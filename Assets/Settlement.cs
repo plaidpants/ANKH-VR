@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 public class Settlement : MonoBehaviour
@@ -8,14 +9,14 @@ public class Settlement : MonoBehaviour
     public Color[] EGAColorPalette;
     public Texture2D[] tiles;
 
-    GameObject npc;
+    GameObject npcs;
     GameObject terrain;
     GameObject animatedTerrrain;
 
-    public string tileEGAFilepath = "Assets/Resources/u4/SHAPES.EGA";
-    public string tileCGAFilepath = "Assets/Resources/u4/SHAPES.CGA";
-    public string settlementFilepath = "Assets/Resources/u4/BRITAIN.ULT";
-    public string talkFilepath = "Assets/Resources/u4/BRITAIN.TLK";
+    public string tileEGAFilepath = "/u4/SHAPES.EGA";
+    public string tileCGAFilepath = "/u4/SHAPES.CGA";
+    public string settlementFilepath = "/u4/BRITAIN.ULT";
+    public string talkFilepath = "/u4/BRITAIN.TLK";
 
     void InitializeEGAPalette()
     {
@@ -57,14 +58,14 @@ public class Settlement : MonoBehaviour
     {
         Color alpha = new Color(0, 0, 0, 0);
 
-        if (!System.IO.File.Exists(tileEGAFilepath))
+        if (!System.IO.File.Exists(Application.persistentDataPath + tileEGAFilepath))
         {
-            Debug.Log("Could not find EGA tiles file " + tileEGAFilepath);
+            Debug.Log("Could not find EGA tiles file " + Application.persistentDataPath + tileEGAFilepath);
             return;
         }
 
         // read the file
-        byte [] fileData = System.IO.File.ReadAllBytes(tileEGAFilepath);
+        byte [] fileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + tileEGAFilepath);
 
         if (fileData.Length != 32*1024)
         {
@@ -162,14 +163,26 @@ public class Settlement : MonoBehaviour
 
     void LoadTilesCGA()
     {
-        if (!System.IO.File.Exists(tileCGAFilepath))
+        string destination = Application.persistentDataPath + "/u4/test1.txt";
+        System.IO.FileStream file;
+
+        if (System.IO.File.Exists(destination)) 
+            file = System.IO.File.OpenWrite(destination);
+        else 
+            file = System.IO.File.Create(destination);
+
+        BinaryFormatter bf = new BinaryFormatter();
+        bf.Serialize(file, "hello world");
+        file.Close();
+
+        if (!System.IO.File.Exists(Application.persistentDataPath + tileCGAFilepath))
         {
-            Debug.Log("Could not find CGA tiles file " + tileCGAFilepath);
+            Debug.Log("Could not find CGA tiles file " + Application.persistentDataPath + tileCGAFilepath);
             return;
         }
 
         // read the file
-        byte[] fileData = System.IO.File.ReadAllBytes(tileCGAFilepath);
+        byte[] fileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + tileCGAFilepath);
 
         if (fileData.Length != 16 * 1024)
         {
@@ -264,14 +277,14 @@ public class Settlement : MonoBehaviour
 0x4C0 	32 	Movement_behavior for NPCs 0-31 (0x0-fixed, 0x1-wander, 0x80-follow, 0xFF-attack)
 0x4E0 	32 	Conversion index (tlk file) for NPCs 0-31 */
 
-        if (!System.IO.File.Exists(settlementFilepath))
+        if (!System.IO.File.Exists(Application.persistentDataPath + settlementFilepath))
         {
-            Debug.Log("Could not find settlement file " + settlementFilepath);
+            Debug.Log("Could not find settlement file " + Application.persistentDataPath + settlementFilepath);
             return;
         }
 
         // read the file
-        byte[] settlementFileData = System.IO.File.ReadAllBytes(settlementFilepath);
+        byte[] settlementFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + settlementFilepath);
 
         if (settlementFileData.Length != 1280)
         {
@@ -298,14 +311,14 @@ Varies 	Varies 	KEYWORD 1
 Varies 	Varies 	KEYWORD 2
 Varies-0x119 	Varies 	00000....  */
 
-        if (!System.IO.File.Exists(talkFilepath))
+        if (!System.IO.File.Exists(Application.persistentDataPath + talkFilepath))
         {
-            Debug.Log("Could not find settlement talk file " + talkFilepath);
+            Debug.Log("Could not find settlement talk file " + Application.persistentDataPath + talkFilepath);
             return;
         }
 
         // read the file
-        byte[] talkFileData = System.IO.File.ReadAllBytes(talkFilepath);
+        byte[] talkFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + talkFilepath);
 
         if (talkFileData.Length != 4608)
         {
@@ -366,10 +379,10 @@ Varies-0x119 	Varies 	00000....  */
         terrain.transform.SetParent(transform);
         terrain.transform.localPosition = Vector3.zero;
         terrain.transform.localRotation = Quaternion.identity;
-        npc = new GameObject("npc");
-        npc.transform.SetParent(transform);
-        npc.transform.localPosition = Vector3.zero;
-        npc.transform.localRotation = Quaternion.identity;
+        npcs = new GameObject("npc");
+        npcs.transform.SetParent(transform);
+        npcs.transform.localPosition = Vector3.zero;
+        npcs.transform.localRotation = Quaternion.identity;
         animatedTerrrain = new GameObject("water");
         animatedTerrrain.transform.SetParent(transform);
         animatedTerrrain.transform.localPosition = Vector3.zero;
@@ -469,42 +482,141 @@ Varies-0x119 	Varies 	00000....  */
                 }
                 else
                 {
+                    // need to check hardcoded vendor npcs and other special npcs here
                     npcGameObject = new GameObject("unamed");
                 }
 
-                npcGameObject.transform.SetParent(npc.transform);
+                // set this as a parent of the npcs game object
+                npcGameObject.transform.SetParent(npcs.transform);
 
-                GameObject npcGameObject1 = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                npcGameObject1.transform.SetParent(npcGameObject.transform);
-
-                GameObject npcGameObject2 = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                npcGameObject2.transform.SetParent(npcGameObject.transform);
-
-                npcGameObject.transform.localPosition = npcLocation;
-                npcGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 180.0f);
-
-                // set the shader
-                Shader unlit = Shader.Find("Sprites/Default");
-
-                // create two objects to alternate between for animation
-                MeshRenderer render = npcGameObject1.GetComponent<MeshRenderer>();
-                render.material.mainTexture = tiles[npcTile];
-                render.material.shader = unlit;
-
-                render = npcGameObject2.GetComponent<MeshRenderer>();
-                if ((npcTile % 2) == 1)
+                // the npc has two animation tiles in these tile ranges
+                if ((npcTile >= 32 && npcTile <= 47) || (npcTile >= 80 && npcTile <= 95) || (npcTile >= 132 && npcTile <= 143))
                 {
-                    render.material.mainTexture = tiles[npcTile - 1];
+                    // create multiple child objects to alternate between for animation
+                    GameObject npcGameObject1 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject1.transform.SetParent(npcGameObject.transform);
+
+                    GameObject npcGameObject2 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject2.transform.SetParent(npcGameObject.transform);
+
+                    // rotate the npc game object after creating and addition all the animation tiles
+                    npcGameObject.transform.localPosition = npcLocation;
+                    npcGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 180.0f);
+
+                    // set the shader
+                    Shader unlit = Shader.Find("Sprites/Default");
+
+                    // create two objects to alternate between for animation
+                    MeshRenderer render1 = npcGameObject1.GetComponent<MeshRenderer>();
+                    MeshRenderer render2 = npcGameObject2.GetComponent<MeshRenderer>();
+
+
+                    render1.material.mainTexture = tiles[npcTile];
+
+                    if ((npcTile % 2) == 1)
+                    {
+                        render2.material.mainTexture = tiles[npcTile - 1];
+                    }
+                    else
+                    {
+                        render2.material.mainTexture = tiles[npcTile + 1];
+                    }
+
+                    // add our little animator script
+                    npcGameObject.AddComponent<Animate2>();
+
+                    render1.material.shader = unlit;
+                    render2.material.shader = unlit;
                 }
+                // the npc has four animation tiles in this tile range
+                else if (npcTile >= 144 && npcTile <= 255) 
+                {
+                    // create multiple child objects to alternate between for animation
+                    GameObject npcGameObject1 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject1.transform.SetParent(npcGameObject.transform);
+                    MeshRenderer render1 = npcGameObject1.GetComponent<MeshRenderer>();
+
+                    GameObject npcGameObject2 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject2.transform.SetParent(npcGameObject.transform);
+                    MeshRenderer render2 = npcGameObject2.GetComponent<MeshRenderer>();
+
+                    GameObject npcGameObject3 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject3.transform.SetParent(npcGameObject.transform);
+                    MeshRenderer render3 = npcGameObject3.GetComponent<MeshRenderer>();
+
+                    GameObject npcGameObject4 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject4.transform.SetParent(npcGameObject.transform);
+                    MeshRenderer render4 = npcGameObject4.GetComponent<MeshRenderer>();
+
+                    // rotate the npc game object after creating and addition all the animation tiles
+                    npcGameObject.transform.localPosition = npcLocation;
+                    npcGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 180.0f);
+                    
+                    // set the tiles
+                    if ((npcTile % 4) == 1)
+                    {
+                        render1.material.mainTexture = tiles[npcTile];
+                        render2.material.mainTexture = tiles[npcTile + 1];
+                        render3.material.mainTexture = tiles[npcTile + 2];
+                        render4.material.mainTexture = tiles[npcTile - 1];
+                    }
+                    else if ((npcTile % 4) == 2)
+                    {
+                        render1.material.mainTexture = tiles[npcTile];
+                        render2.material.mainTexture = tiles[npcTile + 1];
+                        render3.material.mainTexture = tiles[npcTile - 2];
+                        render4.material.mainTexture = tiles[npcTile - 1];
+                    }
+                    else if ((npcTile % 4) == 3)
+                    {
+                        render1.material.mainTexture = tiles[npcTile];
+                        render2.material.mainTexture = tiles[npcTile - 3];
+                        render3.material.mainTexture = tiles[npcTile - 2];
+                        render4.material.mainTexture = tiles[npcTile - 1];
+                    }
+                    else
+                    {
+                        render1.material.mainTexture = tiles[npcTile];
+                        render2.material.mainTexture = tiles[npcTile + 1];
+                        render3.material.mainTexture = tiles[npcTile + 2];
+                        render4.material.mainTexture = tiles[npcTile + 3];
+                    }
+
+                    // set the shader
+                    Shader unlit = Shader.Find("Sprites/Default");
+
+                    render1.material.shader = unlit;
+                    render2.material.shader = unlit;
+                    render3.material.shader = unlit;
+                    render4.material.shader = unlit;
+
+                    // add our little animator script
+                    npcGameObject.AddComponent<Animate2>();
+                }
+                // npc does not have any animation tiles
                 else
                 {
-                    render.material.mainTexture = tiles[npcTile + 1];
+                    // create child object to display texture
+                    GameObject npcGameObject1 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject1.transform.SetParent(npcGameObject.transform);
+
+                    // rotate the npc game object after creating and addition of child
+                    npcGameObject.transform.localPosition = npcLocation;
+                    npcGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 180.0f);
+                    
+                    // create child object for texture
+                    MeshRenderer render1 = npcGameObject1.GetComponent<MeshRenderer>();
+
+                    // set the tile
+                    render1.material.mainTexture = tiles[npcTile];
+
+                    // set the shader
+                    Shader unlit = Shader.Find("Sprites/Default");
+
+                    render1.material.shader = unlit;
+
+                    // don't add the script as this npc does not have any animated tiles
                 }
-
-                // add our little animator script
-                npcGameObject.AddComponent<Animate2>();
-
-                render.material.shader = unlit;
             }
         }
     }
@@ -904,9 +1016,9 @@ Varies-0x119 	Varies 	00000....  */
             }
         }
 
-        if (npc)
+        if (npcs)
         {
-            Combine(npc.gameObject);
+            Combine(npcs.gameObject);
         }
 
         if (animatedTerrrain)

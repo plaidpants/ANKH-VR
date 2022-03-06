@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TilemapSystem3D;
 
 public class Animate2 : MonoBehaviour
 {
