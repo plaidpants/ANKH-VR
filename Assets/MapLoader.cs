@@ -2,23 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// 4 types of maps
+// city
+// dungeon
+// world
+// combat
 
-/**
- * The generic map loader interface.  Map loaders should override the
- * load method to load a map from the meta data already initialized in
- * the map object passed in. They must also register themselves with
- * registerLoader for one or more Map::Types.
- *
- * @todo
- * <ul>
- *      <li>
- *          Instead of loading dungeon room data into a u4dos-style structure and converting it to
- *          an xu4 Map when it's needed, convert it to an xu4 Map immediately upon loading it.
- *      </li>
- * </ul>
- */
+// city maps have an associate dialog file
 
-public class MapLoader : MonoBehaviour
+enum MOVEMENT_STYLE
 {
+    Fixed = 0x00,
+    Wander = 0x01,
+    Follow = 0x80,
+    Attack = 0xFF
+}
 
+public class MapReader : MonoBehaviour
+{
+    //0x0 	1024 	32x32 Town Map Matrix 
+    //0x400 	32 	Tile index for NPCs 0-31 
+    //0x420 	32 	Start_x for NPCs 0-31
+    //0x440 	32 	Start_y for NPCs 0-31 
+
+    //0x460 	32 	Unused? - Same structure as monster.sav so previous tile?
+    //0x480 	32 	Unused? - Same structure as monster.sav so previous x?
+    //0x4A0 	32 	Unused? - Same structure as monster.sav so previous y? 
+    //0x4C0 	32 	Movement Behavior for NPCs 0-31 
+    //0x4E0 	32 	1-based conversation index (in the corresponding tlk file) for NPCs 0-31. 0 indicates no tlk record.
 }
