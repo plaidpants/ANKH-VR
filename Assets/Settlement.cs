@@ -464,7 +464,7 @@ public class Settlement : MonoBehaviour
                 render.material.shader = unlit;
             }
         }
-
+        /*
         for (int npcIndex = 0; npcIndex < 32; npcIndex++)
         {
             int npcTile = settlementFileData[0x400 + npcIndex];
@@ -632,7 +632,7 @@ public class Settlement : MonoBehaviour
                     // don't add the script as this npc does not have any animated tiles
                 }
             }
-        }
+        }*/
     }
 
     // this one will go two layers deep to avoid an implementation that relies on recursion

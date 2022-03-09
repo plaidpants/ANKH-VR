@@ -10,10 +10,11 @@ public class World : MonoBehaviour
     public Color[] EGAColorPalette;
     public Texture2D[] tiles;
 
-    GameObject npcs;
-    GameObject terrain;
-    GameObject animatedTerrrain;
-    GameObject party;
+    public GameObject npcs;
+    public GameObject terrain;
+    public GameObject animatedTerrrain;
+    public GameObject billboardTerrrain; // new item not used yet for trees, anks, etc.
+    public GameObject party;
 
     public string tileEGAFilepath = "/u4/SHAPES.EGA";
     public string tileCGAFilepath = "/u4/SHAPES.CGA";
@@ -872,179 +873,57 @@ public class World : MonoBehaviour
             return;
         }
 
-        // destroy all the NPCs and create new ones
-        foreach (Transform childofnpcs in npcs.transform)
+        // need to create npc game objects if none are present
+        if (npcs.transform.childCount != 32)
         {
-            Object.Destroy(childofnpcs.gameObject);
-        }
-
-        for (int npcIndex = 0; npcIndex < 32; npcIndex++)
-        {
-            int npcTile = currentNpcs[npcIndex]._tile;
-
-            // zero indicated unused
-            if (npcTile != 0)
+            for (int i = 0; i < 32; i++)
             {
-                int npcLocationX = currentNpcs[npcIndex]._x;
-                int npcLocationY = currentNpcs[npcIndex]._y;
-                //int npcConversation = currentNpcs[npcIndex]._tlkidx;
+                // a child object for each npc entry in the table
+                GameObject npcGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
 
-                Vector3 npcLocation = new Vector3(npcLocationX, 255 - npcLocationY, 0);
+                // get the renderer
+                MeshRenderer renderer = npcGameObject.GetComponent<MeshRenderer>();
 
-                GameObject npcGameObject = new GameObject();
+                // intially the texture is null
+                renderer.material.mainTexture = null;
 
-                /*
-                // this is 1 based with 0 meaning no talk entry
-                if (npcConversation != 0)
-                {
-                    // this can be 128 for one vendor in Vincent, not sure why?
-                    if ((npcConversation - 1) < npcStrings.Length)
-                    {
-                        npcGameObject = new GameObject(npcStrings[npcConversation - 1][0]);
-                    }
-                    else
-                    {
-                        npcGameObject = new GameObject("unamed + " + npcConversation);
-                    }
-                }
-                else
-                {
-                    // need to check hardcoded vendor npcs and other special npcs here
-                    npcGameObject = new GameObject("unamed" + npcConversation);
-                }
-                */
+                // set the shader
+                Shader unlit = Shader.Find("Sprites/Default");
+                renderer.material.shader = unlit;
+
+                // add our little animator script and set the tile
+                Animate3 animate = npcGameObject.AddComponent<Animate3>();
+                animate.npcTile = 0;
+                animate.world = this;
+                animate.renderer = renderer;
+
+                // rotate the npc game object into position after creating
+                Vector3 npcLocation = new Vector3(0, 255, 0);
+                npcGameObject.transform.localPosition = npcLocation;
+                npcGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
 
                 // set this as a parent of the npcs game object
                 npcGameObject.transform.SetParent(npcs.transform);
 
-                // the npc has two animation tiles in these tile ranges
-                if ((npcTile >= 32 && npcTile <= 47) || (npcTile >= 80 && npcTile <= 95) || (npcTile >= 132 && npcTile <= 143))
-                {
-                    // create multiple child objects to alternate between for animation
-                    GameObject npcGameObject1 = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                    npcGameObject1.transform.SetParent(npcGameObject.transform);
-
-                    GameObject npcGameObject2 = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                    npcGameObject2.transform.SetParent(npcGameObject.transform);
-
-                    // rotate the npc game object after creating and addition all the animation tiles
-                    npcGameObject.transform.localPosition = npcLocation;
-                    npcGameObject.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 180.0f);
-
-                    // set the shader
-                    Shader unlit = Shader.Find("Sprites/Default");
-
-                    // create two objects to alternate between for animation
-                    MeshRenderer render1 = npcGameObject1.GetComponent<MeshRenderer>();
-                    MeshRenderer render2 = npcGameObject2.GetComponent<MeshRenderer>();
-
-                    render1.material.mainTexture = tiles[npcTile];
-
-                    if ((npcTile % 2) == 1)
-                    {
-                        render2.material.mainTexture = tiles[npcTile - 1];
-                    }
-                    else
-                    {
-                        render2.material.mainTexture = tiles[npcTile + 1];
-                    }
-
-                    // add our little animator script
-                    npcGameObject.AddComponent<Animate2>();
-
-                    render1.material.shader = unlit;
-                    render2.material.shader = unlit;
-                }
-                // the npc has four animation tiles in this tile range
-                else if (npcTile >= 144 && npcTile <= 255)
-                {
-                    // create multiple child objects to alternate between for animation
-                    GameObject npcGameObject1 = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                    npcGameObject1.transform.SetParent(npcGameObject.transform);
-                    MeshRenderer render1 = npcGameObject1.GetComponent<MeshRenderer>();
-
-                    GameObject npcGameObject2 = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                    npcGameObject2.transform.SetParent(npcGameObject.transform);
-                    MeshRenderer render2 = npcGameObject2.GetComponent<MeshRenderer>();
-
-                    GameObject npcGameObject3 = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                    npcGameObject3.transform.SetParent(npcGameObject.transform);
-                    MeshRenderer render3 = npcGameObject3.GetComponent<MeshRenderer>();
-
-                    GameObject npcGameObject4 = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                    npcGameObject4.transform.SetParent(npcGameObject.transform);
-                    MeshRenderer render4 = npcGameObject4.GetComponent<MeshRenderer>();
-
-                    // rotate the npc game object after creating and addition all the animation tiles
-                    npcGameObject.transform.localPosition = npcLocation;
-                    npcGameObject.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 180.0f);
-
-                    // set the tiles
-                    if ((npcTile % 4) == 1)
-                    {
-                        render1.material.mainTexture = tiles[npcTile];
-                        render2.material.mainTexture = tiles[npcTile + 1];
-                        render3.material.mainTexture = tiles[npcTile + 2];
-                        render4.material.mainTexture = tiles[npcTile - 1];
-                    }
-                    else if ((npcTile % 4) == 2)
-                    {
-                        render1.material.mainTexture = tiles[npcTile];
-                        render2.material.mainTexture = tiles[npcTile + 1];
-                        render3.material.mainTexture = tiles[npcTile - 2];
-                        render4.material.mainTexture = tiles[npcTile - 1];
-                    }
-                    else if ((npcTile % 4) == 3)
-                    {
-                        render1.material.mainTexture = tiles[npcTile];
-                        render2.material.mainTexture = tiles[npcTile - 3];
-                        render3.material.mainTexture = tiles[npcTile - 2];
-                        render4.material.mainTexture = tiles[npcTile - 1];
-                    }
-                    else
-                    {
-                        render1.material.mainTexture = tiles[npcTile];
-                        render2.material.mainTexture = tiles[npcTile + 1];
-                        render3.material.mainTexture = tiles[npcTile + 2];
-                        render4.material.mainTexture = tiles[npcTile + 3];
-                    }
-
-                    // set the shader
-                    Shader unlit = Shader.Find("Sprites/Default");
-
-                    render1.material.shader = unlit;
-                    render2.material.shader = unlit;
-                    render3.material.shader = unlit;
-                    render4.material.shader = unlit;
-
-                    // add our little animator script
-                    npcGameObject.AddComponent<Animate2>();
-                }
-                // npc does not have any animation tiles
-                else
-                {
-                    // create child object to display texture
-                    GameObject npcGameObject1 = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                    npcGameObject1.transform.SetParent(npcGameObject.transform);
-
-                    // rotate the npc game object after creating and addition of child
-                    npcGameObject.transform.localPosition = npcLocation;
-                    npcGameObject.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 180.0f);
-
-                    // create child object for texture
-                    MeshRenderer render1 = npcGameObject1.GetComponent<MeshRenderer>();
-
-                    // set the tile
-                    render1.material.mainTexture = tiles[npcTile];
-
-                    // set the shader
-                    Shader unlit = Shader.Find("Sprites/Default");
-
-                    render1.material.shader = unlit;
-
-                    // don't add the script as this npc does not have any animated tiles
-                }
+                // set as intially disabled
+                npcGameObject.SetActive(false);
             }
+        }
+
+        // update all npcs in the table
+        for (int npcIndex = 0; npcIndex < 32; npcIndex++)
+        {
+            // get the tile
+            int npcTile = currentNpcs[npcIndex]._tile;
+
+            // get the corresponding npc game object
+            Transform childofnpcs = npcs.transform.GetChild(npcIndex);
+
+            // update the tile of the game object
+            childofnpcs.GetComponent<Animate3>().SetNPCTile(npcTile);
+
+            // update the position
+            childofnpcs.localPosition = new Vector3(currentNpcs[npcIndex]._x, 255 - currentNpcs[npcIndex]._y, 0);
         }
     }
 

@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using System.Threading;
 
 
 
 public class U4_Decompiled : MonoBehaviour
 {
+    private Thread trd;
+
     public enum DIRECTION
     {
         DIR_W = 0,
@@ -309,6 +312,18 @@ public class U4_Decompiled : MonoBehaviour
 
     public tParty Party = new tParty();
 
+    private void ThreadTask()
+    {
+        // start the DLL
+        main_start();
+
+        while (true)
+        {
+            main_loop();
+            Thread.Sleep(100);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -331,9 +346,20 @@ public class U4_Decompiled : MonoBehaviour
         Combat._charaY = new byte[8];
         Combat._map = new byte[8,8];
 
-        // start the DLL
-        main_start();
+
+        // start a thread with the DLL main task
+        Thread trd = new Thread(new ThreadStart(this.ThreadTask));
+        trd.IsBackground = true;
+        trd.Start();
     }
+
+    public enum KEYS
+    {
+        VK_LEFT = 0x25,
+        VK_UP = 0x26,
+        VK_RIGHT = 0x27,
+        VK_DOWN = 0x28
+    };
 
     // Update is called once per frame
     void Update()
@@ -344,15 +370,28 @@ public class U4_Decompiled : MonoBehaviour
 
         if (timer > timerExpired)
         {
-            main_loop();
+            //main_loop();
 
             timer = timer - timerExpired;
             timerExpired = timerPeriod;
         }
 
+        // send some keyboard codes down to the engine
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            main_keyboardHit((char)0x28);
+            main_keyboardHit((char)KEYS.VK_DOWN);
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            main_keyboardHit((char)KEYS.VK_UP);
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            main_keyboardHit((char)KEYS.VK_LEFT);
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            main_keyboardHit((char)KEYS.VK_RIGHT);
         }
 
         // get the current game mode;
@@ -504,7 +543,5 @@ public class U4_Decompiled : MonoBehaviour
         {
             worldList[0].AddNPCs(_npc);
         }
-
-
     }
 }

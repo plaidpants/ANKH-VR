@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Animate2 : MonoBehaviour
 {
+    // used to check if NPC matches
+    public int tile = 0;
+
     int frame = 0;
     float timer = 0.0f;
     float timerExpired = 0.0f;
