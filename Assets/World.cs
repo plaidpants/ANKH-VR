@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using UnityStandardAssets.Utility;
 
 public class World : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class World : MonoBehaviour
     GameObject npcs;
     GameObject terrain;
     GameObject animatedTerrrain;
+    GameObject party;
 
     public string tileEGAFilepath = "/u4/SHAPES.EGA";
     public string tileCGAFilepath = "/u4/SHAPES.CGA";
@@ -356,6 +358,10 @@ public class World : MonoBehaviour
         animatedTerrrain.transform.SetParent(transform);
         animatedTerrrain.transform.localPosition = Vector3.zero;
         animatedTerrrain.transform.localRotation = Quaternion.identity;
+        party = new GameObject("party");
+        party.transform.SetParent(transform);
+        party.transform.localPosition = Vector3.zero;
+        party.transform.localRotation = Quaternion.identity;
 
         int index = 0;
 
@@ -363,15 +369,15 @@ public class World : MonoBehaviour
         {
             for (int x = 0; x < 8; x++)
             {
-                terrain = new GameObject("terrain (" + x + ", " + y + ")");
-                terrain.transform.SetParent(transform);
-                terrain.transform.localPosition = Vector3.zero;
-                terrain.transform.localRotation = Quaternion.identity;
+                GameObject childTerrain = new GameObject("terrain (" + x + ", " + y + ")");
+                childTerrain.transform.SetParent(terrain.transform);
+                childTerrain.transform.localPosition = Vector3.zero;
+                childTerrain.transform.localRotation = Quaternion.identity;
 
-                animatedTerrrain = new GameObject("water (" + x + ", " + y + ")");
-                animatedTerrrain.transform.SetParent(transform);
-                animatedTerrrain.transform.localPosition = Vector3.zero;
-                animatedTerrrain.transform.localRotation = Quaternion.identity;
+                GameObject childAnimatedTerrrain = new GameObject("water (" + x + ", " + y + ")");
+                childAnimatedTerrrain.transform.SetParent(animatedTerrrain.transform);
+                childAnimatedTerrrain.transform.localPosition = Vector3.zero;
+                childAnimatedTerrrain.transform.localRotation = Quaternion.identity;
 
                 for (int height = 0; height < 32; height++)
                 {
@@ -384,26 +390,26 @@ public class World : MonoBehaviour
                         if (tileIndex == 73 || tileIndex == 127 || tileIndex == 57)
                         {
                             mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            mapTile.transform.SetParent(terrain.transform);
-                            Vector3 location = new Vector3(width + x * 32, 31 - height + 7-y * 32, 0.0f);
+                            mapTile.transform.SetParent(childTerrain.transform);
+                            Vector3 location = new Vector3(width + x * 32, 31 - height + (7 - y) * 32, 0.0f);
                             mapTile.transform.localPosition = location;
                         }
                         // Letters, make into short cubes
                         else if (tileIndex >= 96 && tileIndex <= 125)
                         {
                             mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            mapTile.transform.SetParent(terrain.transform);
+                            mapTile.transform.SetParent(childTerrain.transform);
                             mapTile.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
                             mapTile.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
-                            Vector3 location = new Vector3(width + x * 32, 31 - height + 7-y * 32, 0.25f);
+                            Vector3 location = new Vector3(width + x * 32, 31 - height + (7 - y) * 32, 0.25f);
                             mapTile.transform.localPosition = location;
                         }
                         else if (tileIndex == 8 || tileIndex == 9)
                         {
                             mapTile = CreatePyramid();
-                            mapTile.transform.SetParent(terrain.transform);
+                            mapTile.transform.SetParent(childTerrain.transform);
                             mapTile.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
-                            Vector3 location = new Vector3(width + x * 32 + 0.5f, 31 - height + 7-y * 32 - 0.5f, 0.5f);
+                            Vector3 location = new Vector3(width + x * 32 + 0.5f, 31 - height + (7 - y) * 32 - 0.5f, 0.5f);
                             mapTile.transform.localPosition = location;
                         }
                         // all other terrain tiles are flat
@@ -416,13 +422,13 @@ public class World : MonoBehaviour
                             // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
                             if ((tileIndex < 3) || (tileIndex >= 68 && tileIndex <= 71) || (tileIndex == 76))
                             {
-                                mapTile.transform.SetParent(animatedTerrrain.transform);
-                                location = new Vector3(width + x * 32, 31 - height + 7 - y * 32, 0.5f);
+                                mapTile.transform.SetParent(childAnimatedTerrrain.transform);
+                                location = new Vector3(width + x * 32, 31 - height + (7 - y) * 32, 0.5f);
                             }
                             else
                             {
-                                mapTile.transform.SetParent(terrain.transform);
-                                location = new Vector3(width + x * 32, 31 - height + 7 - y * 32, 0.5f);
+                                mapTile.transform.SetParent(childTerrain.transform);
+                                location = new Vector3(width + x * 32, 31 - height + (7 - y) * 32, 0.5f);
                             }
 
                             mapTile.transform.localPosition = location;
@@ -441,15 +447,45 @@ public class World : MonoBehaviour
                     }
                 }
 
-                Combine(terrain.gameObject);
-                Combine2(animatedTerrrain.gameObject);
+                Combine(childTerrain.gameObject);
+                Combine2(childAnimatedTerrrain.gameObject);
 
                 // add our little animator script
-                animatedTerrrain.AddComponent<Animate1>();
+                childAnimatedTerrrain.AddComponent<Animate1>();
 
                 yield return null;
             }
         }
+
+        {
+            // create player/party object to display texture
+            GameObject partyGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            partyGameObject.transform.SetParent(party.transform);
+
+            // rotate the npc game object after creating and addition of child
+            partyGameObject.transform.localPosition = new Vector3(0, 0, 0);
+            partyGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 180.0f);
+
+            // create child object for texture
+            MeshRenderer renderer = partyGameObject.GetComponent<MeshRenderer>();
+
+            // set the tile
+            renderer.material.mainTexture = tiles[31];
+
+            // set the shader
+            Shader unlit = Shader.Find("Sprites/Default");
+
+            renderer.material.shader = unlit;
+
+            // hook the player game object into the camera and the game engine
+            FindObjectsOfType<SmoothFollow>()[0].target = party.transform;
+            FindObjectsOfType<U4_Decompiled>()[0].partyGameObject = party;
+
+            // don't add the script as the world map player does not have any animated tiles
+        }
+
+        // rotate world into place
+        transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
     }
 
     // this one will go two layers deep to avoid an implementation that relies on recursion
@@ -828,6 +864,190 @@ public class World : MonoBehaviour
         gameObject.transform.rotation = rotation;
     }
 
+    public void AddNPCs(U4_Decompiled.tNPC[] currentNpcs)
+    {
+        // have we finished creating the world
+        if (npcs == null)
+        {
+            return;
+        }
+
+        // destroy all the NPCs and create new ones
+        foreach (Transform childofnpcs in npcs.transform)
+        {
+            Object.Destroy(childofnpcs.gameObject);
+        }
+
+        for (int npcIndex = 0; npcIndex < 32; npcIndex++)
+        {
+            int npcTile = currentNpcs[npcIndex]._tile;
+
+            // zero indicated unused
+            if (npcTile != 0)
+            {
+                int npcLocationX = currentNpcs[npcIndex]._x;
+                int npcLocationY = currentNpcs[npcIndex]._y;
+                //int npcConversation = currentNpcs[npcIndex]._tlkidx;
+
+                Vector3 npcLocation = new Vector3(npcLocationX, 255 - npcLocationY, 0);
+
+                GameObject npcGameObject = new GameObject();
+
+                /*
+                // this is 1 based with 0 meaning no talk entry
+                if (npcConversation != 0)
+                {
+                    // this can be 128 for one vendor in Vincent, not sure why?
+                    if ((npcConversation - 1) < npcStrings.Length)
+                    {
+                        npcGameObject = new GameObject(npcStrings[npcConversation - 1][0]);
+                    }
+                    else
+                    {
+                        npcGameObject = new GameObject("unamed + " + npcConversation);
+                    }
+                }
+                else
+                {
+                    // need to check hardcoded vendor npcs and other special npcs here
+                    npcGameObject = new GameObject("unamed" + npcConversation);
+                }
+                */
+
+                // set this as a parent of the npcs game object
+                npcGameObject.transform.SetParent(npcs.transform);
+
+                // the npc has two animation tiles in these tile ranges
+                if ((npcTile >= 32 && npcTile <= 47) || (npcTile >= 80 && npcTile <= 95) || (npcTile >= 132 && npcTile <= 143))
+                {
+                    // create multiple child objects to alternate between for animation
+                    GameObject npcGameObject1 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject1.transform.SetParent(npcGameObject.transform);
+
+                    GameObject npcGameObject2 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject2.transform.SetParent(npcGameObject.transform);
+
+                    // rotate the npc game object after creating and addition all the animation tiles
+                    npcGameObject.transform.localPosition = npcLocation;
+                    npcGameObject.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 180.0f);
+
+                    // set the shader
+                    Shader unlit = Shader.Find("Sprites/Default");
+
+                    // create two objects to alternate between for animation
+                    MeshRenderer render1 = npcGameObject1.GetComponent<MeshRenderer>();
+                    MeshRenderer render2 = npcGameObject2.GetComponent<MeshRenderer>();
+
+                    render1.material.mainTexture = tiles[npcTile];
+
+                    if ((npcTile % 2) == 1)
+                    {
+                        render2.material.mainTexture = tiles[npcTile - 1];
+                    }
+                    else
+                    {
+                        render2.material.mainTexture = tiles[npcTile + 1];
+                    }
+
+                    // add our little animator script
+                    npcGameObject.AddComponent<Animate2>();
+
+                    render1.material.shader = unlit;
+                    render2.material.shader = unlit;
+                }
+                // the npc has four animation tiles in this tile range
+                else if (npcTile >= 144 && npcTile <= 255)
+                {
+                    // create multiple child objects to alternate between for animation
+                    GameObject npcGameObject1 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject1.transform.SetParent(npcGameObject.transform);
+                    MeshRenderer render1 = npcGameObject1.GetComponent<MeshRenderer>();
+
+                    GameObject npcGameObject2 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject2.transform.SetParent(npcGameObject.transform);
+                    MeshRenderer render2 = npcGameObject2.GetComponent<MeshRenderer>();
+
+                    GameObject npcGameObject3 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject3.transform.SetParent(npcGameObject.transform);
+                    MeshRenderer render3 = npcGameObject3.GetComponent<MeshRenderer>();
+
+                    GameObject npcGameObject4 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject4.transform.SetParent(npcGameObject.transform);
+                    MeshRenderer render4 = npcGameObject4.GetComponent<MeshRenderer>();
+
+                    // rotate the npc game object after creating and addition all the animation tiles
+                    npcGameObject.transform.localPosition = npcLocation;
+                    npcGameObject.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 180.0f);
+
+                    // set the tiles
+                    if ((npcTile % 4) == 1)
+                    {
+                        render1.material.mainTexture = tiles[npcTile];
+                        render2.material.mainTexture = tiles[npcTile + 1];
+                        render3.material.mainTexture = tiles[npcTile + 2];
+                        render4.material.mainTexture = tiles[npcTile - 1];
+                    }
+                    else if ((npcTile % 4) == 2)
+                    {
+                        render1.material.mainTexture = tiles[npcTile];
+                        render2.material.mainTexture = tiles[npcTile + 1];
+                        render3.material.mainTexture = tiles[npcTile - 2];
+                        render4.material.mainTexture = tiles[npcTile - 1];
+                    }
+                    else if ((npcTile % 4) == 3)
+                    {
+                        render1.material.mainTexture = tiles[npcTile];
+                        render2.material.mainTexture = tiles[npcTile - 3];
+                        render3.material.mainTexture = tiles[npcTile - 2];
+                        render4.material.mainTexture = tiles[npcTile - 1];
+                    }
+                    else
+                    {
+                        render1.material.mainTexture = tiles[npcTile];
+                        render2.material.mainTexture = tiles[npcTile + 1];
+                        render3.material.mainTexture = tiles[npcTile + 2];
+                        render4.material.mainTexture = tiles[npcTile + 3];
+                    }
+
+                    // set the shader
+                    Shader unlit = Shader.Find("Sprites/Default");
+
+                    render1.material.shader = unlit;
+                    render2.material.shader = unlit;
+                    render3.material.shader = unlit;
+                    render4.material.shader = unlit;
+
+                    // add our little animator script
+                    npcGameObject.AddComponent<Animate2>();
+                }
+                // npc does not have any animation tiles
+                else
+                {
+                    // create child object to display texture
+                    GameObject npcGameObject1 = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    npcGameObject1.transform.SetParent(npcGameObject.transform);
+
+                    // rotate the npc game object after creating and addition of child
+                    npcGameObject.transform.localPosition = npcLocation;
+                    npcGameObject.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 180.0f);
+
+                    // create child object for texture
+                    MeshRenderer render1 = npcGameObject1.GetComponent<MeshRenderer>();
+
+                    // set the tile
+                    render1.material.mainTexture = tiles[npcTile];
+
+                    // set the shader
+                    Shader unlit = Shader.Find("Sprites/Default");
+
+                    render1.material.shader = unlit;
+
+                    // don't add the script as this npc does not have any animated tiles
+                }
+            }
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -840,54 +1060,16 @@ public class World : MonoBehaviour
         StartCoroutine(LoadWorldMap());
 
         /*
-        if (terrain)
-        {
-            Combine(terrain.gameObject);
-            Shader unlit = Shader.Find("Mobile/Unlit (Supports Lightmap)");
-            MeshRenderer render = terrain.GetComponent<MeshRenderer>();
-            if (render)
-            {
-                render.material.shader = unlit;
-            }
-        }
-        */
-
-        /*
         if (npcs)
         {
             Combine(npcs.gameObject);
         }
         */
-
-        /*
-        if (animatedTerrrain)
-        { 
-            Combine2(animatedTerrrain.gameObject);
-            Shader unlit = Shader.Find("UI/Unlit/Detail");
-            MeshRenderer render = animatedTerrrain.GetComponent<MeshRenderer>();
-            if (render)
-            {
-                render.material.shader = unlit;
-            }
-        }
-        */
     }
-
-    public float waterAnimationSpeed = 0.2f;
 
     // Update is called once per frame
     void Update()
     {
-        /*
-        if (animatedTerrrain)
-        {
-            MeshRenderer waterRenderer = animatedTerrrain.transform.GetComponent<MeshRenderer>();
 
-            if (waterRenderer)
-            {
-                animatedTerrrain.transform.GetComponent<MeshRenderer>().material.mainTextureOffset = new Vector2(0.0f, Time.time * waterAnimationSpeed % 1.0f);
-            }
-        }
-        */
     }
 }
