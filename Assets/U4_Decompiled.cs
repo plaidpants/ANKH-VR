@@ -119,8 +119,6 @@ public class U4_Decompiled : MonoBehaviour
     [DllImport("UN_U4.dll")]
     public static extern void main_start();
     [DllImport("UN_U4.dll")]
-    public static extern void main_loop();
-    [DllImport("UN_U4.dll")]
     public static extern MODE main_CurMode();
     [DllImport("UN_U4.dll")]
     public static extern void main_keyboardHit(char key);
@@ -140,7 +138,7 @@ public class U4_Decompiled : MonoBehaviour
 
     float timer = 0.0f;
     float timerExpired = 0.0f;
-    public float timerPeriod = 0.2f;
+    public float timerPeriod = 0.05f; // the game operates on a 300ms Sleep() so we want to update things at least twice a fast
 
     byte[] buffer = new byte[2000];
 
@@ -150,9 +148,9 @@ public class U4_Decompiled : MonoBehaviour
     [System.Serializable]
     public struct tCombat /*size:0xc0*/
     {
-        public char[] _npcX, _npcY; //16,16 /*_000/_010 D_9470/D_9480*/
+        public byte[] _npcX, _npcY; //16,16 /*_000/_010 D_9470/D_9480*/
         public byte[] _charaX, _charaY; //8,8 /*_20/_28 D_9490/D_9498*/
-        public byte[,] _map; //11 * 11 /*_040 D_94B0*/
+        //public byte[,] _map; //11 * 11 /*_040 D_94B0*/
     };
 
     tCombat Combat;
@@ -174,22 +172,7 @@ public class U4_Decompiled : MonoBehaviour
         public byte _tlkidx;
     };
 
-    [System.Serializable]
-    public struct t_68
-    {
-        /*000*/
-        public char _x, _y;
-        /*020*/
-        public char _HP;
-        /*030*/
-        public char _tile, _gtile;
-        /*050*/
-        public char _sleeping;
-        /*060*/
-        public char _chtile;
-    };
-
-    public t_68[] Fighters = new t_68[16];
+    //public t_68[] Fighters = new t_68[16];
 
     public tNPC[] _npc = new tNPC[32];
 
@@ -209,7 +192,7 @@ public class U4_Decompiled : MonoBehaviour
         /*+0c*/
         public ushort _MP;
         /*+0e*/
-        public char[] __0e; //2
+        public byte[] __0e; //2
         /*+10*/
         public WEAPON _weapon;
         /*+12*/
@@ -217,11 +200,11 @@ public class U4_Decompiled : MonoBehaviour
         /*+14*/
         public string _name; // char _name[16];
         /*+24*/
-        public char p_24;/*sex char*/
+        public byte p_24;/*sex char*/
         /*+25*/
-        public char _class;
+        public byte _class;
         /*+26*/
-        public char _stat;
+        public byte _stat;
     };
 
     [System.Serializable]
@@ -312,16 +295,28 @@ public class U4_Decompiled : MonoBehaviour
 
     public tParty Party = new tParty();
 
+    [System.Serializable]
+    public struct t_68
+    {
+        /*000*/
+        public byte _x, _y;
+        /*020*/
+        public byte _HP;
+        /*030*/
+        public byte _tile, _gtile;
+        /*050*/
+        public byte _sleeping;
+        /*060*/
+        public byte _chtile;
+    }
+
+    public t_68[] Fighters = new t_68[16];
+
+    // Separate thread to run the game, we could attempt to make the data gathering function thread safe but for now this will do
     private void ThreadTask()
     {
         // start the DLL
         main_start();
-
-        while (true)
-        {
-            main_loop();
-            Thread.Sleep(100);
-        }
     }
 
     // Start is called before the first frame update
@@ -332,7 +327,7 @@ public class U4_Decompiled : MonoBehaviour
         for (int i = 0; i < 8; i++)
         {
             Party.chara[i]._HP = new ushort[2];
-            Party.chara[i].__0e = new char[2];
+            Party.chara[i].__0e = new byte[2];
         }
         Party._armors = new ARMOR[8];
         Party._weapons = new WEAPON[16];
@@ -340,17 +335,22 @@ public class U4_Decompiled : MonoBehaviour
         Party._mixtures = new ushort[26];
 
         // allocate storage for Combat global
-        Combat._npcX = new char[16];
-        Combat._npcY = new char[16];
+        Combat._npcX = new byte[16];
+        Combat._npcY = new byte[16];
         Combat._charaX = new byte[8];
         Combat._charaY = new byte[8];
-        Combat._map = new byte[8,8];
-
+        //Combat._map = new byte[11,11];
 
         // start a thread with the DLL main task
-        Thread trd = new Thread(new ThreadStart(this.ThreadTask));
+        trd = new Thread(new ThreadStart(this.ThreadTask));
         trd.IsBackground = true;
         trd.Start();
+    }
+
+    void OnApplicationQuit()
+    {
+        //trd.Abort();
+        main_keyboardHit((char)KEYS.VK_ESCAPE);
     }
 
     public enum KEYS
@@ -358,25 +358,22 @@ public class U4_Decompiled : MonoBehaviour
         VK_LEFT = 0x25,
         VK_UP = 0x26,
         VK_RIGHT = 0x27,
-        VK_DOWN = 0x28
+        VK_DOWN = 0x28,
+        VK_ESCAPE = 0x1B,
+        VK_SPACE          =0x20,
+        VK_RETURN         =0x0D,
+        VK_BACK           =0x08,
     };
 
     // Update is called once per frame
     void Update()
     {
-        int buffer_index = 0;
+        int buffer_index;
 
         timer += Time.deltaTime;
 
-        if (timer > timerExpired)
-        {
-            //main_loop();
-
-            timer = timer - timerExpired;
-            timerExpired = timerPeriod;
-        }
-
-        // send some keyboard codes down to the engine
+        // send some keyboard codes down to the engine,
+        // keydown is only active for a single frame so it cannot be in the timer
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             main_keyboardHit((char)KEYS.VK_DOWN);
@@ -393,155 +390,229 @@ public class U4_Decompiled : MonoBehaviour
         {
             main_keyboardHit((char)KEYS.VK_RIGHT);
         }
-
-        // get the current game mode;
-        MODE current_mode = main_CurMode();
-
-        // get the current map and npc data
-        main_CurMap(buffer, buffer.Length);
-
-        // extract the map data
-        if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
+        else if (Input.GetKeyDown(KeyCode.Escape))
         {
-            buffer_index = 0;
-            for (int i = 0; i < 32; i++)
-            {
-                for (int j = 0; j < 32; j++)
-                {
-                    tMap32x32[i, j] = buffer[buffer_index++];
-                }
-            }
+            main_keyboardHit((char)KEYS.VK_ESCAPE);
         }
-        else if (current_mode == MODE.DUNGEON)
+        else if (Input.GetKeyDown(KeyCode.Return))
         {
-            buffer_index = 0;
-            for (int i = 0; i < 8; i++)
+            main_keyboardHit((char)KEYS.VK_RETURN);
+        }
+        else if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            main_keyboardHit((char)KEYS.VK_BACK);
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            main_keyboardHit((char)'E');
+        }
+        else if (Input.GetKeyDown(KeyCode.A))
+        {
+            main_keyboardHit((char)'A');
+        }
+
+        // only get data periodically
+        if (timer > timerExpired)
+        {
+            timer = timer - timerExpired;
+            timerExpired = timerPeriod;
+
+            // get the current game mode;
+            MODE current_mode = main_CurMode();
+
+            if ((current_mode == MODE.COMBAT) || (current_mode == MODE.COM_CAMP) || (current_mode == MODE.COM_ROOM))
             {
-                for (int j = 0; j < 8; j++)
+
+            }
+
+            // get the current map and npc data
+            main_CurMap(buffer, buffer.Length);
+
+            // extract the map data
+            if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
+            {
+                buffer_index = 0;
+                for (int i = 0; i < 32; i++)
                 {
-                    for (int k = 0; k < 8; k++)
+                    for (int j = 0; j < 32; j++)
                     {
-                        tMap8x8x8[i, j, k] = buffer[buffer_index++];
+                        tMap32x32[i, j] = buffer[buffer_index++];
                     }
                 }
             }
-        }
+            else if (current_mode == MODE.DUNGEON)
+            {
+                buffer_index = 0;
+                for (int i = 0; i < 8; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        for (int k = 0; k < 8; k++)
+                        {
+                            tMap8x8x8[i, j, k] = buffer[buffer_index++];
+                        }
+                    }
+                }
+            }
 
-        // extract the npc data
-        buffer_index = 1024;
-        for (int i = 0; i < 32; i++)
-        {
-            _npc[i]._gtile = buffer[buffer_index + 0x00];
-            _npc[i]._x = buffer[buffer_index + 0x20];
-            _npc[i]._y = buffer[buffer_index + 0x40];
-            _npc[i]._tile = buffer[buffer_index + 0x60];
-            _npc[i]._old_x = buffer[buffer_index + 0x80];
-            _npc[i]._old_y = buffer[buffer_index + 0xa0];
-            _npc[i]._var = buffer[buffer_index + 0xc0]; /*_agressivity (or _z in dungeon)*/
-            _npc[i]._tlkidx = buffer[buffer_index + 0xe0];
-            buffer_index++;
-        }
+            // extract the npc data
+            buffer_index = 1024;
+            for (int i = 0; i < 32; i++)
+            {
+                _npc[i]._gtile = buffer[buffer_index + 0x00];
+                _npc[i]._x = buffer[buffer_index + 0x20];
+                _npc[i]._y = buffer[buffer_index + 0x40];
+                _npc[i]._tile = buffer[buffer_index + 0x60];
+                _npc[i]._old_x = buffer[buffer_index + 0x80];
+                _npc[i]._old_y = buffer[buffer_index + 0xa0];
+                _npc[i]._var = buffer[buffer_index + 0xc0]; /*_agressivity (or _z in dungeon)*/
+                _npc[i]._tlkidx = buffer[buffer_index + 0xe0];
+                buffer_index++;
+            }
 
-        // get the current party data
-        main_Party(buffer, buffer.Length);
+            // get the current party data
+            main_Party(buffer, buffer.Length);
 
-        Party.f_000 = System.BitConverter.ToUInt32(buffer, 0x000);
-        Party._moves = System.BitConverter.ToUInt32(buffer, 0x004);
-        buffer_index = 0x008;
-        for (int i = 0; i < 8; i++)
-        {
-            Party.chara[i]._HP[0] = buffer[buffer_index++];
-            Party.chara[i]._HP[1] = buffer[buffer_index++];
-            Party.chara[i]._XP = buffer[buffer_index++];
-            Party.chara[i]._str = buffer[buffer_index++];
-            Party.chara[i]._int = buffer[buffer_index++];
-            Party.chara[i]._MP = buffer[buffer_index++];
+            Party.f_000 = System.BitConverter.ToUInt32(buffer, 0x000);
+            Party._moves = System.BitConverter.ToUInt32(buffer, 0x004);
+            buffer_index = 0x008;
+            for (int i = 0; i < 8; i++)
+            {
+                Party.chara[i]._HP[0] = buffer[buffer_index++];
+                Party.chara[i]._HP[1] = buffer[buffer_index++];
+                Party.chara[i]._XP = buffer[buffer_index++];
+                Party.chara[i]._str = buffer[buffer_index++];
+                Party.chara[i]._int = buffer[buffer_index++];
+                Party.chara[i]._MP = buffer[buffer_index++];
 
-            Party.chara[i].__0e[0] = (char)buffer[buffer_index++];
-            Party.chara[i].__0e[1] = (char)buffer[buffer_index++];
-            Party.chara[i]._weapon = (WEAPON)buffer[buffer_index++];
-            Party.chara[i]._armor = (ARMOR)buffer[buffer_index++];
-            Party.chara[i]._name = System.BitConverter.ToString(buffer, buffer_index, 8);
-                //"" + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++]
-                //+ (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++];
-            Party.chara[i].p_24 = (char)buffer[buffer_index++];
-            Party.chara[i]._class = (char)buffer[buffer_index++];
-            Party.chara[i]._stat = (char)buffer[buffer_index++];
-        }
-        Party._food = System.BitConverter.ToUInt32(buffer, 0x140);
-        Party._gold = System.BitConverter.ToUInt16(buffer, 0x144);
-        Party._hones = System.BitConverter.ToUInt16(buffer, 0x146);
-        Party._compa = System.BitConverter.ToUInt16(buffer, 0x148);
-        Party._valor = System.BitConverter.ToUInt16(buffer, 0x14a);
-        Party._justi = System.BitConverter.ToUInt16(buffer, 0x14c);
-        Party._sacri = System.BitConverter.ToUInt16(buffer, 0x14e);
-        Party._honor = System.BitConverter.ToUInt16(buffer, 0x150);
-        Party._spiri = System.BitConverter.ToUInt16(buffer, 0x152);
-        Party._humil = System.BitConverter.ToUInt16(buffer, 0x154);
-        Party._torches = System.BitConverter.ToUInt16(buffer, 0x156);
-        Party._gems = System.BitConverter.ToUInt16(buffer, 0x158);
-        Party._keys = System.BitConverter.ToUInt16(buffer, 0x15a);
-        Party._sextants = System.BitConverter.ToUInt16(buffer, 0x15c);
+                Party.chara[i].__0e[0] = buffer[buffer_index++];
+                Party.chara[i].__0e[1] = buffer[buffer_index++];
+                Party.chara[i]._weapon = (WEAPON)buffer[buffer_index++];
+                Party.chara[i]._armor = (ARMOR)buffer[buffer_index++];
+                Party.chara[i]._name = "" + buffer[buffer_index++] + buffer[buffer_index++] + buffer[buffer_index++] + buffer[buffer_index++]
+                    + buffer[buffer_index++] + buffer[buffer_index++] + buffer[buffer_index++] + buffer[buffer_index++];
+                Party.chara[i].p_24 = buffer[buffer_index++];
+                Party.chara[i]._class = buffer[buffer_index++];
+                Party.chara[i]._stat = buffer[buffer_index++];
+            }
+            Party._food = System.BitConverter.ToUInt32(buffer, 0x140);
+            Party._gold = System.BitConverter.ToUInt16(buffer, 0x144);
+            Party._hones = System.BitConverter.ToUInt16(buffer, 0x146);
+            Party._compa = System.BitConverter.ToUInt16(buffer, 0x148);
+            Party._valor = System.BitConverter.ToUInt16(buffer, 0x14a);
+            Party._justi = System.BitConverter.ToUInt16(buffer, 0x14c);
+            Party._sacri = System.BitConverter.ToUInt16(buffer, 0x14e);
+            Party._honor = System.BitConverter.ToUInt16(buffer, 0x150);
+            Party._spiri = System.BitConverter.ToUInt16(buffer, 0x152);
+            Party._humil = System.BitConverter.ToUInt16(buffer, 0x154);
+            Party._torches = System.BitConverter.ToUInt16(buffer, 0x156);
+            Party._gems = System.BitConverter.ToUInt16(buffer, 0x158);
+            Party._keys = System.BitConverter.ToUInt16(buffer, 0x15a);
+            Party._sextants = System.BitConverter.ToUInt16(buffer, 0x15c);
 
-        for (int i = 0; i < 8; i++)
-        {
-            Party._armors[i] = (ARMOR)System.BitConverter.ToUInt16(buffer, 0x15e + i * 2);
-        }
-        for (int i = 0; i < 16; i++)
-        {
-            Party._weapons[i] = (WEAPON)System.BitConverter.ToUInt16(buffer, 0x16e + i * 2);
-        }
-        for (int i = 0; i < 8; i++)
-        {
-            Party._reagents[i] = (REAGENT)System.BitConverter.ToUInt16(buffer, 0x18e + i * 2);
-        }
-        for (int i = 0; i < 26; i++)
-        {
-            Party._mixtures[i] = System.BitConverter.ToUInt16(buffer, 0x19e + i * 2);
-        }
+            for (int i = 0; i < 8; i++)
+            {
+                Party._armors[i] = (ARMOR)System.BitConverter.ToUInt16(buffer, 0x15e + i * 2);
+            }
+            for (int i = 0; i < 16; i++)
+            {
+                Party._weapons[i] = (WEAPON)System.BitConverter.ToUInt16(buffer, 0x16e + i * 2);
+            }
+            for (int i = 0; i < 8; i++)
+            {
+                Party._reagents[i] = (REAGENT)System.BitConverter.ToUInt16(buffer, 0x18e + i * 2);
+            }
+            for (int i = 0; i < 26; i++)
+            {
+                Party._mixtures[i] = System.BitConverter.ToUInt16(buffer, 0x19e + i * 2);
+            }
 
-        Party.mItems = System.BitConverter.ToUInt16(buffer, 0x1d2);
-        Party._x = buffer[0x1d4];
-        Party._y = buffer[0x1d5];
-        Party.mStones = buffer[0x1d6];
-        Party.mRunes = buffer[0x1d7];
-        Party.f_1d8 = System.BitConverter.ToUInt16(buffer, 0x1d8);
-        Party._tile = System.BitConverter.ToUInt16(buffer, 0x1da);
-        Party.f_1dc = System.BitConverter.ToUInt16(buffer, 0x1dc);
-        Party._trammel = System.BitConverter.ToUInt16(buffer, 0x1de);
-        Party._felucca = System.BitConverter.ToUInt16(buffer, 0x1e0);
-        Party._ship = System.BitConverter.ToUInt16(buffer, 0x1e2);
-        Party.f_1e4 = System.BitConverter.ToUInt16(buffer, 0x1e4);
-        Party.f_1e6 = System.BitConverter.ToUInt16(buffer, 0x1e6);
-        Party.f_1e8 = System.BitConverter.ToUInt16(buffer, 0x1e8);
-        Party.f_1ea = System.BitConverter.ToUInt16(buffer, 0x1ea);
-        Party.f_1ec = System.BitConverter.ToUInt16(buffer, 0x1ec);
-        Party.out_x = buffer[0x1ee];
-        Party.out_y = buffer[0x1ef];
-        Party._dir = System.BitConverter.ToUInt16(buffer, 0x1e2);
-        Party._z = System.BitConverter.ToInt16(buffer, 0x1f2);
-        Party._loc = (LOCATIONS)(System.BitConverter.ToUInt16(buffer, 0x1f4));
+            Party.mItems = System.BitConverter.ToUInt16(buffer, 0x1d2);
+            Party._x = buffer[0x1d4];
+            Party._y = buffer[0x1d5];
+            Party.mStones = buffer[0x1d6];
+            Party.mRunes = buffer[0x1d7];
+            Party.f_1d8 = System.BitConverter.ToUInt16(buffer, 0x1d8); // number in party
+            Party._tile = System.BitConverter.ToUInt16(buffer, 0x1da);
+            Party.f_1dc = System.BitConverter.ToUInt16(buffer, 0x1dc);
+            Party._trammel = System.BitConverter.ToUInt16(buffer, 0x1de);
+            Party._felucca = System.BitConverter.ToUInt16(buffer, 0x1e0);
+            Party._ship = System.BitConverter.ToUInt16(buffer, 0x1e2);
+            Party.f_1e4 = System.BitConverter.ToUInt16(buffer, 0x1e4);
+            Party.f_1e6 = System.BitConverter.ToUInt16(buffer, 0x1e6);
+            Party.f_1e8 = System.BitConverter.ToUInt16(buffer, 0x1e8);
+            Party.f_1ea = System.BitConverter.ToUInt16(buffer, 0x1ea);
+            Party.f_1ec = System.BitConverter.ToUInt16(buffer, 0x1ec);
+            Party.out_x = buffer[0x1ee];
+            Party.out_y = buffer[0x1ef];
+            Party._dir = System.BitConverter.ToUInt16(buffer, 0x1e2);
+            Party._z = System.BitConverter.ToInt16(buffer, 0x1f2);
+            Party._loc = (LOCATIONS)(System.BitConverter.ToUInt16(buffer, 0x1f4));
 
-        // read in the Combat global
-        main_Combat(buffer, buffer.Length);
+            // read in the Combat global
+            main_Combat(buffer, buffer.Length);
 
-        // read in the Fighters global
-        main_Fighters(buffer, buffer.Length);
+            for (int i = 0; i < 16; i++)
+            {
+                Combat._npcX[i] = buffer[0x00 + i];
+                Combat._npcY[i] = buffer[0x10 + i];
+            }
+            for (int i = 0; i < 8; i++)
+            {
+                Combat._charaX[i] = buffer[0x20 + i];
+                Combat._charaY[i] = buffer[0x28 + i];
+            }
 
-        // read in the main_D_96F9 global
-        main_D_96F9(buffer, buffer.Length);
+            //skip the map for now as Unity will not serialize and display the stucture with this present
+            /*
+            buffer_index = 0x40;
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    Combat._map[i,j] = buffer[buffer_index++];
+                }
+            }
+            */
 
-        // keep the part game object in sync with the game
-        if (partyGameObject)
-        {
-            partyGameObject.transform.localPosition = new Vector3(Party._x, 255 - Party._y, 0);
-        }
+            // read in the Fighters global
+            main_Fighters(buffer, buffer.Length);
 
-        World[] worldList = FindObjectsOfType<World>();
+            for (int i = 0; i < 16; i++)
+            {
+                Fighters[i]._x = buffer[0x00 + i];
+                Fighters[i]._y = buffer[0x10 + i];
+                Fighters[i]._HP = buffer[0x20 + i];
+                Fighters[i]._tile = buffer[0x30 + i];
+                Fighters[i]._gtile = buffer[0x40 + i];
+                Fighters[i]._sleeping = buffer[0x50 + i];
+                Fighters[i]._chtile = buffer[0x60 + i];
+            }
 
-        if (worldList.Length != 0)
-        {
-            worldList[0].AddNPCs(_npc);
+            // read in the main_D_96F9 global
+            main_D_96F9(buffer, buffer.Length);
+
+            // keep the part game object in sync with the game
+            if (partyGameObject)
+            {
+                partyGameObject.transform.localPosition = new Vector3(Party._x, 255 - Party._y, 0);
+            }
+
+            World[] worldList = FindObjectsOfType<World>();
+
+            if (worldList.Length != 0)
+            {
+                if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
+                {
+                    worldList[0].AddNPCs(_npc);
+                    worldList[0].followWorld();
+                }
+                else
+                {
+                    worldList[0].AddFighters(Fighters, Combat);
+                    worldList[0].AddCharacters(Combat, Party, Fighters);
+                }
+            }
         }
     }
 }

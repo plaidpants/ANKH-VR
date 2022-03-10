@@ -15,6 +15,8 @@ public class World : MonoBehaviour
     public GameObject animatedTerrrain;
     public GameObject billboardTerrrain; // new item not used yet for trees, anks, etc.
     public GameObject party;
+    public GameObject fighters; 
+    public GameObject characters;
 
     public string tileEGAFilepath = "/u4/SHAPES.EGA";
     public string tileCGAFilepath = "/u4/SHAPES.CGA";
@@ -363,6 +365,14 @@ public class World : MonoBehaviour
         party.transform.SetParent(transform);
         party.transform.localPosition = Vector3.zero;
         party.transform.localRotation = Quaternion.identity;
+        fighters = new GameObject("fighters");
+        fighters.transform.SetParent(transform);
+        fighters.transform.localPosition = Vector3.zero;
+        fighters.transform.localRotation = Quaternion.identity;
+        characters = new GameObject("characters");
+        characters.transform.SetParent(transform);
+        characters.transform.localPosition = Vector3.zero;
+        characters.transform.localRotation = Quaternion.identity;
 
         int index = 0;
 
@@ -471,22 +481,26 @@ public class World : MonoBehaviour
             MeshRenderer renderer = partyGameObject.GetComponent<MeshRenderer>();
 
             // set the tile
-            renderer.material.mainTexture = tiles[31];
+            renderer.material.mainTexture = tiles[31]; // this tile number 31 is in the Party structure under tile.
 
             // set the shader
             Shader unlit = Shader.Find("Sprites/Default");
 
             renderer.material.shader = unlit;
 
-            // hook the player game object into the camera and the game engine
-            FindObjectsOfType<SmoothFollow>()[0].target = party.transform;
-            FindObjectsOfType<U4_Decompiled>()[0].partyGameObject = party;
-
+            followWorld();
             // don't add the script as the world map player does not have any animated tiles
         }
 
         // rotate world into place
         transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
+    }
+
+    public void followWorld()
+    {
+        // hook the player game object into the camera and the game engine
+        FindObjectsOfType<SmoothFollow>()[0].target = party.transform;
+        FindObjectsOfType<U4_Decompiled>()[0].partyGameObject = party;
     }
 
     // this one will go two layers deep to avoid an implementation that relies on recursion
@@ -863,6 +877,151 @@ public class World : MonoBehaviour
         // Restore position
         gameObject.transform.position = position;
         gameObject.transform.rotation = rotation;
+    }
+
+    public void AddFighters(U4_Decompiled.t_68[] currentFighters, U4_Decompiled.tCombat currentCombat)
+    {
+        // have we finished creating the world
+        if (fighters == null)
+        {
+            return;
+        }
+
+        // need to create npc game objects if none are present
+        if (fighters.transform.childCount != 16)
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                // a child object for each npc entry in the table
+                GameObject fighterGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+
+                // get the renderer
+                MeshRenderer renderer = fighterGameObject.GetComponent<MeshRenderer>();
+
+                // intially the texture is null
+                renderer.material.mainTexture = null;
+
+                // set the shader
+                Shader unlit = Shader.Find("Sprites/Default");
+                renderer.material.shader = unlit;
+
+                // add our little animator script and set the tile
+                Animate3 animate = fighterGameObject.AddComponent<Animate3>();
+                animate.npcTile = 0;
+                animate.world = this;
+                animate.renderer = renderer;
+
+                // rotate the npc game object into position after creating
+                Vector3 fightersLocation = new Vector3(0, 255, 0);
+                fighterGameObject.transform.localPosition = fightersLocation;
+                fighterGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+                // set this as a parent of the fighters game object
+                fighterGameObject.transform.SetParent(fighters.transform);
+
+                // set as intially disabled
+                fighterGameObject.SetActive(false);
+            }
+        }
+
+        // update all fighters in the table
+        for (int fighterIndex = 0; fighterIndex < 16; fighterIndex++)
+        {
+            // get the tile
+            int npcTile = currentFighters[fighterIndex]._tile;
+
+            // get the corresponding npc game object
+            Transform childoffighters = fighters.transform.GetChild(fighterIndex);
+
+            // update the tile of the game object
+            if (currentFighters[fighterIndex]._sleeping == 0)
+            {
+                childoffighters.GetComponent<Animate3>().SetNPCTile(npcTile);
+            }
+            else
+            {
+                childoffighters.GetComponent<Animate3>().SetNPCTile(56);
+            }
+
+            // update the position
+            childoffighters.localPosition = new Vector3(currentCombat._npcX[fighterIndex], 255 - currentCombat._npcY[fighterIndex], 0);
+            childoffighters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+        }
+    }
+
+    public void AddCharacters(U4_Decompiled.tCombat currentCombat, U4_Decompiled.tParty currentParty, U4_Decompiled.t_68[] currentFighters)
+    {
+        // have we finished creating the world
+        if (characters == null)
+        {
+            return;
+        }
+
+        // need to create npc game objects if none are present
+        if (characters.transform.childCount != 8)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                // a child object for each npc entry in the table
+                GameObject characterGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+
+                // get the renderer
+                MeshRenderer renderer = characterGameObject.GetComponent<MeshRenderer>();
+
+                // intially the texture is null
+                renderer.material.mainTexture = null;
+
+                // set the shader
+                Shader unlit = Shader.Find("Sprites/Default");
+                renderer.material.shader = unlit;
+
+                // add our little animator script and set the tile
+                Animate3 animate = characterGameObject.AddComponent<Animate3>();
+                animate.npcTile = 0;
+                animate.world = this;
+                animate.renderer = renderer;
+
+                // rotate the npc game object into position after creating
+                Vector3 characterLocation = new Vector3(0, 255, 0);
+                characterGameObject.transform.localPosition = characterLocation;
+                characterGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+                // set this as a parent of the fighters game object
+                characterGameObject.transform.SetParent(characters.transform);
+
+                // set as intially disabled
+                characterGameObject.SetActive(false);
+            }
+        }
+
+        // update all characters in the party table
+        for (int characterIndex = 0; characterIndex < 8; characterIndex++)
+        {
+            int npcTile;
+
+            if (characterIndex < currentParty.f_1d8)
+            {
+                // get the tile ???, use class or something?
+                npcTile = currentFighters[characterIndex]._chtile;
+            }
+            else
+            {
+                // set unused characters to 0
+                npcTile = 0;
+            }
+
+            // get the corresponding npc game object
+            Transform childofcharacters = characters.transform.GetChild(characterIndex);
+
+            // update the tile of the game object
+            childofcharacters.GetComponent<Animate3>().SetNPCTile(npcTile);
+  
+            // update the position
+            childofcharacters.localPosition = new Vector3(currentCombat._charaX[characterIndex], 255 - currentCombat._charaY[characterIndex], 0); // appears to be one off in the Y from the fighters
+            childofcharacters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+        }
+
+        FindObjectsOfType<SmoothFollow>()[0].target = characters.transform.GetChild(0);
     }
 
     public void AddNPCs(U4_Decompiled.tNPC[] currentNpcs)
