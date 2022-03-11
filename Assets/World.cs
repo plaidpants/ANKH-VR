@@ -23,6 +23,7 @@ public class World : MonoBehaviour
     public GameObject terrainHud;
     public GameObject animatedTerrrainHud;
     public GameObject otherHud;
+    public GameObject activeCharacterHud;
 
     public string tileEGAFilepath = "/u4/SHAPES.EGA";
     public string tileCGAFilepath = "/u4/SHAPES.CGA";
@@ -502,7 +503,7 @@ public class World : MonoBehaviour
         transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
     }
 
-    public void DrawMap(U4_Decompiled.TILE[,] map, List<U4_Decompiled.hit> hits)
+    public void DrawMap(U4_Decompiled.TILE[,] map, List<U4_Decompiled.hit> hits, U4_Decompiled.activeCharacter currentActiveCharacter)
     {
         if (mapHudGameObject == null)
         {
@@ -530,6 +531,20 @@ public class World : MonoBehaviour
             otherHud.transform.SetParent(mapHudGameObject.transform);
             otherHud.transform.localPosition = Vector3.zero;
             otherHud.transform.localRotation = Quaternion.identity;
+
+            activeCharacterHud = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            activeCharacterHud.transform.SetParent(mapHudGameObject.transform);
+            activeCharacterHud.transform.localPosition = Vector3.zero;
+            activeCharacterHud.transform.localRotation = Quaternion.identity;
+            // set the shader
+            Shader wireframe = Shader.Find("Custom/Geometry/Wireframe");
+            MeshRenderer renderer = activeCharacterHud.GetComponent<MeshRenderer>();
+            renderer.material.shader = wireframe;
+            renderer.material.SetFloat("_WireframeVal", 0.03f);
+            renderer.material.SetFloat("_RemoveDiag", 1);
+            renderer.material.SetColor("_FrontColor", Color.yellow);
+            renderer.material.SetColor("_BackColor", Color.yellow);
+            renderer.material.SetColor("_BackColor", Color.yellow);
         }
         else
         {
@@ -550,6 +565,17 @@ public class World : MonoBehaviour
             {
                 Object.Destroy(child.gameObject);
             }
+        }
+
+        if (currentActiveCharacter.active)
+        {
+            Vector3 location = new Vector3(currentActiveCharacter.x, 11 - currentActiveCharacter.y, 0.0f);
+            activeCharacterHud.transform.localPosition = location;
+            activeCharacterHud.SetActive(true);
+        }
+        else 
+        { 
+            activeCharacterHud.SetActive(false); 
         }
 
         for (int height = 0; height < 11; height++)
@@ -641,7 +667,11 @@ public class World : MonoBehaviour
         Combine2(animatedTerrrainHud);
 
         // add our little animator script
-        animatedTerrrainHud.AddComponent<Animate1>();
+        // adding a script component in the editor is a significant performance hit, avoid adding if already present
+        if (animatedTerrrainHud.GetComponent<Animate1>() == null)
+        {
+            animatedTerrrainHud.AddComponent<Animate1>();
+        }
 
         // rotate world into place
         //transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);

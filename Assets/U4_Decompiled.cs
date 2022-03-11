@@ -503,7 +503,7 @@ public class U4_Decompiled : MonoBehaviour
     };
 
     [DllImport("UN_U4.dll")]
-    public static extern void main_start();
+    public static extern void main();
     [DllImport("UN_U4.dll")]
     public static extern MODE main_CurMode();
     [DllImport("UN_U4.dll")]
@@ -520,8 +520,11 @@ public class U4_Decompiled : MonoBehaviour
     public static extern void main_Party(byte[] buffer, int length);
     [DllImport("UN_U4.dll")]
     public static extern void main_Hit(byte[] buffer, int length);
+    [DllImport("UN_U4.dll")]
+    public static extern void main_ActiveChar(byte[] buffer, int length);
 
 
+    
     public GameObject partyGameObject;
 
     float timer = 0.0f;
@@ -706,11 +709,13 @@ public class U4_Decompiled : MonoBehaviour
 
     public TILE[,] map = new TILE[11, 11];
 
+
+
     // Separate thread to run the game, we could attempt to make the data gathering function thread safe but for now this will do
     private void ThreadTask()
     {
         // start the DLL
-        main_start();
+        main();
     }
 
     // Start is called before the first frame update
@@ -759,6 +764,15 @@ public class U4_Decompiled : MonoBehaviour
         VK_BACK           =0x08,
     };
 
+    public struct activeCharacter
+    {
+        public bool active;
+        public byte characterIndex;
+        public byte x, y;
+    }
+
+    public activeCharacter currentActiveCharacter;
+
     //public float hit_time = 0.0f;
     public float hit_time_period = 0.25f;
 
@@ -778,6 +792,21 @@ public class U4_Decompiled : MonoBehaviour
         int buffer_index;
 
         timer += Time.deltaTime;
+
+        // get any hilighted character
+        main_ActiveChar(buffer, buffer.Length);
+
+        if (buffer[1] != 0xff)
+        {
+            currentActiveCharacter.active = true;
+            currentActiveCharacter.characterIndex = buffer[0];
+            currentActiveCharacter.x = buffer[1];
+            currentActiveCharacter.y = buffer[2];
+        }
+        else
+        {
+            currentActiveCharacter.active = false;
+        }
 
         // read in current hit info, this occurrs out of the main draw squence and for only a short time,
         // the DLL now saves the last hit tile as the hit tile is cleared very quickly but the x & y of the hit are not
@@ -1073,7 +1102,7 @@ public class U4_Decompiled : MonoBehaviour
 
             if (worldList.Length != 0)
             {
-                worldList[0].DrawMap(map, currentHits);
+                worldList[0].DrawMap(map, currentHits, currentActiveCharacter);
 
                 if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
                 {
@@ -1084,6 +1113,16 @@ public class U4_Decompiled : MonoBehaviour
                 {
                     worldList[0].AddFighters(Fighters, Combat);
                     worldList[0].AddCharacters(Combat, Party, Fighters);
+                }
+
+                if ((worldList[0].party != null) && (worldList[0].tiles != null))
+                {
+                    // set the party tile, person, horse, ballon, ship, etc.
+                    Renderer renderer = worldList[0].party.GetComponentInChildren<Renderer>();
+                    if (renderer)
+                    {
+                        worldList[0].party.GetComponentInChildren<Renderer>().material.mainTexture = worldList[0].tiles[(int)Party._tile];
+                    }
                 }
             }
         }

@@ -1512,7 +1512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyGameObject: {fileID: 0}
-  timerPeriod: 0.2
+  timerPeriod: 0.05
   _npc:
   - _gtile: 0
     _x: 0
@@ -1926,6 +1926,7 @@ MonoBehaviour:
     _gtile: 0
     _sleeping: 0
     _chtile: 0
+  hit_time_period: 0.25
 --- !u!4 &999847452
 Transform:
   m_ObjectHideFlags: 0
@@ -2908,6 +2909,7 @@ MonoBehaviour:
   terrainHud: {fileID: 0}
   animatedTerrrainHud: {fileID: 0}
   otherHud: {fileID: 0}
+  activeCharacterHud: {fileID: 0}
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   worldMapFilepath: /u4/WORLD.MAP
