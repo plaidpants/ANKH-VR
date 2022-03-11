@@ -18,6 +18,12 @@ public class World : MonoBehaviour
     public GameObject fighters; 
     public GameObject characters;
 
+    public GameObject mapHudGameObject;
+    public GameObject npcsHud;
+    public GameObject terrainHud;
+    public GameObject animatedTerrrainHud;
+    public GameObject otherHud;
+
     public string tileEGAFilepath = "/u4/SHAPES.EGA";
     public string tileCGAFilepath = "/u4/SHAPES.CGA";
     public string worldMapFilepath = "/u4/WORLD.MAP";
@@ -39,8 +45,8 @@ public class World : MonoBehaviour
         Vector3 p1 = new Vector3(1, 0, 0);
         Vector3 p2 = new Vector3(1, 1, 0);
         Vector3 p3 = new Vector3(0, 1, 0);
-        //Vector3 p4 = new Vector3(0.5f, 0.5f, 1.0f / Mathf.Sqrt(2));
-        Vector3 p4 = new Vector3(0.5f, 0.5f, Random.Range(1.0f / Mathf.Sqrt(2), 2.0f));
+        Vector3 p4 = new Vector3(0.5f, 0.5f, 1.0f / Mathf.Sqrt(2));
+        //Vector3 p4 = new Vector3(0.5f, 0.5f, Random.Range(1.0f / Mathf.Sqrt(2), 2.0f));
 
         Mesh mesh = meshFilter.sharedMesh;
         if (mesh == null)
@@ -496,6 +502,151 @@ public class World : MonoBehaviour
         transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
     }
 
+    public void DrawMap(U4_Decompiled.TILE[,] map, List<U4_Decompiled.hit> hits)
+    {
+        if (mapHudGameObject == null)
+        {
+            mapHudGameObject = new GameObject("hud");
+            mapHudGameObject.transform.SetParent(transform);
+            mapHudGameObject.transform.localPosition = Vector3.zero;
+            mapHudGameObject.transform.localRotation = Quaternion.identity;
+
+            terrainHud = new GameObject("terrain");
+            terrainHud.transform.SetParent(mapHudGameObject.transform);
+            terrainHud.transform.localPosition = Vector3.zero;
+            terrainHud.transform.localRotation = Quaternion.identity;
+
+            npcsHud = new GameObject("npc");
+            npcsHud.transform.SetParent(mapHudGameObject.transform);
+            npcsHud.transform.localPosition = Vector3.zero;
+            npcsHud.transform.localRotation = Quaternion.identity;
+
+            animatedTerrrainHud = new GameObject("water");
+            animatedTerrrainHud.transform.SetParent(mapHudGameObject.transform);
+            animatedTerrrainHud.transform.localPosition = Vector3.zero;
+            animatedTerrrainHud.transform.localRotation = Quaternion.identity;
+
+            otherHud = new GameObject("other");
+            otherHud.transform.SetParent(mapHudGameObject.transform);
+            otherHud.transform.localPosition = Vector3.zero;
+            otherHud.transform.localRotation = Quaternion.identity;
+        }
+        else
+        {
+            // start over each update
+            foreach (Transform child in terrainHud.transform)
+            {
+                Object.Destroy(child.gameObject);
+            }
+            foreach (Transform child in npcsHud.transform)
+            {
+                Object.Destroy(child.gameObject);
+            }
+            foreach (Transform child in animatedTerrrainHud.transform)
+            {
+                Object.Destroy(child.gameObject);
+            }
+            foreach (Transform child in otherHud.transform)
+            {
+                Object.Destroy(child.gameObject);
+            }
+        }
+
+        for (int height = 0; height < 11; height++)
+        {
+            for (int width = 0; width < 11; width++)
+            {
+                GameObject mapTile;
+
+                U4_Decompiled.TILE tileIndex;
+                
+                tileIndex = map[height, width];
+
+                foreach (U4_Decompiled.hit checkHit in hits)
+                {
+                    if (checkHit.x == width && checkHit.y == height && checkHit.tile != 0)
+                    {
+                        // display this hit tile instead
+                        tileIndex = checkHit.tile;
+                        break;
+                    }
+                }
+
+                // solid object, brick, rocks etc.
+                if ((tileIndex == U4_Decompiled.TILE.TILE_SECRET_BRICK_WALL)
+                    || (tileIndex == U4_Decompiled.TILE.TILE_LARGE_ROCKS) 
+                    || (tileIndex == U4_Decompiled.TILE.TILE_BRICK_WALL))
+                {
+                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    mapTile.transform.SetParent(terrainHud.transform);
+                    Vector3 location = new Vector3(width, 11 - height, 0.0f);
+                    mapTile.transform.localPosition = location;
+                }
+                // Letters, make into short cubes
+                else if ((tileIndex >= U4_Decompiled.TILE.TILE_A) && (tileIndex <= U4_Decompiled.TILE.TILE_Z))
+                {
+                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    mapTile.transform.SetParent(terrainHud.transform);
+                    mapTile.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
+                    mapTile.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
+                    Vector3 location = new Vector3(width, 11 - height, 0.25f);
+                    mapTile.transform.localPosition = location;
+                }
+                else if ((tileIndex == U4_Decompiled.TILE.TILE_MOUNTAINS) || (tileIndex == U4_Decompiled.TILE.TILE_DUNGEON))
+                {
+                    mapTile = CreatePyramid();
+                    mapTile.transform.SetParent(terrainHud.transform);
+                    mapTile.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
+                    Vector3 location = new Vector3(width + 0.5f, 11 - height - 0.5f, 0.5f);
+                    mapTile.transform.localPosition = location;
+                }
+                // all other terrain tiles are flat
+                else
+                {
+                    Vector3 location;
+
+                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+
+                    // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
+                    if ((tileIndex <= U4_Decompiled.TILE.TILE_SHALLOW_WATER) || 
+                        (tileIndex >= U4_Decompiled.TILE.TILE_POISON_FIELD && tileIndex <= U4_Decompiled.TILE.TILE_SLEEP_FIELD) 
+                        || (tileIndex == U4_Decompiled.TILE.TILE_LAVA))
+                    {
+                        mapTile.transform.SetParent(animatedTerrrainHud.transform);
+                        location = new Vector3(width, 11 - height, 0.5f);
+                    }
+                    else
+                    {
+                        mapTile.transform.SetParent(terrainHud.transform);
+                        location = new Vector3(width, 11 - height, 0.5f);
+                    }
+
+                    mapTile.transform.localPosition = location;
+                }
+
+                // all terrain is static, used by combine below to merge meshes
+                mapTile.isStatic = true;
+
+                // set the shader
+                Shader unlit = Shader.Find("Mobile/Unlit (Supports Lightmap)");
+
+                MeshRenderer render = mapTile.GetComponent<MeshRenderer>();
+
+                render.material.mainTexture = tiles[(int)tileIndex];
+                render.material.shader = unlit;
+            }
+        }
+
+        Combine(terrainHud); 
+        Combine2(animatedTerrrainHud);
+
+        // add our little animator script
+        animatedTerrrainHud.AddComponent<Animate1>();
+
+        // rotate world into place
+        //transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
+    }
+
     public void followWorld()
     {
         // hook the player game object into the camera and the game engine
@@ -717,8 +868,17 @@ public class World : MonoBehaviour
             // Create a mesh filter and renderer
             if (staticCount > 1)
             {
-                MeshFilter filter = gameObject.AddComponent<MeshFilter>();
-                MeshRenderer renderer = gameObject.AddComponent<MeshRenderer>();
+                MeshFilter filter = gameObject.GetComponent<MeshFilter>();
+                if (filter == null)
+                {
+                    filter = gameObject.AddComponent<MeshFilter>();
+                }
+                MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
+                if (renderer == null)
+                {
+                    renderer = gameObject.AddComponent<MeshRenderer>();
+                }
+
                 filter.mesh = new Mesh();
                 filter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                 filter.mesh.CombineMeshes(combine);
@@ -771,6 +931,21 @@ public class World : MonoBehaviour
 
         gameObject.transform.position = Vector3.zero;
         gameObject.transform.rotation = Quaternion.identity;
+
+        // Create a mesh filter and renderer if needed
+        MeshFilter filter = gameObject.GetComponent<MeshFilter>();
+        if (filter == null)
+        {
+            filter = gameObject.AddComponent<MeshFilter>();
+        }
+        MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
+        if (renderer == null)
+        {
+            renderer = gameObject.AddComponent<MeshRenderer>();
+        }
+
+        // clear the mesh just in case there is anything in there
+        filter.mesh = null;
 
         if (objectsToCombine.Length > 1)
         {
@@ -841,11 +1016,9 @@ public class World : MonoBehaviour
                 }
             }
 
-            // Create a mesh filter and renderer
+            // create a new mesh and combine them if there is anything to combine
             if (staticCount > 1)
             {
-                MeshFilter filter = gameObject.AddComponent<MeshFilter>();
-                MeshRenderer renderer = gameObject.AddComponent<MeshRenderer>();
                 filter.mesh = new Mesh();
                 // the world map has more the 64K elements, need to use 32 bit ints
                 filter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -928,7 +1101,7 @@ public class World : MonoBehaviour
         for (int fighterIndex = 0; fighterIndex < 16; fighterIndex++)
         {
             // get the tile
-            int npcTile = currentFighters[fighterIndex]._tile;
+            U4_Decompiled.TILE npcTile = currentFighters[fighterIndex]._tile;
 
             // get the corresponding npc game object
             Transform childoffighters = fighters.transform.GetChild(fighterIndex);
@@ -940,7 +1113,7 @@ public class World : MonoBehaviour
             }
             else
             {
-                childoffighters.GetComponent<Animate3>().SetNPCTile(56);
+                childoffighters.GetComponent<Animate3>().SetNPCTile(U4_Decompiled.TILE.TILE_SLEEP);
             }
 
             // update the position
@@ -948,6 +1121,8 @@ public class World : MonoBehaviour
             childoffighters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
         }
     }
+
+ 
 
     public void AddCharacters(U4_Decompiled.tCombat currentCombat, U4_Decompiled.tParty currentParty, U4_Decompiled.t_68[] currentFighters)
     {
@@ -997,7 +1172,7 @@ public class World : MonoBehaviour
         // update all characters in the party table
         for (int characterIndex = 0; characterIndex < 8; characterIndex++)
         {
-            int npcTile;
+            U4_Decompiled.TILE npcTile;
 
             if (characterIndex < currentParty.f_1d8)
             {
@@ -1073,7 +1248,7 @@ public class World : MonoBehaviour
         for (int npcIndex = 0; npcIndex < 32; npcIndex++)
         {
             // get the tile
-            int npcTile = currentNpcs[npcIndex]._tile;
+            U4_Decompiled.TILE npcTile = currentNpcs[npcIndex]._tile;
 
             // get the corresponding npc game object
             Transform childofnpcs = npcs.transform.GetChild(npcIndex);

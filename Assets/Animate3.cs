@@ -5,8 +5,8 @@ using UnityEngine;
 public class Animate3 : MonoBehaviour
 {
     public World world;
-    public int npcTile;
-    public int[] animationFrameIndexes;
+    public U4_Decompiled.TILE npcTile;
+    public U4_Decompiled.TILE[] animationFrameIndexes;
     int frame = 0;
     float timer = 0.0f;
     float timerExpired = 0.0f;
@@ -18,18 +18,13 @@ public class Animate3 : MonoBehaviour
     {
     }
 
-    public void SetNPCTile(int tile)
+    public void SetNPCTile(U4_Decompiled.TILE tile)
     {
         // check if this npc tile is already set correctly
         if (npcTile == tile)
         {
             // already set
             return;
-        }
-
-        if (tile > 255)
-        {
-            Debug.Log("tile ?? " + tile);
         }
 
         // update the tile index
@@ -39,58 +34,58 @@ public class Animate3 : MonoBehaviour
         frame = 0;
 
         // the npc has two animation tiles in these tile ranges
-        if ((npcTile >= 32 && npcTile <= 47) || (npcTile >= 80 && npcTile <= 95) || (npcTile >= 132 && npcTile <= 143))
+        if (((int)npcTile >= 32 && (int)npcTile <= 47) || ((int)npcTile >= 80 && (int)npcTile <= 95) || ((int)npcTile >= 132 && (int)npcTile <= 143))
         {
             // update to the initial animation texture frame
-            renderer.material.mainTexture = world.tiles[npcTile];
+            renderer.material.mainTexture = world.tiles[(int)npcTile];
 
             // set the other frames based on the intial frame
-            if ((npcTile % 2) == 0)
+            if (((int)npcTile % 2) == 0)
             {
-                animationFrameIndexes = new int[2] { npcTile, npcTile + 1 }; 
+                animationFrameIndexes = new U4_Decompiled.TILE[2] { npcTile, npcTile + 1 }; 
             }
             else
             {
-                animationFrameIndexes = new int[2] { npcTile, npcTile - 1 };
+                animationFrameIndexes = new U4_Decompiled.TILE[2] { npcTile, npcTile - 1 };
             }
         }
         // the npc has four animation tiles in this tile range
-        else if (npcTile >= 144 && npcTile <= 255)
+        else if ((int)npcTile >= 144 && (int)npcTile <= 255)
         {
             // update to the initial animation texture frame
-            renderer.material.mainTexture = world.tiles[npcTile];
+            renderer.material.mainTexture = world.tiles[(int)npcTile];
 
             // set the other frames based on the intial frame
-            if      ((npcTile % 4) == 0)
+            if      (((int)npcTile % 4) == 0)
             {
-                animationFrameIndexes = new int[4] { npcTile, npcTile + 1, npcTile + 2, npcTile + 3 };
+                animationFrameIndexes = new U4_Decompiled.TILE[4] { npcTile, npcTile + 1, npcTile + 2, npcTile + 3 };
             }
-            else if ((npcTile % 4) == 1)
+            else if (((int)npcTile % 4) == 1)
             {
-                animationFrameIndexes = new int[4] { npcTile, npcTile + 1, npcTile + 2, npcTile - 1 };
+                animationFrameIndexes = new U4_Decompiled.TILE[4] { npcTile, npcTile + 1, npcTile + 2, npcTile - 1 };
             }
-            else if ((npcTile % 4) == 2)
+            else if (((int)npcTile % 4) == 2)
             {
-                animationFrameIndexes = new int[4] { npcTile, npcTile + 1, npcTile - 2, npcTile - 1 };
+                animationFrameIndexes = new U4_Decompiled.TILE[4] { npcTile, npcTile + 1, npcTile - 2, npcTile - 1 };
             }
-            else if ((npcTile % 4) == 3)
+            else if (((int)npcTile % 4) == 3)
             {
-                animationFrameIndexes = new int[4] { npcTile, npcTile -3, npcTile - 2, npcTile - 1 };
+                animationFrameIndexes = new U4_Decompiled.TILE[4] { npcTile, npcTile -3, npcTile - 2, npcTile - 1 };
             }
             else
             {
                 // should never get here
-                animationFrameIndexes = new int[4] { npcTile, npcTile + 1, npcTile + 2, npcTile + 3 };
+                animationFrameIndexes = new U4_Decompiled.TILE[4] { npcTile, npcTile + 1, npcTile + 2, npcTile + 3 };
             }
         }
         // npc does not have any animation tiles
         else
         {
             // update to the animation texture frame
-            renderer.material.mainTexture = world.tiles[npcTile];
+            renderer.material.mainTexture = world.tiles[(int)npcTile];
 
             // add only one frame to the animation
-            animationFrameIndexes = new int[1] { npcTile };
+            animationFrameIndexes = new U4_Decompiled.TILE[1] { npcTile };
         }
 
         // check if this one is disabled
@@ -135,7 +130,7 @@ public class Animate3 : MonoBehaviour
                 frame = 0;
             }
 
-            renderer.material.mainTexture = world.tiles[animationFrameIndexes[frame]];
+            renderer.material.mainTexture = world.tiles[(int)animationFrameIndexes[frame]];
 
             timer -= timerExpired;
             timerExpired = animationPeriod;
