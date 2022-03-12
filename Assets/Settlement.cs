@@ -633,6 +633,11 @@ public class Settlement : MonoBehaviour
                 }
             }
         }*/
+
+        transform.position = new Vector3(0, 0, 224);
+
+        // rotate world into place
+        transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
     }
 
     // this one will go two layers deep to avoid an implementation that relies on recursion

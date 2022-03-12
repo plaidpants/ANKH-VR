@@ -396,6 +396,8 @@ public class U4_Decompiled : MonoBehaviour
         TILE_BALRON4 = 0xFf,
     };
 
+    public TILE current_tile;
+
     public enum DIRECTION
     {
         DIR_W = 0,
@@ -522,9 +524,9 @@ public class U4_Decompiled : MonoBehaviour
     public static extern void main_Hit(byte[] buffer, int length);
     [DllImport("UN_U4.dll")]
     public static extern void main_ActiveChar(byte[] buffer, int length);
+    [DllImport("UN_U4.dll")]
+    public static extern TILE main_tile_cur();
 
-
-    
     public GameObject partyGameObject;
 
     float timer = 0.0f;
@@ -533,7 +535,7 @@ public class U4_Decompiled : MonoBehaviour
 
     volatile byte[] buffer = new byte[2000];
 
-    public byte[,] tMap32x32 = new byte[32, 32];
+    public TILE[,] tMap32x32 = new TILE[32, 32];
     public byte[,,] tMap8x8x8 = new byte[8, 8, 8];
 
     //public TILE hit_tile;
@@ -708,8 +710,32 @@ public class U4_Decompiled : MonoBehaviour
     public t_68[] Fighters = new t_68[16];
 
     public TILE[,] map = new TILE[11, 11];
-
-
+    public enum COMBAT_TERRAIN
+    {
+        GRASS = 0,
+        BRIDGE = 1,
+        BRICK = 2,
+        DUNGEON = 3,
+        HILL = 4,
+        FOREST = 5,
+        BRUSH = 6,
+        MARSH = 7,
+        SHIPSEA = 8,
+        SHORE = 9,
+        SHIPSHIP = 10,
+        SHIPSHORE = 11,
+        SHORESHIP = 22,
+        INN = 21,
+        CAMP = 12,
+        SHRINE = 13,
+        DNG0 = 14,
+        DNG1 = 15,
+        DNG2 = 16,
+        DNG3 = 17,
+        DNG4 = 18,
+        DNG5 = 19,
+        DNG6 = 20
+     };
 
     // Separate thread to run the game, we could attempt to make the data gathering function thread safe but for now this will do
     private void ThreadTask()
@@ -717,6 +743,9 @@ public class U4_Decompiled : MonoBehaviour
         // start the DLL
         main();
     }
+
+    public GameObject[] Settlements;
+    public GameObject[] CombatTerrains;
 
     // Start is called before the first frame update
     void Start()
@@ -744,7 +773,125 @@ public class U4_Decompiled : MonoBehaviour
         trd = new Thread(new ThreadStart(this.ThreadTask));
         trd.IsBackground = true;
         trd.Start();
+
+        Settlements = new GameObject[17];
+        Settlements[(int)LOCATIONS.BRITANNIA] = GameObject.Find("LBC_1");
+        Settlements[(int)0] = GameObject.Find("LBC_2"); // need to fingure out how to determine location of the upper and lower levels of the castle
+        Settlements[(int)LOCATIONS.THE_LYCAEUM] = GameObject.Find("LYCAEUM");
+        Settlements[(int)LOCATIONS.EMPATH_ABBY] = GameObject.Find("EMPATH");
+        Settlements[(int)LOCATIONS.SERPENT_HOLD] = GameObject.Find("SERPENT");
+        Settlements[(int)LOCATIONS.MOONGLOW] = GameObject.Find("MOONGLOW");
+        Settlements[(int)LOCATIONS.BRITAIN] = GameObject.Find("BRITAIN");
+        Settlements[(int)LOCATIONS.JHELOM] = GameObject.Find("JHELOM");
+        Settlements[(int)LOCATIONS.YEW] = GameObject.Find("YEW");
+        Settlements[(int)LOCATIONS.MINOC] = GameObject.Find("MINOC");
+        Settlements[(int)LOCATIONS.TRINSIC] = GameObject.Find("TRINSIC");
+        Settlements[(int)LOCATIONS.SKARA_BRAE] = GameObject.Find("SKARA");
+        Settlements[(int)LOCATIONS.MAGINCIA] = GameObject.Find("MAGINCIA");
+        Settlements[(int)LOCATIONS.PAWS] = GameObject.Find("PAWS");
+        Settlements[(int)LOCATIONS.BUCCANEERS_DEN] = GameObject.Find("DEN");
+        Settlements[(int)LOCATIONS.VESPER] = GameObject.Find("VESPER");
+        Settlements[(int)LOCATIONS.COVE] = GameObject.Find("COVE");
+
+        CombatTerrains = new GameObject[24];
+        CombatTerrains[(int)COMBAT_TERRAIN.GRASS] = GameObject.Find("GRASS");
+        CombatTerrains[(int)COMBAT_TERRAIN.BRIDGE] = GameObject.Find("BRIDGE");
+        CombatTerrains[(int)COMBAT_TERRAIN.BRICK] = GameObject.Find("BRICK");
+        CombatTerrains[(int)COMBAT_TERRAIN.DUNGEON] = GameObject.Find("DUNGEON");
+        CombatTerrains[(int)COMBAT_TERRAIN.HILL] = GameObject.Find("HILL");
+        CombatTerrains[(int)COMBAT_TERRAIN.FOREST] = GameObject.Find("FOREST");
+        CombatTerrains[(int)COMBAT_TERRAIN.BRUSH] = GameObject.Find("BRUSH");
+        CombatTerrains[(int)COMBAT_TERRAIN.MARSH] = GameObject.Find("MARSH");
+        CombatTerrains[(int)COMBAT_TERRAIN.SHIPSEA] = GameObject.Find("SHIPSEA");
+        CombatTerrains[(int)COMBAT_TERRAIN.SHORE] = GameObject.Find("SHORE");
+        CombatTerrains[(int)COMBAT_TERRAIN.SHIPSHIP] = GameObject.Find("SHIPSHIP");
+        CombatTerrains[(int)COMBAT_TERRAIN.SHIPSHORE] = GameObject.Find("SHIPSHORE");
+        CombatTerrains[(int)COMBAT_TERRAIN.SHORESHIP] = GameObject.Find("SHORESHIP");
+        CombatTerrains[(int)COMBAT_TERRAIN.INN] = GameObject.Find("INN");
+        CombatTerrains[(int)COMBAT_TERRAIN.CAMP] = GameObject.Find("CAMP");
+        CombatTerrains[(int)COMBAT_TERRAIN.DUNGEON] = GameObject.Find("DUNGEON");
+        CombatTerrains[(int)COMBAT_TERRAIN.SHRINE] = GameObject.Find("SHRINE");
+        CombatTerrains[(int)COMBAT_TERRAIN.DNG0] = GameObject.Find("DNG0");
+        CombatTerrains[(int)COMBAT_TERRAIN.DNG1] = GameObject.Find("DNG1");
+        CombatTerrains[(int)COMBAT_TERRAIN.DNG2] = GameObject.Find("DNG2");
+        CombatTerrains[(int)COMBAT_TERRAIN.DNG3] = GameObject.Find("DNG3");
+        CombatTerrains[(int)COMBAT_TERRAIN.DNG4] = GameObject.Find("DNG4");
+        CombatTerrains[(int)COMBAT_TERRAIN.DNG5] = GameObject.Find("DNG5");
+        CombatTerrains[(int)COMBAT_TERRAIN.DNG6] = GameObject.Find("DNG6");
+
     }
+
+    COMBAT_TERRAIN Convert_Tile_to_Combat_Terrian(TILE tile)
+    {
+        COMBAT_TERRAIN combat_terrain;
+
+        switch (tile)
+        {
+            case TILE.TILE_SWAMP: combat_terrain = COMBAT_TERRAIN.MARSH; break;
+            case TILE.TILE_SCRUB: combat_terrain = COMBAT_TERRAIN.BRUSH; break;
+            case TILE.TILE_FOREST: combat_terrain = COMBAT_TERRAIN.FOREST; break;
+            case TILE.TILE_HILLS: combat_terrain = COMBAT_TERRAIN.HILL; break;
+            case TILE.TILE_DUNGEON: combat_terrain = COMBAT_TERRAIN.DUNGEON; break;
+            case TILE.TILE_BRICK_FLOOR: combat_terrain = COMBAT_TERRAIN.BRICK; break;
+            case TILE.TILE_BRIDGE:
+            case TILE.TILE_BRIDGE_TOP:
+            case TILE.TILE_BRIDGE_BOTTOM:
+            case TILE.TILE_WOOD_FLOOR: combat_terrain = COMBAT_TERRAIN.BRIDGE; break;
+            default: combat_terrain = COMBAT_TERRAIN.GRASS; break;
+        }
+
+        return combat_terrain;
+
+
+
+                /*
+                if (Party._tile <= TIL_13 || ((byte)current_tile & ~3) == TIL_10)
+                {
+                    if (D_96F8 == TIL_80)
+                    {
+                        D_9452 = TIL_C8;
+                        si = 11;
+                    }
+                    else if (D_946C < TIL_03)
+                    {
+                        si = 8;
+                    }
+                    else
+                    {
+                        si = 9;
+                    }
+                }
+                else
+                {
+                    if (D_96F8 == TIL_80)
+                    {
+                        D_9452 = TIL_C8;
+                        si = 12;
+                    }
+                    else if (D_946C < TIL_03)
+                    {
+                        si = 10;
+                    }
+                    else
+                    {
+                        switch (tile_cur)
+                        {
+                            case TIL_03: si = 7; break;
+                            case TIL_05: si = 6; break;
+                            case TIL_06: si = 5; break;
+                            case TIL_07: si = 4; break;
+                            case TIL_09: si = 3; break;
+                            case TIL_3E: si = 2; break;
+                            case TIL_17:
+                            case TIL_19:
+                            case TIL_1A:
+                            case TIL_3F: si = 1; break;
+                            default: si = 0;
+                        }
+                    }
+                }
+                */
+        }
 
     void OnApplicationQuit()
     {
@@ -808,8 +955,10 @@ public class U4_Decompiled : MonoBehaviour
             currentActiveCharacter.active = false;
         }
 
+        current_tile =  main_tile_cur();
+
         // read in current hit info, this occurrs out of the main draw squence and for only a short time,
-        // the DLL now saves the last hit tile as the hit tile is cleared very quickly but the x & y of the hit are not
+        // the DLL now saves the list of hits and coords to display later
         main_Hit(buffer, buffer.Length);
 
         int hit_length = buffer[0];
@@ -901,6 +1050,10 @@ public class U4_Decompiled : MonoBehaviour
         {
             main_keyboardHit((char)'D');
         }
+        else if (Input.GetKeyDown(KeyCode.K))
+        {
+            main_keyboardHit((char)'K');
+        }
 
         // only get data periodically
         if (timer > timerExpired)
@@ -910,6 +1063,9 @@ public class U4_Decompiled : MonoBehaviour
 
             // get the current game mode;
             MODE current_mode = main_CurMode();
+
+            // get the current game tile;
+            TILE current_tile = main_tile_cur();
 
             if ((current_mode == MODE.COMBAT) || (current_mode == MODE.COM_CAMP) || (current_mode == MODE.COM_ROOM))
             {
@@ -927,7 +1083,7 @@ public class U4_Decompiled : MonoBehaviour
                 {
                     for (int j = 0; j < 32; j++)
                     {
-                        tMap32x32[i, j] = buffer[buffer_index++];
+                        tMap32x32[i, j] = (TILE)buffer[buffer_index++];
                     }
                 }
             }
@@ -1104,15 +1260,104 @@ public class U4_Decompiled : MonoBehaviour
             {
                 worldList[0].DrawMap(map, currentHits, currentActiveCharacter);
 
-                if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
+                if (current_mode == MODE.OUTDOORS)
                 {
                     worldList[0].AddNPCs(_npc);
                     worldList[0].followWorld();
+                    worldList[0].AddHits(currentHits);
+                    worldList[0].AddActiveCharacter(currentActiveCharacter);
+                    worldList[0].terrain.SetActive(true);
+                    worldList[0].animatedTerrrain.SetActive(true);
+                    worldList[0].fighters.SetActive(false);
+                    worldList[0].characters.SetActive(false);
+                    worldList[0].npcs.SetActive(true);
+
+                    for (int i = 0; i < 17; i++)
+                    {
+                        Settlements[i].gameObject.SetActive(false);
+                    }
+                    for (int i = 0; i < 23; i++)
+                    {
+                        CombatTerrains[i].gameObject.SetActive(false);
+                    }
                 }
-                else
+                else if (current_mode == MODE.BUILDING)
+                {
+                    worldList[0].AddNPCs(_npc);
+                    worldList[0].followWorld();
+                    worldList[0].AddHits(currentHits);
+                    worldList[0].AddActiveCharacter(currentActiveCharacter);
+                    worldList[0].terrain.SetActive(false);
+                    worldList[0].animatedTerrrain.SetActive(false);
+                    worldList[0].fighters.SetActive(false);
+                    worldList[0].characters.SetActive(false);
+                    worldList[0].npcs.SetActive(true);
+
+                    for (int i = 0; i < 17; i++)
+                    {
+                        GameObject set = Settlements[i].gameObject;
+
+                        // need to special case the castle, this is how the engine figures it out using the ladder
+                        if ((i == 0) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3,3] == TILE.TILE_LADDER_DOWN))
+                        {
+                            set.SetActive(true);
+                        }
+                        else if ((i == 0) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3, 3] == TILE.TILE_LADDER_UP))
+                        {
+                            set.SetActive(false);
+                        }
+                        else if ((i == 1) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3, 3] == TILE.TILE_LADDER_UP))
+                        {
+                            set.SetActive(true);
+                        }
+                        else if ((i == 1) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3, 3] == TILE.TILE_LADDER_DOWN))
+                        {
+                            set.SetActive(false);
+                        }
+                        else if (Party._loc == (LOCATIONS)i)
+                        {
+                            set.SetActive(true);
+                        }
+                        else
+                        {
+                            set.SetActive(false);
+                        }
+                    }
+                    for (int i = 0; i < 23; i++)
+                    {
+                        CombatTerrains[i].gameObject.SetActive(false);
+                    }
+                }
+                else if (current_mode == MODE.COMBAT)
                 {
                     worldList[0].AddFighters(Fighters, Combat);
                     worldList[0].AddCharacters(Combat, Party, Fighters);
+                    worldList[0].AddHits(currentHits);
+                    worldList[0].AddActiveCharacter(currentActiveCharacter);
+                    worldList[0].terrain.SetActive(false);
+                    worldList[0].animatedTerrrain.SetActive(false);
+                    worldList[0].fighters.SetActive(true);
+                    worldList[0].characters.SetActive(true);
+                    worldList[0].npcs.SetActive(false);
+
+                    for (int i = 0; i < 17; i++)
+                    {
+                        Settlements[i].gameObject.SetActive(false);
+                    }
+
+                    int currentCombatTerrain = (int)Convert_Tile_to_Combat_Terrian(current_tile);
+
+                    for (int i = 0; i< 23; i++)
+                    {
+                        if (i == currentCombatTerrain)
+                        {
+                            CombatTerrains[i].gameObject.SetActive(true);
+                        }
+                        else
+                        {
+                            CombatTerrains[i].gameObject.SetActive(false);
+                        }
+                    }
                 }
 
                 if ((worldList[0].party != null) && (worldList[0].tiles != null))

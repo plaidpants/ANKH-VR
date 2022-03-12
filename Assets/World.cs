@@ -17,6 +17,8 @@ public class World : MonoBehaviour
     public GameObject party;
     public GameObject fighters; 
     public GameObject characters;
+    public GameObject activeCharacter; 
+    public GameObject hits;
 
     public GameObject mapHudGameObject;
     public GameObject npcsHud;
@@ -380,6 +382,10 @@ public class World : MonoBehaviour
         characters.transform.SetParent(transform);
         characters.transform.localPosition = Vector3.zero;
         characters.transform.localRotation = Quaternion.identity;
+        hits = new GameObject("hits");
+        hits.transform.SetParent(transform);
+        hits.transform.localPosition = Vector3.zero;
+        hits.transform.localRotation = Quaternion.identity;
 
         int index = 0;
 
@@ -503,7 +509,7 @@ public class World : MonoBehaviour
         transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
     }
 
-    public void DrawMap(U4_Decompiled.TILE[,] map, List<U4_Decompiled.hit> hits, U4_Decompiled.activeCharacter currentActiveCharacter)
+    public void DrawMap(U4_Decompiled.TILE[,] map, List<U4_Decompiled.hit> currentHits, U4_Decompiled.activeCharacter currentActiveCharacter)
     {
         if (mapHudGameObject == null)
         {
@@ -588,7 +594,7 @@ public class World : MonoBehaviour
                 
                 tileIndex = map[height, width];
 
-                foreach (U4_Decompiled.hit checkHit in hits)
+                foreach (U4_Decompiled.hit checkHit in currentHits)
                 {
                     if (checkHit.x == width && checkHit.y == height && checkHit.tile != 0)
                     {
@@ -1288,6 +1294,105 @@ public class World : MonoBehaviour
 
             // update the position
             childofnpcs.localPosition = new Vector3(currentNpcs[npcIndex]._x, 255 - currentNpcs[npcIndex]._y, 0);
+        }
+    }
+
+    public void AddHits(List<U4_Decompiled.hit> currentHitList)
+    {
+        // have we finished creating the world
+        if (hits == null)
+        {
+            return;
+        }
+
+        // need to create hit game objects if none are present, will will use a pool of 10
+        if (hits.transform.childCount != 10)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                // a child object for each npc entry in the table
+                GameObject npcGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+
+                // get the renderer
+                MeshRenderer renderer = npcGameObject.GetComponent<MeshRenderer>();
+
+                // intially the texture is null
+                renderer.material.mainTexture = null;
+
+                // set the shader
+                Shader unlit = Shader.Find("Sprites/Default");
+                renderer.material.shader = unlit;
+
+                // rotate the hit game object into position after creating
+                Vector3 npcLocation = new Vector3(0, 255, 0);
+                npcGameObject.transform.localPosition = npcLocation;
+                npcGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+                // set this as a parent of the hits game object
+                npcGameObject.transform.SetParent(hits.transform);
+
+                // set as intially disabled
+                npcGameObject.SetActive(false);
+            }
+        }
+
+        // update all hit games with data from the table
+        for (int hitIndex = 0; hitIndex < 10; hitIndex++)
+        {
+            // get the corresponding hit game object
+            Transform childofhits = hits.transform.GetChild(hitIndex);
+            
+            // do we need to use the pool game object
+            if (hitIndex < currentHitList.Count)
+            {
+                // get the tile
+                U4_Decompiled.TILE hitTile = currentHitList[hitIndex].tile;
+
+                // update the tile of the game object
+                childofhits.GetComponent<Renderer>().material.mainTexture = tiles[(int)hitTile];
+
+                // update the position
+                childofhits.localPosition = new Vector3(currentHitList[hitIndex].x, 255 - currentHitList[hitIndex].y - 0.01f, 0); // move it slightly in from of the characters and fighters so we can see it.
+
+                // set as enabled
+                childofhits.gameObject.SetActive(true);
+            }
+            else
+            {
+                // set as disabled
+                childofhits.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    public void AddActiveCharacter(U4_Decompiled.activeCharacter currentActiveCharacter)
+    {
+        if (activeCharacter == null)
+        {
+            activeCharacter = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            activeCharacter.transform.SetParent(transform);
+            activeCharacter.transform.localPosition = Vector3.zero;
+            activeCharacter.transform.localRotation = Quaternion.identity;
+            // set the shader
+            Shader wireframe = Shader.Find("Custom/Geometry/Wireframe");
+            MeshRenderer renderer = activeCharacter.GetComponent<MeshRenderer>();
+            renderer.material.shader = wireframe;
+            renderer.material.SetFloat("_WireframeVal", 0.03f);
+            renderer.material.SetFloat("_RemoveDiag", 1);
+            renderer.material.SetColor("_FrontColor", Color.yellow);
+            renderer.material.SetColor("_BackColor", Color.yellow);
+            renderer.material.SetColor("_BackColor", Color.yellow);
+        }
+
+        if (currentActiveCharacter.active)
+        {
+            Vector3 location = new Vector3(currentActiveCharacter.x, 255 - currentActiveCharacter.y, 0.0f);
+            activeCharacter.transform.localPosition = location;
+            activeCharacter.SetActive(true);
+        }
+        else
+        {
+            activeCharacter.SetActive(false);
         }
     }
 
