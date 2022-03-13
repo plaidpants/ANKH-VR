@@ -605,9 +605,9 @@ public class World : MonoBehaviour
                 }
 
                 // solid object, brick, rocks etc.
-                if ((tileIndex == U4_Decompiled.TILE.TILE_SECRET_BRICK_WALL)
-                    || (tileIndex == U4_Decompiled.TILE.TILE_LARGE_ROCKS) 
-                    || (tileIndex == U4_Decompiled.TILE.TILE_BRICK_WALL))
+                if ((tileIndex == U4_Decompiled.TILE.SECRET_BRICK_WALL)
+                    || (tileIndex == U4_Decompiled.TILE.LARGE_ROCKS) 
+                    || (tileIndex == U4_Decompiled.TILE.BRICK_WALL))
                 {
                     mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     mapTile.transform.SetParent(terrainHud.transform);
@@ -615,7 +615,7 @@ public class World : MonoBehaviour
                     mapTile.transform.localPosition = location;
                 }
                 // Letters, make into short cubes
-                else if ((tileIndex >= U4_Decompiled.TILE.TILE_A) && (tileIndex <= U4_Decompiled.TILE.TILE_Z))
+                else if ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.Z))
                 {
                     mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     mapTile.transform.SetParent(terrainHud.transform);
@@ -624,7 +624,7 @@ public class World : MonoBehaviour
                     Vector3 location = new Vector3(width, 11 - height, 0.25f);
                     mapTile.transform.localPosition = location;
                 }
-                else if ((tileIndex == U4_Decompiled.TILE.TILE_MOUNTAINS) || (tileIndex == U4_Decompiled.TILE.TILE_DUNGEON))
+                else if ((tileIndex == U4_Decompiled.TILE.MOUNTAINS) || (tileIndex == U4_Decompiled.TILE.DUNGEON))
                 {
                     mapTile = CreatePyramid();
                     mapTile.transform.SetParent(terrainHud.transform);
@@ -640,9 +640,9 @@ public class World : MonoBehaviour
                     mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
 
                     // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
-                    if ((tileIndex <= U4_Decompiled.TILE.TILE_SHALLOW_WATER) || 
-                        (tileIndex >= U4_Decompiled.TILE.TILE_POISON_FIELD && tileIndex <= U4_Decompiled.TILE.TILE_SLEEP_FIELD) 
-                        || (tileIndex == U4_Decompiled.TILE.TILE_LAVA))
+                    if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) || 
+                        (tileIndex >= U4_Decompiled.TILE.POISON_FIELD && tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD) 
+                        || (tileIndex == U4_Decompiled.TILE.LAVA))
                     {
                         mapTile.transform.SetParent(animatedTerrrainHud.transform);
                         location = new Vector3(width, 11 - height, 0.5f);
@@ -1088,7 +1088,7 @@ public class World : MonoBehaviour
         gameObject.transform.rotation = rotation;
     }
 
-    public void AddFighters(U4_Decompiled.t_68[] currentFighters, U4_Decompiled.tCombat currentCombat)
+    public void AddFighters(U4_Decompiled.t_68[] currentFighters, U4_Decompiled.tCombat1[] currentCombat)
     {
         // have we finished creating the world
         if (fighters == null)
@@ -1149,18 +1149,18 @@ public class World : MonoBehaviour
             }
             else
             {
-                childoffighters.GetComponent<Animate3>().SetNPCTile(U4_Decompiled.TILE.TILE_SLEEP);
+                childoffighters.GetComponent<Animate3>().SetNPCTile(U4_Decompiled.TILE.SLEEP);
             }
 
             // update the position
-            childoffighters.localPosition = new Vector3(currentCombat._npcX[fighterIndex], 255 - currentCombat._npcY[fighterIndex], 0);
+            childoffighters.localPosition = new Vector3(currentCombat[fighterIndex]._npcX, 255 - currentCombat[fighterIndex]._npcY, 0);
             childoffighters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
         }
     }
 
  
 
-    public void AddCharacters(U4_Decompiled.tCombat currentCombat, U4_Decompiled.tParty currentParty, U4_Decompiled.t_68[] currentFighters)
+    public void AddCharacters(U4_Decompiled.tCombat2[] currentCombat2, U4_Decompiled.tParty currentParty, U4_Decompiled.t_68[] currentFighters)
     {
         // have we finished creating the world
         if (characters == null)
@@ -1228,7 +1228,7 @@ public class World : MonoBehaviour
             childofcharacters.GetComponent<Animate3>().SetNPCTile(npcTile);
   
             // update the position
-            childofcharacters.localPosition = new Vector3(currentCombat._charaX[characterIndex], 255 - currentCombat._charaY[characterIndex], 0); // appears to be one off in the Y from the fighters
+            childofcharacters.localPosition = new Vector3(currentCombat2[characterIndex]._charaX, 255 - currentCombat2[characterIndex]._charaY, 0); // appears to be one off in the Y from the fighters
             childofcharacters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
         }
 
@@ -1288,9 +1288,21 @@ public class World : MonoBehaviour
 
             // get the corresponding npc game object
             Transform childofnpcs = npcs.transform.GetChild(npcIndex);
+            if (currentNpcs[npcIndex]._tlkidx == 0)
+            {
+                childofnpcs.name = npcTile.ToString();
+            }
+            else
+            {
+                U4_Decompiled u4_Decompiled = FindObjectsOfType<U4_Decompiled>()[0];
+                // TODO simplify this mess
+                childofnpcs.name = u4_Decompiled.Settlements[(int)u4_Decompiled.Party._loc].GetComponent<Settlement>().npcStrings[currentNpcs[npcIndex]._tlkidx - 1][0];
+            }
 
             // update the tile of the game object
             childofnpcs.GetComponent<Animate3>().SetNPCTile(npcTile);
+
+
 
             // update the position
             childofnpcs.localPosition = new Vector3(currentNpcs[npcIndex]._x, 255 - currentNpcs[npcIndex]._y, 0);
@@ -1373,6 +1385,7 @@ public class World : MonoBehaviour
             activeCharacter.transform.SetParent(transform);
             activeCharacter.transform.localPosition = Vector3.zero;
             activeCharacter.transform.localRotation = Quaternion.identity;
+            activeCharacter.name = "Active Character";
             // set the shader
             Shader wireframe = Shader.Find("Custom/Geometry/Wireframe");
             MeshRenderer renderer = activeCharacter.GetComponent<MeshRenderer>();

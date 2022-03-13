@@ -257,13 +257,18 @@ public class Settlement : MonoBehaviour
             index += 0x20;
         }
     }
-    enum NPCQuestionFlag
+    public enum NPCQuestionFlag
     {
         JOB = 3,
         HEALTH = 4,
         KEYWORD1 = 5,
         KEYWORD2 = 6
     };
+
+    public NPCQuestionFlag[] npcQuestionFlag = new NPCQuestionFlag[16];
+    public bool[] npcQuestionAffectHumility = new bool[16];
+    public int[] npcProbabilityOfTurningAway = new int[16];
+    public List<string>[] npcStrings = new List<string>[16];
 
     void LoadSettlement()
     {
@@ -329,11 +334,6 @@ public class Settlement : MonoBehaviour
             Debug.Log("Settlement talk file incorrect length " + talkFileData.Length);
             return;
         } 
-
-        NPCQuestionFlag[] npcQuestionFlag = new NPCQuestionFlag[16];
-        bool[] npcQuestionAffectHumility = new bool[16];
-        int[] npcProbabilityOfTurningAway = new int[16];
-        List<string>[] npcStrings = new List<string>[16];
 
         for (int talkIndex = 0; talkIndex < 16; talkIndex++)
         {

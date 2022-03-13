@@ -54,6 +54,7 @@ public class Animate3 : MonoBehaviour
         {
             // update to the initial animation texture frame
             renderer.material.mainTexture = world.tiles[(int)npcTile];
+            transform.gameObject.name = npcTile.ToString();
 
             // set the other frames based on the intial frame
             if      (((int)npcTile % 4) == 0)

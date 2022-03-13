@@ -4,8 +4,6 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using System.Threading;
 
-
-
 public class U4_Decompiled : MonoBehaviour
 {
     private Thread trd;
@@ -14,396 +12,396 @@ public class U4_Decompiled : MonoBehaviour
     public enum TILE
     {
         /*deep water*/
-        TILE_DEEP_WATER = 0x00,
+        DEEP_WATER = 0x00,
         /*medium water*/
-        TILE_MEDIUM_WATER = 0x01,
+        MEDIUM_WATER = 0x01,
         /*shallow water*/
-        TILE_SHALLOW_WATER = 0x02,
+        SHALLOW_WATER = 0x02,
         /*swamp*/
-        TILE_SWAMP = 0x03,
+        SWAMP = 0x03,
         /*grass*/
-        TILE_GRASS = 0x04,
+        GRASS = 0x04,
         /*scrub*/
-        TILE_SCRUB = 0x05,
+        BRUSH = 0x05,
         /*forest*/
-        TILE_FOREST = 0x06,
+        FOREST = 0x06,
         /*hills*/
-        TILE_HILLS = 0x07,
+        HILLS = 0x07,
         /*mountains*/
-        TILE_MOUNTAINS = 0x08,
+        MOUNTAINS = 0x08,
         /*dungeon*/
-        TILE_DUNGEON = 0x09,
+        DUNGEON = 0x09,
         /*town*/
-        TILE_TOWN = 0x0A,
+        TOWN = 0x0A,
         /*castle*/
-        TILE_CASTLE = 0x0B,
+        CASTLE = 0x0B,
         /*village*/
-        TILE_VILLAGE = 0x0C,
+        VILLAGE = 0x0C,
         /*LB castle left wing*/
-        TILE_CASTLE_LEFT = 0x0D,
+        CASTLE_LEFT = 0x0D,
         /*LB castle entrance*/
-        TILE_CASTLE_ENTRANCE = 0x0E,
+        CASTLE_ENTRANCE = 0x0E,
         /*LB castle right wing*/
-        TILE_CASTLE_RIGHT = 0x0F,
+        CASTLE_RIGHT = 0x0F,
 
         /*ship W N E S*/
-        TILE_SHIP_WEST = 0x10,
-        TILE_SHIP_NORTH = 0x11,
-        TILE_SHIP_EAST = 0x12,
-        TILE_SHIP_SOUTH = 0x13,
+        SHIP_WEST = 0x10,
+        SHIP_NORTH = 0x11,
+        SHIP_EAST = 0x12,
+        SHIP_SOUTH = 0x13,
 
         /*horse W/E*/
-        TILE_HORSE_WEST = 0x14,
-        TILE_HORSE_EAST = 0x15,
+        HORSE_WEST = 0x14,
+        HORSE_EAST = 0x15,
 
         /*tiled floor*/
-        TILE_TILED_FLOOR = 0x16,
+        TILED_FLOOR = 0x16,
         /*bridge*/
-        TILE_BRIDGE = 0x17,
+        BRIDGE = 0x17,
         /*balloon*/
-        TILE_BALOON = 0x18,
+        BALOON = 0x18,
         /**/
-        TILE_BRIDGE_TOP = 0x19,
+        BRIDGE_TOP = 0x19,
         /**/
-        TILE_BRIDGE_BOTTOM = 0x1A,
+        BRIDGE_BOTTOM = 0x1A,
         /*ladder up*/
-        TILE_LADDER_UP = 0x1B,
+        LADDER_UP = 0x1B,
         /*ladder down*/
-        TILE_LADDER_DOWN = 0x1C,
+        LADDER_DOWN = 0x1C,
         /*ruins*/
-        TILE_RUINS = 0x1D,
+        RUINS = 0x1D,
         /*shrine*/
-        TILE_SHRINE = 0x1E,
+        SHRINE = 0x1E,
         /*on foot party*/
-        TILE_PARTY = 0x1F,
+        PARTY = 0x1F,
 
         /* 2-tile animation character */
 
         /*mage*/
-        TILE_MAGE = 0x20,
-        TILE_MAGE2 = 0x21,
+        MAGE = 0x20,
+        MAGE2 = 0x21,
         /*bard*/
-        TILE_BARD = 0x22,
-        TILE_BARD2 = 0x21,
+        BARD = 0x22,
+        BARD2 = 0x21,
         /*fighter*/
-        TILE_FIGHTER = 0x24,
-        TILE_FIGHTER2 = 0x25,
+        FIGHTER = 0x24,
+        FIGHTER2 = 0x25,
         /*druid*/
-        TILE_DRUID = 0x26,
-        TILE_DRUID2 = 0x27,
+        DRUID = 0x26,
+        DRUID2 = 0x27,
         /*tinker*/
-        TILE_TINKER = 0x28,
-        TILE_TINKER2 = 0x29,
+        TINKER = 0x28,
+        TINKER2 = 0x29,
         /*paladin*/
-        TILE_PALADIN = 0x2A,
-        TILE_PALADIN2 = 0x2B,
+        PALADIN = 0x2A,
+        PALADIN2 = 0x2B,
         /*ranger*/
-        TILE_RANGER = 0x2C,
-        TILE_RANGER2 = 0x2D,
+        RANGER = 0x2C,
+        RANGER2 = 0x2D,
         /*shepherd*/
-        TILE_SHEPHERD = 0x2E,
-        TILE_SHEPHERD2 = 0x2F,
+        SHEPHERD = 0x2E,
+        SHEPHERD2 = 0x2F,
 
         /* architecture/misc tiles */
-        TILE_BRICK_FLOOR_COLUMN = 0x30,
-        TILE_DIAGONAL_WATER_ARCHITECTURE1 = 0x31,
-        TILE_DIAGONAL_WATER_ARCHITECTURE2 = 0x32,
-        TILE_DIAGONAL_WATER_ARCHITECTURE3 = 0x33,
-        TILE_DIAGONAL_WATER_ARCHITECTURE4 = 0x34,
-        TILE_SHIP_MAST = 0x35,
-        TILE_SHIP_WHEEL = 0x36,
-        TILE_SMALL_ROCKS = 0x37,
+        BRICK_FLOOR_COLUMN = 0x30,
+        DIAGONAL_WATER_ARCHITECTURE1 = 0x31,
+        DIAGONAL_WATER_ARCHITECTURE2 = 0x32,
+        DIAGONAL_WATER_ARCHITECTURE3 = 0x33,
+        DIAGONAL_WATER_ARCHITECTURE4 = 0x34,
+        SHIP_MAST = 0x35,
+        SHIP_WHEEL = 0x36,
+        SMALL_ROCKS = 0x37,
         /*sleep*/
-        TILE_SLEEP = 0x38,
+        SLEEP = 0x38,
         /* large rocks */
-        TILE_LARGE_ROCKS = 0x39,
+        LARGE_ROCKS = 0x39,
         /*locked door*/
-        TILE_LOCKED_DOOR = 0x3A,
+        LOCKED_DOOR = 0x3A,
         /*door*/
-        TILE_DOOR = 0x3B,
+        DOOR = 0x3B,
         /*chest*/
-        TILE_CHEST = 0x3C,
+        CHEST = 0x3C,
         /*ankh*/
-        TILE_ANKH = 0x3D,
+        ANKH = 0x3D,
         /*brick floor*/
-        TILE_BRICK_FLOOR = 0x3E,
+        BRICK_FLOOR = 0x3E,
         /*wood floor*/
-        TILE_WOOD_FLOOR = 0x3F,
+        WOOD_FLOOR = 0x3F,
 
         /*moongate 4 phases*/
-        TILE_MOONGATE1 = 0x40,
-        TILE_MOONGATE2 = 0x41,
-        TILE_MOONGATE3 = 0x42,
-        TILE_MOONGATE4 = 0x43,
+        MOONGATE1 = 0x40,
+        MOONGATE2 = 0x41,
+        MOONGATE3 = 0x42,
+        MOONGATE4 = 0x43,
 
         /*poison field*/
-        TILE_POISON_FIELD = 0x44,
+        POISON_FIELD = 0x44,
         /*energy field*/
-        TILE_ENERGY_FIELD = 0x45,
+        ENERGY_FIELD = 0x45,
         /*fire field*/
-        TILE_FIRE_FIELD = 0x46,
+        FIRE_FIELD = 0x46,
         /*sleep field*/
-        TILE_SLEEP_FIELD = 0x47,
+        SLEEP_FIELD = 0x47,
 
         /* used for boats and building features */
-        TILE_ARCHITECTURE = 0x48,
+        ARCHITECTURE = 0x48,
         /* Secret brick wall */
-        TILE_SECRET_BRICK_WALL = 0x49,
+        SECRET_BRICK_WALL = 0x49,
         /* unknown ??? */
-        TILE_4A = 0x4A,
+        TILE_4A_UNKNOWN = 0x4A,
         /* cooking/camp fire */
-        TILE_COOKING_FIRE = 0x4B,
+        COOKING_FIRE = 0x4B,
         /* lava */
-        TILE_LAVA = 0x4C,
+        LAVA = 0x4C,
 
         /* missiles */
-        TILE_MISSLE1 = 0x4D,
-        TILE_MISSLE2 = 0x4E,
-        TILE_MISSLE3 = 0x4F,
+        MISSLE1 = 0x4D,
+        MISSLE2 = 0x4E,
+        MISSLE3 = 0x4F,
 
         /* 2-tile animation NPCs */
 
         /*guard*/
-        TILE_GUARD = 0x50,
-        TILE_GUARD2 = 0x51,
+        GUARD = 0x50,
+        GUARD2 = 0x51,
         /*merchant*/
-        TILE_MERCHANT = 0x52,
-        TILE_MERCHANT2 = 0x53,
+        MERCHANT = 0x52,
+        MERCHANT2 = 0x53,
         /*bard*/
-        TILE_BARD_NPC = 0x54,
-        TILE_BARD_NPC2 = 0x55,
+        BARD_NPC = 0x54,
+        BARD_NPC2 = 0x55,
         /*jester*/
-        TILE_JESTER = 0x56,
-        TILE_JESTER2 = 0x57,
+        JESTER = 0x56,
+        JESTER2 = 0x57,
         /*beggar*/
-        TILE_BEGGAR = 0x58,
-        TILE_BEGGAR2 = 0x59,
+        BEGGAR = 0x58,
+        BEGGAR2 = 0x59,
         /*child*/
-        TILE_CHILD = 0x5A,
-        TILE_CHILD2 = 0x5B,
+        CHILD = 0x5A,
+        CHILD2 = 0x5B,
         /*bull*/
-        TILE_BULL = 0x5C,
-        TILE_BULL2 = 0x5D,
+        BULL = 0x5C,
+        BULL2 = 0x5D,
         /*lord british*/
-        TILE_LORD_BRITISH = 0x5E,
-        TILE_LORD_BRITISH2 = 0x5F,
+        LORD_BRITISH = 0x5E,
+        LORD_BRITISH2 = 0x5F,
 
         /* Letters */
-        TILE_A = 0x60,
-        TILE_B = 0x61,
-        TILE_C = 0x62,
-        TILE_D = 0x63,
-        TILE_E = 0x64,
-        TILE_F = 0x65,
-        TILE_G = 0x66,
-        TILE_H = 0x67,
-        TILE_I = 0x68,
-        TILE_J = 0x69,
-        TILE_K = 0x6A,
-        TILE_L = 0x6B,
-        TILE_M = 0x6C,
-        TILE_N = 0x6D,
-        TILE_O = 0x6E,
-        TILE_P = 0x6F,
-        TILE_Q = 0x70,
-        TILE_R = 0x71,
-        TILE_S = 0x72,
-        TILE_T = 0x73,
-        TILE_U = 0x74,
-        TILE_V = 0x75,
-        TILE_W = 0x76,
-        TILE_X = 0x77,
-        TILE_Y = 0x78,
-        TILE_Z = 0x79,
+        A = 0x60,
+        B = 0x61,
+        C = 0x62,
+        D = 0x63,
+        E = 0x64,
+        F = 0x65,
+        G = 0x66,
+        H = 0x67,
+        I = 0x68,
+        J = 0x69,
+        K = 0x6A,
+        L = 0x6B,
+        M = 0x6C,
+        N = 0x6D,
+        O = 0x6E,
+        P = 0x6F,
+        Q = 0x70,
+        R = 0x71,
+        S = 0x72,
+        T = 0x73,
+        U = 0x74,
+        V = 0x75,
+        W = 0x76,
+        X = 0x77,
+        Y = 0x78,
+        Z = 0x79,
 
         /*<space>*/
-        TILE_SPACE = 0x7A,
+        SPACE = 0x7A,
 
-        /* Purple brackets */
-        TILE_BRACKET_RIGHT = 0x7B,
-        TILE_BRACKET_LEFT = 0x7C,
-        TILE_BRACKET_SQUARE = 0x7D,
-        TILE_BLANK = 0x7E,
-        TILE_BRICK_WALL = 0x7F,
+        /* brackets */
+        BRACKET_RIGHT = 0x7B,
+        BRACKET_LEFT = 0x7C,
+        BRACKET_SQUARE = 0x7D,
+        BLANK = 0x7E,
+        BRICK_WALL = 0x7F,
 
         /* 2-tile monsters */
 
         /*pirate W N E S*/
-        TILE_PIRATE_WEST = 0x80,
-        TILE_PIRATE_NORTH = 0x81,
-        TILE_PIRATE_EAST = 0x82,
-        TILE_PIRATE_SOUTH = 0x83,
+        PIRATE_WEST = 0x80,
+        PIRATE_NORTH = 0x81,
+        PIRATE_EAST = 0x82,
+        PIRATE_SOUTH = 0x83,
         /*nixie*/
-        TILE_NIXIE = 0x84,
-        TILE_NIXIE2 = 0x85,
+        NIXIE = 0x84,
+        NIXIE2 = 0x85,
         /*squid*/
-        TILE_SQUID = 0x86,
-        TILE_SQUID2 = 0x87,
+        SQUID = 0x86,
+        SQUID2 = 0x87,
         /*serpent*/
-        TILE_SERPENT = 0x88,
-        TILE_SERPENT2 = 0x89,
+        SERPENT = 0x88,
+        SERPENT2 = 0x89,
         /*seahorse*/
-        TILE_SEAHORSE = 0x8A,
-        TILE_SEAHORSE2 = 0x8B,
+        SEAHORSE = 0x8A,
+        SEAHORSE2 = 0x8B,
         /*whirlpool*/
-        TILE_WHIRLPOOL = 0x8C,
-        TILE_WHIRLPOOL2 = 0x8D,
+        WHIRLPOOL = 0x8C,
+        WHIRLPOOL2 = 0x8D,
         /*twister*/
-        TILE_WATER_SPOUT = 0x8E,
-        TILE_WATER_SPOUT2 = 0x8F,
+        WATER_SPOUT = 0x8E,
+        WATER_SPOUT2 = 0x8F,
 
         /* 4-tile monsters */
 
         /*rat*/
-        TILE_RAT = 0x90,
-        TILE_RAT2 = 0x91,
-        TILE_RAT3 = 0x92,
-        TILE_RAT4 = 0x93,
+        RAT = 0x90,
+        RAT2 = 0x91,
+        RAT3 = 0x92,
+        RAT4 = 0x93,
         /*bat*/
-        TILE_BAT = 0x94,
-        TILE_BAT2 = 0x95,
-        TILE_BAT3 = 0x96,
-        TILE_BAT4 = 0x97,
+        BAT = 0x94,
+        BAT2 = 0x95,
+        BAT3 = 0x96,
+        BAT4 = 0x97,
         /*spider*/
-        TILE_SPIDER = 0x98,
-        TILE_SPIDER2 = 0x99,
-        TILE_SPIDER3 = 0x9a,
-        TILE_SPIDER4 = 0x9b,
+        SPIDER = 0x98,
+        SPIDER2 = 0x99,
+        SPIDER3 = 0x9a,
+        SPIDER4 = 0x9b,
         /*ghost*/
-        TILE_GHOST = 0x9C,
-        TILE_GHOST2 = 0x9D,
-        TILE_GHOST3 = 0x9E,
-        TILE_GHOST4 = 0x9F,
+        GHOST = 0x9C,
+        GHOST2 = 0x9D,
+        GHOST3 = 0x9E,
+        GHOST4 = 0x9F,
         /*slime*/
-        TILE_SLIME = 0xA0,
-        TILE_SLIME2 = 0xA1,
-        TILE_SLIME3 = 0xA2,
-        TILE_SLIME4 = 0xA3,
+        SLIME = 0xA0,
+        SLIME2 = 0xA1,
+        SLIME3 = 0xA2,
+        SLIME4 = 0xA3,
         /*troll*/
-        TILE_TROLL = 0xA4,
-        TILE_TROLL2 = 0xA5,
-        TILE_TROLL3 = 0xA6,
-        TILE_TROLL4 = 0xA7,
+        TROLL = 0xA4,
+        TROLL2 = 0xA5,
+        TROLL3 = 0xA6,
+        TROLL4 = 0xA7,
         /*gremlin*/
-        TILE_GREMLIN = 0xA8,
-        TILE_GREMLIN2 = 0xA9,
-        TILE_GREMLIN3 = 0xAa,
-        TILE_GREMLIN4 = 0xAb,
+        GREMLIN = 0xA8,
+        GREMLIN2 = 0xA9,
+        GREMLIN3 = 0xAa,
+        GREMLIN4 = 0xAb,
         /*mimic*/
-        TILE_MIMIC = 0xAC,
-        TILE_MIMIC2 = 0xAd,
-        TILE_MIMIC3 = 0xAe,
-        TILE_MIMIC4 = 0xAf,
+        MIMIC = 0xAC,
+        MIMIC2 = 0xAd,
+        MIMIC3 = 0xAe,
+        MIMIC4 = 0xAf,
         /*reaper*/
-        TILE_REAPER = 0xB0,
-        TILE_REAPER2 = 0xB1,
-        TILE_REAPER3 = 0xB2,
-        TILE_REAPER4 = 0xB3,
+        REAPER = 0xB0,
+        REAPER2 = 0xB1,
+        REAPER3 = 0xB2,
+        REAPER4 = 0xB3,
         /*insects*/
-        TILE_INSECTS = 0xB4,
-        TILE_INSECTS2 = 0xB5,
-        TILE_INSECTS3 = 0xB6,
-        TILE_INSECTS4 = 0xB7,
+        INSECTS = 0xB4,
+        INSECTS2 = 0xB5,
+        INSECTS3 = 0xB6,
+        INSECTS4 = 0xB7,
         /*gazer*/
-        TILE_GAZER = 0xB8,
-        TILE_GAZER2 = 0xB9,
-        TILE_GAZER3 = 0xBa,
-        TILE_GAZER4 = 0xBb,
+        GAZER = 0xB8,
+        GAZER2 = 0xB9,
+        GAZER3 = 0xBa,
+        GAZER4 = 0xBb,
         /*phantom*/
-        TILE_PHANTOM = 0xBC,
-        TILE_PHANTOM2 = 0xBD,
-        TILE_PHANTOM3 = 0xBE,
-        TILE_PHANTOM4 = 0xBF,
+        PHANTOM = 0xBC,
+        PHANTOM2 = 0xBD,
+        PHANTOM3 = 0xBE,
+        PHANTOM4 = 0xBF,
         /*orc*/
-        TILE_ORC = 0xC0,
-        TILE_ORC2 = 0xC1,
-        TILE_ORC3 = 0xC2,
-        TILE_ORC4 = 0xC3,
+        ORC = 0xC0,
+        ORC2 = 0xC1,
+        ORC3 = 0xC2,
+        ORC4 = 0xC3,
         /*skeleton*/
-        TILE_SKELETON = 0xC4,
-        TILE_SKELETON2 = 0xC5,
-        TILE_SKELETON3 = 0xC6,
-        TILE_SKELETON4 = 0xC7,
+        SKELETON = 0xC4,
+        SKELETON2 = 0xC5,
+        SKELETON3 = 0xC6,
+        SKELETON4 = 0xC7,
         /*rogue*/
-        TILE_ROGUE = 0xC8,
-        TILE_ROGUE2 = 0xC9,
-        TILE_ROGUE3 = 0xCa,
-        TILE_ROGUE4 = 0xCb,
+        ROGUE = 0xC8,
+        ROGUE2 = 0xC9,
+        ROGUE3 = 0xCa,
+        ROGUE4 = 0xCb,
         /*python*/
-        TILE_PYTHON = 0xCC,
-        TILE_PYTHON2 = 0xCd,
-        TILE_PYTHON3 = 0xCe,
-        TILE_PYTHON4 = 0xCf,
+        PYTHON = 0xCC,
+        PYTHON2 = 0xCd,
+        PYTHON3 = 0xCe,
+        PYTHON4 = 0xCf,
         /*ettin*/
-        TILE_ETTIN = 0xD0,
-        TILE_ETTIN2 = 0xD1,
-        TILE_ETTIN3 = 0xD2,
-        TILE_ETTIN4 = 0xD3,
+        ETTIN = 0xD0,
+        ETTIN2 = 0xD1,
+        ETTIN3 = 0xD2,
+        ETTIN4 = 0xD3,
         /*headless*/
-        TILE_HEADLESS = 0xD4,
-        TILE_HEADLESS2 = 0xD5,
-        TILE_HEADLESS3 = 0xD6,
-        TILE_HEADLESS4 = 0xD7,
+        HEADLESS = 0xD4,
+        HEADLESS2 = 0xD5,
+        HEADLESS3 = 0xD6,
+        HEADLESS4 = 0xD7,
         /*cyclops*/
-        TILE_CYCLOPS = 0xD8,
-        TILE_CYCLOPS2 = 0xD9,
-        TILE_CYCLOPS3 = 0xDa,
-        TILE_CYCLOPS4 = 0xDb,
+        CYCLOPS = 0xD8,
+        CYCLOPS2 = 0xD9,
+        CYCLOPS3 = 0xDa,
+        CYCLOPS4 = 0xDb,
         /*wisp*/
-        TILE_WISP = 0xDC,
-        TILE_WISP2 = 0xDD,
-        TILE_WISP3 = 0xDE,
-        TILE_WISP4 = 0xDF,
+        WISP = 0xDC,
+        WISP2 = 0xDD,
+        WISP3 = 0xDE,
+        WISP4 = 0xDF,
         /*mage*/
-        TILE_MAGE_NPC = 0xE0,
-        TILE_MAGE_NPC2 = 0xE1,
-        TILE_MAGE_NPC3 = 0xE2,
-        TILE_MAGE_NPC4 = 0xE3,
+        MAGE_NPC = 0xE0,
+        MAGE_NPC2 = 0xE1,
+        MAGE_NPC3 = 0xE2,
+        MAGE_NPC4 = 0xE3,
         /*lyche*/
-        TILE_LYCHE = 0xE4,
-        TILE_LYCHE2 = 0xE5,
-        TILE_LYCHE3 = 0xE6,
-        TILE_LYCHE4 = 0xE7,
+        LYCHE = 0xE4,
+        LYCHE2 = 0xE5,
+        LYCHE3 = 0xE6,
+        LYCHE4 = 0xE7,
         /*lava lizard*/
-        TILE_LAVA_LIZARD = 0xE8,
-        TILE_LAVA_LIZARD2 = 0xE9,
-        TILE_LAVA_LIZARD3 = 0xEa,
-        TILE_LAVA_LIZARD4 = 0xEb,
+        LAVA_LIZARD = 0xE8,
+        LAVA_LIZARD2 = 0xE9,
+        LAVA_LIZARD3 = 0xEa,
+        LAVA_LIZARD4 = 0xEb,
         /*zorn*/
-        TILE_ZORN = 0xEC,
-        TILE_ZORN2 = 0xEd,
-        TILE_ZORN3 = 0xEe,
-        TILE_ZORN4 = 0xEf,
+        ZORN = 0xEC,
+        ZORN2 = 0xEd,
+        ZORN3 = 0xEe,
+        ZORN4 = 0xEf,
         /*daemon*/
-        TILE_DAEMON = 0xF0,
-        TILE_DAEMON2 = 0xF1,
-        TILE_DAEMON3 = 0xF2,
-        TILE_DAEMON4 = 0xF3,
+        DAEMON = 0xF0,
+        DAEMON2 = 0xF1,
+        DAEMON3 = 0xF2,
+        DAEMON4 = 0xF3,
         /*hydra*/
-        TILE_HYDRA = 0xF4,
-        TILE_HYDRA2 = 0xF5,
-        TILE_HYDRA3 = 0xF6,
-        TILE_HYDRA4 = 0xF7,
+        HYDRA = 0xF4,
+        HYDRA2 = 0xF5,
+        HYDRA3 = 0xF6,
+        HYDRA4 = 0xF7,
         /*dragon*/
-        TILE_DRAGON = 0xF8,
-        TILE_DRAGON2 = 0xF9,
-        TILE_DRAGON3 = 0xFa,
-        TILE_DRAGON4 = 0xFb,
+        DRAGON = 0xF8,
+        DRAGON2 = 0xF9,
+        DRAGON3 = 0xFa,
+        DRAGON4 = 0xFb,
         /*balron*/
-        TILE_BALRON = 0xFC,
-        TILE_BALRON2 = 0xFd,
-        TILE_BALRON3 = 0xFe,
-        TILE_BALRON4 = 0xFf,
+        BALRON = 0xFC,
+        BALRON2 = 0xFd,
+        BALRON3 = 0xFe,
+        BALRON4 = 0xFf,
     };
 
     public TILE current_tile;
 
     public enum DIRECTION
     {
-        DIR_W = 0,
-        DIR_N = 1,
-        DIR_E = 2,
-        DIR_S = 3
+        DIRECTION_W = 0,
+        DIRECTION_N = 1,
+        DIRECTION_E = 2,
+        DIRECTION_S = 3
     }
     public enum MODE
     {
@@ -465,11 +463,13 @@ public class U4_Decompiled : MonoBehaviour
     {
         // world map
         OUTDOORS = 0,
+
         // Castles
         BRITANNIA = 1,
         THE_LYCAEUM = 2,
         EMPATH_ABBY = 3,
         SERPENT_HOLD = 4,
+
         // Townes
         MOONGLOW = 5,
         BRITAIN = 6,
@@ -479,11 +479,13 @@ public class U4_Decompiled : MonoBehaviour
         TRINSIC = 10,
         SKARA_BRAE = 11,
         MAGINCIA = 12,
+
         // Villages
         PAWS = 13,
         BUCCANEERS_DEN = 14,
         VESPER = 15,
         COVE = 16,
+
         // Dungeons
         DECEIT = 17,
         DESPISE = 18,
@@ -493,6 +495,7 @@ public class U4_Decompiled : MonoBehaviour
         SHAME = 22,
         HYTHLOTH = 23,
         THE_GREAT_STYGIAN_ABYSS = 24,
+
         //shrines
         HONESTY = 25,
         COMPASSION = 26,
@@ -508,6 +511,10 @@ public class U4_Decompiled : MonoBehaviour
     public static extern void main();
     [DllImport("UN_U4.dll")]
     public static extern MODE main_CurMode();
+    [DllImport("UN_U4.dll")]
+    public static extern TILE main_D_96F8();
+    [DllImport("UN_U4.dll")]
+    public static extern TILE main_D_946C();
     [DllImport("UN_U4.dll")]
     public static extern void main_keyboardHit(char key);
     [DllImport("UN_U4.dll")]
@@ -526,6 +533,10 @@ public class U4_Decompiled : MonoBehaviour
     public static extern void main_ActiveChar(byte[] buffer, int length);
     [DllImport("UN_U4.dll")]
     public static extern TILE main_tile_cur();
+    [DllImport("UN_U4.dll")]
+    public static extern int main_Text(byte[] buffer, int length);
+
+    
 
     public GameObject partyGameObject;
 
@@ -533,24 +544,29 @@ public class U4_Decompiled : MonoBehaviour
     float timerExpired = 0.0f;
     public float timerPeriod = 0.02f; // the game operates on a 300ms Sleep() so we want to update things faster than that
 
-    volatile byte[] buffer = new byte[2000];
+    byte[] buffer = new byte[2000];
 
     public TILE[,] tMap32x32 = new TILE[32, 32];
     public byte[,,] tMap8x8x8 = new byte[8, 8, 8];
 
-    //public TILE hit_tile;
-    //public byte hit_x;
-    //public byte hit_y;
+    public MODE current_mode;
 
     [System.Serializable]
-    public struct tCombat /*size:0xc0*/
+    public struct tCombat1 /*size:0xc0*/
     {
-        public byte[] _npcX, _npcY; //16,16 /*_000/_010 D_9470/D_9480*/
-        public byte[] _charaX, _charaY; //8,8 /*_20/_28 D_9490/D_9498*/
-        //public byte[,] _map; //11 * 11 /*_040 D_94B0*/
+        public byte _npcX, _npcY; //16,16 /*_000/_010 D_9470/D_9480*/
     };
 
-    tCombat Combat;
+    [System.Serializable]
+    public struct tCombat2 /*size:0xc0*/
+    {
+        public byte _charaX, _charaY; //8,8 /*_20/_28 D_9490/D_9498*/
+    };
+
+    // allocate storage for Combat global
+    public tCombat1[] Combat1 = new tCombat1[16];
+    public tCombat2[] Combat2 = new tCombat2[8];
+    public byte[,] Combat_map = new byte[11, 11]; //11 * 11 /*_040 D_94B0*/
 
     [System.Serializable]
     public struct tNPC /*size:0x100*/
@@ -568,8 +584,6 @@ public class U4_Decompiled : MonoBehaviour
         /*_e0*/
         public byte _tlkidx;
     };
-
-    //public t_68[] Fighters = new t_68[16];
 
     public tNPC[] _npc = new tNPC[32];
 
@@ -645,11 +659,11 @@ public class U4_Decompiled : MonoBehaviour
         /*+15c*/
         public ushort _sextants;
         /*+15e*/
-        public ARMOR[] _armors; //8
+        public ushort[] _armors; //8
         /*+16e*/
-        public WEAPON[] _weapons; //16
+        public ushort[] _weapons; //16
         /*+18e*/
-        public REAGENT[] _reagents; //8
+        public ushort[] _reagents; //8
         /*+19e*/
         public ushort[] _mixtures; //26
         /*+1d2*/
@@ -740,16 +754,57 @@ public class U4_Decompiled : MonoBehaviour
     // Separate thread to run the game, we could attempt to make the data gathering function thread safe but for now this will do
     private void ThreadTask()
     {
-        // start the DLL
+        // start the DLL main thread
         main();
     }
 
     public GameObject[] Settlements;
     public GameObject[] CombatTerrains;
 
+    public TMPro.TextMeshPro m_textMeshPro;
+    //private TMP_FontAsset m_FontAsset;
+
+    public string label = "The <#0050FF>count is: </color>{0:2}";
+    public float m_frame;
+
+    public GameObject TextGameObject;
+
+    void StartText()
+    {
+        m_textMeshPro = Camera.main.GetComponentInChildren<TMPro.TextMeshPro>();
+
+        //m_textMeshPro.autoSizeTextContainer = true;
+
+        // Load the Font Asset to be used.
+        //m_FontAsset = Resources.Load("Fonts & Materials/LiberationSans SDF", typeof(TMP_FontAsset)) as TMP_FontAsset;
+        //m_textMeshPro.font = m_FontAsset;
+
+        // Assign Material to TextMesh Pro Component
+        //m_textMeshPro.fontSharedMaterial = Resources.Load("Fonts & Materials/LiberationSans SDF - Bevel", typeof(Material)) as Material;
+        //m_textMeshPro.fontSharedMaterial.EnableKeyword("BEVEL_ON");
+
+        // Set various font settings.
+        //m_textMeshPro.fontSize = 24;
+        //m_textMeshPro
+        //m_textMeshPro.alignment = TMPro.TextAlignmentOptions.Center;
+
+        //m_textMeshPro.anchorDampening = true; // Has been deprecated but under consideration for re-implementation.
+        //m_textMeshPro.enableAutoSizing = true;
+
+        //m_textMeshPro.characterSpacing = 0.2f;
+        //m_textMeshPro.wordSpacing = 0.1f;
+
+        //m_textMeshPro.enableCulling = true;
+        //m_textMeshPro.enableWordWrapping = true;
+
+        //textMeshPro.fontColor = new Color32(255, 255, 255, 255);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        StartText();
+
         // allocate storage for Party global
         Party.chara = new tChara[8];
         for (int i = 0; i < 8; i++)
@@ -757,23 +812,17 @@ public class U4_Decompiled : MonoBehaviour
             Party.chara[i]._HP = new ushort[2];
             Party.chara[i].__0e = new byte[2];
         }
-        Party._armors = new ARMOR[8];
-        Party._weapons = new WEAPON[16];
-        Party._reagents = new REAGENT[8];
+        Party._armors = new ushort[8];
+        Party._weapons = new ushort[16];
+        Party._reagents = new ushort[8];
         Party._mixtures = new ushort[26];
-
-        // allocate storage for Combat global
-        Combat._npcX = new byte[16];
-        Combat._npcY = new byte[16];
-        Combat._charaX = new byte[8];
-        Combat._charaY = new byte[8];
-        //Combat._map = new byte[11,11];
 
         // start a thread with the DLL main task
         trd = new Thread(new ThreadStart(this.ThreadTask));
         trd.IsBackground = true;
         trd.Start();
 
+        // assign settlement game objects
         Settlements = new GameObject[17];
         Settlements[(int)LOCATIONS.BRITANNIA] = GameObject.Find("LBC_1");
         Settlements[(int)0] = GameObject.Find("LBC_2"); // need to fingure out how to determine location of the upper and lower levels of the castle
@@ -793,6 +842,7 @@ public class U4_Decompiled : MonoBehaviour
         Settlements[(int)LOCATIONS.VESPER] = GameObject.Find("VESPER");
         Settlements[(int)LOCATIONS.COVE] = GameObject.Find("COVE");
 
+        // assign combat terrain game objects
         CombatTerrains = new GameObject[24];
         CombatTerrains[(int)COMBAT_TERRAIN.GRASS] = GameObject.Find("GRASS");
         CombatTerrains[(int)COMBAT_TERRAIN.BRIDGE] = GameObject.Find("BRIDGE");
@@ -818,84 +868,105 @@ public class U4_Decompiled : MonoBehaviour
         CombatTerrains[(int)COMBAT_TERRAIN.DNG4] = GameObject.Find("DNG4");
         CombatTerrains[(int)COMBAT_TERRAIN.DNG5] = GameObject.Find("DNG5");
         CombatTerrains[(int)COMBAT_TERRAIN.DNG6] = GameObject.Find("DNG6");
-
     }
 
+    // unfortuantly the game engine never saves this information after loading the combat terrain in function C_7C65()
+    // the code is not re-entrant so I cannot just expose and call the function directly so I need to re-implement the 
+    // logic here so I can on the fly determine the combat terrain to display by exposing the interal variables used in the
+    // original function.
     COMBAT_TERRAIN Convert_Tile_to_Combat_Terrian(TILE tile)
     {
         COMBAT_TERRAIN combat_terrain;
 
-        switch (tile)
+        if (Party._tile <= TILE.SHIP_SOUTH || (TILE)((byte)current_tile & ~3) == TILE.SHIP_WEST)
         {
-            case TILE.TILE_SWAMP: combat_terrain = COMBAT_TERRAIN.MARSH; break;
-            case TILE.TILE_SCRUB: combat_terrain = COMBAT_TERRAIN.BRUSH; break;
-            case TILE.TILE_FOREST: combat_terrain = COMBAT_TERRAIN.FOREST; break;
-            case TILE.TILE_HILLS: combat_terrain = COMBAT_TERRAIN.HILL; break;
-            case TILE.TILE_DUNGEON: combat_terrain = COMBAT_TERRAIN.DUNGEON; break;
-            case TILE.TILE_BRICK_FLOOR: combat_terrain = COMBAT_TERRAIN.BRICK; break;
-            case TILE.TILE_BRIDGE:
-            case TILE.TILE_BRIDGE_TOP:
-            case TILE.TILE_BRIDGE_BOTTOM:
-            case TILE.TILE_WOOD_FLOOR: combat_terrain = COMBAT_TERRAIN.BRIDGE; break;
-            default: combat_terrain = COMBAT_TERRAIN.GRASS; break;
+            if (D_96F8 == TILE.PIRATE_WEST)
+            {
+                combat_terrain = COMBAT_TERRAIN.SHIPSHORE;
+            }
+            else if (D_946C <= TILE.SHALLOW_WATER)
+            {
+                combat_terrain = COMBAT_TERRAIN.SHIPSEA;
+            }
+            else
+            {
+                combat_terrain = COMBAT_TERRAIN.SHORE;
+            }
+        }
+        else
+        {
+            if (D_96F8 == TILE.PIRATE_WEST)
+            {
+                combat_terrain = COMBAT_TERRAIN.SHORESHIP;
+            }
+            else if (D_946C <= TILE.SHALLOW_WATER)
+            {
+                combat_terrain = COMBAT_TERRAIN.SHIPSHIP;
+            }
+            else
+            {
+                switch (tile)
+                {
+                    case TILE.SWAMP:
+                    {
+                        combat_terrain = COMBAT_TERRAIN.MARSH;
+                        break;
+                    }
+                    case TILE.BRUSH:
+                    {
+                        combat_terrain = COMBAT_TERRAIN.BRUSH;
+                        break;
+                    }
+                    case TILE.FOREST:
+                    {
+                        combat_terrain = COMBAT_TERRAIN.FOREST;
+                        break;
+                    }
+                    case TILE.HILLS:
+                    {
+                        combat_terrain = COMBAT_TERRAIN.HILL;
+                        break;
+                    }
+                    case TILE.DUNGEON:
+                    {
+                        combat_terrain = COMBAT_TERRAIN.DUNGEON;
+                        break;
+                    }
+                    case TILE.BRICK_FLOOR:
+                    {
+                        combat_terrain = COMBAT_TERRAIN.BRICK;
+                        break;
+                    }
+                    case TILE.BRIDGE:
+                    case TILE.BRIDGE_TOP:
+                    case TILE.BRIDGE_BOTTOM:
+                    case TILE.WOOD_FLOOR:
+                    {
+                        combat_terrain = COMBAT_TERRAIN.BRIDGE;
+                        break;
+                    }
+                    default:
+                    {
+                        combat_terrain = COMBAT_TERRAIN.GRASS;
+                        break;
+                    }
+                }
+            }
         }
 
         return combat_terrain;
-
-
-
-                /*
-                if (Party._tile <= TIL_13 || ((byte)current_tile & ~3) == TIL_10)
-                {
-                    if (D_96F8 == TIL_80)
-                    {
-                        D_9452 = TIL_C8;
-                        si = 11;
-                    }
-                    else if (D_946C < TIL_03)
-                    {
-                        si = 8;
-                    }
-                    else
-                    {
-                        si = 9;
-                    }
-                }
-                else
-                {
-                    if (D_96F8 == TIL_80)
-                    {
-                        D_9452 = TIL_C8;
-                        si = 12;
-                    }
-                    else if (D_946C < TIL_03)
-                    {
-                        si = 10;
-                    }
-                    else
-                    {
-                        switch (tile_cur)
-                        {
-                            case TIL_03: si = 7; break;
-                            case TIL_05: si = 6; break;
-                            case TIL_06: si = 5; break;
-                            case TIL_07: si = 4; break;
-                            case TIL_09: si = 3; break;
-                            case TIL_3E: si = 2; break;
-                            case TIL_17:
-                            case TIL_19:
-                            case TIL_1A:
-                            case TIL_3F: si = 1; break;
-                            default: si = 0;
-                        }
-                    }
-                }
-                */
-        }
+    }
 
     void OnApplicationQuit()
     {
         //trd.Abort();
+        // CAUTION: this will cleanly exit the DLL, however is some areas such as combat this will not work and you will
+        // need to kill the unity editor process to be able to restart. The abort function will cause the Unity editor to exit which
+        // is not desired. Using the exit() function in the DLL will also exit the unity editore which is also not disired. This
+        // was the best solution I could come up with for the moment. In the final app all threads will be exiting when quiting so
+        // it is not an issue there, only when using the Unity editor do we have trouble. If Unity would load and unload the DLL at runtime
+        // this would be a better solution but Unity 3D unfortantly loads any project DLLs at editor launch and keeps them loaded until you
+        // quit the editor.
         main_keyboardHit((char)KEYS.VK_ESCAPE);
     }
 
@@ -906,9 +977,11 @@ public class U4_Decompiled : MonoBehaviour
         VK_RIGHT = 0x27,
         VK_DOWN = 0x28,
         VK_ESCAPE = 0x1B,
-        VK_SPACE          =0x20,
-        VK_RETURN         =0x0D,
-        VK_BACK           =0x08,
+        VK_SPACE = 0x20,
+        VK_RETURN = 0x0D,
+        VK_BACK = 0x08,
+        VK_END = 0x23,
+        VK_HOME = 0x24
     };
 
     public struct activeCharacter
@@ -932,6 +1005,9 @@ public class U4_Decompiled : MonoBehaviour
     }
 
     public List<hit> currentHits = new List<hit>() { };
+    public TILE D_96F8;
+    public TILE D_946C;
+    public System.Text.ASCIIEncoding enc;
 
     // Update is called once per frame
     void Update()
@@ -940,61 +1016,37 @@ public class U4_Decompiled : MonoBehaviour
 
         timer += Time.deltaTime;
 
-        // get any hilighted character
-        main_ActiveChar(buffer, buffer.Length);
-
-        if (buffer[1] != 0xff)
-        {
-            currentActiveCharacter.active = true;
-            currentActiveCharacter.characterIndex = buffer[0];
-            currentActiveCharacter.x = buffer[1];
-            currentActiveCharacter.y = buffer[2];
-        }
-        else
-        {
-            currentActiveCharacter.active = false;
-        }
-
-        current_tile =  main_tile_cur();
-
-        // read in current hit info, this occurrs out of the main draw squence and for only a short time,
-        // the DLL now saves the list of hits and coords to display later
-        main_Hit(buffer, buffer.Length);
-
-        int hit_length = buffer[0];
-
-        // get all the new hits from the buffer and add them to the list
-        for (int i = 0; i < hit_length; i++)
-        {
-            hit addHit;
-
-            addHit.tile = (TILE)buffer[1 + i * 3];
-
-            if (addHit.tile != 0)
-            {
-                addHit.x = buffer[2 + i * 3];
-                addHit.y = buffer[3 + i * 3];
-                addHit.time = Time.time;
-
-                currentHits.Add(addHit);
-            }
-        }
-
-        // check for timer expiration
-        for(int i = 0; i < currentHits.Count; i++)
-        {
-            hit checkHit = currentHits[i];
-
-            // we will leave this hit up until we get another or the timer expires
-            if (checkHit.time + hit_time_period < Time.time)
-            {
-                currentHits.Remove(checkHit);
-            }
-        }
- 
         // send some keyboard codes down to the engine,
-        // keydown is only active for a single frame so it cannot be in the timer
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        // Unity keydown is only active for a single frame so it cannot be in the timer check if
+        if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && Input.GetKeyDown(KeyCode.Z)) // need to check this first as it overrides the normal Z keypress
+        {
+            main_keyboardHit((char)'9'); // currently the windows implementation of this engine does not support this
+        }
+        else if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.S)) // need to check this first as it overrides the normal S keypress
+        {
+            main_keyboardHit((char)'9'); // currently the windows implementation of this engine does not support this
+        }
+        else if (Input.GetKeyDown(KeyCode.End))
+        {
+            main_keyboardHit((char)KEYS.VK_END);
+        }
+        else if (Input.GetKeyDown(KeyCode.Home))
+        {
+            main_keyboardHit((char)KEYS.VK_HOME);
+        }
+        //else if (Input.GetKeyDown(KeyCode.PageUp))
+        //{
+        //    main_keyboardHit((char)KEYS.VK_PGUP);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.PageDown))
+        //{
+        //    main_keyboardHit((char)KEYS.VK_PGDN);
+        //}
+        else if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            main_keyboardHit((char)KEYS.VK_RETURN);
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             main_keyboardHit((char)KEYS.VK_DOWN);
         }
@@ -1022,25 +1074,17 @@ public class U4_Decompiled : MonoBehaviour
         {
             main_keyboardHit((char)KEYS.VK_BACK);
         }
-        else if (Input.GetKeyDown(KeyCode.E))
+        else if (Input.GetKeyDown(KeyCode.Space))
         {
-            main_keyboardHit((char)'E');
+            main_keyboardHit((char)KEYS.VK_SPACE);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
             main_keyboardHit((char)'A');
         }
-        else if (Input.GetKeyDown(KeyCode.G))
+        else if (Input.GetKeyDown(KeyCode.B))
         {
-            main_keyboardHit((char)'G');
-        }
-        else if (Input.GetKeyDown(KeyCode.O))
-        {
-            main_keyboardHit((char)'O');
-        }
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            main_keyboardHit((char)KEYS.VK_SPACE);
+            main_keyboardHit((char)'B');
         }
         else if (Input.GetKeyDown(KeyCode.C))
         {
@@ -1050,32 +1094,221 @@ public class U4_Decompiled : MonoBehaviour
         {
             main_keyboardHit((char)'D');
         }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            main_keyboardHit((char)'E');
+        }
+        else if (Input.GetKeyDown(KeyCode.F))
+        {
+            main_keyboardHit((char)'F');
+        }
+        else if (Input.GetKeyDown(KeyCode.G))
+        {
+            main_keyboardHit((char)'G');
+        }
+        else if (Input.GetKeyDown(KeyCode.H))
+        {
+            main_keyboardHit((char)'H');
+        }
+        else if (Input.GetKeyDown(KeyCode.I))
+        {
+            main_keyboardHit((char)'I');
+        }
+        else if (Input.GetKeyDown(KeyCode.J))
+        {
+            main_keyboardHit((char)'J');
+        }
         else if (Input.GetKeyDown(KeyCode.K))
         {
             main_keyboardHit((char)'K');
         }
+        else if (Input.GetKeyDown(KeyCode.L))
+        {
+            main_keyboardHit((char)'L');
+        }
+        else if (Input.GetKeyDown(KeyCode.M))
+        {
+            main_keyboardHit((char)'M');
+        }
+        else if (Input.GetKeyDown(KeyCode.N))
+        {
+            main_keyboardHit((char)'N');
+        }
+        else if (Input.GetKeyDown(KeyCode.O))
+        {
+            main_keyboardHit((char)'O');
+        }
+        else if (Input.GetKeyDown(KeyCode.P))
+        {
+            main_keyboardHit((char)'P');
+        }
+        else if (Input.GetKeyDown(KeyCode.Q))
+        {
+            main_keyboardHit((char)'Q');
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            main_keyboardHit((char)'R');
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            main_keyboardHit((char)'S');
+        }
+        else if (Input.GetKeyDown(KeyCode.T))
+        {
+            main_keyboardHit((char)'T');
+        }
+        else if (Input.GetKeyDown(KeyCode.U))
+        {
+            main_keyboardHit((char)'U');
+        }
+        else if (Input.GetKeyDown(KeyCode.V))
+        {
+            main_keyboardHit((char)'V');
+        }
+        else if (Input.GetKeyDown(KeyCode.W))
+        {
+            main_keyboardHit((char)'W');
+        }
+        else if (Input.GetKeyDown(KeyCode.X))
+        {
+            main_keyboardHit((char)'X');
+        }
+        else if (Input.GetKeyDown(KeyCode.Y))
+        {
+            main_keyboardHit((char)'Y');
+        }
+        else if (Input.GetKeyDown(KeyCode.Z))
+        {
+            main_keyboardHit((char)'Z');
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0))
+        {
+            main_keyboardHit((char)'0');
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            main_keyboardHit((char)'1');
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            main_keyboardHit((char)'2');
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
+        {
+            main_keyboardHit((char)'3');
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            main_keyboardHit((char)'4');
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
+        {
+            main_keyboardHit((char)'5');
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
+        {
+            main_keyboardHit((char)'6');
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
+        {
+            main_keyboardHit((char)'7');
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha8) || Input.GetKeyDown(KeyCode.Keypad8))
+        {
+            main_keyboardHit((char)'8');
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9))
+        {
+            main_keyboardHit((char)'9');
+        }
 
-        // only get data periodically
+
+        // only get data from the game engine periodically
         if (timer > timerExpired)
         {
+            // update the timer
             timer = timer - timerExpired;
             timerExpired = timerPeriod;
 
-            // get the current game mode;
-            MODE current_mode = main_CurMode();
 
-            // get the current game tile;
-            TILE current_tile = main_tile_cur();
-
-            if ((current_mode == MODE.COMBAT) || (current_mode == MODE.COM_CAMP) || (current_mode == MODE.COM_ROOM))
+            int text_size = main_Text(buffer, buffer.Length);
+            if (enc == null)
             {
+                enc = new System.Text.ASCIIEncoding();
+            }
+            if (text_size != 0)
+            {
+                m_textMeshPro.SetText(m_textMeshPro.text + enc.GetString(buffer, 0, text_size));
+            }
 
+            D_96F8 = main_D_96F8();
+            D_946C = main_D_946C();
+
+            // get any hilighted character, used during combat
+            main_ActiveChar(buffer, buffer.Length);
+
+            // check if active
+            if (buffer[1] != 0xff)
+            {
+                currentActiveCharacter.active = true;
+                currentActiveCharacter.characterIndex = buffer[0];
+                currentActiveCharacter.x = buffer[1];
+                currentActiveCharacter.y = buffer[2];
+            }
+            // else deactivate
+            else
+            {
+                currentActiveCharacter.active = false;
+            }
+
+            // get the current tile under the party
+            current_tile = main_tile_cur();
+
+            // read in current hit info list, the tile draws occurr out of the main draw squence and for only a short time before the playfield is repainted
+            // the DLL saves the list of hits and coords to display later
+            main_Hit(buffer, buffer.Length);
+
+            // get the hit list length from the buffer
+            int hit_length = buffer[0];
+
+            // add all the new hits to the list from the buffer 
+            for (int i = 0; i < hit_length; i++)
+            {
+                hit addHit;
+
+                addHit.tile = (TILE)buffer[1 + i * 3];
+
+                if (addHit.tile != 0)
+                {
+                    addHit.x = buffer[2 + i * 3];
+                    addHit.y = buffer[3 + i * 3];
+                    addHit.time = Time.time;
+
+                    currentHits.Add(addHit);
+                }
+            }
+
+            // remove any hits with expired timers
+            // TODO: make sure every hit is displayed at least a little while when overlapping hits occur
+            for (int i = 0; i < currentHits.Count; i++)
+            {
+                hit checkHit = currentHits[i];
+
+                // we will leave this hit up until we get another or the timer expires
+                if (checkHit.time + hit_time_period < Time.time)
+                {
+                    currentHits.Remove(checkHit);
+                }
             }
 
             // get the current map and npc data
             main_CurMap(buffer, buffer.Length);
 
-            // extract the map data
+            // get the current game mode;
+            current_mode = main_CurMode();
+
+            // extract the map data depending on the game mode
             if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
             {
                 buffer_index = 0;
@@ -1136,8 +1369,8 @@ public class U4_Decompiled : MonoBehaviour
                 Party.chara[i].__0e[1] = buffer[buffer_index++];
                 Party.chara[i]._weapon = (WEAPON)buffer[buffer_index++];
                 Party.chara[i]._armor = (ARMOR)buffer[buffer_index++];
-                Party.chara[i]._name = "" + buffer[buffer_index++] + buffer[buffer_index++] + buffer[buffer_index++] + buffer[buffer_index++]
-                    + buffer[buffer_index++] + buffer[buffer_index++] + buffer[buffer_index++] + buffer[buffer_index++];
+                Party.chara[i]._name = "" + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++]
+                    + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++];
                 Party.chara[i].p_24 = buffer[buffer_index++];
                 Party.chara[i]._class = buffer[buffer_index++];
                 Party.chara[i]._stat = buffer[buffer_index++];
@@ -1159,15 +1392,15 @@ public class U4_Decompiled : MonoBehaviour
 
             for (int i = 0; i < 8; i++)
             {
-                Party._armors[i] = (ARMOR)System.BitConverter.ToUInt16(buffer, 0x15e + i * 2);
+                Party._armors[i] = System.BitConverter.ToUInt16(buffer, 0x15e + i * 2);
             }
             for (int i = 0; i < 16; i++)
             {
-                Party._weapons[i] = (WEAPON)System.BitConverter.ToUInt16(buffer, 0x16e + i * 2);
+                Party._weapons[i] = System.BitConverter.ToUInt16(buffer, 0x16e + i * 2);
             }
             for (int i = 0; i < 8; i++)
             {
-                Party._reagents[i] = (REAGENT)System.BitConverter.ToUInt16(buffer, 0x18e + i * 2);
+                Party._reagents[i] = System.BitConverter.ToUInt16(buffer, 0x18e + i * 2);
             }
             for (int i = 0; i < 26; i++)
             {
@@ -1199,32 +1432,32 @@ public class U4_Decompiled : MonoBehaviour
             // read in the Combat global
             main_Combat(buffer, buffer.Length);
 
+            // read the npc positions
             for (int i = 0; i < 16; i++)
             {
-                Combat._npcX[i] = buffer[0x00 + i];
-                Combat._npcY[i] = buffer[0x10 + i];
+                Combat1[i]._npcX = buffer[0x00 + i];
+                Combat1[i]._npcY = buffer[0x10 + i];
             }
+            // read the character positions
             for (int i = 0; i < 8; i++)
             {
-                Combat._charaX[i] = buffer[0x20 + i];
-                Combat._charaY[i] = buffer[0x28 + i];
+                Combat2[i]._charaX = buffer[0x20 + i];
+                Combat2[i]._charaY = buffer[0x28 + i];
             }
-
-            //skip the map for now as Unity will not serialize and display the stucture with this present
-            /*
+            // read the combat map
             buffer_index = 0x40;
             for (int i = 0; i < 11; i++)
             {
                 for (int j = 0; j < 11; j++)
                 {
-                    Combat._map[i,j] = buffer[buffer_index++];
+                    Combat_map[i,j] = buffer[buffer_index++];
                 }
             }
-            */
 
             // read in the Fighters global
             main_Fighters(buffer, buffer.Length);
 
+            // extract the fighter data
             for (int i = 0; i < 16; i++)
             {
                 Fighters[i]._x = buffer[0x00 + i];
@@ -1239,6 +1472,7 @@ public class U4_Decompiled : MonoBehaviour
             // read in the main_D_96F9 global
             main_D_96F9(buffer, buffer.Length);
 
+            // read the main display buffer
             buffer_index = 0;
             for (int i = 0; i < 11; i++)
             {
@@ -1258,7 +1492,7 @@ public class U4_Decompiled : MonoBehaviour
 
             if (worldList.Length != 0)
             {
-                worldList[0].DrawMap(map, currentHits, currentActiveCharacter);
+//                worldList[0].DrawMap(map, currentHits, currentActiveCharacter);
 
                 if (current_mode == MODE.OUTDOORS)
                 {
@@ -1271,6 +1505,7 @@ public class U4_Decompiled : MonoBehaviour
                     worldList[0].fighters.SetActive(false);
                     worldList[0].characters.SetActive(false);
                     worldList[0].npcs.SetActive(true);
+                    worldList[0].party.SetActive(true);
 
                     for (int i = 0; i < 17; i++)
                     {
@@ -1292,25 +1527,26 @@ public class U4_Decompiled : MonoBehaviour
                     worldList[0].fighters.SetActive(false);
                     worldList[0].characters.SetActive(false);
                     worldList[0].npcs.SetActive(true);
+                    worldList[0].party.SetActive(true);
 
                     for (int i = 0; i < 17; i++)
                     {
                         GameObject set = Settlements[i].gameObject;
 
                         // need to special case the castle, this is how the engine figures it out using the ladder
-                        if ((i == 0) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3,3] == TILE.TILE_LADDER_DOWN))
+                        if ((i == 0) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3,3] == TILE.LADDER_DOWN))
                         {
                             set.SetActive(true);
                         }
-                        else if ((i == 0) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3, 3] == TILE.TILE_LADDER_UP))
+                        else if ((i == 0) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3, 3] == TILE.LADDER_UP))
                         {
                             set.SetActive(false);
                         }
-                        else if ((i == 1) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3, 3] == TILE.TILE_LADDER_UP))
+                        else if ((i == 1) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3, 3] == TILE.LADDER_UP))
                         {
                             set.SetActive(true);
                         }
-                        else if ((i == 1) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3, 3] == TILE.TILE_LADDER_DOWN))
+                        else if ((i == 1) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3, 3] == TILE.LADDER_DOWN))
                         {
                             set.SetActive(false);
                         }
@@ -1330,8 +1566,8 @@ public class U4_Decompiled : MonoBehaviour
                 }
                 else if (current_mode == MODE.COMBAT)
                 {
-                    worldList[0].AddFighters(Fighters, Combat);
-                    worldList[0].AddCharacters(Combat, Party, Fighters);
+                    worldList[0].AddFighters(Fighters, Combat1);
+                    worldList[0].AddCharacters(Combat2, Party, Fighters);
                     worldList[0].AddHits(currentHits);
                     worldList[0].AddActiveCharacter(currentActiveCharacter);
                     worldList[0].terrain.SetActive(false);
@@ -1339,6 +1575,7 @@ public class U4_Decompiled : MonoBehaviour
                     worldList[0].fighters.SetActive(true);
                     worldList[0].characters.SetActive(true);
                     worldList[0].npcs.SetActive(false);
+                    worldList[0].party.SetActive(false);
 
                     for (int i = 0; i < 17; i++)
                     {
@@ -1347,7 +1584,7 @@ public class U4_Decompiled : MonoBehaviour
 
                     int currentCombatTerrain = (int)Convert_Tile_to_Combat_Terrian(current_tile);
 
-                    for (int i = 0; i< 23; i++)
+                    for (int i = 0; i < 23; i++)
                     {
                         if (i == currentCombatTerrain)
                         {
@@ -1367,6 +1604,7 @@ public class U4_Decompiled : MonoBehaviour
                     if (renderer)
                     {
                         worldList[0].party.GetComponentInChildren<Renderer>().material.mainTexture = worldList[0].tiles[(int)Party._tile];
+                        worldList[0].party.name = Party._tile.ToString();
                     }
                 }
             }
