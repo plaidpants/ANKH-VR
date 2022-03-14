@@ -45,6 +45,7 @@ public class U4_Decompiled : MonoBehaviour
         CASTLE_RIGHT = 0x0F,
 
         /*ship W N E S*/
+        SHIP = 0x10,
         SHIP_WEST = 0x10,
         SHIP_NORTH = 0x11,
         SHIP_EAST = 0x12,
@@ -147,17 +148,17 @@ public class U4_Decompiled : MonoBehaviour
         ARCHITECTURE = 0x48,
         /* Secret brick wall */
         SECRET_BRICK_WALL = 0x49,
-        /* unknown ??? */
-        TILE_4A_UNKNOWN = 0x4A,
+        /* Altar */
+        ALTAR = 0x4A,
         /* cooking/camp fire */
         COOKING_FIRE = 0x4B,
         /* lava */
         LAVA = 0x4C,
 
         /* missiles */
-        MISSLE1 = 0x4D,
-        MISSLE2 = 0x4E,
-        MISSLE3 = 0x4F,
+        MISSLE_ATTACK_SMALL = 0x4D,
+        MISSLE_ATTACK_BLUE = 0x4E,
+        MISSLE_ATTACK_RED = 0x4F,
 
         /* 2-tile animation NPCs */
 
@@ -227,6 +228,7 @@ public class U4_Decompiled : MonoBehaviour
         /* 2-tile monsters */
 
         /*pirate W N E S*/
+        PIRATE = 0x80,
         PIRATE_WEST = 0x80,
         PIRATE_NORTH = 0x81,
         PIRATE_EAST = 0x82,
@@ -1240,6 +1242,22 @@ public class U4_Decompiled : MonoBehaviour
             if (text_size != 0)
             {
                 m_textMeshPro.SetText(m_textMeshPro.text + enc.GetString(buffer, 0, text_size));
+                //m_textMeshPro.textInfo.lineCount;
+                //m_textMeshPro.maxVisibleLines = 10;
+                int newline_count = 0;
+                int i;
+                for (i = m_textMeshPro.text.Length - 1; (i > 0) && (newline_count < 10); i--)
+                {
+                    if (m_textMeshPro.text[i] == '\n')
+                    {
+                        newline_count++;
+                    }
+                }
+                if (newline_count == 10)
+                {
+                    m_textMeshPro.SetText(m_textMeshPro.text.Substring(i + 2));
+                }
+                m_textMeshPro.ForceMeshUpdate();
             }
 
             D_96F8 = main_D_96F8();
