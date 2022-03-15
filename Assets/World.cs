@@ -1388,6 +1388,7 @@ public class World : MonoBehaviour
             activeCharacter.name = "Active Character";
             // set the shader
             Shader wireframe = Shader.Find("Custom/Geometry/Wireframe");
+            //Shader.Find("Custom/Geometry/Wireframe").EnableKeyword("_REMOVEDIAG_ON")
             MeshRenderer renderer = activeCharacter.GetComponent<MeshRenderer>();
             renderer.material.shader = wireframe;
             renderer.material.SetFloat("_WireframeVal", 0.03f);

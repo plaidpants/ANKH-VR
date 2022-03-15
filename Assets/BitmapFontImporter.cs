@@ -119,10 +119,5 @@ public static class BitmapFontImporter
 
 		AssetDatabase.CreateAsset (font, exportPath + ".fontsettings");
 	}
-	
-	private static float ToFloat (XmlNode node, string name)
-	{
-		return float.Parse (node.Attributes.GetNamedItem (name).InnerText);
-	}
 }
 #endif

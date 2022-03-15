@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using System.Threading;
+using UnityEngine.UI;
 
 public class U4_Decompiled : MonoBehaviour
 {
     private Thread trd;
+
+    public GameObject textGameObject;
 
     // tiles
     public enum TILE
@@ -763,7 +766,7 @@ public class U4_Decompiled : MonoBehaviour
     public GameObject[] Settlements;
     public GameObject[] CombatTerrains;
 
-    public TMPro.TextMeshPro m_textMeshPro;
+    public Text textDisplay;
     //private TMP_FontAsset m_FontAsset;
 
     public string label = "The <#0050FF>count is: </color>{0:2}";
@@ -773,7 +776,7 @@ public class U4_Decompiled : MonoBehaviour
 
     void StartText()
     {
-        m_textMeshPro = Camera.main.GetComponentInChildren<TMPro.TextMeshPro>();
+        textDisplay = textGameObject.GetComponent<Text>();
 
         //m_textMeshPro.autoSizeTextContainer = true;
 
@@ -1241,23 +1244,27 @@ public class U4_Decompiled : MonoBehaviour
             }
             if (text_size != 0)
             {
-                m_textMeshPro.SetText(m_textMeshPro.text + enc.GetString(buffer, 0, text_size));
+                if (textDisplay == null)
+                {
+                    textDisplay = textGameObject.GetComponent<Text>();
+                }
+                textDisplay.text = textDisplay.text + enc.GetString(buffer, 0, text_size);
                 //m_textMeshPro.textInfo.lineCount;
                 //m_textMeshPro.maxVisibleLines = 10;
                 int newline_count = 0;
                 int i;
-                for (i = m_textMeshPro.text.Length - 1; (i > 0) && (newline_count < 10); i--)
+                for (i = textDisplay.text.Length - 1; (i > 0) && (newline_count < 20); i--)
                 {
-                    if (m_textMeshPro.text[i] == '\n')
+                    if (textDisplay.text[i] == '\n')
                     {
                         newline_count++;
                     }
                 }
                 if (newline_count == 10)
                 {
-                    m_textMeshPro.SetText(m_textMeshPro.text.Substring(i + 2));
+                    textDisplay.text = textDisplay.text.Substring(i + 2);
                 }
-                m_textMeshPro.ForceMeshUpdate();
+                //textDisplay.ForceMeshUpdate();
             }
 
             D_96F8 = main_D_96F8();
