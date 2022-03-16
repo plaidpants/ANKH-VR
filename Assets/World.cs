@@ -14,6 +14,7 @@ public class World : MonoBehaviour
     public GameObject terrain;
     public GameObject animatedTerrrain;
     public GameObject billboardTerrrain; // new item not used yet for trees, anks, etc.
+    public GameObject bubblePrefab;
     public GameObject party;
     public GameObject fighters; 
     public GameObject characters;
@@ -503,6 +504,9 @@ public class World : MonoBehaviour
 
             followWorld();
             // don't add the script as the world map player does not have any animated tiles
+
+            GameObject BubbleText = Instantiate(bubblePrefab);
+            BubbleText.transform.SetParent(partyGameObject.transform);
         }
 
         // rotate world into place

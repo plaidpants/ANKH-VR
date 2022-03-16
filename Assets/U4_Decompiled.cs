@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using System.Threading;
 using UnityEngine.UI;
+//using SpeechLib;
 
 public class U4_Decompiled : MonoBehaviour
 {
@@ -541,7 +542,9 @@ public class U4_Decompiled : MonoBehaviour
     [DllImport("UN_U4.dll")]
     public static extern int main_Text(byte[] buffer, int length);
 
-    
+    [DllImport("UN_U4.dll")]
+    public static extern int main_NPC_Text(byte[] buffer, int length);
+
 
     public GameObject partyGameObject;
 
@@ -1237,34 +1240,77 @@ public class U4_Decompiled : MonoBehaviour
             timerExpired = timerPeriod;
 
 
-            int text_size = main_Text(buffer, buffer.Length);
+            /*
+        private SpeechLib.pVoice voice;
+
+            voice = new SpVoice();
+            ISpeechObjectTokens voices = voice.GetVoices();
+ 
+        // Update is called once per frame
+            if (Input.anyKeyDown)
+            {
+                voice.Speak("Hello, world!", SpeechVoiceSpeakFlags.SVSFlagsAsync);
+            }
+           */
+
+            // create an ASCII encoder if needed
             if (enc == null)
             {
                 enc = new System.Text.ASCIIEncoding();
             }
+
+            // read the circular text buffer from the game engine
+            int text_size = main_Text(buffer, buffer.Length);
+
+            // check if we have any new text to add
             if (text_size != 0)
             {
+                // create the text if it is not present already
                 if (textDisplay == null)
                 {
                     textDisplay = textGameObject.GetComponent<Text>();
                 }
-                textDisplay.text = textDisplay.text + enc.GetString(buffer, 0, text_size);
-                //m_textMeshPro.textInfo.lineCount;
-                //m_textMeshPro.maxVisibleLines = 10;
+
+                // remove the animated whirlpool from the text if we have some text
+                if (textDisplay.text.Length > 2)
+                {
+                    textDisplay.text = textDisplay.text.Remove(textDisplay.text.Length - 1);
+                }
+
+                // add the ACSII encoded text to the display text plus the whirlpool character
+                textDisplay.text = textDisplay.text + enc.GetString(buffer, 0, text_size) + (char)(0x1c + (int)(Time.time / 2 ) % 4);
+
+                // remove all but the last 20 lines
                 int newline_count = 0;
                 int i;
-                for (i = textDisplay.text.Length - 1; (i > 0) && (newline_count < 20); i--)
+                const int MAX_NEWLINES = 20;
+                for (i = textDisplay.text.Length - 1; (i > 0) && (newline_count < MAX_NEWLINES); i--)
                 {
+                    // check for a newline
                     if (textDisplay.text[i] == '\n')
                     {
+                        // count the newlines
                         newline_count++;
                     }
                 }
-                if (newline_count == 10)
+
+                // if we have enough cut the string 
+                if (newline_count == MAX_NEWLINES)
                 {
                     textDisplay.text = textDisplay.text.Substring(i + 2);
                 }
-                //textDisplay.ForceMeshUpdate();
+            }
+
+            // animate the spining whirlpool character by removing and adding to the end of the text the update whirlpool character
+            textDisplay.text = textDisplay.text.Remove(textDisplay.text.Length - 1) + (char)(0x1c + (Time.time * 10) % 4);
+
+
+            // read the circular text buffer from the game engine
+            text_size = main_NPC_Text(buffer, buffer.Length);
+
+            // check if we have any new text to add
+            if (text_size != 0)
+            {
             }
 
             D_96F8 = main_D_96F8();
