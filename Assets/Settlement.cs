@@ -9,9 +9,10 @@ public class Settlement : MonoBehaviour
     public Color[] EGAColorPalette;
     public Texture2D[] tiles;
 
-    GameObject npcs;
+    //GameObject npcs;
     GameObject terrain;
     GameObject animatedTerrrain;
+    GameObject shadow;
 
     public string tileEGAFilepath = "/u4/SHAPES.EGA";
     public string tileCGAFilepath = "/u4/SHAPES.CGA";
@@ -161,20 +162,9 @@ public class Settlement : MonoBehaviour
         }
     }
 
+
     void LoadTilesCGA()
     {
-        string destination = Application.persistentDataPath + "/u4/test1.txt";
-        System.IO.FileStream file;
-
-        if (System.IO.File.Exists(destination)) 
-            file = System.IO.File.OpenWrite(destination);
-        else 
-            file = System.IO.File.Create(destination);
-
-        BinaryFormatter bf = new BinaryFormatter();
-        bf.Serialize(file, "hello world");
-        file.Close();
-
         if (!System.IO.File.Exists(Application.persistentDataPath + tileCGAFilepath))
         {
             Debug.Log("Could not find CGA tiles file " + Application.persistentDataPath + tileCGAFilepath);
@@ -257,20 +247,53 @@ public class Settlement : MonoBehaviour
             index += 0x20;
         }
     }
-    public enum NPCQuestionFlag
+
+    public enum NPC_MOVEMENT_MODE
     {
-        JOB = 3,
-        HEALTH = 4,
-        KEYWORD1 = 5,
-        KEYWORD2 = 6
+        FIXED = 0x00,
+        WANDER = 0x01,
+        FOLLOW = 0x80,
+        ATTACK = 0xff
     };
 
-    public NPCQuestionFlag[] npcQuestionFlag = new NPCQuestionFlag[16];
+    public int[] npcQuestionTriggerIndex = new int[16];
     public bool[] npcQuestionAffectHumility = new bool[16];
     public int[] npcProbabilityOfTurningAway = new int[16];
     public List<string>[] npcStrings = new List<string>[16];
+    public U4_Decompiled.TILE[,] settlementMap = new U4_Decompiled.TILE[32,32];
 
-    void LoadSettlement()
+    public enum NPC_STRING_INDEX
+    {
+        NAME = 0,
+        PRONOUN = 1, //  (He, She or It)
+        LOOK_DESCRIPTION = 2,
+        JOB_RESPONSE = 3,
+        HEALTH_RESPONSE = 4,
+        KEYWORD1_RESPONSE = 5,
+        KEYWORD2_RESPONSE = 6,
+        QUESTION = 7,
+        QUESTION_YES_RESPONSE = 8,
+        QUESTION_NO_RESPONSE = 9,
+        KEYWORD1 = 10,
+        KEYWORD2 = 11
+    };
+
+    public struct npc
+    {
+        public U4_Decompiled.TILE tile;
+        public byte pos_x;
+        public byte pos_y;
+        public NPC_MOVEMENT_MODE movement;
+        public int conversationIndex;
+        public List<string> strings;
+        public int probabilityOfTurningAway;
+        public bool questionAffectHumility;
+        public int questionTriggerIndex;
+    };
+
+    public npc[] settlementNPCs = new npc[32];
+
+    void LoadSettlementTalkAndMap()
     {
         /* 
            Offset 	Length (in bytes) 	Purpose
@@ -333,13 +356,13 @@ public class Settlement : MonoBehaviour
         {
             Debug.Log("Settlement talk file incorrect length " + talkFileData.Length);
             return;
-        } 
+        }
 
         for (int talkIndex = 0; talkIndex < 16; talkIndex++)
         {
             npcStrings[talkIndex] = new List<string>();
 
-            npcQuestionFlag[talkIndex] = (NPCQuestionFlag)talkFileData[talkIndex * 288];
+            npcQuestionTriggerIndex[talkIndex] = talkFileData[talkIndex * 288];
             if (talkFileData[(talkIndex * 288) + 1] != 0)
             {
                 npcQuestionAffectHumility[talkIndex] = true;
@@ -358,7 +381,7 @@ public class Settlement : MonoBehaviour
             {
                 // reset string
                 s = "";
-                
+
                 // manually construct the string because C# doesn't work with null terminated C strings well
                 for (int i = 0; (i < 100) && (talkFileData[talkIndex * 288 + stringIndex] != 0); i++)
                 {
@@ -378,92 +401,166 @@ public class Settlement : MonoBehaviour
             } while ((s.Length != 0) && (stringIndex < 285));
         }
 
-        // create three game object under us to hold these sub categories of things
-        terrain = new GameObject("terrain");
-        terrain.transform.SetParent(transform);
-        terrain.transform.localPosition = Vector3.zero;
-        terrain.transform.localRotation = Quaternion.identity;
-        npcs = new GameObject("npc");
-        npcs.transform.SetParent(transform);
-        npcs.transform.localPosition = Vector3.zero;
-        npcs.transform.localRotation = Quaternion.identity;
-        animatedTerrrain = new GameObject("water");
-        animatedTerrrain.transform.SetParent(transform);
-        animatedTerrrain.transform.localPosition = Vector3.zero;
-        animatedTerrrain.transform.localRotation = Quaternion.identity;
-        // add our little animator script
-        animatedTerrrain.AddComponent<Animate1>();
-
-        int index = 0;
+        // load settlement map data
+        int bufferIndex = 0;
 
         for (int height = 0; height < 32; height++)
         {
             for (int width = 0; width < 32; width++)
             {
-                GameObject mapTile;
-                int tileIndex = settlementFileData[index++];
+                U4_Decompiled.TILE tileIndex = (U4_Decompiled.TILE)settlementFileData[bufferIndex++];
+                settlementMap[width, height] = tileIndex;
+            }
+        }
 
-                // solid object, brick, rocks etc.
-                if (tileIndex == 73 || tileIndex == 127 || tileIndex == 57)
+        // load npc data from the map data
+        for (int npcIndex = 0; npcIndex < 32; npcIndex++)
+        {
+            U4_Decompiled.TILE npcTile = (U4_Decompiled.TILE)settlementFileData[0x400 + npcIndex];
+            settlementNPCs[npcIndex].tile = npcTile;
+
+            // zero indicates unused
+            if (npcTile != 0)
+            {
+                settlementNPCs[npcIndex].pos_x = settlementFileData[0x420 + npcIndex];
+                settlementNPCs[npcIndex].pos_y = settlementFileData[0x440 + npcIndex];
+                settlementNPCs[npcIndex].movement = (NPC_MOVEMENT_MODE)settlementFileData[0x4C0 + npcIndex];
+                int conversationIndex = settlementFileData[0x4E0 + npcIndex];
+                settlementNPCs[npcIndex].conversationIndex = conversationIndex;
+                // grab the talk data and add it to this structure
+                // zero indicates unused
+                if (conversationIndex != 0)
                 {
-                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    mapTile.transform.SetParent(terrain.transform);
-                    Vector3 location = new Vector3(width, 31 - height, 0.0f);
-                    mapTile.transform.localPosition = location;
+                    // this can be 128 for one vendor in Vincent, not sure why? TODO
+                    if ((conversationIndex - 1) < npcStrings.Length)
+                    {
+                        settlementNPCs[npcIndex].strings = npcStrings[conversationIndex - 1];
+                        settlementNPCs[npcIndex].questionAffectHumility = npcQuestionAffectHumility[conversationIndex - 1];
+                        settlementNPCs[npcIndex].probabilityOfTurningAway = npcProbabilityOfTurningAway[conversationIndex - 1];
+                        settlementNPCs[npcIndex].questionTriggerIndex = npcQuestionTriggerIndex[conversationIndex - 1];
+                    }
+                }
+            }
+        }
+    }
+
+    void CreateSettlementGameObjects(U4_Decompiled.TILE[,] map)
+    {
+        // create three game object under us to hold these sub categories of things
+        if (terrain == null)
+        {
+            terrain = new GameObject("terrain");
+            terrain.transform.SetParent(transform);
+            terrain.transform.localPosition = Vector3.zero;
+            terrain.transform.localRotation = Quaternion.identity;
+        }
+
+        /*
+        npcs = new GameObject("npc");
+        npcs.transform.SetParent(transform);
+        npcs.transform.localPosition = Vector3.zero;
+        npcs.transform.localRotation = Quaternion.identity;
+        */
+
+        if (animatedTerrrain == null)
+        {
+            animatedTerrrain = new GameObject("water");
+            animatedTerrrain.transform.SetParent(transform);
+            animatedTerrrain.transform.localPosition = Vector3.zero;
+            animatedTerrrain.transform.localRotation = Quaternion.identity;
+
+            // add our little animator script to the animated terrain game object
+            animatedTerrrain.AddComponent<Animate1>();
+        }
+
+        // start over each update
+        foreach (Transform child in terrain.transform)
+        {
+            Object.Destroy(child.gameObject);
+        }
+        foreach (Transform child in animatedTerrrain.transform)
+        {
+            Object.Destroy(child.gameObject);
+        }
+
+        for (int height = 0; height < 32; height++)
+        {
+            for (int width = 0; width < 32; width++)
+            {
+                GameObject mapTileGameObject;
+                Vector3 mapTileLocation;
+                U4_Decompiled.TILE tileIndex = map[width, height];
+
+                // check if it tile is blank
+                if (tileIndex == U4_Decompiled.TILE.BLANK)
+                {
+                    continue;
+                }
+                // solid object, brick, rocks etc. make into cubes
+                else if (tileIndex == U4_Decompiled.TILE.BRICK_WALL 
+                    || tileIndex == U4_Decompiled.TILE.LARGE_ROCKS 
+                    || tileIndex == U4_Decompiled.TILE.SECRET_BRICK_WALL)
+                {
+                    mapTileGameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    mapTileGameObject.transform.SetParent(terrain.transform);
+                    mapTileLocation = new Vector3(width, 31 - height, 0.0f);
                 }
                 // Letters, make into short cubes
-                else if (tileIndex >= 96 && tileIndex <= 125)
+                else if (tileIndex >= U4_Decompiled.TILE.A && tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE)
                 {
-                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    mapTile.transform.SetParent(terrain.transform);
-                    mapTile.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
-                    mapTile.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
-                    Vector3 location = new Vector3(width, 31 - height, 0.25f);
-                    mapTile.transform.localPosition = location;
+                    mapTileGameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    mapTileGameObject.transform.SetParent(terrain.transform);
+                    mapTileGameObject.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
+                    mapTileLocation = new Vector3(width, 31 - height, 0.25f);
                 }
                 // all other terrain tiles are flat
                 else
                 {
-                    Vector3 location;
-
-                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    mapTileGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
 
                     // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
-                    if ((tileIndex < 3) || (tileIndex >= 68 && tileIndex <= 71) || ( tileIndex == 76))
+                    if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) 
+                        || (tileIndex >= U4_Decompiled.TILE.POISON_FIELD && tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD) 
+                        || ( tileIndex == U4_Decompiled.TILE.LAVA))
                     {
-                        mapTile.transform.SetParent(animatedTerrrain.transform);
-
+                        mapTileGameObject.transform.SetParent(animatedTerrrain.transform);
+                        
                         // engery fields are above
-                        if (tileIndex >= 68 && tileIndex <= 71)
+                        if (tileIndex >= U4_Decompiled.TILE.POISON_FIELD && tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD)
                         {
-                            location = new Vector3(width, 31 - height, -0.5f);
+                            mapTileLocation = new Vector3(width, 31 - height, -0.5f);
                         }
                         else
                         {
-                            location = new Vector3(width, 31 - height, 0.5f);
+                            mapTileLocation = new Vector3(width, 31 - height, 0.5f);
                         }
+
+
                     }
                     else
                     {
-                        mapTile.transform.SetParent(terrain.transform);
-                        location = new Vector3(width, 31 - height, 0.5f);
+                        mapTileGameObject.transform.SetParent(terrain.transform);
+                        mapTileLocation = new Vector3(width, 31 - height, 0.5f);
                     }
-                    
-                    mapTile.transform.localPosition = location;
                 }
 
-                // all terrain is static, used by combine below to merge meshes
-                mapTile.isStatic = true;
+                mapTileGameObject.transform.localEulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+                mapTileGameObject.transform.localPosition = mapTileLocation;
+
+                // all terrain is static, used by combine function below to merge static meshes
+                mapTileGameObject.isStatic = true;
 
                 // set the shader
                 Shader unlit = Shader.Find("Mobile/Unlit (Supports Lightmap)");
 
-                MeshRenderer render = mapTile.GetComponent<MeshRenderer>();
+                MeshRenderer render = mapTileGameObject.GetComponent<MeshRenderer>();
 
-                render.material.mainTexture = tiles[tileIndex];
+                render.material.mainTexture = tiles[(int)tileIndex];
                 render.material.shader = unlit;
             }
         }
+
+        // we use the game engine to populate the npcs so we do not need to do this here
         /*
         for (int npcIndex = 0; npcIndex < 32; npcIndex++)
         {
@@ -523,7 +620,6 @@ public class Settlement : MonoBehaviour
                     // create two objects to alternate between for animation
                     MeshRenderer render1 = npcGameObject1.GetComponent<MeshRenderer>();
                     MeshRenderer render2 = npcGameObject2.GetComponent<MeshRenderer>();
-
 
                     render1.material.mainTexture = tiles[npcTile];
 
@@ -632,12 +728,65 @@ public class Settlement : MonoBehaviour
                     // don't add the script as this npc does not have any animated tiles
                 }
             }
-        }*/
+        }
+        */
+
+        // rotate entire settlement into place
+        transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+        //transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
+    }
+
+    void CreateSettlementShadowGameObjects()
+    {
+        // create three game object under us to hold these sub categories of things
+        if (shadow == null)
+        {
+            shadow = new GameObject("shadow");
+            shadow.transform.SetParent(transform);
+            shadow.transform.localPosition = Vector3.zero;
+            shadow.transform.localRotation = Quaternion.identity;
+        }
+
+        // start over each update
+        foreach (Transform child in shadow.transform)
+        {
+            Object.Destroy(child.gameObject);
+        }
+
+        for (int height = 0; height < 32; height++)
+        {
+            for (int width = 0; width < 32; width++)
+            {
+                GameObject mapTile;
+                U4_Decompiled.TILE tileIndex = raycastSettlementMap[width, height];
+
+                // solid object, brick, rocks etc. make into cubes
+                if (tileIndex == U4_Decompiled.TILE.BLANK)
+                {
+                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    mapTile.transform.SetParent(shadow.transform);
+                    Vector3 location = new Vector3(width, 31 - height, 0.0f);
+                    mapTile.transform.localPosition = location;
+
+                    // all terrain is static, used by combine function below to merge static meshes
+                    mapTile.isStatic = true;
+
+                    // set the shader
+                    Shader unlit = Shader.Find("Mobile/Unlit (Supports Lightmap)");
+
+                    MeshRenderer render = mapTile.GetComponent<MeshRenderer>();
+
+                    render.material.mainTexture = tiles[(int)tileIndex];
+                    render.material.shader = unlit;
+                }
+            }
+        }
 
         transform.position = new Vector3(0, 0, 224);
 
-        // rotate world into place
-        transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
+        // rotate settlement into place
+        //transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
+        transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
     }
 
     // this one will go two layers deep to avoid an implementation that relies on recursion
@@ -726,7 +875,7 @@ public class Settlement : MonoBehaviour
         if (textures.Count <= 128) return 16;
         if (textures.Count <= 256) return 32;
 
-        // Doesn't handle more than 256 different textures but I think you can see how to extend
+        // Doesn't handle more than 256 different textures
         return 0;
     }
     private int GetTextureSize(GameObject[] o)
@@ -762,7 +911,7 @@ public class Settlement : MonoBehaviour
      * Links or credits to www.jnamobile.com are appreciated but not required.
      * 
      */
-        private void Combine(GameObject gameObject, bool useMipMaps = false, TextureFormat textureFormat = TextureFormat.RGBA32, bool destroy = true)
+    private void Combine(GameObject gameObject, bool useMipMaps = false, TextureFormat textureFormat = TextureFormat.RGBA32, bool destroy = true)
     {
         int size;
         int originalSize;
@@ -854,8 +1003,16 @@ public class Settlement : MonoBehaviour
             // Create a mesh filter and renderer
             if (staticCount > 1)
             {
-                MeshFilter filter = gameObject.AddComponent<MeshFilter>();
-                MeshRenderer renderer = gameObject.AddComponent<MeshRenderer>();
+                MeshFilter filter = gameObject.GetComponent<MeshFilter>();
+                if (filter == null)
+                {
+                    filter = gameObject.AddComponent<MeshFilter>();
+                }
+                MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
+                if (renderer == null)
+                {
+                    renderer = gameObject.AddComponent<MeshRenderer>();
+                }
                 filter.mesh = new Mesh();
                 filter.mesh.CombineMeshes(combine);
                 renderer.material = material;
@@ -980,8 +1137,16 @@ public class Settlement : MonoBehaviour
             // Create a mesh filter and renderer
             if (staticCount > 1)
             {
-                MeshFilter filter = gameObject.AddComponent<MeshFilter>();
-                MeshRenderer renderer = gameObject.AddComponent<MeshRenderer>();
+                MeshFilter filter = gameObject.GetComponent<MeshFilter>();
+                if (filter == null)
+                {
+                    filter = gameObject.AddComponent<MeshFilter>();
+                }
+                MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
+                if (renderer == null)
+                {
+                    renderer = gameObject.AddComponent<MeshRenderer>();
+                }
                 filter.mesh = new Mesh();
                 filter.mesh.CombineMeshes(combine);
                 renderer.material = material;
@@ -1014,15 +1179,31 @@ public class Settlement : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+   // void Start()
+   void Awake()
     {
         InitializeEGAPalette();
-        LoadTilesEGA(); 
+        LoadTilesEGA();
 
         //InitializeCGAPalette();
         //LoadTilesCGA();
 
-        LoadSettlement();
+        LoadSettlementTalkAndMap();
+
+
+        // enter town start position
+        //raycast(1, 15);
+        // enter castle start position
+        raycast(0x0f, 0x1e);
+
+        CreateSettlementGameObjects(raycastSettlementMap);
+
+        // Position the settlement in place
+        transform.position = new Vector3(0, 0, 224);
+
+        // rotate settlement into place
+        //transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
+        transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
 
         if (terrain)
         {
@@ -1035,10 +1216,12 @@ public class Settlement : MonoBehaviour
             }
         }
 
+        /*
         if (npcs)
         {
             Combine(npcs.gameObject);
         }
+        */
 
         if (animatedTerrrain)
         { 
@@ -1052,9 +1235,140 @@ public class Settlement : MonoBehaviour
         }
     }
 
+
+    // cast one ray
+    void Cast_Ray(sbyte diff_x, sbyte diff_y, byte pos_x, byte pos_y)
+    {
+        U4_Decompiled.TILE temp_tile;
+
+        // are we outside the area we want to check
+        if (pos_x > 31 || pos_y > 31)
+        {
+            return;
+        }
+
+        // is the tile already been copied
+        if (raycastSettlementMap[pos_x, pos_y] != U4_Decompiled.TILE.BLANK)
+        {
+            return;
+        }
+
+        // get the tile and copy it to the raycast map
+        temp_tile = settlementMap[pos_x, pos_y];
+        raycastSettlementMap[pos_x, pos_y] = temp_tile;
+
+        // check the tile for opaque tiles
+        if ((temp_tile == U4_Decompiled.TILE.FOREST) ||
+            (temp_tile == U4_Decompiled.TILE.MOUNTAINS) ||
+            (temp_tile == U4_Decompiled.TILE.BLANK) ||
+            (temp_tile == U4_Decompiled.TILE.SECRET_BRICK_WALL) ||
+            (temp_tile == U4_Decompiled.TILE.BRICK_WALL))
+        {
+            return;
+        }
+
+        // continue the ray cast recursively
+        pos_x = (byte)(pos_x + diff_x);
+        pos_y = (byte)(pos_y + diff_y);
+        Cast_Ray(diff_x, diff_y, pos_x, pos_y);
+        if ((diff_x & diff_y) != 0)
+        {
+            Cast_Ray(diff_x, diff_y, pos_x, (byte)(pos_y - diff_y));
+            Cast_Ray(diff_x, diff_y, (byte)(pos_x - diff_x), pos_y);
+        }
+        else
+        {
+            Cast_Ray((sbyte)(((diff_x != 0) ? 1 : 0) * diff_y + diff_x), (sbyte)(diff_y - ((diff_y != 0) ? 1 : 0) * diff_x), (byte)(diff_y + pos_x), (byte)(pos_y - diff_x));
+            Cast_Ray((sbyte)(diff_x - ((diff_x != 0) ? 1 : 0) * diff_y), (sbyte)(((diff_y != 0) ? 1 : 0) * diff_x + diff_y), (byte)(pos_x - diff_y), (byte)(diff_x + pos_y));
+        }
+    }
+
+    public U4_Decompiled.TILE[,] raycastSettlementMap = new U4_Decompiled.TILE[32, 32];
+
+    // visible area (raycast)
+    void raycast(int pos_x, int pos_y)
+    {
+        // set all visible tiles to blank to start
+        for (int i = 0; i < 32; i++)
+        {
+            for (int j = 0; j < 32; j++)
+            {
+                raycastSettlementMap[i, j] = U4_Decompiled.TILE.BLANK;
+            }
+        }
+
+        raycastSettlementMap[pos_x, pos_y] = settlementMap[pos_x, pos_y]; // copy the center party's tile as it is always visible
+
+//        if (pos_y > 1)
+        {
+            Cast_Ray(0, -1, (byte)pos_x, (byte)(pos_y - 1)); // Cast a ray UP
+        }
+        if (pos_y < 31)
+        {
+            Cast_Ray(0, 1, (byte)pos_x, (byte)(pos_y + 1)); // Cast a ray DOWN
+        }
+//        if (pos_x > 1)
+        {
+            Cast_Ray(-1, 0, (byte)(pos_x - 1), (byte)pos_y); // Cast a ray LEFT
+        }
+//        if (pos_x < 31)
+        {
+            Cast_Ray(1, 0, (byte)(pos_x + 1), (byte)pos_y); // Cast a ray RIGHT
+        }
+//        if ((pos_x < 31) && (pos_y < 31))
+        {
+            Cast_Ray(1, 1, (byte)(pos_x + 1), (byte)(pos_y + 1)); // Cast a ray DOWN and to the RIGHT
+        }
+ //       if ((pos_x < 31) && (pos_y > 1))
+        {
+            Cast_Ray(1, -1, (byte)(pos_x + 1), (byte)(pos_y - 1)); // Cast a ray UP and to the RIGHT
+        }
+ //       if ((pos_x > 1) && (pos_y < 31))
+        {
+            Cast_Ray(-1, 1, (byte)(pos_x - 1), (byte)(pos_y + 1)); // Cast a ray DOWN and to the LEFT
+        }
+  //      if ((pos_x > 1) && (pos_y > 1))
+        {
+            Cast_Ray(-1, -1, (byte)(pos_x - 1), (byte)(pos_y - 1)); // Cast a ray UP and to the LEFT
+        }
+    }
+
+    public U4_Decompiled u4;
+
+    int lastPlayer_posx = 0;
+    int lastPlayer_posy = 0;
+
+    private void Start()
+    {
+        // get a reference to the game engine
+        u4 = FindObjectOfType<U4_Decompiled>();
+    }
+
     // Update is called once per frame
     void Update()
     {
-       
+        // we've moved, regenerate the raycast and resulting mesh
+        if ((u4.Party._x != lastPlayer_posx) || (u4.Party._y != lastPlayer_posy))
+        {
+            // generate a new raycast
+            raycast(u4.Party._x, u4.Party._y);
+            // create the game objects with meshes and textures
+            CreateSettlementGameObjects(raycastSettlementMap);
+
+            // combine the meshes and textures for terrain
+            Combine(terrain.gameObject);
+            // combine the meshes and textures for water
+            Combine2(animatedTerrrain.gameObject);
+
+            // Position the settlement in place
+            transform.position = new Vector3(0, 0, 224);
+
+            // rotate settlement into place
+            transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+
+            // update the lst position
+            lastPlayer_posx = u4.Party._x;
+            lastPlayer_posy = u4.Party._y;
+        }
     }
 }

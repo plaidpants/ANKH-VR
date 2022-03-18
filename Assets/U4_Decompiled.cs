@@ -552,7 +552,7 @@ public class U4_Decompiled : MonoBehaviour
     float timerExpired = 0.0f;
     public float timerPeriod = 0.02f; // the game operates on a 300ms Sleep() so we want to update things faster than that
 
-    byte[] buffer = new byte[2000];
+    byte[] buffer = new byte[10000];
 
     public TILE[,] tMap32x32 = new TILE[32, 32];
     public byte[,,] tMap8x8x8 = new byte[8, 8, 8];
@@ -833,7 +833,7 @@ public class U4_Decompiled : MonoBehaviour
         // assign settlement game objects
         Settlements = new GameObject[17];
         Settlements[(int)LOCATIONS.BRITANNIA] = GameObject.Find("LBC_1");
-        Settlements[(int)0] = GameObject.Find("LBC_2"); // need to fingure out how to determine location of the upper and lower levels of the castle
+        Settlements[(int)0] = GameObject.Find("LBC_2"); // actual location of the upper and lower levels is determined by the location of the ladders
         Settlements[(int)LOCATIONS.THE_LYCAEUM] = GameObject.Find("LYCAEUM");
         Settlements[(int)LOCATIONS.EMPATH_ABBY] = GameObject.Find("EMPATH");
         Settlements[(int)LOCATIONS.SERPENT_HOLD] = GameObject.Find("SERPENT");
@@ -882,6 +882,8 @@ public class U4_Decompiled : MonoBehaviour
     // the code is not re-entrant so I cannot just expose and call the function directly so I need to re-implement the 
     // logic here so I can on the fly determine the combat terrain to display by exposing the interal variables used in the
     // original function.
+
+    // TODO: this does not handle the INN or shop or camp case  (e.g. In the middle of the night, while out for a stroll...)
     COMBAT_TERRAIN Convert_Tile_to_Combat_Terrian(TILE tile)
     {
         COMBAT_TERRAIN combat_terrain;
@@ -1311,6 +1313,29 @@ public class U4_Decompiled : MonoBehaviour
             // check if we have any new text to add
             if (text_size != 0)
             {
+                if (partyGameObject != null)
+                {
+                    Text partyText = partyGameObject.GetComponentInChildren<Text>();
+                    if (partyText != null)
+                    {
+                        partyText.text = "";
+
+                        for (int i = 0; i < text_size; i++)
+                        {
+                            int npcIndex = buffer[i * 500];
+                            //partyText.text = partyText.text + npcIndex + " : " + /* Settlements[(int)Party._loc].GetComponent<Settlement>().npcStrings[_npc[npcIndex]._tlkidx - 1][0] + " says : " + */
+                            string npcTalk = enc.GetString(buffer, i * 500 + 1, 500);
+
+                            WindowsVoice voice = partyGameObject.GetComponentInChildren<WindowsVoice>();
+                            WindowsVoice.speak(npcTalk);
+
+                            int firstNull = npcTalk.IndexOf('\0');
+                            npcTalk = npcTalk.Substring(0, firstNull);
+                            partyText.text = partyText.text + npcTalk;
+
+                        }
+                    }
+                }
             }
 
             D_96F8 = main_D_96F8();
@@ -1553,6 +1578,9 @@ public class U4_Decompiled : MonoBehaviour
                 }
             }
 
+            // raycast this map
+            raycast();
+
             // keep the part game object in sync with the game
             if (partyGameObject)
             {
@@ -1563,7 +1591,7 @@ public class U4_Decompiled : MonoBehaviour
 
             if (worldList.Length != 0)
             {
-//                worldList[0].DrawMap(map, currentHits, currentActiveCharacter);
+                //worldList[0].DrawMap(raycastMap, currentHits, currentActiveCharacter);
 
                 if (current_mode == MODE.OUTDOORS)
                 {
@@ -1604,7 +1632,7 @@ public class U4_Decompiled : MonoBehaviour
                     {
                         GameObject set = Settlements[i].gameObject;
 
-                        // need to special case the castle, this is how the engine figures it out using the ladder
+                        // need to special case the castle, this is how the game engine figures it out using the ladder
                         if ((i == 0) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3,3] == TILE.LADDER_DOWN))
                         {
                             set.SetActive(true);
@@ -1635,7 +1663,7 @@ public class U4_Decompiled : MonoBehaviour
                         CombatTerrains[i].gameObject.SetActive(false);
                     }
                 }
-                else if (current_mode == MODE.COMBAT)
+                else if ((current_mode == MODE.COMBAT) || (current_mode == MODE.COM_CAMP /* TODO: this could be the inn or shop or camp */ ) || (current_mode == MODE.COM_ROOM))
                 {
                     worldList[0].AddFighters(Fighters, Combat1);
                     worldList[0].AddCharacters(Combat2, Party, Fighters);
@@ -1680,5 +1708,79 @@ public class U4_Decompiled : MonoBehaviour
                 }
             }
         }
+    }
+
+
+    // cast one ray
+    void Cast_Ray(sbyte diff_x, sbyte diff_y, byte pos_x, byte pos_y)
+    {
+        TILE temp_tile;
+
+        // are we outside the area we want to check
+        if (pos_x > 10 || pos_y > 10)
+        {
+            return;
+        }
+
+        // is the tile already been copied
+        if (raycastMap[pos_x, pos_y] != TILE.BLANK)
+        {
+            return;
+        }
+
+        // get the tile and copy it to the raycast map
+        temp_tile = map[pos_x, pos_y];
+        raycastMap[pos_x, pos_y] = temp_tile;
+
+        // check the tile for opaque tiles
+        if ((temp_tile == TILE.FOREST) ||
+            (temp_tile == TILE.MOUNTAINS) ||
+            (temp_tile == TILE.BLANK) ||
+            (temp_tile == TILE.SECRET_BRICK_WALL) ||
+            (temp_tile == TILE.BRICK_WALL))
+        {
+            return;
+        }
+
+        // continue the ray cast recursively
+        pos_x = (byte)(pos_x + diff_x);
+        pos_y = (byte)(pos_y + diff_y);
+        Cast_Ray(diff_x, diff_y, pos_x, pos_y);
+	    if ((diff_x & diff_y) != 0) 
+        {
+            Cast_Ray(diff_x, diff_y, pos_x, (byte)(pos_y - diff_y));
+            Cast_Ray(diff_x, diff_y, (byte)(pos_x - diff_x), pos_y);
+        }
+        else
+        {
+            Cast_Ray((sbyte)(((diff_x != 0) ? 1 : 0) * diff_y + diff_x), (sbyte)(diff_y - ((diff_y != 0) ? 1 : 0) * diff_x), (byte)(diff_y + pos_x), (byte)(pos_y - diff_x));
+            Cast_Ray((sbyte)(diff_x - ((diff_x != 0) ? 1 : 0) * diff_y), (sbyte)(((diff_y != 0) ? 1 : 0) * diff_x + diff_y), (byte)(pos_x - diff_y), (byte)(diff_x + pos_y));
+        } 
+    }
+
+    public TILE[,] raycastMap = new TILE[11, 11];
+
+    // visible area (raycast)
+    void raycast()
+    {
+        // set all visible tiles to blank to start
+        for (int i = 0; i < 11; i++)
+        {
+            for (int j = 0; j < 11; j++)
+            {
+                raycastMap[i, j] = TILE.BLANK;
+            }
+        }
+
+        raycastMap[5, 5] = map[5,5]; // copy the center party's tile as it is always visible
+
+        Cast_Ray(0, -1, 5, 4); // Cast a ray UP
+        Cast_Ray(0, 1, 5, 6); // Cast a ray DOWN
+        Cast_Ray(-1, 0, 4, 5); // Cast a ray LEFT
+        Cast_Ray(1, 0, 6, 5); // Cast a ray RIGHT
+        Cast_Ray(1, 1, 6, 6); // Cast a ray DOWN and to the RIGHT
+        Cast_Ray(1, -1, 6, 4); // Cast a ray UP and to the RIGHT
+        Cast_Ray(-1, 1, 4, 6); // Cast a ray DOWN and to the LEFT
+        Cast_Ray(-1, -1, 4, 4); // Cast a ray UP and to the LEFT
     }
 }

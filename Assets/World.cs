@@ -506,7 +506,11 @@ public class World : MonoBehaviour
             // don't add the script as the world map player does not have any animated tiles
 
             GameObject BubbleText = Instantiate(bubblePrefab);
-            BubbleText.transform.SetParent(partyGameObject.transform);
+            BubbleText.transform.SetParent(party.transform);
+            bubblePrefab.GetComponent<Canvas>().worldCamera = Camera.main;
+            bubblePrefab.transform.localPosition = Vector3.zero;
+            bubblePrefab.GetComponent<RectTransform>().localPosition = new Vector3(-2.0f, 0.5f, -2.0f);
+            bubblePrefab.transform.localEulerAngles = new Vector3(-90.0f, 0.0f, 0.0f);
         }
 
         // rotate world into place
@@ -1287,26 +1291,62 @@ public class World : MonoBehaviour
         // update all npcs in the table
         for (int npcIndex = 0; npcIndex < 32; npcIndex++)
         {
-            // get the tile
+            // get the npc tile
             U4_Decompiled.TILE npcTile = currentNpcs[npcIndex]._tile;
+
+            // get the game engine
+            U4_Decompiled u4_Decompiled = FindObjectsOfType<U4_Decompiled>()[0];
+
+            // get the npc position
+            int posx = currentNpcs[npcIndex]._x;
+            int posy = currentNpcs[npcIndex]._y;
 
             // get the corresponding npc game object
             Transform childofnpcs = npcs.transform.GetChild(npcIndex);
-            if (currentNpcs[npcIndex]._tlkidx == 0)
+
+            // inside buildings we need to check extra stuff
+            if (u4_Decompiled.current_mode == U4_Decompiled.MODE.BUILDING)
             {
-                childofnpcs.name = npcTile.ToString();
+                Settlement settlement;
+
+                // get the current settlement, need to special case BRITANNIA as the castle has two levels, use the ladder to determine which level
+                if ((u4_Decompiled.Party._loc == U4_Decompiled.LOCATIONS.BRITANNIA) && (u4_Decompiled.tMap32x32[3, 3] == U4_Decompiled.TILE.LADDER_DOWN))
+                {
+                    settlement = u4_Decompiled.Settlements[0].GetComponent<Settlement>();
+                }
+                else
+                {
+                    settlement = u4_Decompiled.Settlements[(int)u4_Decompiled.Party._loc].GetComponent<Settlement>();
+                }
+
+                // can we see the npc
+                if (settlement.raycastSettlementMap[posx, posy] != U4_Decompiled.TILE.BLANK)
+                {
+                    childofnpcs.gameObject.SetActive(true);
+                }
+                else
+                {
+                    childofnpcs.gameObject.SetActive(false);
+                }
+
+                // set the name of the game object to match the npc
+                if ((currentNpcs[npcIndex]._tlkidx == 0) && (currentNpcs[npcIndex]._tlkidx <= 16 /* sometimes this is 127 */))
+                {
+                    childofnpcs.name = npcTile.ToString();
+                }
+                else
+                {
+                    childofnpcs.name = settlement.npcStrings[currentNpcs[npcIndex]._tlkidx - 1][0];
+                }
             }
             else
             {
-                U4_Decompiled u4_Decompiled = FindObjectsOfType<U4_Decompiled>()[0];
-                // TODO simplify this mess
-                childofnpcs.name = u4_Decompiled.Settlements[(int)u4_Decompiled.Party._loc].GetComponent<Settlement>().npcStrings[currentNpcs[npcIndex]._tlkidx - 1][0];
+                // set the name of the game object to match the npc
+                childofnpcs.name = npcTile.ToString();
             }
 
             // update the tile of the game object
             childofnpcs.GetComponent<Animate3>().SetNPCTile(npcTile);
-
-
 
             // update the position
             childofnpcs.localPosition = new Vector3(currentNpcs[npcIndex]._x, 255 - currentNpcs[npcIndex]._y, 0);
@@ -1415,7 +1455,7 @@ public class World : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         InitializeEGAPalette();
         LoadTilesEGA();
