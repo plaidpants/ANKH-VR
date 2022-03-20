@@ -7,7 +7,8 @@ public class Settlement : MonoBehaviour
 {
     public Color[] CGAColorPalette;
     public Color[] EGAColorPalette;
-    public Texture2D[] tiles;
+    public Texture2D[] originalTiles; 
+    public Texture2D[] expandedTiles;
 
     //GameObject npcs;
     GameObject terrain;
@@ -18,6 +19,9 @@ public class Settlement : MonoBehaviour
     public string tileCGAFilepath = "/u4/SHAPES.CGA";
     public string settlementFilepath = "/u4/BRITAIN.ULT";
     public string talkFilepath = "/u4/BRITAIN.TLK";
+
+    // use to pregenerate the raycast from the right starting location for faster initial display after entering the settlement
+    public bool castle = true;
 
     void InitializeEGAPalette()
     {
@@ -66,16 +70,16 @@ public class Settlement : MonoBehaviour
         }
 
         // read the file
-        byte [] fileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + tileEGAFilepath);
+        byte[] fileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + tileEGAFilepath);
 
-        if (fileData.Length != 32*1024)
+        if (fileData.Length != 32 * 1024)
         {
             Debug.Log("EGA tiles file incorrect length " + fileData.Length);
             return;
         }
 
         // allocate an array of textures
-        tiles = new Texture2D[256];
+        originalTiles = new Texture2D[256];
 
         // use and index to walk through the file
         int index = 0;
@@ -90,7 +94,7 @@ public class Settlement : MonoBehaviour
             currentTile.filterMode = FilterMode.Point;
 
             // assign this texture to the tile array index
-            tiles[tile] = currentTile;
+            originalTiles[tile] = currentTile;
 
             // manually go through the data and set the (x,y) pixels to the tile based on the input file using the CGA color palette
             for (int height = 0; height < currentTile.height; height++)
@@ -98,7 +102,7 @@ public class Settlement : MonoBehaviour
                 for (int width = 0; width < currentTile.width; /* width incremented below */ )
                 {
                     // set the color of the first half of the nibble
-                    int colorIndex = fileData[index] >> 4; 
+                    int colorIndex = fileData[index] >> 4;
                     Color color = EGAColorPalette[colorIndex];
 
                     // check if these are people/creatures and use black as alpha channel
@@ -157,7 +161,7 @@ public class Settlement : MonoBehaviour
                 }
             }
 
-            // Actually apply all previous SetPixel and SetPixels changes from above
+            // Actually apply all previous SetPixel changes from above
             currentTile.Apply();
         }
     }
@@ -181,7 +185,7 @@ public class Settlement : MonoBehaviour
         }
 
         // allocate an array of textures
-        tiles = new Texture2D[256];
+        originalTiles = new Texture2D[256];
 
         // use and index to walk through the file
         int index = 0;
@@ -196,7 +200,7 @@ public class Settlement : MonoBehaviour
             currentTile.filterMode = FilterMode.Point;
 
             // assign this texture to the tile array index
-            tiles[tile] = currentTile;
+            originalTiles[tile] = currentTile;
 
             // manually go through the data and set the (x,y) pixels to the tile based on the input file using the EGA color palette
             for (int height = 0; height < currentTile.height; height += 2)
@@ -213,7 +217,7 @@ public class Settlement : MonoBehaviour
 
                     colorIndex = (fileData[index + 0x20] & 0x30) >> 4;
                     color = EGAColorPalette[colorIndex];
-                    currentTile.SetPixel(width, currentTile.height - height -2, color);
+                    currentTile.SetPixel(width, currentTile.height - height - 2, color);
 
                     colorIndex = (fileData[index] & 0x30) >> 4;
                     color = EGAColorPalette[colorIndex];
@@ -248,6 +252,358 @@ public class Settlement : MonoBehaviour
         }
     }
 
+    // NOTE certain shaders used for things like sprites and unlit textures do not
+    // do well with edges and leave ghosts of the nearby textures from the texture atlas
+    // to solve this issue I need to create at least a one pixel mirror border around the
+    // tile, this function creates a larger tile texture and adds this border around the tile placed in the center.
+    // Special care must be made when combining meshes with textures like this and the Combine()
+    // function has been updated to handle this situation and update the uv's. Given that some
+    // platforms may require textures be certain integer multiples of 2 this function will allow
+    // a larger than one pixel border around the tile.
+    const int TILE_BORDER_SIZE = 16;
+    public void ExpandTiles()
+    {
+        // allocate some textures pointers
+        expandedTiles = new Texture2D[256];
+
+        // go through all the original tiles
+        for (int i = 0; i < 256; i++)
+        {
+            // create a new slightly larger texture with boarder for this tile
+            Texture2D currentTile = originalTiles[i];
+            Texture2D newTile = new Texture2D(currentTile.width + 2 * TILE_BORDER_SIZE, currentTile.height + 2 * TILE_BORDER_SIZE, TextureFormat.RGBA32, false);
+
+            // we want pixles not fuzzy images
+            newTile.filterMode = FilterMode.Point;
+
+            // go through all the pixels in the source texture
+            for (int height = 0; height < currentTile.height; height++)
+            {
+                for (int width = 0; width < currentTile.width; width++)
+                {
+                    // copy the pixles into the middle
+                    newTile.SetPixel(width + TILE_BORDER_SIZE, height + TILE_BORDER_SIZE, currentTile.GetPixel(width, height));
+                }
+            }
+
+            // mirror the pixles on either side
+            for (int height = 0; height < currentTile.height; height++)
+            {
+                // left side
+                newTile.SetPixel(TILE_BORDER_SIZE - 1, height + TILE_BORDER_SIZE, currentTile.GetPixel(0, height));
+                // right side
+                newTile.SetPixel(TILE_BORDER_SIZE + currentTile.width, height + TILE_BORDER_SIZE, currentTile.GetPixel(currentTile.width - 1, height));
+            }
+
+            // mirror the pixles on top and bottom
+            for (int width = 0; width < currentTile.width; width++)
+            {
+                // left side
+                newTile.SetPixel(width + TILE_BORDER_SIZE, TILE_BORDER_SIZE - 1, currentTile.GetPixel(width, 0));
+                // right side
+                newTile.SetPixel(width + TILE_BORDER_SIZE, TILE_BORDER_SIZE + currentTile.height, currentTile.GetPixel(width, currentTile.height - 1));
+            }
+
+            // now the four corners
+            newTile.SetPixel(TILE_BORDER_SIZE - 1, TILE_BORDER_SIZE - 1, currentTile.GetPixel(0, 0));
+            newTile.SetPixel(TILE_BORDER_SIZE + currentTile.width, TILE_BORDER_SIZE - 1, currentTile.GetPixel(currentTile.width - 1, 0));
+            newTile.SetPixel(TILE_BORDER_SIZE + currentTile.width, TILE_BORDER_SIZE + currentTile.height, currentTile.GetPixel(currentTile.width - 1, currentTile.height - 1));
+            newTile.SetPixel(TILE_BORDER_SIZE - 1, TILE_BORDER_SIZE + currentTile.height, currentTile.GetPixel(0, currentTile.height - 1));
+
+            // apply all the previous SetPixel() calls to the texture
+            newTile.Apply();
+
+            // save the new expanded texture
+            expandedTiles[i] = newTile;
+        }
+    }
+
+    // used to have unity generate the mesh and export the data 
+    static bool once = false;
+
+    // this is a very slow way to do this but useful to get the mesh data out for the faster function below
+    GameObject CreatePartialCube(bool leftside = true, bool rightside = true, bool back = true, bool front = true)
+    {
+        GameObject parent = new GameObject();
+        //GameObject parent = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+        GameObject topQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        topQuad.name = "top";
+        topQuad.transform.SetParent(parent.transform);
+        topQuad.transform.localPosition = new Vector3(0.0f, 0.0f, -0.5f);
+        topQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+        topQuad.GetComponent<MeshRenderer>().material.mainTexture = originalTiles[0];
+        topQuad.isStatic = true;
+
+        if (leftside)
+        {
+            GameObject leftSideQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            leftSideQuad.name = "left side";
+            leftSideQuad.transform.SetParent(parent.transform);
+            leftSideQuad.transform.localPosition = new Vector3(-0.5f, 0.0f, 0.0f);
+            leftSideQuad.transform.localEulerAngles = new Vector3(0.0f, 90.0f, -90.0f);
+            leftSideQuad.GetComponent<MeshRenderer>().material.mainTexture = originalTiles[0];
+            leftSideQuad.isStatic = true;
+        }
+        if (rightside)
+        {
+            GameObject rightSideQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            rightSideQuad.name = "right side";
+            rightSideQuad.transform.SetParent(parent.transform);
+            rightSideQuad.transform.localPosition = new Vector3(0.5f, 0.0f, 0.0f);
+            rightSideQuad.transform.localEulerAngles = new Vector3(0.0f, -90.0f, 90.0f);
+            rightSideQuad.GetComponent<MeshRenderer>().material.mainTexture = originalTiles[0];
+            rightSideQuad.isStatic = true;
+        }
+        if (front)
+        {
+            GameObject frontQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            frontQuad.name = "front";
+            frontQuad.transform.SetParent(parent.transform);
+            frontQuad.transform.localPosition = new Vector3(0.0f, -0.5f, 0.0f);
+            frontQuad.transform.localEulerAngles = new Vector3(-90.0f, 0.0f, 0.0f);
+            frontQuad.GetComponent<MeshRenderer>().material.mainTexture = originalTiles[0];
+            frontQuad.isStatic = true;
+        }
+        if (back)
+        {
+            GameObject backQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            backQuad.name = "back";
+            backQuad.transform.SetParent(parent.transform);
+            backQuad.transform.localPosition = new Vector3(0.0f, 0.5f, 0.0f);
+            backQuad.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 180.0f);
+            backQuad.GetComponent<MeshRenderer>().material.mainTexture = originalTiles[0];
+            backQuad.isStatic = true;
+        }
+
+        Combine(parent);
+
+        // dump some mesh data
+        if (once)
+        {
+            once = false;
+            Mesh mesh = parent.GetComponent<MeshFilter>().mesh;
+
+            int index = 0;
+            foreach (Vector3 vert in mesh.vertices)
+            {
+                Debug.Log("Vector3 p" + index++ + " = new Vector3(" + vert.x + ", " + vert.y + ", " + vert.z + ");");
+            }
+
+            foreach (int triangle in mesh.triangles)
+            {
+                Debug.Log(triangle + ", ");
+            }
+
+            index = 0;
+            foreach (Vector2 uv in mesh.uv)
+            {
+                Debug.Log("uv[" + index++ + "] = new Vector2(" + uv.x + ", " + uv.y + ");");
+            }
+        }
+
+        return parent;
+    }
+
+    GameObject CreatePartialCube2(bool leftside = true, bool rightside = true, bool back = true, bool front = true )
+    {
+        // create a game object to hold the cube and give it a proper name
+        GameObject partialCube = new GameObject("Partial Cube");
+        partialCube.name = "Partial Cube";
+
+        // add a mesh filter and mesh renderer so we can see this new cube game object 
+        MeshFilter meshFilter = partialCube.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = partialCube.AddComponent<MeshRenderer>();
+
+        // always have the top
+        int sides = 1;
+        if (leftside)
+        {
+            sides++;
+        }
+        if (rightside)
+        {
+            sides++;
+        }
+        if (back)
+        {
+            sides++;
+        }
+        if (front)
+        {
+            sides++;
+        }
+
+        // allocate just enough vertices
+        Vector3[] verts = new Vector3[sides*4];
+
+        // variable index to walk through arrays depending on number of sides enabled
+        int index = 0;
+
+        // top 
+        verts[index++]  = new Vector3(-0.5f, -0.5f, -0.5f);
+        verts[index++]  = new Vector3( 0.5f, -0.5f, -0.5f);
+        verts[index++]  = new Vector3(-0.5f,  0.5f, -0.5f);
+        verts[index++]  = new Vector3( 0.5f,  0.5f, -0.5f);
+
+        if (leftside)
+        {
+            verts[index++] = new Vector3(-0.5f, 0.5f, 0.5f);
+            verts[index++] = new Vector3(-0.5f, -0.5f, 0.5f);
+            verts[index++] = new Vector3(-0.5f, 0.5f, -0.5f);
+            verts[index++] = new Vector3(-0.5f, -0.5f, -0.5f);
+        }
+
+        if (rightside)
+        {
+            verts[index++] = new Vector3(0.5f, -0.5f, 0.5f);
+            verts[index++] = new Vector3(0.5f, 0.5f, 0.5f);
+            verts[index++] = new Vector3(0.5f, -0.5f, -0.5f);
+            verts[index++] = new Vector3(0.5f, 0.5f, -0.5f);
+        }
+
+        if (front)
+        {
+            verts[index++] = new Vector3(-0.5f, -0.5f, 0.5f);
+            verts[index++] = new Vector3(0.5f, -0.5f, 0.5f);
+            verts[index++] = new Vector3(-0.5f, -0.5f, -0.5f);
+            verts[index++] = new Vector3(0.5f, -0.5f, -0.5f);
+        }
+
+        if (back)
+        {
+            verts[index++] = new Vector3(0.5f, 0.5f, 0.5f);
+            verts[index++] = new Vector3(-0.5f, 0.5f, 0.5f);
+            verts[index++] = new Vector3(0.5f, 0.5f, -0.5f);
+            verts[index++] = new Vector3(-0.5f, 0.5f, -0.5f);
+        }
+
+        // get the current mesh
+        Mesh mesh = meshFilter.sharedMesh;
+
+        // if it is null create it
+        if (mesh == null)
+        {
+            meshFilter.mesh = new Mesh();
+            mesh = meshFilter.sharedMesh;
+        }
+
+        // make sure it is empty if we did not just create it above
+        mesh.Clear();
+
+        // save the vertices
+        mesh.vertices = verts;
+
+        int[] tris = new int[3 * 2 * sides]; // 3 verticies per triangle & 2 triangles per side
+
+        // reset the array index
+        index = 0;
+
+        // dynamic offset adjusted depending on sides enabled as we add triangles
+        int offset = 0;
+
+        // top
+        tris[index++] = 0; tris[index++] = 3; tris[index++] = 1;
+        tris[index++] = 3; tris[index++] = 0; tris[index++] = 2;
+
+        if (leftside)
+        {
+            tris[index++] = 4; tris[index++] = 7; tris[index++] = 5;
+            tris[index++] = 7; tris[index++] = 4; tris[index++] = 6;
+        }
+        else
+        {
+            offset = -4;
+        }
+
+        if (rightside)
+        {
+            tris[index++] = 8 + offset; tris[index++] = 11 + offset; tris[index++] = 9 + offset;
+            tris[index++] = 11 + offset; tris[index++] = 8 + offset; tris[index++] = 10 + offset;
+        }
+        else
+        {
+            offset = offset -4;
+        }
+
+        if (front)
+        {
+            tris[index++] = 12 + offset; tris[index++] = 15 + offset; tris[index++] = 13 + offset;
+            tris[index++] = 15 + offset; tris[index++] = 12 + offset; tris[index++] = 14 + offset;
+        }
+        else
+        {
+            offset = offset - 4;
+        }
+
+        if (back)
+        {
+            tris[index++] = 16 + offset; tris[index++] = 19 + offset; tris[index++] = 17 + offset;
+            tris[index++] = 19 + offset; tris[index++] = 16 + offset; tris[index++] = 18 + offset;
+        }
+
+        // save the triangles
+        mesh.triangles = tris;
+
+        // create some uvs base on the number of vertices above
+        Vector2[] uvs = new Vector2[mesh.vertices.Length];
+
+        // reset the array index
+        index = 0;
+
+        // top
+        uvs[index++] = new Vector2(0, 0);
+        uvs[index++] = new Vector2(1, 0);
+        uvs[index++] = new Vector2(0, 1);
+        uvs[index++] = new Vector2(1, 1);
+
+        if (leftside)
+        {
+            uvs[index++] = new Vector2(0, 0);
+            uvs[index++] = new Vector2(1, 0);
+            uvs[index++] = new Vector2(0, 1);
+            uvs[index++] = new Vector2(1, 1);
+        }
+
+        if (rightside)
+        {
+            uvs[index++] = new Vector2(0, 0);
+            uvs[index++] = new Vector2(1, 0);
+            uvs[index++] = new Vector2(0, 1);
+            uvs[index++] = new Vector2(1, 1);
+        }
+
+        if (front)
+        {
+            uvs[index++] = new Vector2(0, 0);
+            uvs[index++] = new Vector2(1, 0);
+            uvs[index++] = new Vector2(0, 1);
+            uvs[index++] = new Vector2(1, 1);
+        }
+
+        if (back)
+        {
+            uvs[index++] = new Vector2(0, 0);
+            uvs[index++] = new Vector2(1, 0);
+            uvs[index++] = new Vector2(0, 1);
+            uvs[index++] = new Vector2(1, 1);
+        }
+
+        // save the uvs
+        mesh.uv = uvs;
+
+        // finish up the mesh
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        mesh.Optimize();
+
+        // save the mesh
+        meshFilter.mesh = mesh;
+
+        // return the game object just like the built in primitive shape creators work
+        return partialCube;
+    }
+
     public enum NPC_MOVEMENT_MODE
     {
         FIXED = 0x00,
@@ -260,7 +616,7 @@ public class Settlement : MonoBehaviour
     public bool[] npcQuestionAffectHumility = new bool[16];
     public int[] npcProbabilityOfTurningAway = new int[16];
     public List<string>[] npcStrings = new List<string>[16];
-    public U4_Decompiled.TILE[,] settlementMap = new U4_Decompiled.TILE[32,32];
+    public U4_Decompiled.TILE[,] settlementMap = new U4_Decompiled.TILE[32, 32];
 
     public enum NPC_STRING_INDEX
     {
@@ -444,6 +800,19 @@ public class Settlement : MonoBehaviour
         }
     }
 
+    bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
+    {
+        return (tileIndex == U4_Decompiled.TILE.BRICK_WALL
+                    || tileIndex == U4_Decompiled.TILE.LARGE_ROCKS
+                    || tileIndex == U4_Decompiled.TILE.SECRET_BRICK_WALL);
+    }
+
+    bool CheckShortTileForOpacity(U4_Decompiled.TILE tileIndex)
+    {
+        return (CheckTileForOpacity(tileIndex) || 
+                    ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE)));
+    }
+
     void CreateSettlementGameObjects(U4_Decompiled.TILE[,] map)
     {
         // create three game object under us to hold these sub categories of things
@@ -490,6 +859,7 @@ public class Settlement : MonoBehaviour
                 GameObject mapTileGameObject;
                 Vector3 mapTileLocation;
                 U4_Decompiled.TILE tileIndex = map[width, height];
+                bool useExpandedTile = false;
 
                 // check if it tile is blank
                 if (tileIndex == U4_Decompiled.TILE.BLANK)
@@ -497,21 +867,51 @@ public class Settlement : MonoBehaviour
                     continue;
                 }
                 // solid object, brick, rocks etc. make into cubes
-                else if (tileIndex == U4_Decompiled.TILE.BRICK_WALL 
-                    || tileIndex == U4_Decompiled.TILE.LARGE_ROCKS 
-                    || tileIndex == U4_Decompiled.TILE.SECRET_BRICK_WALL)
+                else if (CheckTileForOpacity(tileIndex))
                 {
-                    mapTileGameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled.TILE leftTile  = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+
+                    if (height > 0)
+                        aboveTile = map[width, height - 1];
+                    if (height < 31)
+                        belowTile = map[width, height + 1];
+                    if (width > 0)
+                        leftTile = map[width - 1, height];
+                    if (width < 31)
+                        rightTile = map[width + 1, height];
+
+                    //mapTileGameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    mapTileGameObject = CreatePartialCube2( !CheckTileForOpacity(leftTile), !CheckTileForOpacity(rightTile), !CheckTileForOpacity(aboveTile), !CheckTileForOpacity(belowTile));
                     mapTileGameObject.transform.SetParent(terrain.transform);
                     mapTileLocation = new Vector3(width, 31 - height, 0.0f);
+                    useExpandedTile = true;
                 }
                 // Letters, make into short cubes
                 else if (tileIndex >= U4_Decompiled.TILE.A && tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE)
                 {
-                    mapTileGameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+
+                    if (height > 0)
+                        aboveTile = map[width, height - 1];
+                    if (height < 31)
+                        belowTile = map[width, height + 1];
+                    if (width > 0)
+                        leftTile = map[width - 1, height];
+                    if (width < 31)
+                        rightTile = map[width + 1, height];
+
+                    //mapTileGameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    mapTileGameObject = CreatePartialCube2(!CheckShortTileForOpacity(leftTile), !CheckShortTileForOpacity(rightTile), !CheckShortTileForOpacity(aboveTile), !CheckShortTileForOpacity(belowTile));
                     mapTileGameObject.transform.SetParent(terrain.transform);
                     mapTileGameObject.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
                     mapTileLocation = new Vector3(width, 31 - height, 0.25f);
+                    useExpandedTile = true;
                 }
                 // all other terrain tiles are flat
                 else
@@ -519,12 +919,12 @@ public class Settlement : MonoBehaviour
                     mapTileGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
 
                     // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
-                    if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) 
-                        || (tileIndex >= U4_Decompiled.TILE.POISON_FIELD && tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD) 
-                        || ( tileIndex == U4_Decompiled.TILE.LAVA))
+                    if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER)
+                        || (tileIndex >= U4_Decompiled.TILE.POISON_FIELD && tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD)
+                        || (tileIndex == U4_Decompiled.TILE.LAVA))
                     {
                         mapTileGameObject.transform.SetParent(animatedTerrrain.transform);
-                        
+
                         // engery fields are above
                         if (tileIndex >= U4_Decompiled.TILE.POISON_FIELD && tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD)
                         {
@@ -534,13 +934,14 @@ public class Settlement : MonoBehaviour
                         {
                             mapTileLocation = new Vector3(width, 31 - height, 0.5f);
                         }
-
-
+                        // since we animate the texture using uv we cannot use the expanded tiles and need to use the original ones
+                        useExpandedTile = false;
                     }
                     else
                     {
                         mapTileGameObject.transform.SetParent(terrain.transform);
                         mapTileLocation = new Vector3(width, 31 - height, 0.5f);
+                        useExpandedTile = true;
                     }
                 }
 
@@ -552,11 +953,22 @@ public class Settlement : MonoBehaviour
 
                 // set the shader
                 Shader unlit = Shader.Find("Mobile/Unlit (Supports Lightmap)");
+                MeshRenderer renderer = mapTileGameObject.GetComponent<MeshRenderer>();
+                renderer.material.shader = unlit;
 
-                MeshRenderer render = mapTileGameObject.GetComponent<MeshRenderer>();
-
-                render.material.mainTexture = tiles[(int)tileIndex];
-                render.material.shader = unlit;
+                // set the tile and texture offset and scale
+                if (useExpandedTile)
+                {
+                    renderer.material.mainTexture = expandedTiles[(int)tileIndex];
+                    renderer.material.mainTextureOffset = new Vector2((float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
+                    renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
+                }
+                else
+                {
+                    renderer.material.mainTexture = originalTiles[(int)tileIndex];
+                    renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
+                    renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
+                }
             }
         }
 
@@ -764,6 +1176,7 @@ public class Settlement : MonoBehaviour
                 if (tileIndex == U4_Decompiled.TILE.BLANK)
                 {
                     mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    mapTile = CreatePartialCube2();
                     mapTile.transform.SetParent(shadow.transform);
                     Vector3 location = new Vector3(width, 31 - height, 0.0f);
                     mapTile.transform.localPosition = location;
@@ -776,7 +1189,7 @@ public class Settlement : MonoBehaviour
 
                     MeshRenderer render = mapTile.GetComponent<MeshRenderer>();
 
-                    render.material.mainTexture = tiles[(int)tileIndex];
+                    render.material.mainTexture = expandedTiles[(int)tileIndex];
                     render.material.shader = unlit;
                 }
             }
@@ -967,15 +1380,21 @@ public class Settlement : MonoBehaviour
             {
                 mesh = objectsToCombine[i].GetComponent<MeshFilter>().mesh;
                 Vector2[] uv = new Vector2[mesh.uv.Length];
-                Vector2 offset;
-                if (textureAtlas.ContainsKey(objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture))
+                Vector2 textureAtlasOffset;
+                Material objectMaterial = objectsToCombine[i].GetComponent<MeshRenderer>().material;
+                if (textureAtlas.ContainsKey(objectMaterial.mainTexture))
                 {
-                    offset = (Vector2)textureAtlas[objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture];
+                    textureAtlasOffset = (Vector2)textureAtlas[objectMaterial.mainTexture];
                     for (int u = 0; u < mesh.uv.Length; u++)
                     {
-                        uv[u] = mesh.uv[u] / (float)pow2;
-                        uv[u].x += ((float)offset.x) / (float)pow2;
-                        uv[u].y += ((float)offset.y) / (float)pow2;
+                        //uv[u] = mesh.uv[u] / (float)pow2;
+                        //uv[u] = mesh.uv[u] / (((float)(TILE_BOARDER_SIZE * 2 + 16) / (float)16) * pow2);
+                        uv[u].x = mesh.uv[u].x * material.mainTextureScale.x / pow2;
+                        uv[u].y = mesh.uv[u].y * material.mainTextureScale.y / pow2;
+                        //uv[u].x += ((float)textureAtlasOffset.x + ((float)(TILE_BOARDER_SIZE) / (float)objectMaterial.mainTexture.width)) / (float)pow2;
+                        //uv[u].y += ((float)textureAtlasOffset.y + ((float)(TILE_BOARDER_SIZE) / (float)objectMaterial.mainTexture.height)) / (float)pow2;
+                        uv[u].x += (textureAtlasOffset.x + objectMaterial.mainTextureOffset.x) / pow2;
+                        uv[u].y += (textureAtlasOffset.y + objectMaterial.mainTextureOffset.y) / pow2;
                     }
                 }
                 else
@@ -996,6 +1415,7 @@ public class Settlement : MonoBehaviour
                 {
                     staticCount++;
                     combine[i].mesh = objectsToCombine[i].GetComponent<MeshFilter>().mesh;
+                    // need to convert to world coords before combining
                     combine[i].transform = objectsToCombine[i].transform.localToWorldMatrix;
                 }
             }
@@ -1014,8 +1434,11 @@ public class Settlement : MonoBehaviour
                     renderer = gameObject.AddComponent<MeshRenderer>();
                 }
                 filter.mesh = new Mesh();
+                filter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                 filter.mesh.CombineMeshes(combine);
                 renderer.material = material;
+                renderer.material.mainTextureOffset = new Vector2(1.0f, 1.0f);
+                renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
 
                 // Disable all the static object renderers
                 for (int i = 0; i < objectsToCombine.Length; i++)
@@ -1024,7 +1447,7 @@ public class Settlement : MonoBehaviour
                     {
                         if (destroy)
                         {
-                            Destroy(objectsToCombine[i]);
+                            DestroyImmediate(objectsToCombine[i]);
                         }
                         else
                         {
@@ -1081,7 +1504,7 @@ public class Settlement : MonoBehaviour
                 texture = (Texture2D)objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture;
                 if (!textureAtlas.ContainsKey(texture))
                 {
-                    int x = index  * originalSize;
+                    int x = index * originalSize;
                     int y = 0;
 
                     combinedTexture.SetPixels(x, y, originalSize, originalSize, texture.GetPixels());
@@ -1179,23 +1602,31 @@ public class Settlement : MonoBehaviour
     }
 
     // Start is called before the first frame update
-   // void Start()
-   void Awake()
+    // void Start()
+    void Awake()
     {
         InitializeEGAPalette();
         LoadTilesEGA();
+        ExpandTiles();
 
         //InitializeCGAPalette();
         //LoadTilesCGA();
 
         LoadSettlementTalkAndMap();
 
+        if (castle)
+        {
+            // enter castle start position
+            // TODO LBC2 you have multiple ways you can enter so pre rendering may not be useful for that one
+            raycast(0x0f, 0x1e);
+        }
+        else
+        {
+            // enter town start position
+            raycast(1, 15);
+        }
 
-        // enter town start position
-        //raycast(1, 15);
-        // enter castle start position
-        raycast(0x0f, 0x1e);
-
+        // pre generate the initial scene from the raycast above
         CreateSettlementGameObjects(raycastSettlementMap);
 
         // Position the settlement in place
@@ -1224,7 +1655,7 @@ public class Settlement : MonoBehaviour
         */
 
         if (animatedTerrrain)
-        { 
+        {
             Combine2(animatedTerrrain.gameObject);
             Shader unlit = Shader.Find("UI/Unlit/Detail");
             MeshRenderer render = animatedTerrrain.GetComponent<MeshRenderer>();
@@ -1237,25 +1668,28 @@ public class Settlement : MonoBehaviour
 
 
     // cast one ray
-    void Cast_Ray(sbyte diff_x, sbyte diff_y, byte pos_x, byte pos_y)
+    int Cast_Ray(sbyte diff_x, sbyte diff_y, byte pos_x, byte pos_y)
     {
+        int checksum = 0;
+
         U4_Decompiled.TILE temp_tile;
 
         // are we outside the area we want to check
         if (pos_x > 31 || pos_y > 31)
         {
-            return;
+            return checksum;
         }
 
         // is the tile already been copied
         if (raycastSettlementMap[pos_x, pos_y] != U4_Decompiled.TILE.BLANK)
         {
-            return;
+            return checksum;
         }
 
         // get the tile and copy it to the raycast map
         temp_tile = settlementMap[pos_x, pos_y];
         raycastSettlementMap[pos_x, pos_y] = temp_tile;
+        checksum += (int)temp_tile;
 
         // check the tile for opaque tiles
         if ((temp_tile == U4_Decompiled.TILE.FOREST) ||
@@ -1264,30 +1698,34 @@ public class Settlement : MonoBehaviour
             (temp_tile == U4_Decompiled.TILE.SECRET_BRICK_WALL) ||
             (temp_tile == U4_Decompiled.TILE.BRICK_WALL))
         {
-            return;
+            return checksum;
         }
 
         // continue the ray cast recursively
         pos_x = (byte)(pos_x + diff_x);
         pos_y = (byte)(pos_y + diff_y);
-        Cast_Ray(diff_x, diff_y, pos_x, pos_y);
+        checksum += Cast_Ray(diff_x, diff_y, pos_x, pos_y);
         if ((diff_x & diff_y) != 0)
         {
-            Cast_Ray(diff_x, diff_y, pos_x, (byte)(pos_y - diff_y));
-            Cast_Ray(diff_x, diff_y, (byte)(pos_x - diff_x), pos_y);
+            checksum += Cast_Ray(diff_x, diff_y, pos_x, (byte)(pos_y - diff_y));
+            checksum += Cast_Ray(diff_x, diff_y, (byte)(pos_x - diff_x), pos_y);
         }
         else
         {
-            Cast_Ray((sbyte)(((diff_x != 0) ? 1 : 0) * diff_y + diff_x), (sbyte)(diff_y - ((diff_y != 0) ? 1 : 0) * diff_x), (byte)(diff_y + pos_x), (byte)(pos_y - diff_x));
-            Cast_Ray((sbyte)(diff_x - ((diff_x != 0) ? 1 : 0) * diff_y), (sbyte)(((diff_y != 0) ? 1 : 0) * diff_x + diff_y), (byte)(pos_x - diff_y), (byte)(diff_x + pos_y));
+            checksum += Cast_Ray((sbyte)(((diff_x != 0) ? 1 : 0) * diff_y + diff_x), (sbyte)(diff_y - ((diff_y != 0) ? 1 : 0) * diff_x), (byte)(diff_y + pos_x), (byte)(pos_y - diff_x));
+            checksum += Cast_Ray((sbyte)(diff_x - ((diff_x != 0) ? 1 : 0) * diff_y), (sbyte)(((diff_y != 0) ? 1 : 0) * diff_x + diff_y), (byte)(pos_x - diff_y), (byte)(diff_x + pos_y));
         }
+
+        return checksum;
     }
 
     public U4_Decompiled.TILE[,] raycastSettlementMap = new U4_Decompiled.TILE[32, 32];
 
     // visible area (raycast)
-    void raycast(int pos_x, int pos_y)
+    int raycast(int pos_x, int pos_y)
     {
+        int checksum = 0;
+
         // set all visible tiles to blank to start
         for (int i = 0; i < 32; i++)
         {
@@ -1297,40 +1735,44 @@ public class Settlement : MonoBehaviour
             }
         }
 
-        raycastSettlementMap[pos_x, pos_y] = settlementMap[pos_x, pos_y]; // copy the center party's tile as it is always visible
+        U4_Decompiled.TILE currentTile = settlementMap[pos_x, pos_y];
+        raycastSettlementMap[pos_x, pos_y] = currentTile; // copy the center party's tile as it is always visible
+        checksum += (int)currentTile; // add to the checksum
 
-//        if (pos_y > 1)
+        //        if (pos_y > 1)
         {
-            Cast_Ray(0, -1, (byte)pos_x, (byte)(pos_y - 1)); // Cast a ray UP
+            checksum += Cast_Ray(0, -1, (byte)pos_x, (byte)(pos_y - 1)); // Cast a ray UP
         }
         if (pos_y < 31)
         {
-            Cast_Ray(0, 1, (byte)pos_x, (byte)(pos_y + 1)); // Cast a ray DOWN
+            checksum += Cast_Ray(0, 1, (byte)pos_x, (byte)(pos_y + 1)); // Cast a ray DOWN
         }
-//        if (pos_x > 1)
+        //        if (pos_x > 1)
         {
-            Cast_Ray(-1, 0, (byte)(pos_x - 1), (byte)pos_y); // Cast a ray LEFT
+            checksum += Cast_Ray(-1, 0, (byte)(pos_x - 1), (byte)pos_y); // Cast a ray LEFT
         }
-//        if (pos_x < 31)
+        //        if (pos_x < 31)
         {
-            Cast_Ray(1, 0, (byte)(pos_x + 1), (byte)pos_y); // Cast a ray RIGHT
+            checksum += Cast_Ray(1, 0, (byte)(pos_x + 1), (byte)pos_y); // Cast a ray RIGHT
         }
-//        if ((pos_x < 31) && (pos_y < 31))
+        //        if ((pos_x < 31) && (pos_y < 31))
         {
-            Cast_Ray(1, 1, (byte)(pos_x + 1), (byte)(pos_y + 1)); // Cast a ray DOWN and to the RIGHT
+            checksum += Cast_Ray(1, 1, (byte)(pos_x + 1), (byte)(pos_y + 1)); // Cast a ray DOWN and to the RIGHT
         }
- //       if ((pos_x < 31) && (pos_y > 1))
+        //       if ((pos_x < 31) && (pos_y > 1))
         {
-            Cast_Ray(1, -1, (byte)(pos_x + 1), (byte)(pos_y - 1)); // Cast a ray UP and to the RIGHT
+            checksum += Cast_Ray(1, -1, (byte)(pos_x + 1), (byte)(pos_y - 1)); // Cast a ray UP and to the RIGHT
         }
- //       if ((pos_x > 1) && (pos_y < 31))
+        //       if ((pos_x > 1) && (pos_y < 31))
         {
-            Cast_Ray(-1, 1, (byte)(pos_x - 1), (byte)(pos_y + 1)); // Cast a ray DOWN and to the LEFT
+            checksum += Cast_Ray(-1, 1, (byte)(pos_x - 1), (byte)(pos_y + 1)); // Cast a ray DOWN and to the LEFT
         }
-  //      if ((pos_x > 1) && (pos_y > 1))
+        //      if ((pos_x > 1) && (pos_y > 1))
         {
-            Cast_Ray(-1, -1, (byte)(pos_x - 1), (byte)(pos_y - 1)); // Cast a ray UP and to the LEFT
+            checksum += Cast_Ray(-1, -1, (byte)(pos_x - 1), (byte)(pos_y - 1)); // Cast a ray UP and to the LEFT
         }
+
+        return checksum;
     }
 
     public U4_Decompiled u4;
@@ -1344,31 +1786,57 @@ public class Settlement : MonoBehaviour
         u4 = FindObjectOfType<U4_Decompiled>();
     }
 
+    float timer = 0.0f;
+    float timerExpired = 0.0f;
+    public float timerPeriod = 0.02f;
+    int lastChecksum;
+
     // Update is called once per frame
     void Update()
     {
-        // we've moved, regenerate the raycast and resulting mesh
-        if ((u4.Party._x != lastPlayer_posx) || (u4.Party._y != lastPlayer_posy))
+        // update the timer
+        timer += Time.deltaTime;
+
+        // only update periodically
+        if (timer > timerExpired)
         {
-            // generate a new raycast
-            raycast(u4.Party._x, u4.Party._y);
-            // create the game objects with meshes and textures
-            CreateSettlementGameObjects(raycastSettlementMap);
+            // reset the expired timer
+            timer = timer - timerExpired;
+            timerExpired = timerPeriod;
 
-            // combine the meshes and textures for terrain
-            Combine(terrain.gameObject);
-            // combine the meshes and textures for water
-            Combine2(animatedTerrrain.gameObject);
+            // we've moved, regenerate the raycast, TODO NPCs can also affect the raycast when moving, need to check them also or redo raycast more often
+            if ((u4.Party._x != lastPlayer_posx) || (u4.Party._y != lastPlayer_posy))
+            {
+                // update the lst position
+                lastPlayer_posx = u4.Party._x;
+                lastPlayer_posy = u4.Party._y;
 
-            // Position the settlement in place
-            transform.position = new Vector3(0, 0, 224);
+                // generate a new raycast and get a checksum
+                int currentChecksum = raycast(u4.Party._x, u4.Party._y);
 
-            // rotate settlement into place
-            transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+                // if last checksum does not match we need to regenerate the scene because the raycast is different
+                if (lastChecksum != currentChecksum)
+                {
+                    //Debug.Log("Something changed");
 
-            // update the lst position
-            lastPlayer_posx = u4.Party._x;
-            lastPlayer_posy = u4.Party._y;
+                    // save the checksum
+                    lastChecksum = currentChecksum;
+
+                    // create the game objects with meshes and textures
+                    CreateSettlementGameObjects(raycastSettlementMap);
+
+                    // combine the meshes and textures for terrain
+                    Combine(terrain.gameObject);
+                    // combine the meshes and textures for water
+                    Combine2(animatedTerrrain.gameObject);
+
+                    // Position the settlement in place
+                    transform.position = new Vector3(0, 0, 224);
+
+                    // rotate settlement into place
+                    transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+                }
+            }
         }
     }
 }

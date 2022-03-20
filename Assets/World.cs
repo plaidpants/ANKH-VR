@@ -8,7 +8,8 @@ public class World : MonoBehaviour
 {
     public Color[] CGAColorPalette;
     public Color[] EGAColorPalette;
-    public Texture2D[] tiles;
+    public Texture2D[] originalTiles;
+    public Texture2D[] expandedTiles;
 
     public GameObject npcs;
     public GameObject terrain;
@@ -140,7 +141,7 @@ public class World : MonoBehaviour
         }
 
         // allocate an array of textures
-        tiles = new Texture2D[256];
+        originalTiles = new Texture2D[256];
 
         // use and index to walk through the file
         int index = 0;
@@ -155,7 +156,7 @@ public class World : MonoBehaviour
             currentTile.filterMode = FilterMode.Point;
 
             // assign this texture to the tile array index
-            tiles[tile] = currentTile;
+            originalTiles[tile] = currentTile;
 
             // manually go through the data and set the (x,y) pixels to the tile based on the input file using the CGA color palette
             for (int height = 0; height < currentTile.height; height++)
@@ -229,18 +230,6 @@ public class World : MonoBehaviour
 
     void LoadTilesCGA()
     {
-        string destination = Application.persistentDataPath + "/u4/test1.txt";
-        System.IO.FileStream file;
-
-        if (System.IO.File.Exists(destination)) 
-            file = System.IO.File.OpenWrite(destination);
-        else 
-            file = System.IO.File.Create(destination);
-
-        BinaryFormatter bf = new BinaryFormatter();
-        bf.Serialize(file, "hello world");
-        file.Close();
-
         if (!System.IO.File.Exists(Application.persistentDataPath + tileCGAFilepath))
         {
             Debug.Log("Could not find CGA tiles file " + Application.persistentDataPath + tileCGAFilepath);
@@ -257,7 +246,7 @@ public class World : MonoBehaviour
         }
 
         // allocate an array of textures
-        tiles = new Texture2D[256];
+        originalTiles = new Texture2D[256];
 
         // use and index to walk through the file
         int index = 0;
@@ -272,7 +261,7 @@ public class World : MonoBehaviour
             currentTile.filterMode = FilterMode.Point;
 
             // assign this texture to the tile array index
-            tiles[tile] = currentTile;
+            originalTiles[tile] = currentTile;
 
             // manually go through the data and set the (x,y) pixels to the tile based on the input file using the EGA color palette
             for (int height = 0; height < currentTile.height; height += 2)
@@ -410,6 +399,7 @@ public class World : MonoBehaviour
                     {
                         GameObject mapTile;
                         int tileIndex = worldMapFileData[index++];
+                        bool useExpandedTile = false;
 
                         // solid object, brick, rocks etc.
                         if (tileIndex == 73 || tileIndex == 127 || tileIndex == 57)
@@ -418,6 +408,7 @@ public class World : MonoBehaviour
                             mapTile.transform.SetParent(childTerrain.transform);
                             Vector3 location = new Vector3(width + x * 32, 31 - height + (7 - y) * 32, 0.0f);
                             mapTile.transform.localPosition = location;
+                            useExpandedTile = true;
                         }
                         // Letters, make into short cubes
                         else if (tileIndex >= 96 && tileIndex <= 125)
@@ -428,6 +419,7 @@ public class World : MonoBehaviour
                             mapTile.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
                             Vector3 location = new Vector3(width + x * 32, 31 - height + (7 - y) * 32, 0.25f);
                             mapTile.transform.localPosition = location;
+                            useExpandedTile = true;
                         }
                         else if (tileIndex == 8 || tileIndex == 9)
                         {
@@ -436,6 +428,7 @@ public class World : MonoBehaviour
                             mapTile.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
                             Vector3 location = new Vector3(width + x * 32 + 0.5f, 31 - height + (7 - y) * 32 - 0.5f, 0.5f);
                             mapTile.transform.localPosition = location;
+                            useExpandedTile = true;
                         }
                         // all other terrain tiles are flat
                         else
@@ -449,11 +442,13 @@ public class World : MonoBehaviour
                             {
                                 mapTile.transform.SetParent(childAnimatedTerrrain.transform);
                                 location = new Vector3(width + x * 32, 31 - height + (7 - y) * 32, 0.5f);
+                                useExpandedTile = false;
                             }
                             else
                             {
                                 mapTile.transform.SetParent(childTerrain.transform);
-                                location = new Vector3(width + x * 32, 31 - height + (7 - y) * 32, 0.5f);
+                                location = new Vector3(width + x * 32, 31 - height + (7 - y) * 32, 0.5f); 
+                                useExpandedTile = true;
                             }
 
                             mapTile.transform.localPosition = location;
@@ -464,11 +459,22 @@ public class World : MonoBehaviour
 
                         // set the shader
                         Shader unlit = Shader.Find("Mobile/Unlit (Supports Lightmap)");
+                        MeshRenderer renderer = mapTile.GetComponent<MeshRenderer>();
+                        renderer.material.shader = unlit;
 
-                        MeshRenderer render = mapTile.GetComponent<MeshRenderer>();
-
-                        render.material.mainTexture = tiles[tileIndex];
-                        render.material.shader = unlit;
+                        // set the tile and texture offset and scale
+                        if (useExpandedTile)
+                        {
+                            renderer.material.mainTexture = expandedTiles[(int)tileIndex];
+                            renderer.material.mainTextureOffset = new Vector2((float)TILE_BOARDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BOARDER_SIZE / (float)renderer.material.mainTexture.height);
+                            renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BOARDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BOARDER_SIZE)) / (float)renderer.material.mainTexture.height);
+                        }
+                        else
+                        {
+                            renderer.material.mainTexture = originalTiles[(int)tileIndex];
+                            renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
+                            renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
+                        }
                     }
                 }
 
@@ -495,7 +501,9 @@ public class World : MonoBehaviour
             MeshRenderer renderer = partyGameObject.GetComponent<MeshRenderer>();
 
             // set the tile
-            renderer.material.mainTexture = tiles[31]; // this tile number 31 is in the Party structure under tile.
+            renderer.material.mainTexture = expandedTiles[31]; // this tile number 31 is in the Party structure under tile.
+            renderer.material.mainTextureOffset = new Vector2((float)TILE_BOARDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BOARDER_SIZE / (float)renderer.material.mainTexture.height);
+            renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BOARDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BOARDER_SIZE)) / (float)renderer.material.mainTexture.height);
 
             // set the shader
             Shader unlit = Shader.Find("Sprites/Default");
@@ -672,7 +680,9 @@ public class World : MonoBehaviour
 
                 MeshRenderer render = mapTile.GetComponent<MeshRenderer>();
 
-                render.material.mainTexture = tiles[(int)tileIndex];
+                render.material.mainTexture = expandedTiles[(int)tileIndex];
+                render.material.mainTextureOffset = new Vector2((float)TILE_BOARDER_SIZE / (float)render.material.mainTexture.width, (float)TILE_BOARDER_SIZE / (float)render.material.mainTexture.height);
+                render.material.mainTextureScale = new Vector2((float)(render.material.mainTexture.width - (2 * TILE_BOARDER_SIZE)) / (float)render.material.mainTexture.width, (float)(render.material.mainTexture.height - (2 * TILE_BOARDER_SIZE)) / (float)render.material.mainTexture.height);
                 render.material.shader = unlit;
             }
         }
@@ -696,6 +706,83 @@ public class World : MonoBehaviour
         // hook the player game object into the camera and the game engine
         FindObjectsOfType<SmoothFollow>()[0].target = party.transform;
         FindObjectsOfType<U4_Decompiled>()[0].partyGameObject = party;
+    }
+
+    const int TILE_BOARDER_SIZE = 1;
+
+    public void ExpandTiles()
+    {
+        expandedTiles = new Texture2D[256];
+
+        // go through all the tiles
+        for (int i = 0; i < 256; i++)
+        {
+            // create a new slightly larger texture with boarder for this tile
+            Texture2D currentTile = originalTiles[i];
+            Texture2D newTile = new Texture2D(currentTile.width + 2 * TILE_BOARDER_SIZE, currentTile.height + 2 * TILE_BOARDER_SIZE, TextureFormat.RGBA32, false);
+
+            // we want pixles not fuzzy images
+            newTile.filterMode = FilterMode.Point;
+
+            // for through all the pixels in the source texture
+            for (int height = 0; height < currentTile.height; height++)
+            {
+                for (int width = 0; width < currentTile.width; width++)
+                {
+                    // copy the pixles into the middle
+                    newTile.SetPixel(width + TILE_BOARDER_SIZE, height + TILE_BOARDER_SIZE, currentTile.GetPixel(width, height));
+
+                    /*
+                    // mirror the pixels on the boarders if the pixels fit
+                    if ((width - currentTile.width - 1 + TILE_BOARDER_SIZE >= 0) && (height - currentTile.height - 1 + TILE_BOARDER_SIZE >= 0))
+                        newTile.SetPixel(width - currentTile.width - 1 + TILE_BOARDER_SIZE, height - currentTile.height - 1 + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1 - width, currentTile.height - 1 - height));
+                    if (height - currentTile.height - 1 + TILE_BOARDER_SIZE >= 0)
+                        newTile.SetPixel(width                     + TILE_BOARDER_SIZE, height - currentTile.height - 1 + TILE_BOARDER_SIZE, currentTile.GetPixel(                    width, currentTile.height - 1 - height));
+                    if ((width + currentTile.width - 1 + TILE_BOARDER_SIZE < newTile.width) && (height - currentTile.height - 1 + TILE_BOARDER_SIZE >= 0))
+                        newTile.SetPixel(width + currentTile.width - 1 + TILE_BOARDER_SIZE, height - currentTile.height - 1 + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1 - width, currentTile.height - 1 - height));
+                    if (width - currentTile.width - 1 + TILE_BOARDER_SIZE >= 0)
+                        newTile.SetPixel(width - currentTile.width - 1 + TILE_BOARDER_SIZE, height                      + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1 - width,                      height));
+                    if (width + currentTile.width - 1 + TILE_BOARDER_SIZE < newTile.width)
+                        newTile.SetPixel(width + currentTile.width - 1 + TILE_BOARDER_SIZE, height                      + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1 - width,                      height));
+                    if ((width - currentTile.width - 1 + TILE_BOARDER_SIZE >= 0) && (height + currentTile.height - 1 + TILE_BOARDER_SIZE < newTile.height))
+                        newTile.SetPixel(width - currentTile.width - 1 + TILE_BOARDER_SIZE, height + currentTile.height - 1 + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1 - width, currentTile.height - 1 - height));
+                    if (height + currentTile.height - 1 + TILE_BOARDER_SIZE < newTile.height)
+                        newTile.SetPixel(width                     + TILE_BOARDER_SIZE, height + currentTile.height - 1 + TILE_BOARDER_SIZE, currentTile.GetPixel(                    width, currentTile.height - 1 - height));
+                    if ((width + currentTile.width - 1 + TILE_BOARDER_SIZE < newTile.width) && (height + currentTile.height - 1 + TILE_BOARDER_SIZE < newTile.height))
+                        newTile.SetPixel(width + currentTile.width - 1 + TILE_BOARDER_SIZE, height + currentTile.height - 1 + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1 - width, currentTile.height - 1 - height));
+                */
+                }
+            }
+
+            // mirror the pixles on either side
+            for (int height = 0; height < currentTile.height; height++)
+            {
+                // left side
+                newTile.SetPixel(TILE_BOARDER_SIZE - 1, height + TILE_BOARDER_SIZE, currentTile.GetPixel(0, height));
+                // right side
+                newTile.SetPixel(TILE_BOARDER_SIZE + currentTile.width, height + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1, height));
+            }
+
+            // mirror the pixles on top and bottom
+            for (int width = 0; width < currentTile.width; width++)
+            {
+                // left side
+                newTile.SetPixel(width + TILE_BOARDER_SIZE, TILE_BOARDER_SIZE - 1, currentTile.GetPixel(width, 0));
+                // right side
+                newTile.SetPixel(width + TILE_BOARDER_SIZE, TILE_BOARDER_SIZE + currentTile.height, currentTile.GetPixel(width, currentTile.height - 1));
+            }
+
+            // now the four corners
+            newTile.SetPixel(TILE_BOARDER_SIZE - 1, TILE_BOARDER_SIZE - 1, currentTile.GetPixel(0, 0));
+            newTile.SetPixel(TILE_BOARDER_SIZE + currentTile.width, TILE_BOARDER_SIZE - 1, currentTile.GetPixel(currentTile.width - 1, 0));
+            newTile.SetPixel(TILE_BOARDER_SIZE + currentTile.width, TILE_BOARDER_SIZE + currentTile.height, currentTile.GetPixel(currentTile.width - 1, currentTile.height - 1));
+            newTile.SetPixel(TILE_BOARDER_SIZE - 1, TILE_BOARDER_SIZE + currentTile.height, currentTile.GetPixel(0, currentTile.height - 1));
+
+            newTile.Apply();
+
+            // replace the existing texture with the new expanded one
+            expandedTiles[i] = newTile;
+        }
     }
 
     // this one will go two layers deep to avoid an implementation that relies on recursion
@@ -876,15 +963,19 @@ public class World : MonoBehaviour
             {
                 mesh = objectsToCombine[i].GetComponent<MeshFilter>().mesh;
                 Vector2[] uv = new Vector2[mesh.uv.Length];
-                Vector2 offset;
+                Vector2 textureAtlasOffset;
+                Material objectMaterial = objectsToCombine[i].GetComponent<MeshRenderer>().material;
                 if (textureAtlas.ContainsKey(objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture))
                 {
-                    offset = (Vector2)textureAtlas[objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture];
+                    textureAtlasOffset = (Vector2)textureAtlas[objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture];
                     for (int u = 0; u < mesh.uv.Length; u++)
                     {
-                        uv[u] = mesh.uv[u] / (float)pow2;
-                        uv[u].x += ((float)offset.x) / (float)pow2;
-                        uv[u].y += ((float)offset.y) / (float)pow2;
+                        uv[u].x = mesh.uv[u].x * material.mainTextureScale.x / pow2;
+                        uv[u].y = mesh.uv[u].y * material.mainTextureScale.y / pow2;
+                        //uv[u] = Vector2.Scale(mesh.uv[u], material.mainTextureScale) / pow2;
+                        uv[u].x += (textureAtlasOffset.x + objectMaterial.mainTextureOffset.x) / pow2;
+                        uv[u].y += (textureAtlasOffset.y + objectMaterial.mainTextureOffset.y) / pow2;
+                        //uv[u] = (textureAtlasOffset + objectMaterial.mainTextureOffset) / pow2;
                     }
                 }
                 else
@@ -905,6 +996,7 @@ public class World : MonoBehaviour
                 {
                     staticCount++;
                     combine[i].mesh = objectsToCombine[i].GetComponent<MeshFilter>().mesh;
+                    // need to convert to world coords before combining
                     combine[i].transform = objectsToCombine[i].transform.localToWorldMatrix;
                 }
             }
@@ -927,6 +1019,8 @@ public class World : MonoBehaviour
                 filter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                 filter.mesh.CombineMeshes(combine);
                 renderer.material = material;
+                renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
+                renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
 
                 // Disable all the static object renderers
                 for (int i = 0; i < objectsToCombine.Length; i++)
@@ -1126,7 +1220,7 @@ public class World : MonoBehaviour
                 Animate3 animate = fighterGameObject.AddComponent<Animate3>();
                 animate.npcTile = 0;
                 animate.world = this;
-                animate.renderer = renderer;
+                animate.ObjectRenderer = renderer;
 
                 // rotate the npc game object into position after creating
                 Vector3 fightersLocation = new Vector3(0, 255, 0);
@@ -1166,8 +1260,6 @@ public class World : MonoBehaviour
         }
     }
 
- 
-
     public void AddCharacters(U4_Decompiled.tCombat2[] currentCombat2, U4_Decompiled.tParty currentParty, U4_Decompiled.t_68[] currentFighters)
     {
         // have we finished creating the world
@@ -1198,7 +1290,7 @@ public class World : MonoBehaviour
                 Animate3 animate = characterGameObject.AddComponent<Animate3>();
                 animate.npcTile = 0;
                 animate.world = this;
-                animate.renderer = renderer;
+                animate.ObjectRenderer = renderer;
 
                 // rotate the npc game object into position after creating
                 Vector3 characterLocation = new Vector3(0, 255, 0);
@@ -1273,7 +1365,7 @@ public class World : MonoBehaviour
                 Animate3 animate = npcGameObject.AddComponent<Animate3>();
                 animate.npcTile = 0;
                 animate.world = this;
-                animate.renderer = renderer;
+                animate.ObjectRenderer = renderer;
 
                 // rotate the npc game object into position after creating
                 Vector3 npcLocation = new Vector3(0, 255, 0);
@@ -1291,7 +1383,6 @@ public class World : MonoBehaviour
         // update all npcs in the table
         for (int npcIndex = 0; npcIndex < 32; npcIndex++)
         {
-
             // get the corresponding npc game object
             Transform childofnpcs = npcs.transform.GetChild(npcIndex);
 
@@ -1418,7 +1509,7 @@ public class World : MonoBehaviour
                 U4_Decompiled.TILE hitTile = currentHitList[hitIndex].tile;
 
                 // update the tile of the game object
-                childofhits.GetComponent<Renderer>().material.mainTexture = tiles[(int)hitTile];
+                childofhits.GetComponent<Renderer>().material.mainTexture = originalTiles[(int)hitTile];
 
                 // update the position
                 childofhits.localPosition = new Vector3(currentHitList[hitIndex].x, 255 - currentHitList[hitIndex].y - 0.01f, 0); // move it slightly in from of the characters and fighters so we can see it.
@@ -1472,6 +1563,7 @@ public class World : MonoBehaviour
     {
         InitializeEGAPalette();
         LoadTilesEGA();
+        ExpandTiles();
 
         //InitializeCGAPalette();
         //LoadTilesCGA();

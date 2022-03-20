@@ -159,9 +159,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/EMPATH.ULT
   talkFilepath: /u4/EMPATH.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &21463744
 Transform:
   m_ObjectHideFlags: 0
@@ -236,180 +243,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
---- !u!1 &184905586
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 184905587}
-  - component: {fileID: 184905589}
-  - component: {fileID: 184905588}
-  m_Layer: 0
-  m_Name: text
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &184905587
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 184905586}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1476502649}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 10, y: 10}
-  m_SizeDelta: {x: 10, y: 10}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &184905588
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 184905586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: Sample text Sample text Sample text Sample textSample text Sample text
-    Sample text Sample textSample text Sample text Sample text Sample textSample
-    text Sample text Sample text Sample textSample text Sample text Sample text Sample
-    textSample text Sample text Sample text Sample textSample text Sample text Sample
-    text Sample text
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 8
-  m_fontSizeBase: 8
-  m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 1
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 0
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 184905589}
-  m_maskType: 0
-  _SortingLayer: 0
-  _SortingLayerID: 0
-  _SortingOrder: 0
---- !u!23 &184905589
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 184905586}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 212269039
-  m_SortingLayer: 1
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &191871698
 GameObject:
   m_ObjectHideFlags: 0
@@ -446,9 +279,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/LCB_2.ULT
   talkFilepath: /u4/LCB.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &191871700
 Transform:
   m_ObjectHideFlags: 0
@@ -562,7 +402,7 @@ Transform:
   m_Children:
   - {fileID: 420394710}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &238935500
 GameObject:
@@ -681,9 +521,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/YEW.ULT
   talkFilepath: /u4/YEW.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &253206148
 Transform:
   m_ObjectHideFlags: 0
@@ -854,88 +701,6 @@ Material:
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_BuildTextureStacks: []
---- !u!1 &298961325
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 298961326}
-  - component: {fileID: 298961327}
-  m_Layer: 0
-  m_Name: background
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &298961326
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 298961325}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: 10, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1476502649}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &298961327
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 298961325}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 212269039
-  m_SortingLayer: 1
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0086a50403de40c42a0cdfa0205e30fb, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 1
-  m_Size: {x: 10, y: 10}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
 --- !u!1 &309936692
 GameObject:
   m_ObjectHideFlags: 0
@@ -1022,9 +787,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/COVE.ULT
   talkFilepath: /u4/COVE.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &312711162
 Transform:
   m_ObjectHideFlags: 0
@@ -1299,9 +1071,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/SERPENT.ULT
   talkFilepath: /u4/SERPENT.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &479014018
 Transform:
   m_ObjectHideFlags: 0
@@ -1470,9 +1249,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/LCB_1.ULT
   talkFilepath: /u4/LCB.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 12
+  u4: {fileID: 0}
+  timerPeriod: 0.5
 --- !u!4 &588377744
 Transform:
   m_ObjectHideFlags: 0
@@ -1683,86 +1469,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: 
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
-  m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 1024
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 4
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 1
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 0
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 731275214}
-  m_maskType: 0
-  _SortingLayer: 0
-  _SortingLayerID: 0
-  _SortingOrder: 0
 --- !u!23 &731275214
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2137,9 +1843,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/TRINSIC.ULT
   talkFilepath: /u4/TRINSIC.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &833177451
 Transform:
   m_ObjectHideFlags: 0
@@ -2444,9 +2157,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/SKARA.ULT
   talkFilepath: /u4/SKARA.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &861099458
 Transform:
   m_ObjectHideFlags: 0
@@ -3286,9 +3006,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/PAWS.ULT
   talkFilepath: /u4/PAWS.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &1033731154
 Transform:
   m_ObjectHideFlags: 0
@@ -3498,9 +3225,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/JHELOM.ULT
   talkFilepath: /u4/JHELOM.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &1123583268
 Transform:
   m_ObjectHideFlags: 0
@@ -3600,9 +3334,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/MINOC.ULT
   talkFilepath: /u4/MINOC.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &1239072612
 Transform:
   m_ObjectHideFlags: 0
@@ -3653,9 +3394,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/MAGINCIA.ULT
   talkFilepath: /u4/MAGINCIA.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &1279706700
 Transform:
   m_ObjectHideFlags: 0
@@ -3706,9 +3454,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/DEN.ULT
   talkFilepath: /u4/DEN.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &1293989965
 Transform:
   m_ObjectHideFlags: 0
@@ -3759,9 +3514,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/BRITAIN.ULT
   talkFilepath: /u4/BRITAIN.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &1302919553
 Transform:
   m_ObjectHideFlags: 0
@@ -3916,9 +3678,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/MOONGLOW.ULT
   talkFilepath: /u4/MOONGLOW.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &1362802852
 Transform:
   m_ObjectHideFlags: 0
@@ -4159,38 +3928,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1457507144}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1476502648
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1476502649}
-  m_Layer: 0
-  m_Name: Chat Bubble
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1476502649
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1476502648}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 298961326}
-  - {fileID: 184905587}
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1530595630
 GameObject:
   m_ObjectHideFlags: 0
@@ -4276,9 +4013,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/VESPER.ULT
   talkFilepath: /u4/VESPER.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &1553782261
 Transform:
   m_ObjectHideFlags: 0
@@ -4498,7 +4242,7 @@ Transform:
   m_Children:
   - {fileID: 779227796}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1828118601
 GameObject:
@@ -4536,9 +4280,16 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/LYCAEUM.ULT
   talkFilepath: /u4/LYCAEUM.TLK
-  npcQuestionFlag: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  myMainTextureOffset: 1
+  myMainTextureScale: 1
+  extra_offset_x: 0
+  extra_offset_y: 0
+  extra_offset_scale: 1
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &1828118603
 Transform:
   m_ObjectHideFlags: 0
@@ -5471,7 +5222,7 @@ PrefabInstance:
         type: 3}
       propertyPath: uiElementsToApplyTo.Array.data[3]
       value: 
-      objectReference: {fileID: 184905588}
+      objectReference: {fileID: 0}
     - target: {fileID: 5424587087699679327, guid: 01025e69428beb6408b14a27154ad608,
         type: 3}
       propertyPath: m_Camera

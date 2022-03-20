@@ -404,10 +404,10 @@ public class U4_Decompiled : MonoBehaviour
 
     public enum DIRECTION
     {
-        DIRECTION_W = 0,
-        DIRECTION_N = 1,
-        DIRECTION_E = 2,
-        DIRECTION_S = 3
+        WEST = 0,
+        NORTH = 1,
+        EAST = 2,
+        SOUTH = 3
     }
     public enum MODE
     {
@@ -416,8 +416,8 @@ public class U4_Decompiled : MonoBehaviour
         BUILDING = 2,
         DUNGEON = 3,
         COMBAT = 4,
-        COM_CAMP = 5,
-        COM_ROOM = 6,
+        COMBAT_CAMP = 5,
+        COMBAT_ROOM = 6,
         SHRINE = 7
     };
 
@@ -450,7 +450,7 @@ public class U4_Decompiled : MonoBehaviour
         PLATE_MAIL = 4,
         MAGIC_CHAIN = 5,
         MAGIC_PLATE = 6,
-        MYSTIC_ROB = 7,
+        MYSTIC_ROBE = 7,
     };
 
     public enum REAGENT
@@ -746,17 +746,17 @@ public class U4_Decompiled : MonoBehaviour
         SHORE = 9,
         SHIPSHIP = 10,
         SHIPSHORE = 11,
-        SHORESHIP = 22,
-        INN = 21,
-        CAMP = 12,
-        SHRINE = 13,
-        DNG0 = 14,
-        DNG1 = 15,
-        DNG2 = 16,
-        DNG3 = 17,
-        DNG4 = 18,
-        DNG5 = 19,
-        DNG6 = 20
+        SHORESHIP = 12,
+        INN = 13,
+        CAMP = 14,
+        SHRINE = 15,
+        DNG0 = 16,
+        DNG1 = 17,
+        DNG2 = 18,
+        DNG3 = 19,
+        DNG4 = 20,
+        DNG5 = 21,
+        DNG6 = 22
      };
 
     // Separate thread to run the game, we could attempt to make the data gathering function thread safe but for now this will do
@@ -851,20 +851,19 @@ public class U4_Decompiled : MonoBehaviour
         Settlements[(int)LOCATIONS.COVE] = GameObject.Find("COVE");
 
         // assign combat terrain game objects
-        CombatTerrains = new GameObject[24];
+        CombatTerrains = new GameObject[23];
         CombatTerrains[(int)COMBAT_TERRAIN.GRASS] = GameObject.Find("GRASS");
         CombatTerrains[(int)COMBAT_TERRAIN.BRIDGE] = GameObject.Find("BRIDGE");
         CombatTerrains[(int)COMBAT_TERRAIN.BRICK] = GameObject.Find("BRICK");
-        CombatTerrains[(int)COMBAT_TERRAIN.DUNGEON] = GameObject.Find("DUNGEON");
         CombatTerrains[(int)COMBAT_TERRAIN.HILL] = GameObject.Find("HILL");
         CombatTerrains[(int)COMBAT_TERRAIN.FOREST] = GameObject.Find("FOREST");
         CombatTerrains[(int)COMBAT_TERRAIN.BRUSH] = GameObject.Find("BRUSH");
         CombatTerrains[(int)COMBAT_TERRAIN.MARSH] = GameObject.Find("MARSH");
-        CombatTerrains[(int)COMBAT_TERRAIN.SHIPSEA] = GameObject.Find("SHIPSEA");
         CombatTerrains[(int)COMBAT_TERRAIN.SHORE] = GameObject.Find("SHORE");
+        CombatTerrains[(int)COMBAT_TERRAIN.SHORESHIP] = GameObject.Find("SHORESHIP");
+        CombatTerrains[(int)COMBAT_TERRAIN.SHIPSEA] = GameObject.Find("SHIPSEA");
         CombatTerrains[(int)COMBAT_TERRAIN.SHIPSHIP] = GameObject.Find("SHIPSHIP");
         CombatTerrains[(int)COMBAT_TERRAIN.SHIPSHORE] = GameObject.Find("SHIPSHORE");
-        CombatTerrains[(int)COMBAT_TERRAIN.SHORESHIP] = GameObject.Find("SHORESHIP");
         CombatTerrains[(int)COMBAT_TERRAIN.INN] = GameObject.Find("INN");
         CombatTerrains[(int)COMBAT_TERRAIN.CAMP] = GameObject.Find("CAMP");
         CombatTerrains[(int)COMBAT_TERRAIN.DUNGEON] = GameObject.Find("DUNGEON");
@@ -1273,16 +1272,16 @@ public class U4_Decompiled : MonoBehaviour
                     textDisplay = textGameObject.GetComponent<Text>();
                 }
 
-                // remove the animated whirlpool from the text if we have some text
+                // remove the animated whirlpool from the text last character if we have some new text
                 if (textDisplay.text.Length > 2)
                 {
                     textDisplay.text = textDisplay.text.Remove(textDisplay.text.Length - 1);
                 }
 
-                // add the ACSII encoded text to the display text plus the whirlpool character
+                // add the ACSII encoded text to the display text plus readd the whirlpool character
                 textDisplay.text = textDisplay.text + enc.GetString(buffer, 0, text_size) + (char)(0x1c + (int)(Time.time / 2 ) % 4);
 
-                // remove all but the last 20 lines
+                // remove all but the last 20 lines of text from the tex buffer
                 int newline_count = 0;
                 int i;
                 const int MAX_NEWLINES = 20;
@@ -1296,7 +1295,7 @@ public class U4_Decompiled : MonoBehaviour
                     }
                 }
 
-                // if we have enough cut the string 
+                // if we have enough lines cut the string 
                 if (newline_count == MAX_NEWLINES)
                 {
                     textDisplay.text = textDisplay.text.Substring(i + 2);
@@ -1307,10 +1306,10 @@ public class U4_Decompiled : MonoBehaviour
             textDisplay.text = textDisplay.text.Remove(textDisplay.text.Length - 1) + (char)(0x1c + (Time.time * 10) % 4);
 
 
-            // read the circular text buffer from the game engine
+            // read the circular npc text buffer from the game engine
             text_size = main_NPC_Text(buffer, buffer.Length);
 
-            // check if we have any new text to add
+            // check if we have any new npc text to add
             if (text_size != 0)
             {
                 if (partyGameObject != null)
@@ -1327,12 +1326,11 @@ public class U4_Decompiled : MonoBehaviour
                             string npcTalk = enc.GetString(buffer, i * 500 + 1, 500);
 
                             WindowsVoice voice = partyGameObject.GetComponentInChildren<WindowsVoice>();
-                            WindowsVoice.speak(npcTalk);
+                            WindowsVoice.speak(npcTalk); // TODO need to collect enough text til the newline so we don't have broken speech patterns in the middle of constructed sentences e.g. "I am" ... "a guard."...
 
                             int firstNull = npcTalk.IndexOf('\0');
                             npcTalk = npcTalk.Substring(0, firstNull);
                             partyText.text = partyText.text + npcTalk;
-
                         }
                     }
                 }
@@ -1568,7 +1566,7 @@ public class U4_Decompiled : MonoBehaviour
             // read in the main_D_96F9 global
             main_D_96F9(buffer, buffer.Length);
 
-            // read the main display buffer
+            // read the main display tile buffer
             buffer_index = 0;
             for (int i = 0; i < 11; i++)
             {
@@ -1579,7 +1577,7 @@ public class U4_Decompiled : MonoBehaviour
             }
 
             // raycast this map
-            raycast();
+            //raycast();
 
             // keep the part game object in sync with the game
             if (partyGameObject)
@@ -1663,7 +1661,7 @@ public class U4_Decompiled : MonoBehaviour
                         CombatTerrains[i].gameObject.SetActive(false);
                     }
                 }
-                else if ((current_mode == MODE.COMBAT) || (current_mode == MODE.COM_CAMP /* TODO: this could be the inn or shop or camp */ ) || (current_mode == MODE.COM_ROOM))
+                else if ((current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP /* TODO: this could be the inn or shop or camp */ ) || (current_mode == MODE.COMBAT_ROOM))
                 {
                     worldList[0].AddFighters(Fighters, Combat1);
                     worldList[0].AddCharacters(Combat2, Party, Fighters);
@@ -1696,13 +1694,13 @@ public class U4_Decompiled : MonoBehaviour
                     }
                 }
 
-                if ((worldList[0].party != null) && (worldList[0].tiles != null))
+                if ((worldList[0].party != null) && (worldList[0].originalTiles != null))
                 {
                     // set the party tile, person, horse, ballon, ship, etc.
                     Renderer renderer = worldList[0].party.GetComponentInChildren<Renderer>();
                     if (renderer)
                     {
-                        worldList[0].party.GetComponentInChildren<Renderer>().material.mainTexture = worldList[0].tiles[(int)Party._tile];
+                        worldList[0].party.GetComponentInChildren<Renderer>().material.mainTexture = worldList[0].originalTiles[(int)Party._tile];
                         worldList[0].party.name = Party._tile.ToString();
                     }
                 }

@@ -11,7 +11,7 @@ public class Animate3 : MonoBehaviour
     float timer = 0.0f;
     float timerExpired = 0.0f;
     public float animationPeriod = 0.2f;
-    public MeshRenderer renderer;
+    public MeshRenderer ObjectRenderer;
 
     // Start is called before the first frame update
     void Start()
@@ -37,7 +37,7 @@ public class Animate3 : MonoBehaviour
         if (((int)npcTile >= 32 && (int)npcTile <= 47) || ((int)npcTile >= 80 && (int)npcTile <= 95) || ((int)npcTile >= 132 && (int)npcTile <= 143))
         {
             // update to the initial animation texture frame
-            renderer.material.mainTexture = world.tiles[(int)npcTile];
+            ObjectRenderer.material.mainTexture = world.originalTiles[(int)npcTile];
 
             // set the other frames based on the intial frame
             if (((int)npcTile % 2) == 0)
@@ -53,7 +53,7 @@ public class Animate3 : MonoBehaviour
         else if ((int)npcTile >= 144 && (int)npcTile <= 255)
         {
             // update to the initial animation texture frame
-            renderer.material.mainTexture = world.tiles[(int)npcTile];
+            ObjectRenderer.material.mainTexture = world.originalTiles[(int)npcTile];
             transform.gameObject.name = npcTile.ToString();
 
             // set the other frames based on the intial frame
@@ -83,7 +83,7 @@ public class Animate3 : MonoBehaviour
         else
         {
             // update to the animation texture frame
-            renderer.material.mainTexture = world.tiles[(int)npcTile];
+            ObjectRenderer.material.mainTexture = world.originalTiles[(int)npcTile];
 
             // add only one frame to the animation
             animationFrameIndexes = new U4_Decompiled.TILE[1] { npcTile };
@@ -115,10 +115,10 @@ public class Animate3 : MonoBehaviour
         if (world == null)
             return;
 
-        if (world.tiles == null)
+        if (world.originalTiles == null)
             return;
 
-        if (world.tiles.Length == 0)
+        if (world.originalTiles.Length == 0)
             return;
 
         timer += Time.deltaTime;
@@ -131,7 +131,7 @@ public class Animate3 : MonoBehaviour
                 frame = 0;
             }
 
-            renderer.material.mainTexture = world.tiles[(int)animationFrameIndexes[frame]];
+            ObjectRenderer.material.mainTexture = world.originalTiles[(int)animationFrameIndexes[frame]];
 
             timer -= timerExpired;
             timerExpired = animationPeriod;
