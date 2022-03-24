@@ -65,9 +65,9 @@ public class U4_Decompiled : MonoBehaviour
         BRIDGE = 0x17,
         /*balloon*/
         BALOON = 0x18,
-        /**/
+        /* bridge upper */
         BRIDGE_TOP = 0x19,
-        /**/
+        /* bridge lower */
         BRIDGE_BOTTOM = 0x1A,
         /*ladder up*/
         LADDER_UP = 0x1B,
@@ -116,6 +116,7 @@ public class U4_Decompiled : MonoBehaviour
         SHIP_MAST = 0x35,
         SHIP_WHEEL = 0x36,
         SMALL_ROCKS = 0x37,
+
         /*sleep*/
         SLEEP = 0x38,
         /* large rocks */
@@ -226,7 +227,11 @@ public class U4_Decompiled : MonoBehaviour
         BRACKET_RIGHT = 0x7B,
         BRACKET_LEFT = 0x7C,
         BRACKET_SQUARE = 0x7D,
+
+        /* blank */
         BLANK = 0x7E,
+
+        /* brick wall */
         BRICK_WALL = 0x7F,
 
         /* 2-tile monsters */
@@ -522,6 +527,10 @@ public class U4_Decompiled : MonoBehaviour
     [DllImport("UN_U4.dll")]
     public static extern TILE main_D_946C();
     [DllImport("UN_U4.dll")]
+    public static extern int main_D_95A5_x();
+    [DllImport("UN_U4.dll")]
+    public static extern int main_D_95A5_y();
+    [DllImport("UN_U4.dll")]
     public static extern void main_keyboardHit(char key);
     [DllImport("UN_U4.dll")]
     public static extern void main_CurMap(byte[] buffer, int length);
@@ -541,10 +550,8 @@ public class U4_Decompiled : MonoBehaviour
     public static extern TILE main_tile_cur();
     [DllImport("UN_U4.dll")]
     public static extern int main_Text(byte[] buffer, int length);
-
     [DllImport("UN_U4.dll")]
     public static extern int main_NPC_Text(byte[] buffer, int length);
-
 
     public GameObject partyGameObject;
 
@@ -552,6 +559,7 @@ public class U4_Decompiled : MonoBehaviour
     float timerExpired = 0.0f;
     public float timerPeriod = 0.02f; // the game operates on a 300ms Sleep() so we want to update things faster than that
 
+    // buffer used to read stuff from the game engine
     byte[] buffer = new byte[10000];
 
     public TILE[,] tMap32x32 = new TILE[32, 32];
@@ -734,6 +742,7 @@ public class U4_Decompiled : MonoBehaviour
     public TILE[,] map = new TILE[11, 11];
     public enum COMBAT_TERRAIN
     {
+        // this order and numbering is important up to at least CAMP
         GRASS = 0,
         BRIDGE = 1,
         BRICK = 2,
@@ -743,12 +752,13 @@ public class U4_Decompiled : MonoBehaviour
         BRUSH = 6,
         MARSH = 7,
         SHIPSEA = 8,
-        SHORE = 9,
-        SHIPSHIP = 10,
-        SHIPSHORE = 11,
-        SHORESHIP = 12,
-        INN = 13,
-        CAMP = 14,
+        SHIPSHOR = 9,
+        SHORE = 10,
+        SHIPSHIP = 11,
+        SHORSHIP = 12,
+        CAMP = 13,
+
+        INN = 14,
         SHRINE = 15,
         DNG0 = 16,
         DNG1 = 17,
@@ -756,8 +766,9 @@ public class U4_Decompiled : MonoBehaviour
         DNG3 = 19,
         DNG4 = 20,
         DNG5 = 21,
-        DNG6 = 22
-     };
+        DNG6 = 22,
+        MAX = 23
+    };
 
     // Separate thread to run the game, we could attempt to make the data gathering function thread safe but for now this will do
     private void ThreadTask()
@@ -766,54 +777,16 @@ public class U4_Decompiled : MonoBehaviour
         main();
     }
 
-    public GameObject[] Settlements;
-    public GameObject[] CombatTerrains;
-
     public Text textDisplay;
-    //private TMP_FontAsset m_FontAsset;
-
-    public string label = "The <#0050FF>count is: </color>{0:2}";
-    public float m_frame;
 
     public GameObject TextGameObject;
-
-    void StartText()
-    {
-        textDisplay = textGameObject.GetComponent<Text>();
-
-        //m_textMeshPro.autoSizeTextContainer = true;
-
-        // Load the Font Asset to be used.
-        //m_FontAsset = Resources.Load("Fonts & Materials/LiberationSans SDF", typeof(TMP_FontAsset)) as TMP_FontAsset;
-        //m_textMeshPro.font = m_FontAsset;
-
-        // Assign Material to TextMesh Pro Component
-        //m_textMeshPro.fontSharedMaterial = Resources.Load("Fonts & Materials/LiberationSans SDF - Bevel", typeof(Material)) as Material;
-        //m_textMeshPro.fontSharedMaterial.EnableKeyword("BEVEL_ON");
-
-        // Set various font settings.
-        //m_textMeshPro.fontSize = 24;
-        //m_textMeshPro
-        //m_textMeshPro.alignment = TMPro.TextAlignmentOptions.Center;
-
-        //m_textMeshPro.anchorDampening = true; // Has been deprecated but under consideration for re-implementation.
-        //m_textMeshPro.enableAutoSizing = true;
-
-        //m_textMeshPro.characterSpacing = 0.2f;
-        //m_textMeshPro.wordSpacing = 0.1f;
-
-        //m_textMeshPro.enableCulling = true;
-        //m_textMeshPro.enableWordWrapping = true;
-
-        //textMeshPro.fontColor = new Color32(255, 255, 255, 255);
-    }
 
     // Start is called before the first frame update
     void Start()
     {
-        StartText();
+        textDisplay = textGameObject.GetComponent<Text>();
 
-        // allocate storage for Party global
+        // allocate storage for Party globals
         Party.chara = new tChara[8];
         for (int i = 0; i < 8; i++)
         {
@@ -829,52 +802,6 @@ public class U4_Decompiled : MonoBehaviour
         trd = new Thread(new ThreadStart(this.ThreadTask));
         trd.IsBackground = true;
         trd.Start();
-
-        // assign settlement game objects
-        Settlements = new GameObject[17];
-        Settlements[(int)LOCATIONS.BRITANNIA] = GameObject.Find("LBC_1");
-        Settlements[(int)0] = GameObject.Find("LBC_2"); // actual location of the upper and lower levels is determined by the location of the ladders
-        Settlements[(int)LOCATIONS.THE_LYCAEUM] = GameObject.Find("LYCAEUM");
-        Settlements[(int)LOCATIONS.EMPATH_ABBY] = GameObject.Find("EMPATH");
-        Settlements[(int)LOCATIONS.SERPENT_HOLD] = GameObject.Find("SERPENT");
-        Settlements[(int)LOCATIONS.MOONGLOW] = GameObject.Find("MOONGLOW");
-        Settlements[(int)LOCATIONS.BRITAIN] = GameObject.Find("BRITAIN");
-        Settlements[(int)LOCATIONS.JHELOM] = GameObject.Find("JHELOM");
-        Settlements[(int)LOCATIONS.YEW] = GameObject.Find("YEW");
-        Settlements[(int)LOCATIONS.MINOC] = GameObject.Find("MINOC");
-        Settlements[(int)LOCATIONS.TRINSIC] = GameObject.Find("TRINSIC");
-        Settlements[(int)LOCATIONS.SKARA_BRAE] = GameObject.Find("SKARA");
-        Settlements[(int)LOCATIONS.MAGINCIA] = GameObject.Find("MAGINCIA");
-        Settlements[(int)LOCATIONS.PAWS] = GameObject.Find("PAWS");
-        Settlements[(int)LOCATIONS.BUCCANEERS_DEN] = GameObject.Find("DEN");
-        Settlements[(int)LOCATIONS.VESPER] = GameObject.Find("VESPER");
-        Settlements[(int)LOCATIONS.COVE] = GameObject.Find("COVE");
-
-        // assign combat terrain game objects
-        CombatTerrains = new GameObject[23];
-        CombatTerrains[(int)COMBAT_TERRAIN.GRASS] = GameObject.Find("GRASS");
-        CombatTerrains[(int)COMBAT_TERRAIN.BRIDGE] = GameObject.Find("BRIDGE");
-        CombatTerrains[(int)COMBAT_TERRAIN.BRICK] = GameObject.Find("BRICK");
-        CombatTerrains[(int)COMBAT_TERRAIN.HILL] = GameObject.Find("HILL");
-        CombatTerrains[(int)COMBAT_TERRAIN.FOREST] = GameObject.Find("FOREST");
-        CombatTerrains[(int)COMBAT_TERRAIN.BRUSH] = GameObject.Find("BRUSH");
-        CombatTerrains[(int)COMBAT_TERRAIN.MARSH] = GameObject.Find("MARSH");
-        CombatTerrains[(int)COMBAT_TERRAIN.SHORE] = GameObject.Find("SHORE");
-        CombatTerrains[(int)COMBAT_TERRAIN.SHORESHIP] = GameObject.Find("SHORESHIP");
-        CombatTerrains[(int)COMBAT_TERRAIN.SHIPSEA] = GameObject.Find("SHIPSEA");
-        CombatTerrains[(int)COMBAT_TERRAIN.SHIPSHIP] = GameObject.Find("SHIPSHIP");
-        CombatTerrains[(int)COMBAT_TERRAIN.SHIPSHORE] = GameObject.Find("SHIPSHORE");
-        CombatTerrains[(int)COMBAT_TERRAIN.INN] = GameObject.Find("INN");
-        CombatTerrains[(int)COMBAT_TERRAIN.CAMP] = GameObject.Find("CAMP");
-        CombatTerrains[(int)COMBAT_TERRAIN.DUNGEON] = GameObject.Find("DUNGEON");
-        CombatTerrains[(int)COMBAT_TERRAIN.SHRINE] = GameObject.Find("SHRINE");
-        CombatTerrains[(int)COMBAT_TERRAIN.DNG0] = GameObject.Find("DNG0");
-        CombatTerrains[(int)COMBAT_TERRAIN.DNG1] = GameObject.Find("DNG1");
-        CombatTerrains[(int)COMBAT_TERRAIN.DNG2] = GameObject.Find("DNG2");
-        CombatTerrains[(int)COMBAT_TERRAIN.DNG3] = GameObject.Find("DNG3");
-        CombatTerrains[(int)COMBAT_TERRAIN.DNG4] = GameObject.Find("DNG4");
-        CombatTerrains[(int)COMBAT_TERRAIN.DNG5] = GameObject.Find("DNG5");
-        CombatTerrains[(int)COMBAT_TERRAIN.DNG6] = GameObject.Find("DNG6");
     }
 
     // unfortuantly the game engine never saves this information after loading the combat terrain in function C_7C65()
@@ -883,7 +810,8 @@ public class U4_Decompiled : MonoBehaviour
     // original function.
 
     // TODO: this does not handle the INN or shop or camp case  (e.g. In the middle of the night, while out for a stroll...)
-    COMBAT_TERRAIN Convert_Tile_to_Combat_Terrian(TILE tile)
+    // TODO: ship to shore combat showed the ship to ship combat terrain while playing, need to check where this is wrong, enum or code
+    public COMBAT_TERRAIN Convert_Tile_to_Combat_Terrian(TILE tile)
     {
         COMBAT_TERRAIN combat_terrain;
 
@@ -891,7 +819,7 @@ public class U4_Decompiled : MonoBehaviour
         {
             if (D_96F8 == TILE.PIRATE_WEST)
             {
-                combat_terrain = COMBAT_TERRAIN.SHIPSHORE;
+                combat_terrain = COMBAT_TERRAIN.SHIPSHIP;
             }
             else if (D_946C <= TILE.SHALLOW_WATER)
             {
@@ -899,18 +827,18 @@ public class U4_Decompiled : MonoBehaviour
             }
             else
             {
-                combat_terrain = COMBAT_TERRAIN.SHORE;
+                combat_terrain = COMBAT_TERRAIN.SHIPSHOR;
             }
         }
         else
         {
             if (D_96F8 == TILE.PIRATE_WEST)
             {
-                combat_terrain = COMBAT_TERRAIN.SHORESHIP;
+                combat_terrain = COMBAT_TERRAIN.SHORSHIP;
             }
             else if (D_946C <= TILE.SHALLOW_WATER)
             {
-                combat_terrain = COMBAT_TERRAIN.SHIPSHIP;
+                combat_terrain = COMBAT_TERRAIN.SHORE;
             }
             else
             {
@@ -1002,7 +930,6 @@ public class U4_Decompiled : MonoBehaviour
 
     public activeCharacter currentActiveCharacter;
 
-    //public float hit_time = 0.0f;
     public float hit_time_period = 0.25f;
 
     public struct hit
@@ -1016,6 +943,15 @@ public class U4_Decompiled : MonoBehaviour
     public List<hit> currentHits = new List<hit>() { };
     public TILE D_96F8;
     public TILE D_946C;
+
+    public struct mapPosition
+    {
+        public byte x;
+        public byte y;
+    }
+
+    public mapPosition D_95A5;
+
     public System.Text.ASCIIEncoding enc;
 
     // Update is called once per frame
@@ -1232,27 +1168,12 @@ public class U4_Decompiled : MonoBehaviour
             main_keyboardHit((char)'9');
         }
 
-
         // only get data from the game engine periodically
         if (timer > timerExpired)
         {
             // update the timer
             timer = timer - timerExpired;
             timerExpired = timerPeriod;
-
-
-            /*
-        private SpeechLib.pVoice voice;
-
-            voice = new SpVoice();
-            ISpeechObjectTokens voices = voice.GetVoices();
- 
-        // Update is called once per frame
-            if (Input.anyKeyDown)
-            {
-                voice.Speak("Hello, world!", SpeechVoiceSpeakFlags.SVSFlagsAsync);
-            }
-           */
 
             // create an ASCII encoder if needed
             if (enc == null)
@@ -1303,8 +1224,14 @@ public class U4_Decompiled : MonoBehaviour
             }
 
             // animate the spining whirlpool character by removing and adding to the end of the text the update whirlpool character
-            textDisplay.text = textDisplay.text.Remove(textDisplay.text.Length - 1) + (char)(0x1c + (Time.time * 10) % 4);
-
+            if (textDisplay.text.Length > 0)
+            {
+                textDisplay.text = textDisplay.text.Remove(textDisplay.text.Length - 1) + (char)(0x1c + (Time.time * 10) % 4);
+            }
+            else
+            {
+                textDisplay.text = "" + (char)(0x1c + (Time.time * 10) % 4);
+            }
 
             // read the circular npc text buffer from the game engine
             text_size = main_NPC_Text(buffer, buffer.Length);
@@ -1338,6 +1265,9 @@ public class U4_Decompiled : MonoBehaviour
 
             D_96F8 = main_D_96F8();
             D_946C = main_D_946C();
+
+            D_95A5.x = (byte)main_D_95A5_x();
+            D_95A5.y = (byte)main_D_95A5_y();
 
             // get any hilighted character, used during combat
             main_ActiveChar(buffer, buffer.Length);
@@ -1406,11 +1336,11 @@ public class U4_Decompiled : MonoBehaviour
             if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
             {
                 buffer_index = 0;
-                for (int i = 0; i < 32; i++)
+                for (int y = 0; y < 32; y++)
                 {
-                    for (int j = 0; j < 32; j++)
+                    for (int x = 0; x < 32; x++)
                     {
-                        tMap32x32[i, j] = (TILE)buffer[buffer_index++];
+                        tMap32x32[x, y] = (TILE)buffer[buffer_index++];
                     }
                 }
             }
@@ -1568,217 +1498,19 @@ public class U4_Decompiled : MonoBehaviour
 
             // read the main display tile buffer
             buffer_index = 0;
-            for (int i = 0; i < 11; i++)
+            for (int y = 0; y < 11; y++)
             {
-                for (int j = 0; j < 11; j++)
+                for (int x = 0; x < 11; x++)
                 {
-                    map[i, j] = (TILE)buffer[buffer_index++];
+                    map[x, y] = (TILE)buffer[buffer_index++];
                 }
             }
-
-            // raycast this map
-            //raycast();
 
             // keep the part game object in sync with the game
             if (partyGameObject)
             {
                 partyGameObject.transform.localPosition = new Vector3(Party._x, 255 - Party._y, 0);
             }
-
-            World[] worldList = FindObjectsOfType<World>();
-
-            if (worldList.Length != 0)
-            {
-                //worldList[0].DrawMap(raycastMap, currentHits, currentActiveCharacter);
-
-                if (current_mode == MODE.OUTDOORS)
-                {
-                    worldList[0].AddNPCs(_npc);
-                    worldList[0].followWorld();
-                    worldList[0].AddHits(currentHits);
-                    worldList[0].AddActiveCharacter(currentActiveCharacter);
-                    worldList[0].terrain.SetActive(true);
-                    worldList[0].animatedTerrrain.SetActive(true);
-                    worldList[0].fighters.SetActive(false);
-                    worldList[0].characters.SetActive(false);
-                    worldList[0].npcs.SetActive(true);
-                    worldList[0].party.SetActive(true);
-
-                    for (int i = 0; i < 17; i++)
-                    {
-                        Settlements[i].gameObject.SetActive(false);
-                    }
-                    for (int i = 0; i < 23; i++)
-                    {
-                        CombatTerrains[i].gameObject.SetActive(false);
-                    }
-                }
-                else if (current_mode == MODE.BUILDING)
-                {
-                    worldList[0].AddNPCs(_npc);
-                    worldList[0].followWorld();
-                    worldList[0].AddHits(currentHits);
-                    worldList[0].AddActiveCharacter(currentActiveCharacter);
-                    worldList[0].terrain.SetActive(false);
-                    worldList[0].animatedTerrrain.SetActive(false);
-                    worldList[0].fighters.SetActive(false);
-                    worldList[0].characters.SetActive(false);
-                    worldList[0].npcs.SetActive(true);
-                    worldList[0].party.SetActive(true);
-
-                    for (int i = 0; i < 17; i++)
-                    {
-                        GameObject set = Settlements[i].gameObject;
-
-                        // need to special case the castle, this is how the game engine figures it out using the ladder
-                        if ((i == 0) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3,3] == TILE.LADDER_DOWN))
-                        {
-                            set.SetActive(true);
-                        }
-                        else if ((i == 0) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3, 3] == TILE.LADDER_UP))
-                        {
-                            set.SetActive(false);
-                        }
-                        else if ((i == 1) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3, 3] == TILE.LADDER_UP))
-                        {
-                            set.SetActive(true);
-                        }
-                        else if ((i == 1) && (Party._loc == LOCATIONS.BRITANNIA) && (tMap32x32[3, 3] == TILE.LADDER_DOWN))
-                        {
-                            set.SetActive(false);
-                        }
-                        else if (Party._loc == (LOCATIONS)i)
-                        {
-                            set.SetActive(true);
-                        }
-                        else
-                        {
-                            set.SetActive(false);
-                        }
-                    }
-                    for (int i = 0; i < 23; i++)
-                    {
-                        CombatTerrains[i].gameObject.SetActive(false);
-                    }
-                }
-                else if ((current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP /* TODO: this could be the inn or shop or camp */ ) || (current_mode == MODE.COMBAT_ROOM))
-                {
-                    worldList[0].AddFighters(Fighters, Combat1);
-                    worldList[0].AddCharacters(Combat2, Party, Fighters);
-                    worldList[0].AddHits(currentHits);
-                    worldList[0].AddActiveCharacter(currentActiveCharacter);
-                    worldList[0].terrain.SetActive(false);
-                    worldList[0].animatedTerrrain.SetActive(false);
-                    worldList[0].fighters.SetActive(true);
-                    worldList[0].characters.SetActive(true);
-                    worldList[0].npcs.SetActive(false);
-                    worldList[0].party.SetActive(false);
-
-                    for (int i = 0; i < 17; i++)
-                    {
-                        Settlements[i].gameObject.SetActive(false);
-                    }
-
-                    int currentCombatTerrain = (int)Convert_Tile_to_Combat_Terrian(current_tile);
-
-                    for (int i = 0; i < 23; i++)
-                    {
-                        if (i == currentCombatTerrain)
-                        {
-                            CombatTerrains[i].gameObject.SetActive(true);
-                        }
-                        else
-                        {
-                            CombatTerrains[i].gameObject.SetActive(false);
-                        }
-                    }
-                }
-
-                if ((worldList[0].party != null) && (worldList[0].originalTiles != null))
-                {
-                    // set the party tile, person, horse, ballon, ship, etc.
-                    Renderer renderer = worldList[0].party.GetComponentInChildren<Renderer>();
-                    if (renderer)
-                    {
-                        worldList[0].party.GetComponentInChildren<Renderer>().material.mainTexture = worldList[0].originalTiles[(int)Party._tile];
-                        worldList[0].party.name = Party._tile.ToString();
-                    }
-                }
-            }
         }
-    }
-
-
-    // cast one ray
-    void Cast_Ray(sbyte diff_x, sbyte diff_y, byte pos_x, byte pos_y)
-    {
-        TILE temp_tile;
-
-        // are we outside the area we want to check
-        if (pos_x > 10 || pos_y > 10)
-        {
-            return;
-        }
-
-        // is the tile already been copied
-        if (raycastMap[pos_x, pos_y] != TILE.BLANK)
-        {
-            return;
-        }
-
-        // get the tile and copy it to the raycast map
-        temp_tile = map[pos_x, pos_y];
-        raycastMap[pos_x, pos_y] = temp_tile;
-
-        // check the tile for opaque tiles
-        if ((temp_tile == TILE.FOREST) ||
-            (temp_tile == TILE.MOUNTAINS) ||
-            (temp_tile == TILE.BLANK) ||
-            (temp_tile == TILE.SECRET_BRICK_WALL) ||
-            (temp_tile == TILE.BRICK_WALL))
-        {
-            return;
-        }
-
-        // continue the ray cast recursively
-        pos_x = (byte)(pos_x + diff_x);
-        pos_y = (byte)(pos_y + diff_y);
-        Cast_Ray(diff_x, diff_y, pos_x, pos_y);
-	    if ((diff_x & diff_y) != 0) 
-        {
-            Cast_Ray(diff_x, diff_y, pos_x, (byte)(pos_y - diff_y));
-            Cast_Ray(diff_x, diff_y, (byte)(pos_x - diff_x), pos_y);
-        }
-        else
-        {
-            Cast_Ray((sbyte)(((diff_x != 0) ? 1 : 0) * diff_y + diff_x), (sbyte)(diff_y - ((diff_y != 0) ? 1 : 0) * diff_x), (byte)(diff_y + pos_x), (byte)(pos_y - diff_x));
-            Cast_Ray((sbyte)(diff_x - ((diff_x != 0) ? 1 : 0) * diff_y), (sbyte)(((diff_y != 0) ? 1 : 0) * diff_x + diff_y), (byte)(pos_x - diff_y), (byte)(diff_x + pos_y));
-        } 
-    }
-
-    public TILE[,] raycastMap = new TILE[11, 11];
-
-    // visible area (raycast)
-    void raycast()
-    {
-        // set all visible tiles to blank to start
-        for (int i = 0; i < 11; i++)
-        {
-            for (int j = 0; j < 11; j++)
-            {
-                raycastMap[i, j] = TILE.BLANK;
-            }
-        }
-
-        raycastMap[5, 5] = map[5,5]; // copy the center party's tile as it is always visible
-
-        Cast_Ray(0, -1, 5, 4); // Cast a ray UP
-        Cast_Ray(0, 1, 5, 6); // Cast a ray DOWN
-        Cast_Ray(-1, 0, 4, 5); // Cast a ray LEFT
-        Cast_Ray(1, 0, 6, 5); // Cast a ray RIGHT
-        Cast_Ray(1, 1, 6, 6); // Cast a ray DOWN and to the RIGHT
-        Cast_Ray(1, -1, 6, 4); // Cast a ray UP and to the RIGHT
-        Cast_Ray(-1, 1, 4, 6); // Cast a ray DOWN and to the LEFT
-        Cast_Ray(-1, -1, 4, 4); // Cast a ray UP and to the LEFT
     }
 }

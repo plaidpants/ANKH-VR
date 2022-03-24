@@ -154,19 +154,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/EMPATH.ULT
   talkFilepath: /u4/EMPATH.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &21463744
@@ -274,19 +271,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/LCB_2.ULT
   talkFilepath: /u4/LCB.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &191871700
@@ -302,107 +296,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 985816492}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &199557894
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 199557895}
-  - component: {fileID: 199557896}
-  m_Layer: 0
-  m_Name: BRIDGE
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &199557895
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 199557894}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &199557896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 199557894}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/BRIDGE.CON
---- !u!1 &203382650
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 203382654}
-  - component: {fileID: 203382651}
-  m_Layer: 0
-  m_Name: Bubble
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &203382651
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 203382650}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c639be8e73ff5c43ab812d1397b6b12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  text: {fileID: 1010938561}
-  background: {fileID: 1837623940}
-  fontAtlas: {fileID: 0}
-  myFont: {fileID: 0}
-  charsetEGAFilepath: /u4/CHARSET.EGA
-  charsetCGAFilepath: /u4/CHARSET.CGA
-  CGAColorPalette: []
-  EGAColorPalette: []
---- !u!4 &203382654
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 203382650}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 420394710}
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &238935500
 GameObject:
@@ -516,19 +409,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/YEW.ULT
   talkFilepath: /u4/YEW.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &253206148
@@ -782,19 +672,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/COVE.ULT
   talkFilepath: /u4/COVE.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &312711162
@@ -811,55 +698,6 @@ Transform:
   m_Father: {fileID: 985816492}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &331996113
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 331996114}
-  - component: {fileID: 331996115}
-  m_Layer: 0
-  m_Name: SHORE
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &331996114
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 331996113}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 13
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &331996115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 331996113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/SHORE.CON
 --- !u!1001 &344196550
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -935,106 +773,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 344196550}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &420394709
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 420394710}
-  - component: {fileID: 420394713}
-  - component: {fileID: 420394712}
-  - component: {fileID: 420394711}
-  m_Layer: 5
-  m_Name: Canvas
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &420394710
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 420394709}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
-  m_Children:
-  - {fileID: 1010938560}
-  m_Father: {fileID: 203382654}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1, y: 1}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &420394711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 420394709}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &420394712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 420394709}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 150
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
---- !u!223 &420394713
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 420394709}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 1319542886}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &479014016
 GameObject:
   m_ObjectHideFlags: 0
@@ -1066,19 +804,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/SERPENT.ULT
   talkFilepath: /u4/SERPENT.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &479014018
@@ -1095,55 +830,6 @@ Transform:
   m_Father: {fileID: 985816492}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &488880728
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 488880729}
-  - component: {fileID: 488880730}
-  m_Layer: 0
-  m_Name: DNG3
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &488880729
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 488880728}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 19
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &488880730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 488880728}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/DNG3.CON
 --- !u!1 &582030271
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,7 +873,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582030271}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.88, y: 1.5, z: 7.18}
+  m_LocalPosition: {x: 3.88, y: 0.5, z: 7.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 246932416}
@@ -1205,11 +891,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 582030271}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f76806479d916a64aa03f8e3eba7912f, type: 3}
+  m_Script: {fileID: 11500000, guid: d4e429786f94d4140860ea6f44e2cf6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  distance: 10
+  distance: 5
   height: 5
   rotationDamping: 0
   heightDamping: 0
@@ -1244,19 +930,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/LCB_1.ULT
   talkFilepath: /u4/LCB.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 12
   u4: {fileID: 0}
   timerPeriod: 0.5
 --- !u!4 &588377744
@@ -1273,153 +956,6 @@ Transform:
   m_Father: {fileID: 985816492}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &597947916
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 597947917}
-  - component: {fileID: 597947918}
-  m_Layer: 0
-  m_Name: DUNGEON
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &597947917
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 597947916}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 15
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &597947918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 597947916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/DUNGEON.CON
---- !u!1 &612889760
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 612889761}
-  - component: {fileID: 612889762}
-  m_Layer: 0
-  m_Name: DNG5
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &612889761
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 612889760}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 21
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &612889762
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 612889760}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/DNG5.CON
---- !u!1 &625132455
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 625132456}
-  - component: {fileID: 625132457}
-  m_Layer: 0
-  m_Name: SHORESHIP
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &625132456
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625132455}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &625132457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625132455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/SHORSHIP.CON
 --- !u!1 &731275211
 GameObject:
   m_ObjectHideFlags: 0
@@ -1510,303 +1046,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &779227795
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 779227796}
-  - component: {fileID: 779227799}
-  - component: {fileID: 779227798}
-  - component: {fileID: 779227797}
-  m_Layer: 5
-  m_Name: Bubble
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &779227796
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 779227795}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.07263851}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1568987022}
-  - {fileID: 1892102332}
-  m_Father: {fileID: 1758985018}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 600.0211, y: 381.69342}
-  m_SizeDelta: {x: 1200, y: 765}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &779227797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 779227795}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &779227798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 779227795}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
---- !u!223 &779227799
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 779227795}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 1319542886}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
---- !u!1 &784579710
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 784579711}
-  - component: {fileID: 784579712}
-  m_Layer: 0
-  m_Name: DNG2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &784579711
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 784579710}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 18
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &784579712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 784579710}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/DNG2.CON
---- !u!1 &790972565
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 790972566}
-  - component: {fileID: 790972567}
-  m_Layer: 0
-  m_Name: GRASS
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &790972566
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 790972565}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 11
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &790972567
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 790972565}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/GRASS.CON
---- !u!1 &805100566
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 805100567}
-  - component: {fileID: 805100568}
-  m_Layer: 0
-  m_Name: DNG0
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &805100567
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 805100566}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 16
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &805100568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 805100566}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/DNG0.CON
---- !u!1 &812202296
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 812202297}
-  - component: {fileID: 812202298}
-  m_Layer: 0
-  m_Name: DNG6
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &812202297
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 812202296}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 22
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &812202298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 812202296}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/DNG6.CON
 --- !u!1 &833177449
 GameObject:
   m_ObjectHideFlags: 0
@@ -1838,19 +1077,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/TRINSIC.ULT
   talkFilepath: /u4/TRINSIC.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &833177451
@@ -1867,260 +1103,6 @@ Transform:
   m_Father: {fileID: 985816492}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &837931663
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 837931664}
-  - component: {fileID: 837931665}
-  m_Layer: 0
-  m_Name: FOREST
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &837931664
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 837931663}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 14
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &837931665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 837931663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/FOREST.CON
---- !u!1 &844129934
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 844129935}
-  - component: {fileID: 844129937}
-  - component: {fileID: 844129936}
-  m_Layer: 5
-  m_Name: Content
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &844129935
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 844129934}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2045841837}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 2, y: 178.77}
-  m_SizeDelta: {x: -3, y: 176.8758}
-  m_Pivot: {x: 0, y: 1}
---- !u!114 &844129936
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 844129934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 12800000, guid: d36e3df6e5f2d054c82dd18be5c5d4f0, type: 2}
-    m_FontSize: 10
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
-    m_Alignment: 6
-    m_AlignByGeometry: 1
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 1
-    m_LineSpacing: 1
-  m_Text: ' the funds for even one! wd wd wd dw wd w w dwd wd wd w wd w
-
-    Anything
-    else?
-
-    Winston says: Fare thee well!
-
-    > Pass
-
-    >  the funds for even
-    one! wd wd wd dw wd w w dwd wd wd w wd w
-
-    Anything else?
-
-    Winston says:
-    Fare thee well!
-
-    > Pass
-
-    >  the funds for even one! wd wd wd dw wd w
-    w dwd wd wd w wd w
-
-    Anything else?
-
-    Winston says: Fare thee well!
-
-    >
-    Pass
-
-    >  the funds for even one! wd wd wd dw wd w w dwd wd wd w wd w
-
-    Anything
-    else?
-
-    Winston says: Fare thee well!
-
-    > Pass
-
-    >  the funds for even
-    one! wd wd wd dw wd w w dwd wd wd w wd w
-
-    Anything else?
-
-    Winston says:
-    Fare thee well!
-
-    > Pass
-
-    >  the funds for even one! wd wd wd dw wd w
-    w dwd wd wd w wd w
-
-    Anything else?
-
-    Winston says: Fare thee well!
-
-    >
-    Pass
-
-    >  the funds for even one! wd wd wd dw wd w w dwd wd wd w wd w
-
-    Anything
-    else?
-
-    Winston says: Fare thee well!
-
-    > Pass
-
-    >  the funds for even
-    one! wd wd wd dw wd w w dwd wd wd w wd w
-
-    Anything else?
-
-    Winston says:
-    Fare thee well!
-
-    > Pass
-
-    > '
---- !u!222 &844129937
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 844129934}
-  m_CullTransparentMesh: 1
---- !u!1 &851473630
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 851473631}
-  - component: {fileID: 851473632}
-  m_Layer: 0
-  m_Name: BRUSH
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &851473631
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 851473630}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &851473632
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 851473630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/BRUSH.CON
 --- !u!1 &861099456
 GameObject:
   m_ObjectHideFlags: 0
@@ -2152,19 +1134,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/SKARA.ULT
   talkFilepath: /u4/SKARA.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &861099458
@@ -2181,55 +1160,6 @@ Transform:
   m_Father: {fileID: 985816492}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &879687842
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 879687843}
-  - component: {fileID: 879687844}
-  m_Layer: 0
-  m_Name: SHIPSHORE
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &879687843
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 879687842}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &879687844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 879687842}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/SHIPSHOR.CON
 --- !u!1 &985816491
 GameObject:
   m_ObjectHideFlags: 0
@@ -2774,11 +1704,7 @@ MonoBehaviour:
     _gtile: 0
     _sleeping: 0
     _chtile: 0
-  Settlements: []
-  CombatTerrains: []
   textDisplay: {fileID: 0}
-  label: 'The <#0050FF>count is: </color>{0:2}'
-  m_frame: 0
   TextGameObject: {fileID: 0}
   hit_time_period: 0.25
   D_96F8: 0
@@ -2795,181 +1721,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1010938559
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1010938560}
-  - component: {fileID: 1010938562}
-  - component: {fileID: 1010938561}
-  - component: {fileID: 1010938563}
-  - component: {fileID: 1010938564}
-  m_Layer: 5
-  m_Name: Text
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1010938560
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1010938559}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1837623942}
-  m_Father: {fileID: 420394710}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 4.5338, y: -1.275}
-  m_SizeDelta: {x: 9.0675, y: 18.9}
-  m_Pivot: {x: 0.5, y: 0}
---- !u!114 &1010938561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1010938559}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 12800000, guid: d36e3df6e5f2d054c82dd18be5c5d4f0, type: 2}
-    m_FontSize: 1
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 0
-    m_MaxSize: 66
-    m_Alignment: 6
-    m_AlignByGeometry: 1
-    m_RichText: 0
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 1
-    m_LineSpacing: 1.1
-  m_Text: "Your Interest?\nYour Interest?\nYour Interest?\nYou have not the funds
-    for even one! wd wd wd dw wd w w dwd wd wd w wd w\nAnything else?\nWinston says:
-    Fare thee well!\n> Pass\n> \n"
---- !u!222 &1010938562
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1010938559}
-  m_CullTransparentMesh: 1
---- !u!114 &1010938563
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1010938559}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 2
---- !u!114 &1010938564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1010938559}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 7
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
---- !u!1 &1028905853
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1028905854}
-  - component: {fileID: 1028905855}
-  m_Layer: 0
-  m_Name: HILL
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1028905854
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1028905853}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1028905855
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1028905853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/HILL.CON
 --- !u!1 &1033731152
 GameObject:
   m_ObjectHideFlags: 0
@@ -3001,19 +1754,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/PAWS.ULT
   talkFilepath: /u4/PAWS.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &1033731154
@@ -3030,55 +1780,6 @@ Transform:
   m_Father: {fileID: 985816492}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1036903423
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1036903424}
-  - component: {fileID: 1036903425}
-  m_Layer: 0
-  m_Name: DNG4
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1036903424
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1036903423}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 20
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1036903425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1036903423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/DNG4.CON
 --- !u!21 &1083198363
 Material:
   serializedVersion: 6
@@ -3220,19 +1921,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/JHELOM.ULT
   talkFilepath: /u4/JHELOM.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &1123583268
@@ -3249,55 +1947,6 @@ Transform:
   m_Father: {fileID: 985816492}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1187193797
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1187193798}
-  - component: {fileID: 1187193799}
-  m_Layer: 0
-  m_Name: MARSH
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1187193798
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1187193797}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1187193799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1187193797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/MARSH.CON
 --- !u!1 &1239072610
 GameObject:
   m_ObjectHideFlags: 0
@@ -3329,19 +1978,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/MINOC.ULT
   talkFilepath: /u4/MINOC.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &1239072612
@@ -3389,19 +2035,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/MAGINCIA.ULT
   talkFilepath: /u4/MAGINCIA.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &1279706700
@@ -3449,19 +2092,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/DEN.ULT
   talkFilepath: /u4/DEN.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &1293989965
@@ -3509,19 +2149,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/BRITAIN.ULT
   talkFilepath: /u4/BRITAIN.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &1302919553
@@ -3673,19 +2310,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/MOONGLOW.ULT
   talkFilepath: /u4/MOONGLOW.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &1362802852
@@ -3701,157 +2335,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 985816492}
   m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1401374222
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1401374223}
-  - component: {fileID: 1401374224}
-  m_Layer: 0
-  m_Name: SHRINE
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1401374223
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1401374222}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1401374224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1401374222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/SHRINE.CON
---- !u!1 &1437974350
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1437974351}
-  - component: {fileID: 1437974352}
-  m_Layer: 0
-  m_Name: INN
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1437974351
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1437974350}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1437974352
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1437974350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/INN.CON
---- !u!1 &1440502660
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1440502661}
-  m_Layer: 0
-  m_Name: Combat
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1440502661
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1440502660}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1883568919}
-  - {fileID: 1835556643}
-  - {fileID: 879687843}
-  - {fileID: 625132456}
-  - {fileID: 1530595631}
-  - {fileID: 1437974351}
-  - {fileID: 1958995689}
-  - {fileID: 199557895}
-  - {fileID: 1401374223}
-  - {fileID: 1028905854}
-  - {fileID: 851473631}
-  - {fileID: 790972566}
-  - {fileID: 1187193798}
-  - {fileID: 331996114}
-  - {fileID: 837931664}
-  - {fileID: 597947917}
-  - {fileID: 805100567}
-  - {fileID: 2073773363}
-  - {fileID: 784579711}
-  - {fileID: 488880729}
-  - {fileID: 1036903424}
-  - {fileID: 612889761}
-  - {fileID: 812202297}
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1457507144
 PrefabInstance:
@@ -3928,55 +2411,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1457507144}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1530595630
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1530595631}
-  - component: {fileID: 1530595632}
-  m_Layer: 0
-  m_Name: BRICK
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1530595631
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1530595630}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1530595632
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1530595630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/BRICK.CON
 --- !u!1 &1553782259
 GameObject:
   m_ObjectHideFlags: 0
@@ -4008,19 +2442,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/VESPER.ULT
   talkFilepath: /u4/VESPER.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &1553782261
@@ -4071,82 +2502,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
---- !u!1 &1568987021
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1568987022}
-  - component: {fileID: 1568987024}
-  - component: {fileID: 1568987023}
-  m_Layer: 5
-  m_Name: Button
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &1568987022
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568987021}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.0000009536743}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1883219196}
-  m_Father: {fileID: 779227796}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 3.1291, y: 326.584}
-  m_SizeDelta: {x: 144.5477, y: 113.2143}
-  m_Pivot: {x: 0.5, y: 0}
---- !u!114 &1568987023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568987021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0086a50403de40c42a0cdfa0205e30fb, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1568987024
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568987021}
-  m_CullTransparentMesh: 1
 --- !u!1 &1753957572
 GameObject:
   m_ObjectHideFlags: 0
@@ -4178,11 +2533,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
-  npcs: {fileID: 0}
+  originalTiles: []
+  expandedTiles: []
+  mainTerrain: {fileID: 0}
   terrain: {fileID: 0}
   animatedTerrrain: {fileID: 0}
   billboardTerrrain: {fileID: 0}
+  npcs: {fileID: 0}
   bubblePrefab: {fileID: 5424587087699679323, guid: 01025e69428beb6408b14a27154ad608,
     type: 3}
   party: {fileID: 0}
@@ -4190,15 +2547,14 @@ MonoBehaviour:
   characters: {fileID: 0}
   activeCharacter: {fileID: 0}
   hits: {fileID: 0}
-  mapHudGameObject: {fileID: 0}
-  npcsHud: {fileID: 0}
-  terrainHud: {fileID: 0}
-  animatedTerrrainHud: {fileID: 0}
-  otherHud: {fileID: 0}
-  activeCharacterHud: {fileID: 0}
+  partyGameObject: {fileID: 0}
+  Settlements: []
+  CombatTerrains: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   worldMapFilepath: /u4/WORLD.MAP
+  u4: {fileID: 0}
+  timerPeriod: 0.02
 --- !u!4 &1753957574
 Transform:
   m_ObjectHideFlags: 0
@@ -4212,37 +2568,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1758985017
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1758985018}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1758985018
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1758985017}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.14, y: 0.80657154, z: 44.29}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 779227796}
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1828118601
 GameObject:
@@ -4275,19 +2600,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CGAColorPalette: []
   EGAColorPalette: []
-  tiles: []
+  originalTiles: []
+  expandedTiles: []
   tileEGAFilepath: /u4/SHAPES.EGA
   tileCGAFilepath: /u4/SHAPES.CGA
   settlementFilepath: /u4/LYCAEUM.ULT
   talkFilepath: /u4/LYCAEUM.TLK
+  castle: 1
   npcQuestionTriggerIndex: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   npcQuestionAffectHumility: 00000000000000000000000000000000
   npcProbabilityOfTurningAway: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  myMainTextureOffset: 1
-  myMainTextureScale: 1
-  extra_offset_x: 0
-  extra_offset_y: 0
-  extra_offset_scale: 1
   u4: {fileID: 0}
   timerPeriod: 0.02
 --- !u!4 &1828118603
@@ -4304,462 +2626,6 @@ Transform:
   m_Father: {fileID: 985816492}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1835556642
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1835556643}
-  - component: {fileID: 1835556644}
-  m_Layer: 0
-  m_Name: SHIPSEA
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1835556643
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1835556642}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1835556644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1835556642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/SHIPSEA.CON
---- !u!1 &1837623938
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1837623942}
-  - component: {fileID: 1837623940}
-  - component: {fileID: 1837623941}
-  - component: {fileID: 1837623939}
-  m_Layer: 0
-  m_Name: background
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1837623939
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1837623938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
---- !u!212 &1837623940
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1837623938}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 212269039
-  m_SortingLayer: 1
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0086a50403de40c42a0cdfa0205e30fb, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 1
-  m_Size: {x: 1, y: 1}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!223 &1837623941
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1837623938}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
---- !u!224 &1837623942
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1837623938}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 20, y: 20, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1010938560}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 4.53375, y: -18.4}
-  m_SizeDelta: {x: 1, y: 1}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1883219195
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1883219196}
-  - component: {fileID: 1883219198}
-  - component: {fileID: 1883219197}
-  - component: {fileID: 1883219199}
-  m_Layer: 5
-  m_Name: Text
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1883219196
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1883219195}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1568987022}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 1.6566467, y: 7}
-  m_SizeDelta: {x: -10.686699, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1883219197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1883219195}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 12800000, guid: d36e3df6e5f2d054c82dd18be5c5d4f0, type: 2}
-    m_FontSize: 10
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
-    m_Alignment: 6
-    m_AlignByGeometry: 1
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 1
-    m_LineSpacing: 1
-  m_Text: ' the funds for even one! wd wd wd dw wd w w dwd wd wd w wd w
-
-    Anything
-    else?
-
-    Winston says: Fare thee well!
-
-    > Pass
-
-    > '
---- !u!222 &1883219198
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1883219195}
-  m_CullTransparentMesh: 1
---- !u!114 &1883219199
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1883219195}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 1
---- !u!1 &1883568918
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1883568919}
-  - component: {fileID: 1883568920}
-  m_Layer: 0
-  m_Name: SHIPSHIP
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1883568919
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1883568918}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1883568920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1883568918}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/SHIPSHIP.CON
---- !u!1 &1892102331
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1892102332}
-  - component: {fileID: 1892102335}
-  - component: {fileID: 1892102334}
-  m_Layer: 5
-  m_Name: Scolling
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1892102332
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1892102331}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 2045841837}
-  m_Father: {fileID: 779227796}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 82.12036, y: -25.903006}
-  m_SizeDelta: {x: 203.3905, y: 132.1706}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1892102334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1892102331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0086a50403de40c42a0cdfa0205e30fb, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1892102335
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1892102331}
-  m_CullTransparentMesh: 1
---- !u!1 &1958995688
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1958995689}
-  - component: {fileID: 1958995690}
-  m_Layer: 0
-  m_Name: CAMP
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1958995689
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1958995688}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1958995690
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1958995688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/CAMP.CON
 --- !u!1 &2006084671
 GameObject:
   m_ObjectHideFlags: 0
@@ -4853,145 +2719,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &2045841836
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2045841837}
-  - component: {fileID: 2045841840}
-  - component: {fileID: 2045841839}
-  - component: {fileID: 2045841838}
-  m_Layer: 5
-  m_Name: Viewport
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2045841837
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2045841836}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 844129935}
-  m_Father: {fileID: 1892102332}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 5, y: -4.9999466}
-  m_SizeDelta: {x: -10, y: -10}
-  m_Pivot: {x: 0, y: 1}
---- !u!114 &2045841838
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2045841836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 0
---- !u!114 &2045841839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2045841836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &2045841840
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2045841836}
-  m_CullTransparentMesh: 1
---- !u!1 &2073773362
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2073773363}
-  - component: {fileID: 2073773364}
-  m_Layer: 0
-  m_Name: DNG1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2073773363
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2073773362}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1440502661}
-  m_RootOrder: 17
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2073773364
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2073773362}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2138d1e17ab9a409b3bb2b6c576ec9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  tiles: []
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  combatMapFilepath: /u4/DNG1.CON
 --- !u!1 &2101250206 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5424587088318531095, guid: 01025e69428beb6408b14a27154ad608,
@@ -5241,7 +2968,7 @@ PrefabInstance:
     - target: {fileID: 5424587088318531113, guid: 01025e69428beb6408b14a27154ad608,
         type: 3}
       propertyPath: m_Text
-      value: testing
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5424587088318531113, guid: 01025e69428beb6408b14a27154ad608,
         type: 3}

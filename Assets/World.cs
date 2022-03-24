@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-using UnityStandardAssets.Utility;
 
 public class World : MonoBehaviour
 {
@@ -11,10 +10,14 @@ public class World : MonoBehaviour
     public Texture2D[] originalTiles;
     public Texture2D[] expandedTiles;
 
-    public GameObject npcs;
+    // mainTerrain holds the terrain, animatedTerrrain, billboardTerrrain
+    public GameObject mainTerrain;
     public GameObject terrain;
     public GameObject animatedTerrrain;
-    public GameObject billboardTerrrain; // new item not used yet for trees, anks, etc.
+    public GameObject billboardTerrrain;
+
+    // these are fixed in space 
+    public GameObject npcs;
     public GameObject bubblePrefab;
     public GameObject party;
     public GameObject fighters; 
@@ -22,18 +25,224 @@ public class World : MonoBehaviour
     public GameObject activeCharacter; 
     public GameObject hits;
 
-    public GameObject mapHudGameObject;
-    public GameObject npcsHud;
-    public GameObject terrainHud;
-    public GameObject animatedTerrrainHud;
-    public GameObject otherHud;
-    public GameObject activeCharacterHud;
+    public GameObject partyGameObject;
+
+    public GameObject[] Settlements;
+    public GameObject[] CombatTerrains;
 
     public string tileEGAFilepath = "/u4/SHAPES.EGA";
     public string tileCGAFilepath = "/u4/SHAPES.CGA";
     public string worldMapFilepath = "/u4/WORLD.MAP";
 
-    GameObject CreatePyramid ()
+    public U4_Decompiled u4;
+
+    U4_Decompiled.TILE[,] raycastSettlementMap = new U4_Decompiled.TILE[32, 32];
+    U4_Decompiled.TILE[,] raycastOutdoorMap = new U4_Decompiled.TILE[64, 64];
+
+    GameObject Test2;
+
+    const int MAP_CHUNK = 1;
+
+    GameObject CreatePartialCube(bool leftside = true, bool rightside = true, bool back = true, bool front = true)
+    {
+        // create a game object to hold the cube and give it a proper name
+        GameObject partialCube = new GameObject("Partial Cube");
+        partialCube.name = "Partial Cube";
+
+        // add a mesh filter and mesh renderer so we can see this new cube game object 
+        MeshFilter meshFilter = partialCube.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = partialCube.AddComponent<MeshRenderer>();
+
+        // always have the top
+        int sides = 1;
+        if (leftside)
+        {
+            sides++;
+        }
+        if (rightside)
+        {
+            sides++;
+        }
+        if (back)
+        {
+            sides++;
+        }
+        if (front)
+        {
+            sides++;
+        }
+
+        // allocate just enough vertices
+        Vector3[] verts = new Vector3[sides * 4];
+
+        // variable index to walk through arrays depending on number of sides enabled
+        int index = 0;
+
+        // top 
+        verts[index++] = new Vector3(-0.5f, -0.5f, -0.5f);
+        verts[index++] = new Vector3(0.5f, -0.5f, -0.5f);
+        verts[index++] = new Vector3(-0.5f, 0.5f, -0.5f);
+        verts[index++] = new Vector3(0.5f, 0.5f, -0.5f);
+
+        if (leftside)
+        {
+            verts[index++] = new Vector3(-0.5f, 0.5f, 0.5f);
+            verts[index++] = new Vector3(-0.5f, -0.5f, 0.5f);
+            verts[index++] = new Vector3(-0.5f, 0.5f, -0.5f);
+            verts[index++] = new Vector3(-0.5f, -0.5f, -0.5f);
+        }
+
+        if (rightside)
+        {
+            verts[index++] = new Vector3(0.5f, -0.5f, 0.5f);
+            verts[index++] = new Vector3(0.5f, 0.5f, 0.5f);
+            verts[index++] = new Vector3(0.5f, -0.5f, -0.5f);
+            verts[index++] = new Vector3(0.5f, 0.5f, -0.5f);
+        }
+
+        if (front)
+        {
+            verts[index++] = new Vector3(-0.5f, -0.5f, 0.5f);
+            verts[index++] = new Vector3(0.5f, -0.5f, 0.5f);
+            verts[index++] = new Vector3(-0.5f, -0.5f, -0.5f);
+            verts[index++] = new Vector3(0.5f, -0.5f, -0.5f);
+        }
+
+        if (back)
+        {
+            verts[index++] = new Vector3(0.5f, 0.5f, 0.5f);
+            verts[index++] = new Vector3(-0.5f, 0.5f, 0.5f);
+            verts[index++] = new Vector3(0.5f, 0.5f, -0.5f);
+            verts[index++] = new Vector3(-0.5f, 0.5f, -0.5f);
+        }
+
+        // get the current mesh
+        Mesh mesh = meshFilter.sharedMesh;
+
+        // if it is null create it
+        if (mesh == null)
+        {
+            meshFilter.mesh = new Mesh();
+            mesh = meshFilter.sharedMesh;
+        }
+
+        // make sure it is empty if we did not just create it above
+        mesh.Clear();
+
+        // save the vertices
+        mesh.vertices = verts;
+
+        int[] tris = new int[3 * 2 * sides]; // 3 verticies per triangle & 2 triangles per side
+
+        // reset the array index
+        index = 0;
+
+        // dynamic offset adjusted depending on sides enabled as we add triangles
+        int offset = 0;
+
+        // top
+        tris[index++] = 0; tris[index++] = 3; tris[index++] = 1;
+        tris[index++] = 3; tris[index++] = 0; tris[index++] = 2;
+
+        if (leftside)
+        {
+            tris[index++] = 4; tris[index++] = 7; tris[index++] = 5;
+            tris[index++] = 7; tris[index++] = 4; tris[index++] = 6;
+        }
+        else
+        {
+            offset = -4;
+        }
+
+        if (rightside)
+        {
+            tris[index++] = 8 + offset; tris[index++] = 11 + offset; tris[index++] = 9 + offset;
+            tris[index++] = 11 + offset; tris[index++] = 8 + offset; tris[index++] = 10 + offset;
+        }
+        else
+        {
+            offset = offset - 4;
+        }
+
+        if (front)
+        {
+            tris[index++] = 12 + offset; tris[index++] = 15 + offset; tris[index++] = 13 + offset;
+            tris[index++] = 15 + offset; tris[index++] = 12 + offset; tris[index++] = 14 + offset;
+        }
+        else
+        {
+            offset = offset - 4;
+        }
+
+        if (back)
+        {
+            tris[index++] = 16 + offset; tris[index++] = 19 + offset; tris[index++] = 17 + offset;
+            tris[index++] = 19 + offset; tris[index++] = 16 + offset; tris[index++] = 18 + offset;
+        }
+
+        // save the triangles
+        mesh.triangles = tris;
+
+        // create some uvs base on the number of vertices above
+        Vector2[] uvs = new Vector2[mesh.vertices.Length];
+
+        // reset the array index
+        index = 0;
+
+        // top
+        uvs[index++] = new Vector2(0, 0);
+        uvs[index++] = new Vector2(1, 0);
+        uvs[index++] = new Vector2(0, 1);
+        uvs[index++] = new Vector2(1, 1);
+
+        if (leftside)
+        {
+            uvs[index++] = new Vector2(0, 0);
+            uvs[index++] = new Vector2(1, 0);
+            uvs[index++] = new Vector2(0, 1);
+            uvs[index++] = new Vector2(1, 1);
+        }
+
+        if (rightside)
+        {
+            uvs[index++] = new Vector2(0, 0);
+            uvs[index++] = new Vector2(1, 0);
+            uvs[index++] = new Vector2(0, 1);
+            uvs[index++] = new Vector2(1, 1);
+        }
+
+        if (front)
+        {
+            uvs[index++] = new Vector2(0, 0);
+            uvs[index++] = new Vector2(1, 0);
+            uvs[index++] = new Vector2(0, 1);
+            uvs[index++] = new Vector2(1, 1);
+        }
+
+        if (back)
+        {
+            uvs[index++] = new Vector2(0, 0);
+            uvs[index++] = new Vector2(1, 0);
+            uvs[index++] = new Vector2(0, 1);
+            uvs[index++] = new Vector2(1, 1);
+        }
+
+        // save the uvs
+        mesh.uv = uvs;
+
+        // finish up the mesh
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        mesh.Optimize();
+
+        // save the mesh
+        meshFilter.mesh = mesh;
+
+        // return the game object just like the built in primitive shape creators work
+        return partialCube;
+    }
+
+    GameObject CreatePyramid (float height)
     {
         GameObject pyramid = new GameObject("Pyramid");
         //pyramid.transform.position = Vector3.zero;
@@ -50,7 +259,15 @@ public class World : MonoBehaviour
         Vector3 p1 = new Vector3(1, 0, 0);
         Vector3 p2 = new Vector3(1, 1, 0);
         Vector3 p3 = new Vector3(0, 1, 0);
-        Vector3 p4 = new Vector3(0.5f, 0.5f, 1.0f / Mathf.Sqrt(2));
+        Vector3 p4;
+        if (height == 0.0f)
+        {
+            p4 = new Vector3(0.5f, 0.5f, 1.0f / Mathf.Sqrt(2));
+        }
+        else
+        {
+            p4 = new Vector3(0.5f, 0.5f, height);
+        }
         //Vector3 p4 = new Vector3(0.5f, 0.5f, Random.Range(1.0f / Mathf.Sqrt(2), 2.0f));
 
         Mesh mesh = meshFilter.sharedMesh;
@@ -85,6 +302,26 @@ public class World : MonoBehaviour
         return pyramid;
     }
 
+    enum EGA_COLOR
+    {
+        BLACK = 0,
+        BLUE = 1,
+        GREEN = 2,
+        CYAN = 3,
+        RED = 4,
+        MEGENTA = 5,
+        BROWN = 6,
+        LIGHT_GRAY = 7,
+        DARK_GRAY = 8,
+        BRIGHT_BLUE = 9,
+        BRIGHT_GREEN = 10,
+        BRIGHT_CYAN = 11,
+        BRIGHT_RED = 12,
+        BRIGHT_MEGENTA = 13,
+        BRIGHT_YELLOW = 14,
+        WHITE = 15
+    };
+
     void InitializeEGAPalette()
     {
         // create a EGA color palette
@@ -106,6 +343,18 @@ public class World : MonoBehaviour
         ColorUtility.TryParseHtmlString("#FFFF55", out EGAColorPalette[14]);
         ColorUtility.TryParseHtmlString("#FFFFFF", out EGAColorPalette[15]);
     }
+
+    enum CGA_COLOR
+    {
+        BLACK = 0,
+        BLUE = 1,
+        GREEN = 2,
+        CYAN = 3,
+        RED = 4,
+        MEGENTA = 5,
+        BROWN = 6,
+        LIGHT_GRAY = 7,
+    };
 
     void InitializeCGAPalette()
     {
@@ -167,15 +416,53 @@ public class World : MonoBehaviour
                     int colorIndex = fileData[index] >> 4; 
                     Color color = EGAColorPalette[colorIndex];
 
-                    // check if these are people/creatures and use black as alpha channel
-                    if ((colorIndex == 0) && ((tile >= 32 && tile <= 47) || (tile >= 80 && tile <= 95)))
+                    // check if these are people/creatures/ladders/anhk and use black as alpha channel 61
+                    if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                        (tile == (int)U4_Decompiled.TILE.ANKH ||
+                        tile == (int)U4_Decompiled.TILE.LADDER_UP ||
+                        tile == (int)U4_Decompiled.TILE.LADDER_DOWN ||
+                        tile == (int)U4_Decompiled.TILE.FOREST ||
+                        tile == (int)U4_Decompiled.TILE.COOKING_FIRE ||
+                        tile == (int)U4_Decompiled.TILE.SHRINE ||
+                        tile == (int)U4_Decompiled.TILE.CASTLE ||
+                        tile == (int)U4_Decompiled.TILE.CASTLE_LEFT ||
+                        tile == (int)U4_Decompiled.TILE.CASTLE_ENTRANCE ||
+                        tile == (int)U4_Decompiled.TILE.CASTLE_RIGHT ||
+                        tile == (int)U4_Decompiled.TILE.BRUSH ||
+                        (tile >= (int)U4_Decompiled.TILE.MISSLE_ATTACK_SMALL && tile <= (int)U4_Decompiled.TILE.MISSLE_ATTACK_RED) ||
+                        (tile >= (int)U4_Decompiled.TILE.PARTY && tile <= (int)U4_Decompiled.TILE.SHEPHERD2) ||
+                        (tile >= (int)U4_Decompiled.TILE.GUARD && tile <= (int)U4_Decompiled.TILE.LORD_BRITISH2) ||
+                        tile == (int)U4_Decompiled.TILE.NIXIE ||
+                        tile == (int)U4_Decompiled.TILE.NIXIE2 ||
+                        (tile >= (int)U4_Decompiled.TILE.SERPENT && tile <= (int)U4_Decompiled.TILE.WATER_SPOUT2) ||
+                        (tile >= (int)U4_Decompiled.TILE.BAT && tile <= (int)U4_Decompiled.TILE.TROLL4) ||
+                        (tile >= (int)U4_Decompiled.TILE.INSECTS && tile <= (int)U4_Decompiled.TILE.INSECTS4) ||
+                        (tile >= (int)U4_Decompiled.TILE.PHANTOM && tile <= (int)U4_Decompiled.TILE.MAGE_NPC4) ||
+                        (tile >= (int)U4_Decompiled.TILE.LAVA_LIZARD && tile <= (int)U4_Decompiled.TILE.ZORN4) ||
+                        (tile >= (int)U4_Decompiled.TILE.HYDRA && tile <= (int)U4_Decompiled.TILE.BALRON4)))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
-                    // energy fields are transparent
-                    else if (tile >= 68 && tile <= 71)
+                    // others where we need to make green an alpha channel also like towns/ruins/villages
+                    // so the grass speckels don't show when we use the tile standing upright
+                    else if (((colorIndex == (int)EGA_COLOR.BLACK) || (colorIndex == (int)EGA_COLOR.GREEN)) && 
+                        (tile == (int)U4_Decompiled.TILE.VILLAGE || 
+                        tile == (int)U4_Decompiled.TILE.TOWN || 
+                        tile == (int)U4_Decompiled.TILE.RUINS) ||
+                        (tile >= (int)U4_Decompiled.TILE.MOONGATE1 && tile <= (int)U4_Decompiled.TILE.MOONGATE4))
                     {
-                        if (colorIndex == 0)
+                        currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
+                    }
+                    // remove blue water from these tiles and make black and blue into alpha
+                    else if (((colorIndex == (int)EGA_COLOR.BLACK) || (colorIndex == (int)EGA_COLOR.BLUE)) &&
+                    (tile == (int)U4_Decompiled.TILE.SQUID || tile == (int)U4_Decompiled.TILE.SQUID2))
+                    {
+                        currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
+                    }
+                    // make energy fields are transparent
+                    else if (tile >= (int)U4_Decompiled.TILE.POISON_FIELD && tile <= (int)U4_Decompiled.TILE.SLEEP_FIELD)
+                    {
+                        if (colorIndex == (int)EGA_COLOR.BLACK)
                         {
                             currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                         }
@@ -185,6 +472,7 @@ public class World : MonoBehaviour
                             currentTile.SetPixel(width++, currentTile.height - height - 1, color);
                         }
                     }
+                    // everything else just copy all the pixels with no modifications
                     else
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, color);
@@ -195,14 +483,53 @@ public class World : MonoBehaviour
                     color = EGAColorPalette[colorIndex];
 
                     // check if these are people/creatures and use black as alpha channel
-                    if ((colorIndex == 0) && ((tile >= 32 && tile <= 47) || (tile >= 80 && tile <= 95)))
+                    // check if these are people/creatures/ladders/anhk and use black as alpha channel
+                    if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                        (tile == (int)U4_Decompiled.TILE.ANKH ||
+                        tile == (int)U4_Decompiled.TILE.LADDER_UP ||
+                        tile == (int)U4_Decompiled.TILE.LADDER_DOWN ||
+                        tile == (int)U4_Decompiled.TILE.FOREST ||
+                        tile == (int)U4_Decompiled.TILE.COOKING_FIRE ||
+                        tile == (int)U4_Decompiled.TILE.SHRINE ||
+                        tile == (int)U4_Decompiled.TILE.CASTLE ||
+                        tile == (int)U4_Decompiled.TILE.CASTLE_LEFT ||
+                        tile == (int)U4_Decompiled.TILE.CASTLE_ENTRANCE ||
+                        tile == (int)U4_Decompiled.TILE.CASTLE_RIGHT ||
+                        tile == (int)U4_Decompiled.TILE.BRUSH ||
+                        (tile >= (int)U4_Decompiled.TILE.MISSLE_ATTACK_SMALL && tile <= (int)U4_Decompiled.TILE.MISSLE_ATTACK_RED) ||
+                        (tile >= (int)U4_Decompiled.TILE.PARTY && tile <= (int)U4_Decompiled.TILE.SHEPHERD2) ||
+                        (tile >= (int)U4_Decompiled.TILE.GUARD && tile <= (int)U4_Decompiled.TILE.LORD_BRITISH2) ||
+                        tile == (int)U4_Decompiled.TILE.NIXIE ||
+                        tile == (int)U4_Decompiled.TILE.NIXIE2 ||
+                        (tile >= (int)U4_Decompiled.TILE.SERPENT && tile <= (int)U4_Decompiled.TILE.WATER_SPOUT2) ||
+                        (tile >= (int)U4_Decompiled.TILE.BAT && tile <= (int)U4_Decompiled.TILE.TROLL4) ||
+                        (tile >= (int)U4_Decompiled.TILE.INSECTS && tile <= (int)U4_Decompiled.TILE.INSECTS4) ||
+                        (tile >= (int)U4_Decompiled.TILE.PHANTOM && tile <= (int)U4_Decompiled.TILE.MAGE_NPC4) ||
+                        (tile >= (int)U4_Decompiled.TILE.LAVA_LIZARD && tile <= (int)U4_Decompiled.TILE.ZORN4) || 
+                        (tile >= (int)U4_Decompiled.TILE.HYDRA && tile <= (int)U4_Decompiled.TILE.BALRON4)))
+                    {
+                        currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
+                    }
+                    // others where we need to make green an alpha channel also like towns/ruins/villages
+                    // so the green grass speckels don't show when we use the tile standing upright
+                    else if (((colorIndex == (int)EGA_COLOR.BLACK) || (colorIndex == (int)EGA_COLOR.GREEN)) &&
+                        (tile == (int)U4_Decompiled.TILE.VILLAGE ||
+                        tile == (int)U4_Decompiled.TILE.TOWN ||
+                        tile == (int)U4_Decompiled.TILE.RUINS) ||
+                        (tile >= (int)U4_Decompiled.TILE.MOONGATE1 && tile <= (int)U4_Decompiled.TILE.MOONGATE4))
+                    {
+                        currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
+                    }
+                    // remove blue water from these tiles and make black and blue into alpha
+                    else if  (((colorIndex == (int)EGA_COLOR.BLACK) || (colorIndex == (int)EGA_COLOR.GREEN)) &&
+                    (tile == (int)U4_Decompiled.TILE.SQUID || tile == (int)U4_Decompiled.TILE.SQUID2))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // energy fields are transparent
-                    else if (tile >= 68 && tile <= 71)
+                    else if (tile >= (int)U4_Decompiled.TILE.POISON_FIELD && tile <= (int)U4_Decompiled.TILE.SLEEP_FIELD)
                     {
-                        if (colorIndex == 0)
+                        if (colorIndex == (int)EGA_COLOR.BLACK)
                         {
                             currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                         }
@@ -313,8 +640,58 @@ public class World : MonoBehaviour
         }
     }
 
-    // this can take a while so we need to yield during this or the editor or game will lock up.
-    IEnumerator LoadWorldMap()
+    void LoadCombatMap(string combatMapFilepath, ref U4_Decompiled.TILE[,] combatMap)
+    {
+        /*
+        These files contain the 11x11 battleground maps shown when combat starts. It has the map itself plus starting positions for up to 16 monsters and 8 party members.
+        Offset 	Length (in bytes) 	Purpose
+        0x0 	16 	start_x for monsters 0-15
+        0x10 	16 	start_y for monsters 0-15
+        0x20 	8 	start_x for party members 0-7
+        0x28 	8 	start_y for party members 0-7
+        0x30 	16 	Purpose unknown; seems to be a constant: 08 AD 83 C0 AD 83 C0 AD 83 C0 A0 00 B9 A6 08 F0
+        0x40 	121 	11x11 Map Matrix
+        0xB9 	7 	Purpose unknown; seems to be a constant: 8D 00 00 00 00 47 09 
+        */
+
+        if (!System.IO.File.Exists(Application.persistentDataPath + combatMapFilepath))
+        {
+            Debug.Log("Could not find combat map file " + Application.persistentDataPath + combatMapFilepath);
+            return;
+        }
+
+        // read the file
+        byte[] combatMapFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + combatMapFilepath);
+
+        if (combatMapFileData.Length != 0xc0)
+        {
+            Debug.Log("Combat map file incorrect length " + combatMapFileData.Length);
+            return;
+        }
+
+        int fileIndex;
+
+        if (combatMapFilepath == "/u4/SHRINE.CON")
+        {
+            fileIndex = 0x40 - 64;
+        }
+        else
+        {
+            fileIndex = 0x40;
+        }
+
+        for (int y = 0; y < 11; y++)
+        {
+            for (int x = 0; x < 11; x++)
+            {
+                combatMap[x, y] = (U4_Decompiled.TILE)combatMapFileData[fileIndex++];
+            }
+        }
+    }
+
+    U4_Decompiled.TILE[,] entireMap = new U4_Decompiled.TILE[32 * 8, 32 * 8];
+
+    void LoadWorldMap()
     {
         /*
         This is the map of Britannia. It is 256x256 tiles in total and broken up into 64 32x32 chunks; 
@@ -335,7 +712,7 @@ public class World : MonoBehaviour
         if (!System.IO.File.Exists(Application.persistentDataPath + worldMapFilepath))
         {
             Debug.Log("Could not find world map file " + Application.persistentDataPath + worldMapFilepath);
-            yield break;
+            return;
         }
 
         // read the file
@@ -344,413 +721,103 @@ public class World : MonoBehaviour
         if (worldMapFileData.Length != 32 * 32 * 64)
         {
             Debug.Log("World map file incorrect length " + worldMapFileData.Length);
-            yield break; 
+            return;
         }
 
-        // create three game object under us to hold these sub categories of things
-        terrain = new GameObject("terrain");
-        terrain.transform.SetParent(transform);
-        terrain.transform.localPosition = Vector3.zero;
-        terrain.transform.localRotation = Quaternion.identity;
-        npcs = new GameObject("npc");
-        npcs.transform.SetParent(transform);
-        npcs.transform.localPosition = Vector3.zero;
-        npcs.transform.localRotation = Quaternion.identity;
-        animatedTerrrain = new GameObject("water");
-        animatedTerrrain.transform.SetParent(transform);
-        animatedTerrrain.transform.localPosition = Vector3.zero;
-        animatedTerrrain.transform.localRotation = Quaternion.identity;
-        party = new GameObject("party");
-        party.transform.SetParent(transform);
-        party.transform.localPosition = Vector3.zero;
-        party.transform.localRotation = Quaternion.identity;
-        fighters = new GameObject("fighters");
-        fighters.transform.SetParent(transform);
-        fighters.transform.localPosition = Vector3.zero;
-        fighters.transform.localRotation = Quaternion.identity;
-        characters = new GameObject("characters");
-        characters.transform.SetParent(transform);
-        characters.transform.localPosition = Vector3.zero;
-        characters.transform.localRotation = Quaternion.identity;
-        hits = new GameObject("hits");
-        hits.transform.SetParent(transform);
-        hits.transform.localPosition = Vector3.zero;
-        hits.transform.localRotation = Quaternion.identity;
-
-        int index = 0;
+        int fileIndex = 0;
 
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++)
             {
-                GameObject childTerrain = new GameObject("terrain (" + x + ", " + y + ")");
-                childTerrain.transform.SetParent(terrain.transform);
-                childTerrain.transform.localPosition = Vector3.zero;
-                childTerrain.transform.localRotation = Quaternion.identity;
-
-                GameObject childAnimatedTerrrain = new GameObject("water (" + x + ", " + y + ")");
-                childAnimatedTerrrain.transform.SetParent(animatedTerrrain.transform);
-                childAnimatedTerrrain.transform.localPosition = Vector3.zero;
-                childAnimatedTerrrain.transform.localRotation = Quaternion.identity;
-
                 for (int height = 0; height < 32; height++)
                 {
                     for (int width = 0; width < 32; width++)
                     {
-                        GameObject mapTile;
-                        int tileIndex = worldMapFileData[index++];
-                        bool useExpandedTile = false;
-
-                        // solid object, brick, rocks etc.
-                        if (tileIndex == 73 || tileIndex == 127 || tileIndex == 57)
-                        {
-                            mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            mapTile.transform.SetParent(childTerrain.transform);
-                            Vector3 location = new Vector3(width + x * 32, 31 - height + (7 - y) * 32, 0.0f);
-                            mapTile.transform.localPosition = location;
-                            useExpandedTile = true;
-                        }
-                        // Letters, make into short cubes
-                        else if (tileIndex >= 96 && tileIndex <= 125)
-                        {
-                            mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            mapTile.transform.SetParent(childTerrain.transform);
-                            mapTile.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
-                            mapTile.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
-                            Vector3 location = new Vector3(width + x * 32, 31 - height + (7 - y) * 32, 0.25f);
-                            mapTile.transform.localPosition = location;
-                            useExpandedTile = true;
-                        }
-                        else if (tileIndex == 8 || tileIndex == 9)
-                        {
-                            mapTile = CreatePyramid();
-                            mapTile.transform.SetParent(childTerrain.transform);
-                            mapTile.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
-                            Vector3 location = new Vector3(width + x * 32 + 0.5f, 31 - height + (7 - y) * 32 - 0.5f, 0.5f);
-                            mapTile.transform.localPosition = location;
-                            useExpandedTile = true;
-                        }
-                        // all other terrain tiles are flat
-                        else
-                        {
-                            Vector3 location;
-
-                            mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
-
-                            // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
-                            if ((tileIndex < 3) || (tileIndex >= 68 && tileIndex <= 71) || (tileIndex == 76))
-                            {
-                                mapTile.transform.SetParent(childAnimatedTerrrain.transform);
-                                location = new Vector3(width + x * 32, 31 - height + (7 - y) * 32, 0.5f);
-                                useExpandedTile = false;
-                            }
-                            else
-                            {
-                                mapTile.transform.SetParent(childTerrain.transform);
-                                location = new Vector3(width + x * 32, 31 - height + (7 - y) * 32, 0.5f); 
-                                useExpandedTile = true;
-                            }
-
-                            mapTile.transform.localPosition = location;
-                        }
-
-                        // all terrain is static, used by combine below to merge meshes
-                        mapTile.isStatic = true;
-
-                        // set the shader
-                        Shader unlit = Shader.Find("Mobile/Unlit (Supports Lightmap)");
-                        MeshRenderer renderer = mapTile.GetComponent<MeshRenderer>();
-                        renderer.material.shader = unlit;
-
-                        // set the tile and texture offset and scale
-                        if (useExpandedTile)
-                        {
-                            renderer.material.mainTexture = expandedTiles[(int)tileIndex];
-                            renderer.material.mainTextureOffset = new Vector2((float)TILE_BOARDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BOARDER_SIZE / (float)renderer.material.mainTexture.height);
-                            renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BOARDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BOARDER_SIZE)) / (float)renderer.material.mainTexture.height);
-                        }
-                        else
-                        {
-                            renderer.material.mainTexture = originalTiles[(int)tileIndex];
-                            renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
-                            renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
-                        }
+                        entireMap[x * 32 + width, y * 32 + height] = (U4_Decompiled.TILE)worldMapFileData[fileIndex++];
                     }
                 }
-
-                Combine(childTerrain.gameObject);
-                Combine2(childAnimatedTerrrain.gameObject);
-
-                // add our little animator script
-                childAnimatedTerrrain.AddComponent<Animate1>();
-
-                yield return null;
             }
         }
-
-        {
-            // create player/party object to display texture
-            GameObject partyGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            partyGameObject.transform.SetParent(party.transform);
-
-            // rotate the npc game object after creating and addition of child
-            partyGameObject.transform.localPosition = new Vector3(0, 0, 0);
-            partyGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 180.0f);
-
-            // create child object for texture
-            MeshRenderer renderer = partyGameObject.GetComponent<MeshRenderer>();
-
-            // set the tile
-            renderer.material.mainTexture = expandedTiles[31]; // this tile number 31 is in the Party structure under tile.
-            renderer.material.mainTextureOffset = new Vector2((float)TILE_BOARDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BOARDER_SIZE / (float)renderer.material.mainTexture.height);
-            renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BOARDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BOARDER_SIZE)) / (float)renderer.material.mainTexture.height);
-
-            // set the shader
-            Shader unlit = Shader.Find("Sprites/Default");
-
-            renderer.material.shader = unlit;
-
-            followWorld();
-            // don't add the script as the world map player does not have any animated tiles
-
-            GameObject BubbleText = Instantiate(bubblePrefab);
-            BubbleText.transform.SetParent(party.transform);
-            bubblePrefab.GetComponent<Canvas>().worldCamera = Camera.main;
-            bubblePrefab.transform.localPosition = Vector3.zero;
-            bubblePrefab.GetComponent<RectTransform>().localPosition = new Vector3(-2.0f, 0.5f, -2.0f);
-            bubblePrefab.transform.localEulerAngles = new Vector3(-90.0f, 0.0f, 0.0f);
-        }
-
-        // rotate world into place
-        transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
     }
 
-    public void DrawMap(U4_Decompiled.TILE[,] map, List<U4_Decompiled.hit> currentHits, U4_Decompiled.activeCharacter currentActiveCharacter)
+    void CreateParty()
     {
-        if (mapHudGameObject == null)
-        {
-            mapHudGameObject = new GameObject("hud");
-            mapHudGameObject.transform.SetParent(transform);
-            mapHudGameObject.transform.localPosition = Vector3.zero;
-            mapHudGameObject.transform.localRotation = Quaternion.identity;
+        // create player/party object to display texture
+        partyGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        partyGameObject.transform.SetParent(party.transform);
 
-            terrainHud = new GameObject("terrain");
-            terrainHud.transform.SetParent(mapHudGameObject.transform);
-            terrainHud.transform.localPosition = Vector3.zero;
-            terrainHud.transform.localRotation = Quaternion.identity;
+        // rotate the npc game object after creating and addition of child
+        partyGameObject.transform.localPosition = new Vector3(0, 0, 0);
+        partyGameObject.transform.localEulerAngles = new Vector3(90.0f, 180.0f, 0);
 
-            npcsHud = new GameObject("npc");
-            npcsHud.transform.SetParent(mapHudGameObject.transform);
-            npcsHud.transform.localPosition = Vector3.zero;
-            npcsHud.transform.localRotation = Quaternion.identity;
+        // create child object for texture
+        MeshRenderer renderer = partyGameObject.GetComponent<MeshRenderer>();
 
-            animatedTerrrainHud = new GameObject("water");
-            animatedTerrrainHud.transform.SetParent(mapHudGameObject.transform);
-            animatedTerrrainHud.transform.localPosition = Vector3.zero;
-            animatedTerrrainHud.transform.localRotation = Quaternion.identity;
+        // set the tile
+        renderer.material.mainTexture = expandedTiles[31]; // this tile number 31 is in the Party structure under tile.
+        renderer.material.mainTextureOffset = new Vector2((float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
+        renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
 
-            otherHud = new GameObject("other");
-            otherHud.transform.SetParent(mapHudGameObject.transform);
-            otherHud.transform.localPosition = Vector3.zero;
-            otherHud.transform.localRotation = Quaternion.identity;
+        // set the shader
+        Shader unlit = Shader.Find("Sprites/Default");
+        renderer.material.shader = unlit;
 
-            activeCharacterHud = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            activeCharacterHud.transform.SetParent(mapHudGameObject.transform);
-            activeCharacterHud.transform.localPosition = Vector3.zero;
-            activeCharacterHud.transform.localRotation = Quaternion.identity;
-            // set the shader
-            Shader wireframe = Shader.Find("Custom/Geometry/Wireframe");
-            MeshRenderer renderer = activeCharacterHud.GetComponent<MeshRenderer>();
-            renderer.material.shader = wireframe;
-            renderer.material.SetFloat("_WireframeVal", 0.03f);
-            renderer.material.SetFloat("_RemoveDiag", 1);
-            renderer.material.SetColor("_FrontColor", Color.yellow);
-            renderer.material.SetColor("_BackColor", Color.yellow);
-            renderer.material.SetColor("_BackColor", Color.yellow);
-        }
-        else
-        {
-            // start over each update
-            foreach (Transform child in terrainHud.transform)
-            {
-                Object.Destroy(child.gameObject);
-            }
-            foreach (Transform child in npcsHud.transform)
-            {
-                Object.Destroy(child.gameObject);
-            }
-            foreach (Transform child in animatedTerrrainHud.transform)
-            {
-                Object.Destroy(child.gameObject);
-            }
-            foreach (Transform child in otherHud.transform)
-            {
-                Object.Destroy(child.gameObject);
-            }
-        }
-
-        if (currentActiveCharacter.active)
-        {
-            Vector3 location = new Vector3(currentActiveCharacter.x, 11 - currentActiveCharacter.y, 0.0f);
-            activeCharacterHud.transform.localPosition = location;
-            activeCharacterHud.SetActive(true);
-        }
-        else 
-        { 
-            activeCharacterHud.SetActive(false); 
-        }
-
-        for (int height = 0; height < 11; height++)
-        {
-            for (int width = 0; width < 11; width++)
-            {
-                GameObject mapTile;
-
-                U4_Decompiled.TILE tileIndex;
-                
-                tileIndex = map[height, width];
-
-                foreach (U4_Decompiled.hit checkHit in currentHits)
-                {
-                    if (checkHit.x == width && checkHit.y == height && checkHit.tile != 0)
-                    {
-                        // display this hit tile instead
-                        tileIndex = checkHit.tile;
-                        break;
-                    }
-                }
-
-                // solid object, brick, rocks etc.
-                if ((tileIndex == U4_Decompiled.TILE.SECRET_BRICK_WALL)
-                    || (tileIndex == U4_Decompiled.TILE.LARGE_ROCKS) 
-                    || (tileIndex == U4_Decompiled.TILE.BRICK_WALL))
-                {
-                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    mapTile.transform.SetParent(terrainHud.transform);
-                    Vector3 location = new Vector3(width, 11 - height, 0.0f);
-                    mapTile.transform.localPosition = location;
-                }
-                // Letters, make into short cubes
-                else if ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.Z))
-                {
-                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    mapTile.transform.SetParent(terrainHud.transform);
-                    mapTile.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
-                    mapTile.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
-                    Vector3 location = new Vector3(width, 11 - height, 0.25f);
-                    mapTile.transform.localPosition = location;
-                }
-                else if ((tileIndex == U4_Decompiled.TILE.MOUNTAINS) || (tileIndex == U4_Decompiled.TILE.DUNGEON))
-                {
-                    mapTile = CreatePyramid();
-                    mapTile.transform.SetParent(terrainHud.transform);
-                    mapTile.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
-                    Vector3 location = new Vector3(width + 0.5f, 11 - height - 0.5f, 0.5f);
-                    mapTile.transform.localPosition = location;
-                }
-                // all other terrain tiles are flat
-                else
-                {
-                    Vector3 location;
-
-                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
-
-                    // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
-                    if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) || 
-                        (tileIndex >= U4_Decompiled.TILE.POISON_FIELD && tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD) 
-                        || (tileIndex == U4_Decompiled.TILE.LAVA))
-                    {
-                        mapTile.transform.SetParent(animatedTerrrainHud.transform);
-                        location = new Vector3(width, 11 - height, 0.5f);
-                    }
-                    else
-                    {
-                        mapTile.transform.SetParent(terrainHud.transform);
-                        location = new Vector3(width, 11 - height, 0.5f);
-                    }
-
-                    mapTile.transform.localPosition = location;
-                }
-
-                // all terrain is static, used by combine below to merge meshes
-                mapTile.isStatic = true;
-
-                // set the shader
-                Shader unlit = Shader.Find("Mobile/Unlit (Supports Lightmap)");
-
-                MeshRenderer render = mapTile.GetComponent<MeshRenderer>();
-
-                render.material.mainTexture = expandedTiles[(int)tileIndex];
-                render.material.mainTextureOffset = new Vector2((float)TILE_BOARDER_SIZE / (float)render.material.mainTexture.width, (float)TILE_BOARDER_SIZE / (float)render.material.mainTexture.height);
-                render.material.mainTextureScale = new Vector2((float)(render.material.mainTexture.width - (2 * TILE_BOARDER_SIZE)) / (float)render.material.mainTexture.width, (float)(render.material.mainTexture.height - (2 * TILE_BOARDER_SIZE)) / (float)render.material.mainTexture.height);
-                render.material.shader = unlit;
-            }
-        }
-
-        Combine(terrainHud); 
-        Combine2(animatedTerrrainHud);
-
-        // add our little animator script
-        // adding a script component in the editor is a significant performance hit, avoid adding if already present
-        if (animatedTerrrainHud.GetComponent<Animate1>() == null)
-        {
-            animatedTerrrainHud.AddComponent<Animate1>();
-        }
-
-        // rotate world into place
-        //transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
+        /*
+        // create the bubble text
+        GameObject BubbleText = Instantiate(bubblePrefab);
+        BubbleText.transform.SetParent(party.transform);
+        bubblePrefab.GetComponent<Canvas>().worldCamera = Camera.main;
+        bubblePrefab.transform.localPosition = Vector3.zero;
+        bubblePrefab.GetComponent<RectTransform>().localPosition = new Vector3(-2.0f, 0.5f, -2.0f);
+        bubblePrefab.transform.localEulerAngles = new Vector3(-90.0f, 0.0f, 0.0f);
+        */
     }
 
-    public void followWorld()
+    bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
     {
-        // hook the player game object into the camera and the game engine
-        FindObjectsOfType<SmoothFollow>()[0].target = party.transform;
-        FindObjectsOfType<U4_Decompiled>()[0].partyGameObject = party;
+        return (tileIndex == U4_Decompiled.TILE.BRICK_WALL
+                    || tileIndex == U4_Decompiled.TILE.LARGE_ROCKS
+                    || tileIndex == U4_Decompiled.TILE.SECRET_BRICK_WALL);
     }
 
-    const int TILE_BOARDER_SIZE = 1;
+    bool CheckShortTileForOpacity(U4_Decompiled.TILE tileIndex)
+    {
+        return (CheckTileForOpacity(tileIndex) ||
+                    ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE)));
+    }
 
+    // NOTE certain shaders used for things like sprites and unlit textures do not
+    // do well with edges and leave ghosts of the nearby textures from the texture atlas
+    // to solve this issue I need to create at least a one pixel mirror border around the
+    // tile, this function creates a larger tile texture and adds this border around the tile placed in the center.
+    // Special care must be made when combining meshes with textures like this and the Combine()
+    // function has been updated to handle this situation and update the uv's. Given that some
+    // platforms may require textures be certain integer multiples of 2 this function will allow
+    // a larger than one pixel border around the tile.
+    const int TILE_BORDER_SIZE = 16;
     public void ExpandTiles()
     {
+        // allocate some textures pointers
         expandedTiles = new Texture2D[256];
 
-        // go through all the tiles
+        // go through all the original tiles
         for (int i = 0; i < 256; i++)
         {
             // create a new slightly larger texture with boarder for this tile
             Texture2D currentTile = originalTiles[i];
-            Texture2D newTile = new Texture2D(currentTile.width + 2 * TILE_BOARDER_SIZE, currentTile.height + 2 * TILE_BOARDER_SIZE, TextureFormat.RGBA32, false);
+            Texture2D newTile = new Texture2D(currentTile.width + 2 * TILE_BORDER_SIZE, currentTile.height + 2 * TILE_BORDER_SIZE, TextureFormat.RGBA32, false);
 
             // we want pixles not fuzzy images
             newTile.filterMode = FilterMode.Point;
 
-            // for through all the pixels in the source texture
+            // go through all the pixels in the source texture
             for (int height = 0; height < currentTile.height; height++)
             {
                 for (int width = 0; width < currentTile.width; width++)
                 {
                     // copy the pixles into the middle
-                    newTile.SetPixel(width + TILE_BOARDER_SIZE, height + TILE_BOARDER_SIZE, currentTile.GetPixel(width, height));
-
-                    /*
-                    // mirror the pixels on the boarders if the pixels fit
-                    if ((width - currentTile.width - 1 + TILE_BOARDER_SIZE >= 0) && (height - currentTile.height - 1 + TILE_BOARDER_SIZE >= 0))
-                        newTile.SetPixel(width - currentTile.width - 1 + TILE_BOARDER_SIZE, height - currentTile.height - 1 + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1 - width, currentTile.height - 1 - height));
-                    if (height - currentTile.height - 1 + TILE_BOARDER_SIZE >= 0)
-                        newTile.SetPixel(width                     + TILE_BOARDER_SIZE, height - currentTile.height - 1 + TILE_BOARDER_SIZE, currentTile.GetPixel(                    width, currentTile.height - 1 - height));
-                    if ((width + currentTile.width - 1 + TILE_BOARDER_SIZE < newTile.width) && (height - currentTile.height - 1 + TILE_BOARDER_SIZE >= 0))
-                        newTile.SetPixel(width + currentTile.width - 1 + TILE_BOARDER_SIZE, height - currentTile.height - 1 + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1 - width, currentTile.height - 1 - height));
-                    if (width - currentTile.width - 1 + TILE_BOARDER_SIZE >= 0)
-                        newTile.SetPixel(width - currentTile.width - 1 + TILE_BOARDER_SIZE, height                      + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1 - width,                      height));
-                    if (width + currentTile.width - 1 + TILE_BOARDER_SIZE < newTile.width)
-                        newTile.SetPixel(width + currentTile.width - 1 + TILE_BOARDER_SIZE, height                      + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1 - width,                      height));
-                    if ((width - currentTile.width - 1 + TILE_BOARDER_SIZE >= 0) && (height + currentTile.height - 1 + TILE_BOARDER_SIZE < newTile.height))
-                        newTile.SetPixel(width - currentTile.width - 1 + TILE_BOARDER_SIZE, height + currentTile.height - 1 + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1 - width, currentTile.height - 1 - height));
-                    if (height + currentTile.height - 1 + TILE_BOARDER_SIZE < newTile.height)
-                        newTile.SetPixel(width                     + TILE_BOARDER_SIZE, height + currentTile.height - 1 + TILE_BOARDER_SIZE, currentTile.GetPixel(                    width, currentTile.height - 1 - height));
-                    if ((width + currentTile.width - 1 + TILE_BOARDER_SIZE < newTile.width) && (height + currentTile.height - 1 + TILE_BOARDER_SIZE < newTile.height))
-                        newTile.SetPixel(width + currentTile.width - 1 + TILE_BOARDER_SIZE, height + currentTile.height - 1 + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1 - width, currentTile.height - 1 - height));
-                */
+                    newTile.SetPixel(width + TILE_BORDER_SIZE, height + TILE_BORDER_SIZE, currentTile.GetPixel(width, height));
                 }
             }
 
@@ -758,31 +825,317 @@ public class World : MonoBehaviour
             for (int height = 0; height < currentTile.height; height++)
             {
                 // left side
-                newTile.SetPixel(TILE_BOARDER_SIZE - 1, height + TILE_BOARDER_SIZE, currentTile.GetPixel(0, height));
+                newTile.SetPixel(TILE_BORDER_SIZE - 1, height + TILE_BORDER_SIZE, currentTile.GetPixel(0, height));
                 // right side
-                newTile.SetPixel(TILE_BOARDER_SIZE + currentTile.width, height + TILE_BOARDER_SIZE, currentTile.GetPixel(currentTile.width - 1, height));
+                newTile.SetPixel(TILE_BORDER_SIZE + currentTile.width, height + TILE_BORDER_SIZE, currentTile.GetPixel(currentTile.width - 1, height));
             }
 
             // mirror the pixles on top and bottom
             for (int width = 0; width < currentTile.width; width++)
             {
                 // left side
-                newTile.SetPixel(width + TILE_BOARDER_SIZE, TILE_BOARDER_SIZE - 1, currentTile.GetPixel(width, 0));
+                newTile.SetPixel(width + TILE_BORDER_SIZE, TILE_BORDER_SIZE - 1, currentTile.GetPixel(width, 0));
                 // right side
-                newTile.SetPixel(width + TILE_BOARDER_SIZE, TILE_BOARDER_SIZE + currentTile.height, currentTile.GetPixel(width, currentTile.height - 1));
+                newTile.SetPixel(width + TILE_BORDER_SIZE, TILE_BORDER_SIZE + currentTile.height, currentTile.GetPixel(width, currentTile.height - 1));
             }
 
             // now the four corners
-            newTile.SetPixel(TILE_BOARDER_SIZE - 1, TILE_BOARDER_SIZE - 1, currentTile.GetPixel(0, 0));
-            newTile.SetPixel(TILE_BOARDER_SIZE + currentTile.width, TILE_BOARDER_SIZE - 1, currentTile.GetPixel(currentTile.width - 1, 0));
-            newTile.SetPixel(TILE_BOARDER_SIZE + currentTile.width, TILE_BOARDER_SIZE + currentTile.height, currentTile.GetPixel(currentTile.width - 1, currentTile.height - 1));
-            newTile.SetPixel(TILE_BOARDER_SIZE - 1, TILE_BOARDER_SIZE + currentTile.height, currentTile.GetPixel(0, currentTile.height - 1));
+            newTile.SetPixel(TILE_BORDER_SIZE - 1, TILE_BORDER_SIZE - 1, currentTile.GetPixel(0, 0));
+            newTile.SetPixel(TILE_BORDER_SIZE + currentTile.width, TILE_BORDER_SIZE - 1, currentTile.GetPixel(currentTile.width - 1, 0));
+            newTile.SetPixel(TILE_BORDER_SIZE + currentTile.width, TILE_BORDER_SIZE + currentTile.height, currentTile.GetPixel(currentTile.width - 1, currentTile.height - 1));
+            newTile.SetPixel(TILE_BORDER_SIZE - 1, TILE_BORDER_SIZE + currentTile.height, currentTile.GetPixel(0, currentTile.height - 1));
 
+            // apply all the previous SetPixel() calls to the texture
             newTile.Apply();
 
-            // replace the existing texture with the new expanded one
+            // save the new expanded texture
             expandedTiles[i] = newTile;
         }
+    }
+
+    public void CreateMap(GameObject mapGameObject, U4_Decompiled.TILE[,] map)
+    {
+        GameObject terrainGameObject;
+        GameObject animatedTerrrainGameObject;
+        GameObject billboardTerrrainGameObject;
+        bool useExpandedTile;
+        bool useUIShader;
+
+        // create the terrain child object if it does not exist
+        Transform terrainTransform = mapGameObject.transform.Find("terrain");
+        if (terrainTransform == null)
+        {
+            terrainGameObject = new GameObject("terrain");
+            terrainGameObject.transform.SetParent(mapGameObject.transform);
+            terrainGameObject.transform.localPosition = Vector3.zero;
+            terrainGameObject.transform.localRotation = Quaternion.identity;
+        }
+        else
+        {
+            terrainGameObject = terrainTransform.gameObject;
+        }
+
+        // create the water child object if it does not exist
+        Transform waterTransform = mapGameObject.transform.Find("water");
+        if (waterTransform == null)
+        {
+            animatedTerrrainGameObject = new GameObject("water");
+            animatedTerrrainGameObject.transform.SetParent(mapGameObject.transform);
+            animatedTerrrainGameObject.transform.localPosition = Vector3.zero;
+            animatedTerrrainGameObject.transform.localRotation = Quaternion.identity;
+        }
+        else
+        {
+            animatedTerrrainGameObject = waterTransform.gameObject;
+        }
+
+        // create the billboard child object if it does not exist
+        Transform billboardTransform = mapGameObject.transform.Find("billboard");
+        if (billboardTransform == null)
+        {
+            billboardTerrrainGameObject = new GameObject("billboard");
+            billboardTerrrainGameObject.transform.SetParent(mapGameObject.transform);
+            billboardTerrrainGameObject.transform.localPosition = Vector3.zero;
+            billboardTerrrainGameObject.transform.localRotation = Quaternion.identity;
+        }
+        else
+        {
+            billboardTerrrainGameObject = billboardTransform.gameObject;
+        }
+
+        // remove any children if present
+        foreach (Transform child in terrainGameObject.transform)
+        {
+            Object.DestroyImmediate(child.gameObject);
+        }
+        foreach (Transform child in animatedTerrrainGameObject.transform)
+        {
+            Object.DestroyImmediate(child.gameObject);
+        }
+
+        foreach (Transform child in billboardTerrrainGameObject.transform)
+        {
+            Object.DestroyImmediate(child.gameObject);
+        }
+
+        // go through the map tiles and create game objects for each
+        for (int y = 0; y < map.GetLength(1); y++)
+        {
+            for (int x = 0; x < map.GetLength(0); x++)
+            {
+                GameObject mapTile;
+                Vector3 location = Vector3.zero;
+                Vector3 rotation = Vector3.zero;
+                U4_Decompiled.TILE tileIndex;
+
+                tileIndex = map[x, y];
+
+                // check if it tile is blank
+                if (tileIndex == U4_Decompiled.TILE.BLANK)
+                {
+                    // skip it
+                    continue;
+                }
+                // solid object, brick, rocks etc. make into cubes
+                else if (CheckTileForOpacity(tileIndex))
+                {
+                    U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+
+                    if (y > 0)
+                        aboveTile = map[x, y - 1];
+                    if (y < map.GetLength(1) - 1)
+                        belowTile = map[x, y + 1];
+                    if (x > 0)
+                        leftTile = map[x - 1, y];
+                    if (x < map.GetLength(0) - 1)
+                        rightTile = map[x + 1, y];
+
+                    mapTile = CreatePartialCube(!CheckTileForOpacity(leftTile), !CheckTileForOpacity(rightTile), !CheckTileForOpacity(aboveTile), !CheckTileForOpacity(belowTile));
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    rotation = Vector3.zero;
+                    useExpandedTile = true;
+                    useUIShader = false;
+                }
+                // Letters, make into short cubes
+                else if ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE))
+                {
+                    U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+
+                    if (y > 0)
+                        aboveTile = map[x, y - 1];
+                    if (y < map.GetLength(1) - 1)
+                        belowTile = map[x, y + 1];
+                    if (x > 0)
+                        leftTile = map[x - 1, y];
+                    if (x < map.GetLength(0) - 1)
+                        rightTile = map[x + 1, y];
+
+                    mapTile = CreatePartialCube(!CheckShortTileForOpacity(leftTile), !CheckShortTileForOpacity(rightTile), !CheckShortTileForOpacity(aboveTile), !CheckShortTileForOpacity(belowTile));
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    mapTile.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.25f);
+                    rotation = Vector3.zero;
+                    useExpandedTile = true;
+                    useUIShader = false;
+                }
+                // make mountains into pyramids
+                else if (tileIndex == U4_Decompiled.TILE.MOUNTAINS)
+                {
+                    mapTile = CreatePyramid(1.0f);
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(0.0f, 180.0f, 0.0f);
+                    location = new Vector3(x + 0.5f, map.GetLength(1) - 1 - y - 0.5f, 0.5f); // TODO center pyramid mesh so we don't need to move it or rotate it
+                    useExpandedTile = true;
+                    useUIShader = false;
+                }
+                // make dungeon entrace into pyramid, rotate so it faces the right direction
+                else if (tileIndex == U4_Decompiled.TILE.DUNGEON)
+                {
+                    mapTile = CreatePyramid(0.2f);
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(0.0f, 180.0f, 90.0f);
+                    location = new Vector3(x - 0.5f, map.GetLength(1) - 1 - y - 0.5f, 0.5f); // TODO center pyramid mesh so we don't need to move it or rotate it
+                    useExpandedTile = true;
+                    useUIShader = false;
+                }
+                // make brush and hills into short pyramids
+                else if ((tileIndex == U4_Decompiled.TILE.BRUSH) || (tileIndex == U4_Decompiled.TILE.HILLS))
+                {
+                    mapTile = CreatePyramid(0.15f);
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(0.0f, 180.0f, 90.0f);
+                    location = new Vector3(x - 0.5f, map.GetLength(1) - 1 - y - 0.5f, 0.5f); // TODO center pyramid mesh so we don't need to move it or rotate it
+                    useExpandedTile = true;
+                    useUIShader = false;
+                }
+                // make rocks into little bigger short pyramids since you cannot walk over them
+                else if (tileIndex == U4_Decompiled.TILE.SMALL_ROCKS)
+                {
+                    mapTile = CreatePyramid(0.25f);
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(0.0f, 180.0f, 90.0f);
+                    location = new Vector3(x - 0.5f, map.GetLength(1) - 1 - y - 0.5f, 0.5f); // TODO center pyramid mesh so we don't need to move it or rotate it
+                    useExpandedTile = true;
+                    useUIShader = false;
+                }
+                // tress we need to stand upright and face the camera
+                else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
+                    (tileIndex == U4_Decompiled.TILE.TOWN) ||
+                    (tileIndex == U4_Decompiled.TILE.ANKH) ||
+                    (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
+                    (tileIndex == U4_Decompiled.TILE.CASTLE))
+                {
+                    // create a billboard gameobject
+                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    mapTile.transform.SetParent(billboardTerrrainGameObject.transform);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    // need to move it here first and rotate it into place before we can get the results of LookAt()
+                    mapTile.transform.localPosition = location;
+                    mapTile.transform.localEulerAngles = new Vector3(-180.0f, -90.0f, 90.0f);
+                    Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these bulboards
+                    look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+                    mapTile.transform.LookAt(look.transform);
+                    //mapTile.transform.forward = new Vector3(Camera.main.transform.forward.x, transform.forward.y, Camera.main.transform.forward.z);
+                    rotation = mapTile.transform.localEulerAngles; // new Vector3(rotx, -90f, 90.0f);
+                    rotation.x = rotation.x - 180.0f;
+
+                    useExpandedTile = true;
+                    useUIShader = true;
+                }
+                // all other terrain tiles are flat
+                else
+                {
+                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+
+                    // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
+                    // TODO may need to have single textures for the three water tiles if we want to use UV animation to show wind direction
+                    if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) ||
+                        (tileIndex >= U4_Decompiled.TILE.POISON_FIELD && tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD)
+                        || (tileIndex == U4_Decompiled.TILE.LAVA))
+                    {
+                        mapTile.transform.SetParent(animatedTerrrainGameObject.transform);
+                        location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
+                        rotation = Vector3.zero;
+                        // since we animate the texture using uv we cannot use the expanded tiles and need to use the original ones
+                        useExpandedTile = false;
+                        useUIShader = false;
+                    }
+                    else
+                    {
+                        mapTile.transform.SetParent(terrainGameObject.transform);
+                        location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
+                        rotation = Vector3.zero;
+                        useExpandedTile = true;
+                        useUIShader = false;
+                    }
+
+                }
+
+                mapTile.transform.localEulerAngles = rotation;
+                mapTile.transform.localPosition = location;
+
+                // all terrain is static, used by combine below to merge meshes
+                mapTile.isStatic = true;
+
+                // set the shader
+                Shader unlit;
+                if (useUIShader)
+                {
+                    unlit = Shader.Find("UI/Unlit/Detail");
+                }
+                else
+                {
+                    unlit = Shader.Find("Mobile/Unlit (Supports Lightmap)");
+                }
+                Renderer renderer = mapTile.GetComponent<MeshRenderer>();
+                renderer.material.shader = unlit;
+
+                // set the tile and texture offset and scale
+                if (useExpandedTile)
+                {
+                    renderer.material.mainTexture = expandedTiles[(int)tileIndex];
+                    renderer.material.mainTextureOffset = new Vector2((float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
+                    renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
+                }
+                else
+                {
+                    renderer.material.mainTexture = originalTiles[(int)tileIndex];
+                    renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
+                    renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
+                }
+            }
+        }
+
+        Combine(terrainGameObject);
+        Combine2(animatedTerrrainGameObject); 
+        Combine(billboardTerrrainGameObject); // combine separately from terrain above as we may need a different shader for these
+
+        // add our little water animator script
+        // adding a script component in the editor is a significant performance hit, avoid adding if already present
+        if (animatedTerrrainGameObject.GetComponent<Animate1>() == null)
+        {
+            animatedTerrrainGameObject.AddComponent<Animate1>();
+        }
+
+        // Position the settlement in place
+        mapGameObject.transform.position = new Vector3(0, 0, 224);
+
+        // rotate settlement into place
+        mapGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+    }
+
+    public void followWorld()
+    {
+        // hook the player game object into the camera and the game engine
+        FindObjectsOfType<MySmoothFollow>()[0].target = partyGameObject.transform;
+        u4.partyGameObject = partyGameObject;
     }
 
     // this one will go two layers deep to avoid an implementation that relies on recursion
@@ -851,6 +1204,8 @@ public class World : MonoBehaviour
 
         return objectsToCombine;
     }
+
+    //TODO get the max texture size here also while I'm looking through all the objects
     private int GetTextureSquareSize(GameObject[] o)
     {
         ArrayList textures = new ArrayList();
@@ -927,9 +1282,33 @@ public class World : MonoBehaviour
         gameObject.transform.position = Vector3.zero;
         gameObject.transform.rotation = Quaternion.identity;
 
+        // Create a mesh filter and renderer if needed
+        MeshFilter filter = gameObject.GetComponent<MeshFilter>();
+        if (filter == null)
+        {
+            filter = gameObject.AddComponent<MeshFilter>();
+        }
+        MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
+        if (renderer == null)
+        {
+            renderer = gameObject.AddComponent<MeshRenderer>();
+        }
+
+        // clear the mesh just in case there is anything in there
+        filter.mesh = null;
+
         if (objectsToCombine.Length > 1)
         {
-            originalSize = objectsToCombine[0].GetComponent<MeshRenderer>().material.mainTexture.width;
+            // try to get the texture size used from the first gameobject
+            Texture checkTexture = objectsToCombine[0].GetComponent<MeshRenderer>().material.mainTexture;
+            if (checkTexture && checkTexture.width > 0)
+            {
+                originalSize = checkTexture.width;
+            }
+            else
+            {
+                originalSize = 2*TILE_BORDER_SIZE + 16;
+            }
             pow2 = GetTextureSquareSize(objectsToCombine);
             size = pow2 * originalSize;
             combinedTexture = new Texture2D(size, size, textureFormat, useMipMaps);
@@ -941,7 +1320,7 @@ public class World : MonoBehaviour
             for (int i = 0; i < objectsToCombine.Length; i++)
             {
                 texture = (Texture2D)objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture;
-                if (!textureAtlas.ContainsKey(texture))
+                if (texture && !textureAtlas.ContainsKey(texture))
                 {
                     int x = (index % pow2) * originalSize;
                     int y = (index / pow2) * originalSize;
@@ -965,17 +1344,13 @@ public class World : MonoBehaviour
                 Vector2[] uv = new Vector2[mesh.uv.Length];
                 Vector2 textureAtlasOffset;
                 Material objectMaterial = objectsToCombine[i].GetComponent<MeshRenderer>().material;
-                if (textureAtlas.ContainsKey(objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture))
+                if (objectMaterial.mainTexture && textureAtlas.ContainsKey(objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture))
                 {
                     textureAtlasOffset = (Vector2)textureAtlas[objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture];
                     for (int u = 0; u < mesh.uv.Length; u++)
                     {
-                        uv[u].x = mesh.uv[u].x * material.mainTextureScale.x / pow2;
-                        uv[u].y = mesh.uv[u].y * material.mainTextureScale.y / pow2;
-                        //uv[u] = Vector2.Scale(mesh.uv[u], material.mainTextureScale) / pow2;
-                        uv[u].x += (textureAtlasOffset.x + objectMaterial.mainTextureOffset.x) / pow2;
-                        uv[u].y += (textureAtlasOffset.y + objectMaterial.mainTextureOffset.y) / pow2;
-                        //uv[u] = (textureAtlasOffset + objectMaterial.mainTextureOffset) / pow2;
+                        uv[u] = Vector2.Scale(mesh.uv[u], material.mainTextureScale) / pow2;
+                        uv[u] += (textureAtlasOffset + objectMaterial.mainTextureOffset) / pow2;
                     }
                 }
                 else
@@ -1004,17 +1379,6 @@ public class World : MonoBehaviour
             // Create a mesh filter and renderer
             if (staticCount > 1)
             {
-                MeshFilter filter = gameObject.GetComponent<MeshFilter>();
-                if (filter == null)
-                {
-                    filter = gameObject.AddComponent<MeshFilter>();
-                }
-                MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
-                if (renderer == null)
-                {
-                    renderer = gameObject.AddComponent<MeshRenderer>();
-                }
-
                 filter.mesh = new Mesh();
                 filter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                 filter.mesh.CombineMeshes(combine);
@@ -1203,7 +1567,7 @@ public class World : MonoBehaviour
         {
             for (int i = 0; i < 16; i++)
             {
-                // a child object for each npc entry in the table
+                // a child object for each fighters entry in the table
                 GameObject fighterGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
 
                 // get the renderer
@@ -1222,7 +1586,7 @@ public class World : MonoBehaviour
                 animate.world = this;
                 animate.ObjectRenderer = renderer;
 
-                // rotate the npc game object into position after creating
+                // rotate the fighters game object into position after creating
                 Vector3 fightersLocation = new Vector3(0, 255, 0);
                 fighterGameObject.transform.localPosition = fightersLocation;
                 fighterGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
@@ -1233,6 +1597,9 @@ public class World : MonoBehaviour
                 // set as intially disabled
                 fighterGameObject.SetActive(false);
             }
+
+            // rotate characters into place
+            fighters.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
         }
 
         // update all fighters in the table
@@ -1241,7 +1608,7 @@ public class World : MonoBehaviour
             // get the tile
             U4_Decompiled.TILE npcTile = currentFighters[fighterIndex]._tile;
 
-            // get the corresponding npc game object
+            // get the corresponding fighters game object
             Transform childoffighters = fighters.transform.GetChild(fighterIndex);
 
             // update the tile of the game object
@@ -1268,12 +1635,12 @@ public class World : MonoBehaviour
             return;
         }
 
-        // need to create npc game objects if none are present
+        // need to create character game objects if none are present
         if (characters.transform.childCount != 8)
         {
             for (int i = 0; i < 8; i++)
             {
-                // a child object for each npc entry in the table
+                // a child object for each character entry in the table
                 GameObject characterGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
 
                 // get the renderer
@@ -1292,7 +1659,7 @@ public class World : MonoBehaviour
                 animate.world = this;
                 animate.ObjectRenderer = renderer;
 
-                // rotate the npc game object into position after creating
+                // rotate the character game object into position after creating
                 Vector3 characterLocation = new Vector3(0, 255, 0);
                 characterGameObject.transform.localPosition = characterLocation;
                 characterGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
@@ -1303,6 +1670,9 @@ public class World : MonoBehaviour
                 // set as intially disabled
                 characterGameObject.SetActive(false);
             }
+
+            // rotate characters into place
+            characters.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
         }
 
         // update all characters in the party table
@@ -1321,7 +1691,7 @@ public class World : MonoBehaviour
                 npcTile = 0;
             }
 
-            // get the corresponding npc game object
+            // get the corresponding character game object
             Transform childofcharacters = characters.transform.GetChild(characterIndex);
 
             // update the tile of the game object
@@ -1332,7 +1702,7 @@ public class World : MonoBehaviour
             childofcharacters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
         }
 
-        FindObjectsOfType<SmoothFollow>()[0].target = characters.transform.GetChild(0);
+        FindObjectsOfType<MySmoothFollow>()[0].target = characters.transform.GetChild(0);
     }
 
     public void AddNPCs(U4_Decompiled.tNPC[] currentNpcs)
@@ -1378,6 +1748,9 @@ public class World : MonoBehaviour
                 // set as intially disabled
                 npcGameObject.SetActive(false);
             }
+
+            // rotate npcs into place
+            npcs.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
         }
 
         // update all npcs in the table
@@ -1397,39 +1770,23 @@ public class World : MonoBehaviour
             }
             else
             {
-                // enable object if active
-                childofnpcs.gameObject.SetActive(true);
-
-                // get the game engine
-                U4_Decompiled u4_Decompiled = FindObjectsOfType<U4_Decompiled>()[0];
-
                 // get the npc position
                 int posx = currentNpcs[npcIndex]._x;
                 int posy = currentNpcs[npcIndex]._y;
 
                 // inside buildings we need to check extra stuff
-                if (u4_Decompiled.current_mode == U4_Decompiled.MODE.BUILDING)
+                if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
                 {
                     Settlement settlement;
 
                     // get the current settlement, need to special case BRITANNIA as the castle has two levels, use the ladder to determine which level
-                    if ((u4_Decompiled.Party._loc == U4_Decompiled.LOCATIONS.BRITANNIA) && (u4_Decompiled.tMap32x32[3, 3] == U4_Decompiled.TILE.LADDER_DOWN))
+                    if ((u4.Party._loc == U4_Decompiled.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == U4_Decompiled.TILE.LADDER_DOWN))
                     {
-                        settlement = u4_Decompiled.Settlements[0].GetComponent<Settlement>();
+                        settlement = Settlements[0].GetComponent<Settlement>();
                     }
                     else
                     {
-                        settlement = u4_Decompiled.Settlements[(int)u4_Decompiled.Party._loc].GetComponent<Settlement>();
-                    }
-
-                    // can we see the npc
-                    if (settlement.raycastSettlementMap[posx, posy] != U4_Decompiled.TILE.BLANK)
-                    {
-                        childofnpcs.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        childofnpcs.gameObject.SetActive(false);
+                        settlement = Settlements[(int)u4.Party._loc].GetComponent<Settlement>();
                     }
 
                     // set the name of the game object to match the npc
@@ -1441,9 +1798,35 @@ public class World : MonoBehaviour
                     {
                         childofnpcs.name = settlement.npcStrings[currentNpcs[npcIndex]._tlkidx - 1][0];
                     }
+
+                    // adjust position based on the offset of the raycastSettlementMap due to the player position
+                    posx = posx - (lastRaycastPlayer_posx - raycastSettlementMap.GetLength(0) / 2 - 1);
+                    posy = posy - (lastRaycastPlayer_posy - raycastSettlementMap.GetLength(1) / 2 - 1);
+                    // can we see the npc
+                    if (posx < 0 || posy < 0 || posx >= raycastSettlementMap.GetLength(0) || posy >= raycastSettlementMap.GetLength(1) || raycastSettlementMap[posx, posy] == U4_Decompiled.TILE.BLANK)
+                    {
+                        childofnpcs.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        childofnpcs.gameObject.SetActive(true);
+                    }
                 }
-                else
+                else if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
                 {
+                    // adjust position based on the offset of the raycastSettlementMap due to the player position
+                    posx = posx - (lastRaycastPlayer_posx - raycastOutdoorMap.GetLength(0) / 2 - 1);
+                    posy = posy - (lastRaycastPlayer_posy - raycastOutdoorMap.GetLength(1) / 2 - 1);
+                    // can we see the npc
+                    if (posx < 0 || posy < 0 || posx >= raycastOutdoorMap.GetLength(0) || posy >= raycastOutdoorMap.GetLength(1) || raycastOutdoorMap[posx, posy] == U4_Decompiled.TILE.BLANK)
+                    {
+                        childofnpcs.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        childofnpcs.gameObject.SetActive(true);
+                    }
+
                     // set the name of the game object to match the npc
                     childofnpcs.name = npcTile.ToString();
                 }
@@ -1452,7 +1835,12 @@ public class World : MonoBehaviour
                 childofnpcs.GetComponent<Animate3>().SetNPCTile(npcTile);
 
                 // update the position
-                childofnpcs.localPosition = new Vector3(currentNpcs[npcIndex]._x, 255 - currentNpcs[npcIndex]._y, 0);
+                childofnpcs.localPosition = new Vector3(currentNpcs[npcIndex]._x, entireMap.GetLength(1) - 1 - currentNpcs[npcIndex]._y, 0);
+
+                // make it billboard
+                Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these bulboards
+                look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+                childofnpcs.transform.LookAt(look.transform);
             }
         }
     }
@@ -1471,10 +1859,10 @@ public class World : MonoBehaviour
             for (int i = 0; i < 10; i++)
             {
                 // a child object for each npc entry in the table
-                GameObject npcGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                GameObject hitGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
 
                 // get the renderer
-                MeshRenderer renderer = npcGameObject.GetComponent<MeshRenderer>();
+                MeshRenderer renderer = hitGameObject.GetComponent<MeshRenderer>();
 
                 // intially the texture is null
                 renderer.material.mainTexture = null;
@@ -1485,15 +1873,18 @@ public class World : MonoBehaviour
 
                 // rotate the hit game object into position after creating
                 Vector3 npcLocation = new Vector3(0, 255, 0);
-                npcGameObject.transform.localPosition = npcLocation;
-                npcGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+                hitGameObject.transform.localPosition = npcLocation;
+                hitGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
 
                 // set this as a parent of the hits game object
-                npcGameObject.transform.SetParent(hits.transform);
+                hitGameObject.transform.SetParent(hits.transform);
 
                 // set as intially disabled
-                npcGameObject.SetActive(false);
+                hitGameObject.SetActive(false);
             }
+
+            // rotate npcs into place
+            hits.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
         }
 
         // update all hit games with data from the table
@@ -1544,11 +1935,14 @@ public class World : MonoBehaviour
             renderer.material.SetColor("_FrontColor", Color.yellow);
             renderer.material.SetColor("_BackColor", Color.yellow);
             renderer.material.SetColor("_BackColor", Color.yellow);
+
+            // rotate active character box into place
+            characters.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
         }
 
         if (currentActiveCharacter.active)
         {
-            Vector3 location = new Vector3(currentActiveCharacter.x, 255 - currentActiveCharacter.y, 0.0f);
+            Vector3 location = new Vector3(currentActiveCharacter.x, 0.01f, entireMap.GetLength(1) - 1 - currentActiveCharacter.y);
             activeCharacter.transform.localPosition = location;
             activeCharacter.SetActive(true);
         }
@@ -1561,6 +1955,188 @@ public class World : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+ 
+    }
+
+    // cast one ray
+    int Cast_Ray(ref U4_Decompiled.TILE[,] map, 
+        int diff_x,
+        int diff_y,
+        int pos_x,
+        int pos_y, 
+        ref U4_Decompiled.TILE[,] raycastMap, int offset_x, int offset_y, U4_Decompiled.TILE wrapTile)
+    {
+        int checksum = 0;
+
+        U4_Decompiled.TILE temp_tile;
+
+        // are we outside the destination raycast map area, stop here
+        if (pos_x - offset_x >= raycastMap.GetLength(0) || pos_y - offset_y >= raycastMap.GetLength(1) || pos_x - offset_x < 0 || pos_y - offset_y < 0)
+        {
+            return checksum;
+        }
+
+        // has the tile already been copied, if so stop here
+        if (raycastMap[pos_x - offset_x, pos_y - offset_y] != U4_Decompiled.TILE.BLANK)
+        {
+            return checksum;
+        }
+
+        // check if we should wrap the source map or if we should fill
+        // any tile outside of the map area with a specific tile such as GRASS
+        // are we outside the source map?
+        if ((wrapTile != U4_Decompiled.TILE.BLANK) && (pos_x >= map.GetLength(0) || pos_y >= map.GetLength(1) || pos_x < 0 || pos_y < 0))
+        {
+            temp_tile = wrapTile;
+            raycastMap[pos_x - offset_x, pos_y - offset_y] = temp_tile;
+            checksum += (int)temp_tile;
+        }
+        else
+        {
+            // get the tile and copy it to the raycast map
+            temp_tile = map[(pos_x + map.GetLength(0)) % map.GetLength(0), (pos_y + map.GetLength(1)) % map.GetLength(1)];
+            raycastMap[pos_x - offset_x, pos_y - offset_y] = temp_tile;
+            checksum += (int)temp_tile;
+        }
+
+        // check the tile for opaque tiles
+        if ((temp_tile == U4_Decompiled.TILE.FOREST) ||
+            (temp_tile == U4_Decompiled.TILE.MOUNTAINS) ||
+            (temp_tile == U4_Decompiled.TILE.BLANK) ||
+            (temp_tile == U4_Decompiled.TILE.SECRET_BRICK_WALL) ||
+            (temp_tile == U4_Decompiled.TILE.BRICK_WALL))
+        {
+            return checksum;
+        }
+
+        // continue the ray cast recursively
+        pos_x = (pos_x + diff_x);
+        pos_y = (pos_y + diff_y);
+        checksum += Cast_Ray(ref map, diff_x, diff_y, pos_x, pos_y, ref raycastMap, offset_x, offset_y, wrapTile);
+        if ((diff_x & diff_y) != 0)
+        {
+            checksum += Cast_Ray(ref map, 
+                diff_x, 
+                diff_y, 
+                pos_x, 
+                (pos_y - diff_y), 
+                ref raycastMap, offset_x, offset_y, wrapTile);
+            checksum += Cast_Ray(ref map, 
+                diff_x, diff_y, 
+                (pos_x - diff_x), 
+                pos_y, 
+                ref raycastMap, offset_x, offset_y, wrapTile);
+        }
+        else
+        {
+            checksum += Cast_Ray(ref map, 
+                (((diff_x != 0) ? 1 : 0) * diff_y + diff_x), 
+                (diff_y - ((diff_y != 0) ? 1 : 0) * diff_x), 
+                (diff_y + pos_x), 
+                (pos_y - diff_x), 
+                ref raycastMap, offset_x, offset_y, wrapTile);
+            checksum += Cast_Ray(ref map, 
+                (diff_x - ((diff_x != 0) ? 1 : 0) * diff_y), 
+                (((diff_y != 0) ? 1 : 0) * diff_x + diff_y), 
+                (pos_x - diff_y), 
+                (diff_x + pos_y), 
+                ref raycastMap, offset_x, offset_y, wrapTile);
+        }
+
+        return checksum;
+    }
+
+    // visible area (raycast)
+    int raycast(ref U4_Decompiled.TILE[,] map, int pos_x, int pos_y, ref U4_Decompiled.TILE[,] raycastMap, int offset_x, int offset_y, U4_Decompiled.TILE wrapTile)
+    {
+        // initialize the checksum
+        int checksum = 0;
+
+        if (pos_x < 0 || pos_y < 0 || pos_x >= map.GetLength(0) || pos_y >= map.GetLength(1))
+        {
+            Debug.Log("start position is outside of source map ( " + pos_x + ", " + pos_y + ")");
+            return checksum;
+        }
+
+        if (pos_x - offset_x < 0 || pos_y - offset_y < 0 || pos_x - offset_x >= raycastMap.GetLength(0) || pos_y - offset_y >= raycastMap.GetLength(1))
+        {
+            Debug.Log("offset does not contain the starting position given the dimensions of the destination raycast map " 
+                + "position ( " + pos_x + ", " + pos_y + ")" 
+                + " offset (" + offset_x + ", " + offset_y + ")" 
+                + " dimensions (" + raycastMap.GetLength(0) + ", " + raycastMap.GetLength(1) + ")");
+            return checksum;
+        }
+
+        // set all visible tiles in the destination raycast map to blank to start
+        for (int y = 0; y < raycastMap.GetLength(1); y++)
+        {
+            for (int x = 0; x < raycastMap.GetLength(0); x++)
+            {
+                raycastMap[x, y] = U4_Decompiled.TILE.BLANK;
+            }
+        }
+
+        // copy the starting position as it is alway visible given the map offset
+        U4_Decompiled.TILE currentTile = map[pos_x, pos_y];
+        raycastMap[pos_x - offset_x, pos_y - offset_y] = currentTile;
+        checksum += (int)currentTile; // add current tile to the checksum
+
+        // cast out recusively from the starting position
+        checksum += Cast_Ray(ref map, 0, -1, pos_x, (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP
+        checksum += Cast_Ray(ref map, 0, 1, pos_x, (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN
+        checksum += Cast_Ray(ref map, -1, 0, (pos_x - 1), pos_y, ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray LEFT
+        checksum += Cast_Ray(ref map, 1, 0, (pos_x + 1), pos_y, ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray RIGHT
+        checksum += Cast_Ray(ref map, 1, 1, (pos_x + 1), (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN and to the RIGHT
+        checksum += Cast_Ray(ref map, 1, -1, (pos_x + 1), (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP and to the RIGHT
+        checksum += Cast_Ray(ref map, -1, 1, (pos_x - 1), (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN and to the LEFT
+        checksum += Cast_Ray(ref map, -1, -1, (pos_x - 1), (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP and to the LEFT
+
+        // return the file tile checksum so we can determine if there were any changes from a previous raycase
+        return checksum;
+    }
+
+    int lastRaycastPlayer_posx = 0;
+    int lastRaycastPlayer_posy = 0;
+
+    private void Start()
+    {
+        // this object needs to move around so it needs to be above the other which are based on the whole world map
+        mainTerrain = new GameObject("Main Terrain");
+        // create game object under us to hold these sub categories of things
+        terrain = new GameObject("terrain");
+        terrain.transform.SetParent(mainTerrain.transform);
+        terrain.transform.localPosition = Vector3.zero;
+        terrain.transform.localRotation = Quaternion.identity;
+        animatedTerrrain = new GameObject("water");
+        animatedTerrrain.transform.SetParent(mainTerrain.transform);
+        animatedTerrrain.transform.localPosition = Vector3.zero;
+        animatedTerrrain.transform.localRotation = Quaternion.identity;
+        billboardTerrrain = new GameObject("billboard");
+        billboardTerrrain.transform.SetParent(mainTerrain.transform);
+        billboardTerrrain.transform.localPosition = Vector3.zero;
+        billboardTerrrain.transform.localRotation = Quaternion.identity;
+
+        npcs = new GameObject("npc");
+        npcs.transform.SetParent(transform);
+        npcs.transform.localPosition = Vector3.zero;
+        npcs.transform.localRotation = Quaternion.identity;
+        party = new GameObject("party");
+        party.transform.localPosition = Vector3.zero;
+        party.transform.localRotation = Quaternion.identity;
+        party.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+        fighters = new GameObject("fighters");
+        fighters.transform.SetParent(transform);
+        fighters.transform.localPosition = Vector3.zero;
+        fighters.transform.localRotation = Quaternion.identity;
+        characters = new GameObject("characters");
+        characters.transform.SetParent(transform);
+        characters.transform.localPosition = Vector3.zero;
+        characters.transform.localRotation = Quaternion.identity;
+        hits = new GameObject("hits");
+        hits.transform.SetParent(transform);
+        hits.transform.localPosition = Vector3.zero;
+        hits.transform.localRotation = Quaternion.identity;
+
         InitializeEGAPalette();
         LoadTilesEGA();
         ExpandTiles();
@@ -1568,19 +2144,236 @@ public class World : MonoBehaviour
         //InitializeCGAPalette();
         //LoadTilesCGA();
 
-        StartCoroutine(LoadWorldMap());
+        // load the entire world map
+        LoadWorldMap();
 
-        /*
-        if (npcs)
+        // create the part game object
+        CreateParty();
+
+        // create a game object to store the combat terrain game objects, this should be at the top with no parent same as the world
+        GameObject combatTerrainsObject = new GameObject();
+        combatTerrainsObject.name = "Combat Terrains";
+
+        // create a temp TILE map array to hold the combat terrains as we load them
+        U4_Decompiled.TILE[,] combatMap = new U4_Decompiled.TILE[11, 11];
+
+        CombatTerrains = new GameObject[(int)U4_Decompiled.COMBAT_TERRAIN.MAX];
+
+        // go through all the combat terrains and load their maps and create a game object to hold them
+        // as a child of the above combat terrains game object
+        for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
         {
-            Combine(npcs.gameObject);
+            // load the combat map from the original files
+            LoadCombatMap("/u4/" + ((U4_Decompiled.COMBAT_TERRAIN)i).ToString() + ".CON", ref combatMap);
+
+            // create a game object to hold it and set it as a child of the combat terrains game object
+            GameObject gameObject = new GameObject();
+            gameObject.transform.SetParent(combatTerrainsObject.transform);
+
+            // set it's name to match the combat terrain being created
+            gameObject.name = ((U4_Decompiled.COMBAT_TERRAIN)i).ToString();
+
+            // create the combat terrain based on the loaded map
+            CreateMap(gameObject, combatMap);
+
+            // Disable it initially
+            gameObject.SetActive(false);
+
+            // Position the combat map in place
+            gameObject.transform.position = new Vector3(0, 0, entireMap.GetLength(1) - combatMap.GetLength(1)); ;
+
+            // rotate map into place
+            gameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+
+            // save the game object in the array
+            CombatTerrains[i] = gameObject;
         }
-        */
+
+        // get a reference to the game engine
+        u4 = FindObjectOfType<U4_Decompiled>();
+
+        // assign settlement game objects
+        Settlements = new GameObject[17];
+        Settlements[(int)U4_Decompiled.LOCATIONS.BRITANNIA] = GameObject.Find("LBC_1");
+        Settlements[(int)0] = GameObject.Find("LBC_2"); // actual location of the upper and lower levels is determined by the location of the ladders
+        Settlements[(int)U4_Decompiled.LOCATIONS.THE_LYCAEUM] = GameObject.Find("LYCAEUM");
+        Settlements[(int)U4_Decompiled.LOCATIONS.EMPATH_ABBY] = GameObject.Find("EMPATH");
+        Settlements[(int)U4_Decompiled.LOCATIONS.SERPENT_HOLD] = GameObject.Find("SERPENT");
+        Settlements[(int)U4_Decompiled.LOCATIONS.MOONGLOW] = GameObject.Find("MOONGLOW");
+        Settlements[(int)U4_Decompiled.LOCATIONS.BRITAIN] = GameObject.Find("BRITAIN");
+        Settlements[(int)U4_Decompiled.LOCATIONS.JHELOM] = GameObject.Find("JHELOM");
+        Settlements[(int)U4_Decompiled.LOCATIONS.YEW] = GameObject.Find("YEW");
+        Settlements[(int)U4_Decompiled.LOCATIONS.MINOC] = GameObject.Find("MINOC");
+        Settlements[(int)U4_Decompiled.LOCATIONS.TRINSIC] = GameObject.Find("TRINSIC");
+        Settlements[(int)U4_Decompiled.LOCATIONS.SKARA_BRAE] = GameObject.Find("SKARA");
+        Settlements[(int)U4_Decompiled.LOCATIONS.MAGINCIA] = GameObject.Find("MAGINCIA");
+        Settlements[(int)U4_Decompiled.LOCATIONS.PAWS] = GameObject.Find("PAWS");
+        Settlements[(int)U4_Decompiled.LOCATIONS.BUCCANEERS_DEN] = GameObject.Find("DEN");
+        Settlements[(int)U4_Decompiled.LOCATIONS.VESPER] = GameObject.Find("VESPER");
+        Settlements[(int)U4_Decompiled.LOCATIONS.COVE] = GameObject.Find("COVE");
     }
+
+    // Update is called once per frame
+    float timer = 0.0f;
+    float timerExpired = 0.0f;
+    public float timerPeriod = 0.02f;
+    int lastChecksum = -1;
+    int currentChecksum = 0;
 
     // Update is called once per frame
     void Update()
     {
+        // update the timer
+        timer += Time.deltaTime;
 
+        // only update periodically
+        if (timer > timerExpired)
+        {
+            // reset the expired timer
+            timer -= timerExpired;
+            timerExpired = timerPeriod;
+
+            if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
+            {
+                AddNPCs(u4._npc);
+                followWorld();
+                AddHits(u4.currentHits);
+                AddActiveCharacter(u4.currentActiveCharacter);
+                terrain.SetActive(true);
+                animatedTerrrain.SetActive(true);
+                billboardTerrrain.SetActive(true);
+                fighters.SetActive(false);
+                characters.SetActive(false);
+                npcs.SetActive(true);
+                party.SetActive(true);
+
+                for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                {
+                    CombatTerrains[i].gameObject.SetActive(false);
+                }
+            }
+            else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
+            {
+                AddNPCs(u4._npc);
+                followWorld();
+                AddHits(u4.currentHits);
+                AddActiveCharacter(u4.currentActiveCharacter);
+                terrain.SetActive(true);
+                animatedTerrrain.SetActive(true);
+                billboardTerrrain.SetActive(true);
+                fighters.SetActive(false);
+                characters.SetActive(false);
+                npcs.SetActive(true);
+                party.SetActive(true);
+
+                for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                {
+                    CombatTerrains[i].gameObject.SetActive(false);
+                }
+            }
+            else if ((u4.current_mode == U4_Decompiled.MODE.COMBAT)  || (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP /* TODO: this could be the inn or shop or camp need to figure out which */ ) || (u4.current_mode == U4_Decompiled.MODE.COMBAT_ROOM))
+            {
+                AddFighters(u4.Fighters, u4.Combat1);
+                AddCharacters(u4.Combat2, u4.Party, u4.Fighters);
+                AddHits(u4.currentHits);
+                AddActiveCharacter(u4.currentActiveCharacter);
+                terrain.SetActive(false);
+                animatedTerrrain.SetActive(false);
+                billboardTerrrain.SetActive(false);
+                fighters.SetActive(true);
+                characters.SetActive(true);
+                npcs.SetActive(false);
+                party.SetActive(false);
+
+                int currentCombatTerrain = (int)u4.Convert_Tile_to_Combat_Terrian(u4.current_tile);
+
+                for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                {
+                    if (i == currentCombatTerrain)
+                    {
+                        CombatTerrains[i].gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        CombatTerrains[i].gameObject.SetActive(false);
+                    }
+                }
+            }
+
+            if ((party != null) && (originalTiles != null))
+            {
+                // set the party tile, person, horse, ballon, ship, etc.
+                Renderer renderer = party.GetComponentInChildren<Renderer>();
+                if (renderer)
+                {
+                    party.GetComponentInChildren<Renderer>().material.mainTexture = originalTiles[(int)u4.Party._tile];
+                    party.name = u4.Party._tile.ToString();
+                }
+            }
+        }
+
+        // we've moved, regenerate the raycast, TODO NPCs can also affect the raycast when moving, need to check them also or redo raycast more often
+        if ((u4.Party._x != lastRaycastPlayer_posx) || (u4.Party._y != lastRaycastPlayer_posy))
+        {
+            Vector3 location = Vector3.zero;
+
+            // update the last raycast position
+            lastRaycastPlayer_posx = u4.Party._x;
+            lastRaycastPlayer_posy = u4.Party._y;
+
+            if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
+            {
+                // generate a new raycast and get a checksum
+                currentChecksum = raycast(ref entireMap,
+                    u4.Party._x, 
+                    u4.Party._y,
+                    ref raycastOutdoorMap, 
+                    ((u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK,
+                    ((u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK, 
+                    U4_Decompiled.TILE.BLANK);
+                location = new Vector3(
+                    ((u4.Party._x - raycastOutdoorMap.GetLength(0) / 2) - 1) / MAP_CHUNK * MAP_CHUNK, 0, 
+                    entireMap.GetLength(1) - ((u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK - raycastOutdoorMap.GetLength(1));
+            }
+            else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
+            {
+                // generate a new raycast and get a checksum
+                currentChecksum = raycast(ref u4.tMap32x32, 
+                    u4.Party._x, 
+                    u4.Party._y, 
+                    ref raycastSettlementMap, 
+                    ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK, 
+                    ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK, 
+                    U4_Decompiled.TILE.GRASS);
+                location = new Vector3(
+                    ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK, 0,
+                    entireMap.GetLength(1) - ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK - raycastSettlementMap.GetLength(1));
+            }
+
+            // if last checksum does not match we need to regenerate the scene because the raycast is different
+            // TODO also if we are sitting on a blank tile we are probably surrounded by something like trees so we need to regenerate
+            // check if any of the surrounding tiles are emtpy also
+            if (lastChecksum != currentChecksum)
+            {
+                // save the checksum
+                lastChecksum = currentChecksum;
+
+                // create the game object children with meshes and textures
+                if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
+                {
+                    CreateMap(mainTerrain.transform.gameObject, raycastOutdoorMap);
+                }
+                else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
+                {
+                    CreateMap(mainTerrain.transform.gameObject, raycastSettlementMap);
+                }
+
+                // Position the map in place
+                mainTerrain.transform.position = location;
+
+                // rotate map into place
+                mainTerrain.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+            }
+        }
     }
 }

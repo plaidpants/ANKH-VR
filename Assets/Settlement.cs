@@ -859,7 +859,7 @@ public class Settlement : MonoBehaviour
                 GameObject mapTileGameObject;
                 Vector3 mapTileLocation;
                 U4_Decompiled.TILE tileIndex = map[width, height];
-                bool useExpandedTile = false;
+                bool useExpandedTile;
 
                 // check if it tile is blank
                 if (tileIndex == U4_Decompiled.TILE.BLANK)
@@ -1614,6 +1614,7 @@ public class Settlement : MonoBehaviour
 
         LoadSettlementTalkAndMap();
 
+        /*
         if (castle)
         {
             // enter castle start position
@@ -1635,7 +1636,7 @@ public class Settlement : MonoBehaviour
         // rotate settlement into place
         //transform.Rotate(90.0f, 0.0f, 0.0f, Space.World);
         transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
-
+        */
         if (terrain)
         {
             Combine(terrain.gameObject);
@@ -1675,7 +1676,7 @@ public class Settlement : MonoBehaviour
         U4_Decompiled.TILE temp_tile;
 
         // are we outside the area we want to check
-        if (pos_x > 31 || pos_y > 31)
+        if (pos_x >= 31 || pos_y >= 31)
         {
             return checksum;
         }
@@ -1794,6 +1795,7 @@ public class Settlement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         // update the timer
         timer += Time.deltaTime;
 
@@ -1838,5 +1840,6 @@ public class Settlement : MonoBehaviour
                 }
             }
         }
+        */
     }
 }
