@@ -225,6 +225,7 @@ public class World : MonoBehaviour
             uvs[index++] = new Vector2(1, 1);
         }
 
+        // TODO add bottom or create a full cube so I can avoid using the unity cube for the active player
         // save the uvs
         mesh.uv = uvs;
 
@@ -298,6 +299,76 @@ public class World : MonoBehaviour
         meshFilter.mesh = mesh;
 
         return pyramid;
+    }
+
+    bool once = true;
+
+    GameObject CreateQuad()
+    {
+        /*
+        GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+
+        MeshFilter meshFilter = quad.GetComponent<MeshFilter>();
+
+        if (once)
+        {
+            for (int i = 0; i < meshFilter.mesh.vertices.Length; i++)
+            {
+                Debug.Log("meshFilter.mesh.vertices[" + i + "] = new Vector3(" + meshFilter.mesh.vertices[i].x + "f, " + meshFilter.mesh.vertices[i].y + "f, " + meshFilter.mesh.vertices[i].z + "f);");
+            }
+            for (int i = 0; i < meshFilter.mesh.triangles.Length; i+=3)
+            {
+                Debug.Log("meshFilter.mesh.triangles[" + i + "] = " + meshFilter.mesh.triangles[i] + ", " + meshFilter.mesh.triangles[i + 1] + ", " + meshFilter.mesh.triangles[i + 2] +  ",");
+            }
+            for (int i = 0; i < meshFilter.mesh.uv.Length; i++)
+            {
+                Debug.Log("meshFilter.mesh.uv[" + i + "] = new Vector2(" + meshFilter.mesh.uv[i].x + "f, " + meshFilter.mesh.uv[i].y +"f);");
+            }
+            once = false;
+        }
+        */
+
+        GameObject quad = new GameObject("Quad");
+
+        quad.name = "Quad";
+
+        MeshFilter meshFilter = quad.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = quad.AddComponent<MeshRenderer>();
+
+        if (meshFilter.mesh == null)
+        {
+            meshFilter.mesh = new Mesh();
+        }
+
+        meshFilter.mesh.Clear();
+
+        meshFilter.mesh.vertices = new Vector3[]
+        {
+            new Vector3(-0.5f, -0.5f, 0.0f),
+            new Vector3(0.5f, -0.5f, -0.0f),
+            new Vector3(-0.5f, 0.5f, 0.0f),
+            new Vector3(0.5f, 0.5f, 0.0f)
+        };
+
+        meshFilter.mesh.triangles = new int[]
+        {
+            0, 3, 1,
+            3, 0, 2
+        };
+
+        meshFilter.mesh.uv = new Vector2[]
+        {
+            new Vector2(0, 0),
+            new Vector2(1, 0),
+            new Vector2(0, 1),
+            new Vector2(1, 1)
+        };
+
+        meshFilter.mesh.RecalculateNormals();
+        meshFilter.mesh.RecalculateBounds();
+        meshFilter.mesh.Optimize();
+
+        return quad;
     }
 
     enum EGA_COLOR
@@ -743,7 +814,8 @@ public class World : MonoBehaviour
     void CreateParty()
     {
         // create player/party object to display texture
-        partyGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        //partyGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        partyGameObject = CreateQuad();
         partyGameObject.transform.SetParent(party.transform);
 
         // rotate the npc game object after creating and addition of child
@@ -1032,7 +1104,8 @@ public class World : MonoBehaviour
                     (tileIndex == U4_Decompiled.TILE.CASTLE))
                 {
                     // create a billboard gameobject
-                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad); 
+                    mapTile = CreateQuad();
                     mapTile.transform.SetParent(billboardTerrrainGameObject.transform);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     // need to move it here first and rotate it into place before we can get the results of LookAt()
@@ -1051,8 +1124,8 @@ public class World : MonoBehaviour
                 // all other terrain tiles are flat
                 else
                 {
-                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
-
+                    //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    mapTile = CreateQuad();
                     // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
                     // TODO may need to have single textures for the three water tiles if we want to use UV animation to show wind direction
                     if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) ||
@@ -1229,7 +1302,9 @@ public class World : MonoBehaviour
                     (tileIndex == U4_Decompiled.TILE.CASTLE))
                 {
                     // create a billboard gameobject
-                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    mapTile = CreateQuad();
+
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     // need to move it here first and rotate it into place before we can get the results of LookAt()
                     mapTile.transform.localPosition = location;
@@ -1244,7 +1319,8 @@ public class World : MonoBehaviour
                 // all other terrain tiles are flat
                 else
                 {
-                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    mapTile = CreateQuad();
 
                     // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
                     // TODO may need to have single textures for the three water tiles if we want to use UV animation to show wind direction
@@ -1461,7 +1537,8 @@ public class World : MonoBehaviour
                     (tileIndex == U4_Decompiled.TILE.CASTLE))
                 {
                     // create a billboard gameobject
-                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    mapTile = CreateQuad();
                     mapTile.transform.SetParent(billboardTerrrainGameObject.transform);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     // need to move it here first and rotate it into place before we can get the results of LookAt()
@@ -1480,7 +1557,8 @@ public class World : MonoBehaviour
                 // all other terrain tiles are flat
                 else
                 {
-                    mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    mapTile = CreateQuad();
 
                     // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
                     // TODO may need to have single textures for the three water tiles if we want to use UV animation to show wind direction
@@ -2490,7 +2568,8 @@ public class World : MonoBehaviour
             for (int i = 0; i < 16; i++)
             {
                 // a child object for each fighters entry in the table
-                GameObject fighterGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                //GameObject fighterGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                GameObject fighterGameObject = CreateQuad();
 
                 // get the renderer
                 MeshRenderer renderer = fighterGameObject.GetComponent<MeshRenderer>();
@@ -2563,7 +2642,8 @@ public class World : MonoBehaviour
             for (int i = 0; i < 8; i++)
             {
                 // a child object for each character entry in the table
-                GameObject characterGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                //GameObject characterGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                GameObject characterGameObject = CreateQuad();
 
                 // get the renderer
                 MeshRenderer renderer = characterGameObject.GetComponent<MeshRenderer>();
@@ -2641,7 +2721,8 @@ public class World : MonoBehaviour
             for (int i = 0; i < 32; i++)
             {
                 // a child object for each npc entry in the table
-                GameObject npcGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                //GameObject npcGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                GameObject npcGameObject = CreateQuad();
 
                 // get the renderer
                 MeshRenderer renderer = npcGameObject.GetComponent<MeshRenderer>();
@@ -2781,7 +2862,8 @@ public class World : MonoBehaviour
             for (int i = 0; i < 10; i++)
             {
                 // a child object for each npc entry in the table
-                GameObject hitGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                //GameObject hitGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                GameObject hitGameObject = CreateQuad();
 
                 // get the renderer
                 MeshRenderer renderer = hitGameObject.GetComponent<MeshRenderer>();
@@ -2935,6 +3017,7 @@ public class World : MonoBehaviour
         pos_x = (pos_x + diff_x);
         pos_y = (pos_y + diff_y);
         checksum += Cast_Ray(ref map, diff_x, diff_y, pos_x, pos_y, ref raycastMap, offset_x, offset_y, wrapTile);
+        
         if ((diff_x & diff_y) != 0)
         {
             checksum += Cast_Ray(ref map, 
@@ -2944,7 +3027,8 @@ public class World : MonoBehaviour
                 (pos_y - diff_y), 
                 ref raycastMap, offset_x, offset_y, wrapTile);
             checksum += Cast_Ray(ref map, 
-                diff_x, diff_y, 
+                diff_x, 
+                diff_y, 
                 (pos_x - diff_x), 
                 pos_y, 
                 ref raycastMap, offset_x, offset_y, wrapTile);
@@ -2952,14 +3036,14 @@ public class World : MonoBehaviour
         else
         {
             checksum += Cast_Ray(ref map, 
-                (((diff_x != 0) ? 1 : 0) * diff_y + diff_x), 
-                (diff_y - ((diff_y != 0) ? 1 : 0) * diff_x), 
+                (((diff_x == 0) ? 1 : 0) * diff_y + diff_x), 
+                (diff_y - ((diff_y == 0) ? 1 : 0) * diff_x), 
                 (diff_y + pos_x), 
                 (pos_y - diff_x), 
                 ref raycastMap, offset_x, offset_y, wrapTile);
             checksum += Cast_Ray(ref map, 
-                (diff_x - ((diff_x != 0) ? 1 : 0) * diff_y), 
-                (((diff_y != 0) ? 1 : 0) * diff_x + diff_y), 
+                (diff_x - ((diff_x == 0) ? 1 : 0) * diff_y), 
+                (((diff_y == 0) ? 1 : 0) * diff_x + diff_y), 
                 (pos_x - diff_y), 
                 (diff_x + pos_y), 
                 ref raycastMap, offset_x, offset_y, wrapTile);
@@ -3006,13 +3090,13 @@ public class World : MonoBehaviour
         checksum += (int)currentTile; // add current tile to the checksum
 
         // cast out recusively from the starting position
-        checksum += Cast_Ray(ref map, 0, -1, pos_x, (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP
-        checksum += Cast_Ray(ref map, 0, 1, pos_x, (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN
-        checksum += Cast_Ray(ref map, -1, 0, (pos_x - 1), pos_y, ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray LEFT
-        checksum += Cast_Ray(ref map, 1, 0, (pos_x + 1), pos_y, ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray RIGHT
-        checksum += Cast_Ray(ref map, 1, 1, (pos_x + 1), (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN and to the RIGHT
-        checksum += Cast_Ray(ref map, 1, -1, (pos_x + 1), (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP and to the RIGHT
-        checksum += Cast_Ray(ref map, -1, 1, (pos_x - 1), (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN and to the LEFT
+        checksum += Cast_Ray(ref map,  0, -1, pos_x, (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP
+        checksum += Cast_Ray(ref map,  0,  1, pos_x, (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN
+        checksum += Cast_Ray(ref map, -1,  0, (pos_x - 1), pos_y, ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray LEFT
+        checksum += Cast_Ray(ref map,  1,  0, (pos_x + 1), pos_y, ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray RIGHT
+        checksum += Cast_Ray(ref map,  1,  1, (pos_x + 1), (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN and to the RIGHT
+        checksum += Cast_Ray(ref map,  1, -1, (pos_x + 1), (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP and to the RIGHT
+        checksum += Cast_Ray(ref map, -1,  1, (pos_x - 1), (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN and to the LEFT
         checksum += Cast_Ray(ref map, -1, -1, (pos_x - 1), (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP and to the LEFT
         
         Debug.Log("Raycast processing time : " + (Time.realtimeSinceStartup - startTime));
