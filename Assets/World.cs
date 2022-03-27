@@ -225,7 +225,8 @@ public class World : MonoBehaviour
             uvs[index++] = new Vector2(1, 1);
         }
 
-        // TODO add bottom or create a full cube so I can avoid using the unity cube for the active player
+        // TODO add bottom option or create a full cube so I can avoid using the unity cube for the active player
+
         // save the uvs
         mesh.uv = uvs;
 
@@ -239,6 +240,97 @@ public class World : MonoBehaviour
 
         // return the game object just like the built in primitive shape creators work
         return partialCube;
+    }
+
+    GameObject CreateBridge()
+    {
+        // create a game object to hold the cube and give it a proper name
+        GameObject bridge = new GameObject("Bridge");
+        bridge.name = "Bridge";
+
+        // add a mesh filter and mesh renderer so we can see this new cube game object 
+        MeshFilter meshFilter = bridge.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = bridge.AddComponent<MeshRenderer>();
+
+        meshFilter.mesh.vertices = new Vector3[] 
+        {
+            new Vector3(-0.5f, -0.5f, 0.5f),
+            new Vector3(0.5f, -0.5f, 0.5f),
+            new Vector3(-0.5f, -0.1875f, 0.5f),
+            new Vector3(0.5f, -0.1875f, 0.5f),
+            new Vector3(-0.5f, -0.5f, -0.5f),
+            new Vector3(0.5f, -0.5f, -0.5f),
+            new Vector3(-0.5f, -0.1875f, -0.5f),
+            new Vector3(0.5f, -0.1875f, -0.5f),
+            new Vector3(-0.5f, -0.5f, 0.0f),
+            new Vector3(0.5f, -0.5f, 0.0f),
+            new Vector3(-0.5f, -0.5f, 0.5f),
+            new Vector3(0.5f, -0.5f, 0.5f),
+            new Vector3(-0.5f, -0.5f, -0.5f),
+            new Vector3(0.5f, -0.5f, -0.5f),
+            new Vector3(-0.5f, -0.5f, 0.0f),
+            new Vector3(0.5f, -0.5f, 0.0f),
+
+            // double sided sides
+            new Vector3(0.5f, -0.5f, 0.5f),
+            new Vector3(-0.5f, -0.5f, 0.5f),
+            new Vector3(0.5f, -0.1875f, 0.5f),
+            new Vector3(-0.5f, -0.1875f, 0.5f),
+            new Vector3(0.5f, -0.5f, -0.5f),
+            new Vector3(-0.5f, -0.5f, -0.5f),
+            new Vector3(0.5f, -0.1875f, -0.5f),
+            new Vector3(-0.5f, -0.1875f, -0.5f)
+    };
+
+        meshFilter.mesh.triangles = new int[] 
+        {
+            0, 3, 1,
+            3, 0, 2,
+            4, 7, 5,
+            7, 4, 6,
+            8, 11, 9,
+            11, 8, 10,
+            12, 15, 13,
+            15, 12, 14,
+
+            // double sided sides
+            16, 19, 17,
+            19, 16, 18,
+            20, 23, 21,
+            23, 20, 22,
+        };
+
+        meshFilter.mesh.uv = new Vector2[]
+        {
+            new Vector2(0f, 0.6875f), // 11
+            new Vector2(1f, 0.6875f), // 11
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, 0.6875f), // 11
+            new Vector2(1f, 0.6875f), // 11
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, 0.3125f), // 6
+            new Vector2(1f, 0.3125f), // 6
+            new Vector2(0f, 0.6875f), // 11
+            new Vector2(1f, 0.6875f), // 11
+            new Vector2(0f, 0.3125f), // 6
+            new Vector2(1f, 0.3125f), // 6
+            new Vector2(0f, 0.6875f), // 11
+            new Vector2(1f, 0.6875f), // 11
+            
+            // double sided sides
+            new Vector2(0f, 0.6875f), // 11
+            new Vector2(1f, 0.6875f), // 11
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, 0.6875f), // 11
+            new Vector2(1f, 0.6875f), // 11
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f)
+    };
+
+        return bridge;
     }
 
     GameObject CreatePyramid(float height)
@@ -345,7 +437,7 @@ public class World : MonoBehaviour
         meshFilter.mesh.vertices = new Vector3[]
         {
             new Vector3(-0.5f, -0.5f, 0.0f),
-            new Vector3(0.5f, -0.5f, -0.0f),
+            new Vector3(0.5f, -0.5f, 0.0f),
             new Vector3(-0.5f, 0.5f, 0.0f),
             new Vector3(0.5f, 0.5f, 0.0f)
         };
@@ -497,6 +589,9 @@ public class World : MonoBehaviour
                         tile == (int)U4_Decompiled.TILE.CASTLE_LEFT ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_ENTRANCE ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_RIGHT ||
+                        tile == (int)U4_Decompiled.TILE.BRIDGE ||
+                        tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM ||
+                        tile == (int)U4_Decompiled.TILE.BRIDGE_TOP ||
                         tile == (int)U4_Decompiled.TILE.BRUSH ||
                         (tile >= (int)U4_Decompiled.TILE.MISSLE_ATTACK_SMALL && tile <= (int)U4_Decompiled.TILE.MISSLE_ATTACK_RED) ||
                         (tile >= (int)U4_Decompiled.TILE.PARTY && tile <= (int)U4_Decompiled.TILE.SHEPHERD2) ||
@@ -564,6 +659,9 @@ public class World : MonoBehaviour
                         tile == (int)U4_Decompiled.TILE.CASTLE_LEFT ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_ENTRANCE ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_RIGHT ||
+                        tile == (int)U4_Decompiled.TILE.BRIDGE ||
+                        tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM ||
+                        tile == (int)U4_Decompiled.TILE.BRIDGE_TOP ||
                         tile == (int)U4_Decompiled.TILE.BRUSH ||
                         (tile >= (int)U4_Decompiled.TILE.MISSLE_ATTACK_SMALL && tile <= (int)U4_Decompiled.TILE.MISSLE_ATTACK_RED) ||
                         (tile >= (int)U4_Decompiled.TILE.PARTY && tile <= (int)U4_Decompiled.TILE.SHEPHERD2) ||
@@ -1365,6 +1463,7 @@ public class World : MonoBehaviour
         GameObject billboardTerrrainGameObject;
         bool useExpandedTile;
         bool useUIShader;
+        bool useLinearTile;
 
         // create the terrain child object if it does not exist
         Transform terrainTransform = mapGameObject.transform.Find("terrain");
@@ -1463,6 +1562,7 @@ public class World : MonoBehaviour
                     rotation = Vector3.zero;
                     useExpandedTile = true;
                     useUIShader = false;
+                    useLinearTile = false;
                 }
                 // Letters, make into short cubes
                 else if ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE))
@@ -1488,6 +1588,7 @@ public class World : MonoBehaviour
                     rotation = Vector3.zero;
                     useExpandedTile = true;
                     useUIShader = false;
+                    useLinearTile = false;
                 }
                 // make mountains into pyramids
                 else if (tileIndex == U4_Decompiled.TILE.MOUNTAINS)
@@ -1498,6 +1599,7 @@ public class World : MonoBehaviour
                     location = new Vector3(x + 0.5f, map.GetLength(1) - 1 - y - 0.5f, 0.5f); // TODO center pyramid mesh so we don't need to move it or rotate it
                     useExpandedTile = true;
                     useUIShader = false;
+                    useLinearTile = false;
                 }
                 // make dungeon entrace into pyramid, rotate so it faces the right direction
                 else if (tileIndex == U4_Decompiled.TILE.DUNGEON)
@@ -1508,6 +1610,7 @@ public class World : MonoBehaviour
                     location = new Vector3(x - 0.5f, map.GetLength(1) - 1 - y - 0.5f, 0.5f); // TODO center pyramid mesh so we don't need to move it or rotate it
                     useExpandedTile = true;
                     useUIShader = false;
+                    useLinearTile = false;
                 }
                 // make brush and hills into short pyramids
                 else if ((tileIndex == U4_Decompiled.TILE.BRUSH) || (tileIndex == U4_Decompiled.TILE.HILLS))
@@ -1518,6 +1621,7 @@ public class World : MonoBehaviour
                     location = new Vector3(x - 0.5f, map.GetLength(1) - 1 - y - 0.5f, 0.5f); // TODO center pyramid mesh so we don't need to move it or rotate it
                     useExpandedTile = true;
                     useUIShader = false;
+                    useLinearTile = false;
                 }
                 // make rocks into little bigger short pyramids since you cannot walk over them
                 else if (tileIndex == U4_Decompiled.TILE.SMALL_ROCKS)
@@ -1528,6 +1632,7 @@ public class World : MonoBehaviour
                     location = new Vector3(x - 0.5f, map.GetLength(1) - 1 - y - 0.5f, 0.5f); // TODO center pyramid mesh so we don't need to move it or rotate it
                     useExpandedTile = true;
                     useUIShader = false;
+                    useLinearTile = false;
                 }
                 // tress we need to stand upright and face the camera
                 else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
@@ -1553,6 +1658,17 @@ public class World : MonoBehaviour
 
                     useExpandedTile = true;
                     useUIShader = true;
+                    useLinearTile = false;
+                }
+                else if (tileIndex == U4_Decompiled.TILE.BRIDGE)
+                {
+                    mapTile = CreateBridge();
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    useExpandedTile = true;
+                    useUIShader = false;
+                    useLinearTile = false;
                 }
                 // all other terrain tiles are flat
                 else
@@ -1571,6 +1687,7 @@ public class World : MonoBehaviour
                         rotation = Vector3.zero;
                         // since we animate the texture using uv we cannot use the expanded tiles and need to use the original ones
                         useExpandedTile = false;
+                        useLinearTile = true;
                         useUIShader = false;
                     }
                     else
@@ -1580,6 +1697,7 @@ public class World : MonoBehaviour
                         rotation = Vector3.zero;
                         useExpandedTile = true;
                         useUIShader = false;
+                        useLinearTile = false;
                     }
                 }
 
@@ -1593,11 +1711,11 @@ public class World : MonoBehaviour
                 Shader unlit;
                 if (useUIShader)
                 {
-                    unlit = Shader.Find("UI/Unlit/Detail");
+                    unlit = Shader.Find("Unlit/Transparent Cutout");
                 }
                 else
                 {
-                    unlit = Shader.Find("Mobile/Unlit (Supports Lightmap)");
+                    unlit = Shader.Find("Unlit/Transparent Cutout");
                 }
                 Renderer renderer = mapTile.GetComponent<MeshRenderer>();
                 renderer.material.shader = unlit;
@@ -1606,9 +1724,18 @@ public class World : MonoBehaviour
                 
                 if (useExpandedTile)
                 {
+                    renderer.material = combinedExpandedMaterial;
                     renderer.material.mainTexture = combinedExpandedTexture;
                     renderer.material.mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)tileIndex % 16) * 18)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)tileIndex / 16) * 18)) / (float)renderer.material.mainTexture.height);
                     renderer.material.mainTextureScale = new Vector2((float)(18 - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(18 - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
+                
+                }
+                else if (useLinearTile)
+                {
+                    renderer.material = combinedLinearMaterial;
+                    renderer.material.mainTexture = combinedLinearTexture;
+                    renderer.material.mainTextureOffset = new Vector2((float)((int)tileIndex * 16) / (float)renderer.material.mainTexture.width, 0.0f);
+                    renderer.material.mainTextureScale = new Vector2((float)16.0f / (float)renderer.material.mainTexture.width, 1.0f);
                 }
                 else
                 {
@@ -1617,8 +1744,8 @@ public class World : MonoBehaviour
                     renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
                 }
                 
-                renderer.material = combinedExpandedMaterial;
-                renderer.material.mainTexture = combinedExpandedTexture;
+                //renderer.material = combinedExpandedMaterial;
+                //renderer.material.mainTexture = combinedExpandedTexture;
                 Mesh mesh = mapTile.GetComponent<MeshFilter>().mesh;
                 Vector2[] uv = new Vector2[mesh.uv.Length];
                 Vector2 textureAtlasOffset;
@@ -1626,8 +1753,24 @@ public class World : MonoBehaviour
                 textureAtlasOffset = new Vector2((int)tileIndex % textureExpandedAtlasPowerOf2 * 18, (int)tileIndex / textureExpandedAtlasPowerOf2 * 18);
                 for (int u = 0; u < mesh.uv.Length; u++)
                 {
-                    Vector2 mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)tileIndex % 16) * 18)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)tileIndex / 16) * 18)) / (float)renderer.material.mainTexture.height);
-                    Vector2 mainTextureScale = new Vector2((float)(18 - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(18 - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
+                    Vector2 mainTextureOffset;
+                    Vector2 mainTextureScale;
+
+                    if (useExpandedTile)
+                    {
+                        mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)tileIndex % 16) * 18)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)tileIndex / 16) * 18)) / (float)renderer.material.mainTexture.height);
+                        mainTextureScale = new Vector2((float)(18 - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(18 - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
+                    }
+                    else if (useLinearTile)
+                    {
+                        mainTextureOffset = new Vector2((float)((int)tileIndex * 16) / (float)renderer.material.mainTexture.width, 0.0f);
+                        mainTextureScale = new Vector2((float)16 / (float)renderer.material.mainTexture.width, 1.0f);
+                    }
+                    else
+                    {
+                        mainTextureOffset = new Vector2(0.0f, 0.0f);
+                        mainTextureScale = new Vector2(1.0f, 1.0f);
+                    }
 
                     uv[u] = Vector2.Scale(mesh.uv[u], mainTextureScale);
                     uv[u] += (textureAtlasOffset + mainTextureOffset);
@@ -1910,8 +2053,8 @@ public class World : MonoBehaviour
                     textureAtlasOffset = (Vector2)textureAtlas[objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture];
                     for (int u = 0; u < mesh.uv.Length; u++)
                     {
-                        uv[u] = Vector2.Scale(mesh.uv[u], material.mainTextureScale) / pow2;
-                        uv[u] += (textureAtlasOffset + objectMaterial.mainTextureOffset) / pow2;
+                        uv[u] = Vector2.Scale(mesh.uv[u], material.mainTextureScale) / (float)pow2;
+                        uv[u] += (textureAtlasOffset + objectMaterial.mainTextureOffset) / (float)pow2;
                     }
                 }
                 else
@@ -2134,7 +2277,7 @@ public class World : MonoBehaviour
     public Material combinedMaterial;
     public Hashtable textureAtlasHashTable = new Hashtable();
     public int textureAtlasPowerOf2;
-    void CreateTextureAtlas(ref Texture2D[] tilesTextures, bool useMipMaps = false, TextureFormat textureFormat = TextureFormat.RGBA32)
+    void CreateSquareTextureAtlas(ref Texture2D[] tilesTextures, bool useMipMaps = false, TextureFormat textureFormat = TextureFormat.RGBA32)
     {
         int size;
         int originalSize;
@@ -2218,6 +2361,68 @@ public class World : MonoBehaviour
         combinedMaterial.mainTexture = combinedTexture;
     }
 
+    public Texture2D combinedLinearTexture;
+    public Material combinedLinearMaterial;
+    void CreateLinearTextureAtlas(ref Texture2D[] tilesTextures, bool useMipMaps = false, TextureFormat textureFormat = TextureFormat.RGBA32)
+    {
+        int size;
+        int originalSize;
+        Texture2D texture;
+
+        // figure out the square size power of 2 factor for the number of textures we have
+        if (tilesTextures.Length == 0)
+        {
+            Debug.Log("empty tilesTextures");
+            return;
+        }
+        // extend as needed
+        else if (tilesTextures.Length > 256)
+        {
+            Debug.Log("too many tilesTextures");
+            return;
+        }
+
+        // check for null texture in array
+        if (tilesTextures[0] == null)
+        {
+            Debug.Log("empty tilesTextures[0]");
+            return;
+        }
+
+        // get the texture size used from the first one
+        originalSize = tilesTextures[0].width;
+
+        // calc full size of texture atlas
+        size = tilesTextures.Length * originalSize;
+
+        // creare a new combined texture big enough to hold all the textures
+        combinedLinearTexture = new Texture2D(size, originalSize, textureFormat, useMipMaps);
+        // we want our pixels
+        combinedLinearTexture.filterMode = FilterMode.Point;
+
+        // Create the combined square texture using the existing textures (remember to ensure the total size of the texture isn't
+        // larger than the platform supports)
+        int index = 0;
+        for (int i = 0; i < tilesTextures.Length; i++)
+        {
+            texture = (Texture2D)tilesTextures[i];
+            if (texture)
+            {
+                int x = index * originalSize;
+                int y = 0;
+
+                combinedLinearTexture.SetPixels(x, y, originalSize, originalSize, texture.GetPixels());
+                index++;
+            }
+        }
+        // apply all the pixles we copied in the loop above
+        combinedLinearTexture.Apply();
+
+        // create a material based on this texture atlas
+        combinedLinearMaterial = new Material(Shader.Find("Unlit/Transparent Cutout"));
+        combinedLinearMaterial.mainTexture = combinedLinearTexture;
+    }
+
     public Texture2D combinedExpandedTexture;
     public Material combinedExpandedMaterial;
     public int textureExpandedAtlasPowerOf2;
@@ -2295,7 +2500,7 @@ public class World : MonoBehaviour
         combinedExpandedTexture.Apply();
 
         // create a material based on this texture atlas
-        combinedExpandedMaterial = new Material(Shader.Find("Mobile/Unlit (Supports Lightmap)"));
+        combinedExpandedMaterial = new Material(Shader.Find("Unlit/Transparent Cutout"));
         combinedExpandedMaterial.mainTexture = combinedExpandedTexture;
     }
 
@@ -2490,6 +2695,19 @@ public class World : MonoBehaviour
                             (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
                             (tileIndex == U4_Decompiled.TILE.CASTLE))
                         {
+                            GameObject mapTile = mapGameObjects[x, y];
+                            Vector3 savePosition = mapTile.transform.position;
+                            // temp move
+                            mapTile.transform.position = new Vector3(x, 0, 255 - y);
+                            Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
+                            look.position = new Vector3(look.position.x, 90.0f, look.position.z);
+                            mapTile.transform.LookAt(look.transform);
+                            Vector3 rotation1 = mapTile.transform.localEulerAngles; 
+                            rotation1.x = rotation1.x - 180.0f;
+                            mapTile.transform.localEulerAngles = rotation1;
+                            // restore position
+                            mapTile.transform.position = savePosition;
+
                             // add the game object mesh to the list we want to combine
                             billboardTerrrainCombine[countBillboardTerrrain].mesh = mapGameObjects[x, y].GetComponent<MeshFilter>().mesh;
                             // need to convert the transform to world coords before combining
@@ -2528,9 +2746,16 @@ public class World : MonoBehaviour
                 animatedTerrrainFilter.mesh = new Mesh();
                 animatedTerrrainFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                 animatedTerrrainFilter.mesh.CombineMeshes(animatedTerrrainCombine);
-                animatedTerrrainRenderer.material = combinedExpandedMaterial;
+                animatedTerrrainRenderer.material = combinedLinearMaterial;
                 animatedTerrrainRenderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
                 animatedTerrrainRenderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
+
+                // add our little water animator script
+                // adding a script component in the editor is a significant performance hit, avoid adding if already present
+                if (animatedTerrrainGameObject.GetComponent<Animate1>() == null)
+                {
+                    animatedTerrrainGameObject.AddComponent<Animate1>();
+                }
             }
 
             if (countBillboardTerrrain > 1)
@@ -3377,9 +3602,10 @@ public class World : MonoBehaviour
                     if (test == null)
                     {
                         test = new GameObject();
-                        CreateTextureAtlas(ref originalTiles);
+                        CreateSquareTextureAtlas(ref originalTiles);
                         ExpandTiles();
                         CreateExpandedTextureAtlas(ref expandedTiles);
+                        CreateLinearTextureAtlas(ref originalTiles);
                         CreateMapSubsetPass2(test, ref entireMapTILEs);
                     }
 
@@ -3402,7 +3628,35 @@ public class World : MonoBehaviour
 
                 // rotate map into place
                 mainTerrain.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+
+/*
+                if (once)
+                {
+                    if (convertMe)
+                    {
+                        Combine(convertMe, false, TextureFormat.RGBA32, false);
+
+                        MeshFilter meshFilter = convertMe.GetComponent<MeshFilter>();
+                        for (int i = 0; i < meshFilter.mesh.vertices.Length; i++)
+                        {
+                            Debug.Log("meshFilter.mesh.vertices[" + i + "] = new Vector3(" + meshFilter.mesh.vertices[i].x + "f, " + meshFilter.mesh.vertices[i].y + "f, " + meshFilter.mesh.vertices[i].z + "f);");
+                        }
+                        for (int i = 0; i < meshFilter.mesh.triangles.Length; i += 3)
+                        {
+                            Debug.Log("meshFilter.mesh.triangles[" + i + "] = " + meshFilter.mesh.triangles[i] + ", " + meshFilter.mesh.triangles[i + 1] + ", " + meshFilter.mesh.triangles[i + 2] + ",");
+                        }
+                        for (int i = 0; i < meshFilter.mesh.uv.Length; i++)
+                        {
+                            Debug.Log("meshFilter.mesh.uv[" + i + "] = new Vector2(" + meshFilter.mesh.uv[i].x + "f, " + meshFilter.mesh.uv[i].y + "f);");
+                        }
+
+                        once = false;
+                    }
+                }
+*/
             }
         }
     }
+
+    public GameObject convertMe;
 }
