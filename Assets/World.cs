@@ -242,6 +242,144 @@ public class World : MonoBehaviour
         return partialCube;
     }
 
+    GameObject CreateBridgeUpper()
+    {
+        // create a game object to hold the cube and give it a proper name
+        GameObject bridge = new GameObject("Bridge Upper");
+        bridge.name = "Bridge Upper";
+
+        // add a mesh filter and mesh renderer so we can see this new cube game object 
+        MeshFilter meshFilter = bridge.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = bridge.AddComponent<MeshRenderer>();
+
+        meshFilter.mesh.vertices = new Vector3[]
+        {
+            new Vector3(-0.5f, -0.5f, 0.5f),
+            new Vector3(0.5f, -0.5f, 0.5f),
+            new Vector3(-0.5f, -0.1875f, 0.5f),
+            new Vector3(0.5f, -0.1875f, 0.5f),
+            new Vector3(-0.5f, -0.5f, 0.0f),
+            new Vector3(0.5f, -0.5f, 0.0f),
+            new Vector3(-0.5f, -0.5f, 0.5f),
+            new Vector3(0.5f, -0.5f, 0.5f),
+            new Vector3(-0.5f, -0.5f, -0.5f),
+            new Vector3(0.5f, -0.5f, -0.5f),
+            new Vector3(-0.5f, -0.5f, 0.0f),
+            new Vector3(0.5f, -0.5f, 0.0f),
+            new Vector3(0.5f, -0.5f, 0.5f),
+            new Vector3(-0.5f, -0.5f, 0.5f),
+            new Vector3(0.5f, -0.1875f, 0.5f),
+            new Vector3(-0.5f, -0.1875f, 0.5f)
+        };
+
+        meshFilter.mesh.triangles = new int[]
+        {
+            0, 3, 1,
+            3, 0, 2,
+            4, 7, 5,
+            7, 4, 6,
+            8, 11, 9,
+            11, 8, 10,
+            12, 15, 13,
+            15, 12, 14
+        };
+
+        meshFilter.mesh.uv = new Vector2[]
+        {
+            new Vector2(0f, 0.6875f),
+            new Vector2(1f, 0.6875f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            //new Vector2(0f, 0.3125f),
+            //new Vector2(1f, 0.3125f),
+            new Vector2(0f, 0.375f),
+            new Vector2(1f, 0.375f),
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            //new Vector2(0f, 0.3125f),
+            //new Vector2(1f, 0.3125f),
+            new Vector2(0f, 0.375f),
+            new Vector2(1f, 0.375f),
+            new Vector2(0f, 0.6875f),
+            new Vector2(1f, 0.6875f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f)
+        };
+
+        return bridge;
+    }
+
+    GameObject CreateBridgeLower()
+    {
+        // create a game object to hold the cube and give it a proper name
+        GameObject bridge = new GameObject("Bridge Lower");
+        bridge.name = "Bridge Lower";
+
+        // add a mesh filter and mesh renderer so we can see this new cube game object 
+        MeshFilter meshFilter = bridge.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = bridge.AddComponent<MeshRenderer>();
+
+        meshFilter.mesh.vertices = new Vector3[]
+        {   
+            new Vector3(-0.5f, -0.5f, -0.5f),
+            new Vector3(0.5f, -0.5f, -0.5f),
+            new Vector3(-0.5f, -0.1875f, -0.5f),
+            new Vector3(0.5f, -0.1875f, -0.5f),
+            new Vector3(-0.5f, -0.5f, 0.0f),
+            new Vector3(0.5f, -0.5f, 0.0f),
+            new Vector3(-0.5f, -0.5f, 0.5f),
+            new Vector3(0.5f, -0.5f, 0.5f),
+            new Vector3(-0.5f, -0.5f, -0.5f),
+            new Vector3(0.5f, -0.5f, -0.5f),
+            new Vector3(-0.5f, -0.5f, 0.0f),
+            new Vector3(0.5f, -0.5f, 0.0f),
+            new Vector3(0.5f, -0.5f, -0.5f),
+            new Vector3(-0.5f, -0.5f, -0.5f),
+            new Vector3(0.5f, -0.1875f, -0.5f),
+            new Vector3(-0.5f, -0.1875f, -0.5f)
+        };
+
+        meshFilter.mesh.triangles = new int[]
+        {
+            0, 3, 1,
+            3, 0, 2,
+            4, 7, 5,
+            7, 4, 6,
+            8, 11, 9,
+            11, 8, 10,
+            12, 15, 13,
+            15, 12, 14
+        };
+
+        meshFilter.mesh.uv = new Vector2[]
+        {
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0f, 0.43f),
+            new Vector2(1f, 0.43f),
+            new Vector2(0f, 0.5f),
+            new Vector2(1f, 0.5f),
+            //new Vector2(0f, 0.93f),
+            //new Vector2(1f, 0.93f),
+            new Vector2(0f, 0.875f),
+            new Vector2(1f, 0.875f),
+            new Vector2(0f, 0.5f),
+            new Vector2(1f, 0.5f),
+            //new Vector2(0f, 0.93f),
+            //new Vector2(1f, 0.93f),
+            new Vector2(0f, 0.875f),
+            new Vector2(1f, 0.875f),
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0f, 0.43f),
+            new Vector2(1f, 0.43f),
+        };
+
+        return bridge;
+    }
+
     GameObject CreateBridge()
     {
         // create a game object to hold the cube and give it a proper name
@@ -607,6 +745,11 @@ public class World : MonoBehaviour
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
+                    // remove the brown line that overlaps the bridge support
+                    else if ((colorIndex == (int)EGA_COLOR.BROWN) &&  tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM && height == 9)
+                    {
+                        currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
+                    }
                     // others where we need to make green an alpha channel also like towns/ruins/villages
                     // so the grass speckels don't show when we use the tile standing upright
                     else if (((colorIndex == (int)EGA_COLOR.BLACK) || (colorIndex == (int)EGA_COLOR.GREEN)) &&
@@ -674,6 +817,11 @@ public class World : MonoBehaviour
                         (tile >= (int)U4_Decompiled.TILE.PHANTOM && tile <= (int)U4_Decompiled.TILE.MAGE_NPC4) ||
                         (tile >= (int)U4_Decompiled.TILE.LAVA_LIZARD && tile <= (int)U4_Decompiled.TILE.ZORN4) ||
                         (tile >= (int)U4_Decompiled.TILE.HYDRA && tile <= (int)U4_Decompiled.TILE.BALRON4)))
+                    {
+                        currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
+                    }
+                    // remove the brown line that overlaps the bridge support
+                    else if ((colorIndex == (int)EGA_COLOR.BROWN) && tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM && height == 9)
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
@@ -1219,6 +1367,33 @@ public class World : MonoBehaviour
                     useExpandedTile = true;
                     useUIShader = true;
                 }
+                else if (tileIndex == U4_Decompiled.TILE.BRIDGE)
+                {
+                    mapTile = CreateBridge();
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    useExpandedTile = true;
+                    useUIShader = false;
+                }
+                else if (tileIndex == U4_Decompiled.TILE.BRIDGE_TOP)
+                {
+                    mapTile = CreateBridgeUpper();
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    useExpandedTile = true;
+                    useUIShader = false;
+                }
+                else if (tileIndex == U4_Decompiled.TILE.BRIDGE_BOTTOM)
+                {
+                    mapTile = CreateBridgeLower();
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    useExpandedTile = true;
+                    useUIShader = false;
+                }
                 // all other terrain tiles are flat
                 else
                 {
@@ -1258,11 +1433,11 @@ public class World : MonoBehaviour
                 Shader unlit;
                 if (useUIShader)
                 {
-                    unlit = Shader.Find("UI/Unlit/Detail");
+                    unlit = Shader.Find("Unlit/Transparent Cutout");
                 }
                 else
                 {
-                    unlit = Shader.Find("Mobile/Unlit (Supports Lightmap)");
+                    unlit = Shader.Find("Unlit/Transparent Cutout");
                 }
                 Renderer renderer = mapTile.GetComponent<MeshRenderer>();
                 renderer.material.shader = unlit;
@@ -1663,6 +1838,26 @@ public class World : MonoBehaviour
                 else if (tileIndex == U4_Decompiled.TILE.BRIDGE)
                 {
                     mapTile = CreateBridge();
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    useExpandedTile = true;
+                    useUIShader = false;
+                    useLinearTile = false;
+                }
+                else if (tileIndex == U4_Decompiled.TILE.BRIDGE_TOP)
+                {
+                    mapTile = CreateBridgeUpper();
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    useExpandedTile = true;
+                    useUIShader = false;
+                    useLinearTile = false;
+                }
+                else if (tileIndex == U4_Decompiled.TILE.BRIDGE_BOTTOM)
+                {
+                    mapTile = CreateBridgeLower();
                     mapTile.transform.SetParent(terrainGameObject.transform);
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
@@ -2075,7 +2270,7 @@ public class World : MonoBehaviour
 
             for (int i = 0; i < objectsToCombine.Length; i++)
             {
-                if (objectsToCombine[i].isStatic)
+                //if (objectsToCombine[i].isStatic)
                 {
                     staticCount++;
                     combine[i].mesh = objectsToCombine[i].GetComponent<MeshFilter>().mesh;
@@ -2107,7 +2302,7 @@ public class World : MonoBehaviour
                 // Disable all the static object renderers
                 for (int i = 0; i < objectsToCombine.Length; i++)
                 {
-                    if (objectsToCombine[i].isStatic)
+                    //if (objectsToCombine[i].isStatic)
                     {
                         if (destroy)
                         {
@@ -3594,11 +3789,10 @@ public class World : MonoBehaviour
                 // save the checksum
                 lastChecksum = currentChecksum;
 
+
                 // create the game object children with meshes and textures
                 if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
                 {
-                    //CreateMap(mainTerrain.transform.gameObject, raycastOutdoorMap);
-
                     if (test == null)
                     {
                         test = new GameObject();
@@ -3629,7 +3823,7 @@ public class World : MonoBehaviour
                 // rotate map into place
                 mainTerrain.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
 
-/*
+
                 if (once)
                 {
                     if (convertMe)
@@ -3653,7 +3847,7 @@ public class World : MonoBehaviour
                         once = false;
                     }
                 }
-*/
+
             }
         }
     }
