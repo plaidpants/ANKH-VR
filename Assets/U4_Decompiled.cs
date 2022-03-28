@@ -551,6 +551,13 @@ public class U4_Decompiled : MonoBehaviour
     [DllImport("UN_U4.dll")]
     public static extern int main_Text(byte[] buffer, int length);
     [DllImport("UN_U4.dll")]
+    public static extern int main_D_9445(); // moongate x
+    [DllImport("UN_U4.dll")]
+    public static extern int main_D_9448(); // moongate y
+    [DllImport("UN_U4.dll")]
+    public static extern TILE  main_D_9141(); // moongate tile
+    [DllImport("UN_U4.dll")]
+
     public static extern int main_NPC_Text(byte[] buffer, int length);
 
     public GameObject partyGameObject;
@@ -566,6 +573,10 @@ public class U4_Decompiled : MonoBehaviour
     public byte[,,] tMap8x8x8 = new byte[8, 8, 8];
 
     public MODE current_mode;
+
+    public TILE moongate_tile;
+    public int moongate_x; 
+    public int moongate_y;
 
     [System.Serializable]
     public struct tCombat1 /*size:0xc0*/
@@ -1268,6 +1279,10 @@ public class U4_Decompiled : MonoBehaviour
 
             D_95A5.x = (byte)main_D_95A5_x();
             D_95A5.y = (byte)main_D_95A5_y();
+
+            moongate_tile = main_D_9141();
+            moongate_x = main_D_9445();
+            moongate_y = main_D_9448();
 
             // get any hilighted character, used during combat
             main_ActiveChar(buffer, buffer.Length);

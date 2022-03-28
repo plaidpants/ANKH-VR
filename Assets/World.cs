@@ -727,6 +727,7 @@ public class World : MonoBehaviour
                         tile == (int)U4_Decompiled.TILE.CASTLE_LEFT ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_ENTRANCE ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_RIGHT ||
+                        tile == (int)U4_Decompiled.TILE.VILLAGE ||
                         tile == (int)U4_Decompiled.TILE.BRIDGE ||
                         tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM ||
                         tile == (int)U4_Decompiled.TILE.BRIDGE_TOP ||
@@ -749,6 +750,32 @@ public class World : MonoBehaviour
                     else if ((colorIndex == (int)EGA_COLOR.BROWN) &&  tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM && height == 9)
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
+                    }
+                    // special case the horse black eyes
+                    else if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                        (tile == (int)U4_Decompiled.TILE.HORSE_EAST))
+                    {
+                        if ((width == 13) && (height == 4))
+                        {
+                            currentTile.SetPixel(width++, currentTile.height - height - 1, color);
+                        }
+                        else
+                        {
+                            currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
+                        }
+                    }
+                    // special case the horse black eyes
+                    else if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                        (tile == (int)U4_Decompiled.TILE.HORSE_WEST))
+                    {
+                        if ((width == 3) && (height == 5))
+                        {
+                            currentTile.SetPixel(width++, currentTile.height - height - 1, color);
+                        }
+                        else
+                        {
+                            currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
+                        }
                     }
                     // others where we need to make green an alpha channel also like towns/ruins/villages
                     // so the grass speckels don't show when we use the tile standing upright
@@ -802,6 +829,7 @@ public class World : MonoBehaviour
                         tile == (int)U4_Decompiled.TILE.CASTLE_LEFT ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_ENTRANCE ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_RIGHT ||
+                        tile == (int)U4_Decompiled.TILE.VILLAGE ||
                         tile == (int)U4_Decompiled.TILE.BRIDGE ||
                         tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM ||
                         tile == (int)U4_Decompiled.TILE.BRIDGE_TOP ||
@@ -840,6 +868,32 @@ public class World : MonoBehaviour
                     (tile == (int)U4_Decompiled.TILE.SQUID || tile == (int)U4_Decompiled.TILE.SQUID2))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
+                    }
+                    // special case the horse black eyes
+                    else if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                        (tile == (int)U4_Decompiled.TILE.HORSE_EAST))
+                    {
+                        if ((width == 13) && (height == 4))
+                        {
+                            currentTile.SetPixel(width++, currentTile.height - height - 1, color);
+                        }
+                        else
+                        {
+                            currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
+                        }
+                    }
+                    // special case the horse black eyes
+                    else if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                        (tile == (int)U4_Decompiled.TILE.HORSE_WEST))
+                    {
+                        if ((width == 3) && (height == 5))
+                        {
+                            currentTile.SetPixel(width++, currentTile.height - height - 1, color);
+                        }
+                        else
+                        {
+                            currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
+                        }
                     }
                     // energy fields are transparent
                     else if (tile >= (int)U4_Decompiled.TILE.POISON_FIELD && tile <= (int)U4_Decompiled.TILE.SLEEP_FIELD)
@@ -1345,6 +1399,8 @@ public class World : MonoBehaviour
                 // tress we need to stand upright and face the camera
                 else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
                     (tileIndex == U4_Decompiled.TILE.TOWN) ||
+                    (tileIndex == U4_Decompiled.TILE.VILLAGE) ||
+                    (tileIndex == U4_Decompiled.TILE.RUINS) ||
                     (tileIndex == U4_Decompiled.TILE.ANKH) ||
                     (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
                     (tileIndex == U4_Decompiled.TILE.CASTLE))
@@ -1812,6 +1868,9 @@ public class World : MonoBehaviour
                 // tress we need to stand upright and face the camera
                 else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
                     (tileIndex == U4_Decompiled.TILE.TOWN) ||
+                    (tileIndex == U4_Decompiled.TILE.VILLAGE) ||
+                    (tileIndex == U4_Decompiled.TILE.RUINS) ||
+                    (tileIndex == U4_Decompiled.TILE.SHRINE) ||
                     (tileIndex == U4_Decompiled.TILE.ANKH) ||
                     (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
                     (tileIndex == U4_Decompiled.TILE.CASTLE))
@@ -1825,11 +1884,11 @@ public class World : MonoBehaviour
                     mapTile.transform.localPosition = location;
                     mapTile.transform.localEulerAngles = new Vector3(-180.0f, -90.0f, 90.0f);
                     Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these bulboards
-                    look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+                    look.position = new Vector3(u4.Party._x, map.GetLength(1) - 1 - (u4.Party._y + 5), 0.0f);
                     mapTile.transform.LookAt(look.transform);
                     //mapTile.transform.forward = new Vector3(Camera.main.transform.forward.x, transform.forward.y, Camera.main.transform.forward.z);
-                    rotation = mapTile.transform.localEulerAngles; // new Vector3(rotx, -90f, 90.0f);
-                    rotation.x = rotation.x - 180.0f;
+                    rotation = mapTile.transform.localEulerAngles;
+                    rotation = new Vector3(rotation.x + adjustx, rotation.y + adjusty, rotation.z + adjustz);
 
                     useExpandedTile = true;
                     useUIShader = true;
@@ -2891,23 +2950,24 @@ public class World : MonoBehaviour
                             (tileIndex == U4_Decompiled.TILE.CASTLE))
                         {
                             GameObject mapTile = mapGameObjects[x, y];
-                            Vector3 savePosition = mapTile.transform.position;
-                            // temp move
-                            mapTile.transform.position = new Vector3(x, 0, 255 - y);
-                            Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
-                            look.position = new Vector3(look.position.x, 90.0f, look.position.z);
-                            mapTile.transform.LookAt(look.transform);
-                            Vector3 rotation1 = mapTile.transform.localEulerAngles; 
-                            rotation1.x = rotation1.x - 180.0f;
-                            mapTile.transform.localEulerAngles = rotation1;
+                            Vector3 saveLocalPosition = mapTile.transform.localPosition;
+
+                            mapTile.transform.localPosition = Vector3.zero;
+                            mapTile.transform.localRotation = Quaternion.identity;
+                            mapTile.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f); //rotate it like it whill be eventually
+                            Vector3 look = new Vector3(u4.Party._x - saveLocalPosition.x, 0.0f, (255 - (u4.Party._y + 5)) - saveLocalPosition.y);
+                            Quaternion rotation1 = Quaternion.LookRotation(look);
+                            mapTile.transform.rotation = rotation1;
+                            mapTile.transform.localEulerAngles = new Vector3(mapTile.transform.localEulerAngles.x - 90.0f + adjustx, mapTile.transform.localEulerAngles.y + adjusty, mapTile.transform.localEulerAngles.z + adjustz); // rotate it back to the way it was
+
                             // restore position
-                            mapTile.transform.position = savePosition;
+                            mapTile.transform.localPosition = saveLocalPosition;
 
                             // add the game object mesh to the list we want to combine
-                            billboardTerrrainCombine[countBillboardTerrrain].mesh = mapGameObjects[x, y].GetComponent<MeshFilter>().mesh;
+                            billboardTerrrainCombine[countBillboardTerrrain].mesh = mapTile.GetComponent<MeshFilter>().mesh;
                             // need to convert the transform to world coords before combining
-                            billboardTerrrainCombine[countBillboardTerrrain].transform = mapGameObjects[x, y].transform.localToWorldMatrix;
-                            
+                            billboardTerrrainCombine[countBillboardTerrrain].transform = mapTile.transform.localToWorldMatrix;
+
                             // increment the index
                             countBillboardTerrrain++;
                         }
@@ -3151,7 +3211,7 @@ public class World : MonoBehaviour
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                Shader unlit = Shader.Find("Sprites/Default");
+                Shader unlit = Shader.Find("Unlit/Transparent Cutout");
                 renderer.material.shader = unlit;
 
                 // add our little animator script and set the tile
@@ -3261,12 +3321,18 @@ public class World : MonoBehaviour
                 childofnpcs.localPosition = new Vector3(currentNpcs[npcIndex]._x, entireMapTILEs.GetLength(1) - 1 - currentNpcs[npcIndex]._y, 0);
 
                 // make it billboard
-                Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these bulboards
+                Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
                 look.position = new Vector3(look.position.x, 0.0f, look.position.z);
                 childofnpcs.transform.LookAt(look.transform);
+                Vector3 rot = childofnpcs.transform.eulerAngles;
+                childofnpcs.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y , rot.z + 180.0f);
             }
         }
     }
+
+    public float adjustx;
+    public float adjusty;
+    public float adjustz;
 
     public void AddHits(List<U4_Decompiled.hit> currentHitList)
     {
@@ -3744,7 +3810,7 @@ public class World : MonoBehaviour
         }
 
         // we've moved, regenerate the raycast, TODO NPCs can also affect the raycast when moving, need to check them also or redo raycast more often
-        if ((u4.Party._x != lastRaycastPlayer_posx) || (u4.Party._y != lastRaycastPlayer_posy))
+        //if ((u4.Party._x != lastRaycastPlayer_posx) || (u4.Party._y != lastRaycastPlayer_posy))
         {
             Vector3 location = Vector3.zero;
 
@@ -3784,7 +3850,7 @@ public class World : MonoBehaviour
             // if last checksum does not match we need to regenerate the scene because the raycast is different
             // TODO also if we are sitting on a blank tile we are probably surrounded by something like trees so we need to regenerate
             // check if any of the surrounding tiles are emtpy also
-            if (lastChecksum != currentChecksum)
+            //if (lastChecksum != currentChecksum)
             {
                 // save the checksum
                 lastChecksum = currentChecksum;
@@ -3823,7 +3889,6 @@ public class World : MonoBehaviour
                 // rotate map into place
                 mainTerrain.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
 
-
                 if (once)
                 {
                     if (convertMe)
@@ -3847,7 +3912,6 @@ public class World : MonoBehaviour
                         once = false;
                     }
                 }
-
             }
         }
     }
