@@ -1241,6 +1241,9 @@ MonoBehaviour:
   partyGameObject: {fileID: 0}
   timerPeriod: 0.05
   current_mode: 0
+  moongate_tile: 0
+  moongate_x: 0
+  moongate_y: 0
   Combat1:
   - _npcX: 0
     _npcY: 0
@@ -2547,6 +2550,7 @@ MonoBehaviour:
   characters: {fileID: 0}
   activeCharacter: {fileID: 0}
   hits: {fileID: 0}
+  moongate: {fileID: 0}
   partyGameObject: {fileID: 0}
   Settlements: []
   CombatTerrains: []
@@ -2562,6 +2566,9 @@ MonoBehaviour:
   combinedExpandedTexture: {fileID: 0}
   combinedExpandedMaterial: {fileID: 0}
   textureExpandedAtlasPowerOf2: 0
+  adjustx: 0
+  adjusty: 0
+  adjustz: 0
   timerPeriod: 0.02
   convertMe: {fileID: 0}
 --- !u!4 &1753957574
@@ -2651,7 +2658,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &2006084672
 Light:
   m_ObjectHideFlags: 0
@@ -2670,7 +2677,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
