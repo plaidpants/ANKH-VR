@@ -95,7 +95,7 @@ public class Animate3 : MonoBehaviour
             // enable if not enabled
             if (transform.gameObject.activeSelf == false)
             {
-                transform.gameObject.SetActive(true);
+                //transform.gameObject.SetActive(true); let the other path enable this if needed
             }
         }
         else if (transform.gameObject.activeSelf == true)
