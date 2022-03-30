@@ -873,7 +873,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582030271}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.88, y: 0.5, z: 7.18}
+  m_LocalPosition: {x: 3.88, y: 1.52, z: 7.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 246932416}
@@ -2569,6 +2569,8 @@ MonoBehaviour:
   adjustx: 0
   adjusty: 0
   adjustz: 0
+  adjust1: -0.5
+  adjust2: -1
   timerPeriod: 0.02
   convertMe: {fileID: 0}
 --- !u!4 &1753957574

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class ChatBubble : MonoBehaviour
 {
@@ -287,10 +288,11 @@ public class ChatBubble : MonoBehaviour
 		myFont.characterInfo = charInfos;
 		text.font = myFont;
 
-		UnityEditor.SerializedObject mFont = new UnityEditor.SerializedObject(myFont);
-		mFont.FindProperty("m_FontSize").floatValue = 10.0f;
-		mFont.FindProperty("m_LineSpacing").floatValue = 8.0f;
-		mFont.ApplyModifiedProperties();
+        // TODO figure out how to compile this
+		//UnityEditor.SerializedObject mFont = new UnityEditor.SerializedObject(myFont);
+		//mFont.FindProperty("m_FontSize").floatValue = 10.0f;
+		//mFont.FindProperty("m_LineSpacing").floatValue = 8.0f;
+		//mFont.ApplyModifiedProperties();
 	}
 
 	// Update is called once per frame

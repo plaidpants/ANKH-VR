@@ -1263,13 +1263,14 @@ public class U4_Decompiled : MonoBehaviour
                             //partyText.text = partyText.text + npcIndex + " : " + /* Settlements[(int)Party._loc].GetComponent<Settlement>().npcStrings[_npc[npcIndex]._tlkidx - 1][0] + " says : " + */
                             string npcTalk = enc.GetString(buffer, i * 500 + 1, 500);
 
-                            WindowsVoice voice = partyGameObject.GetComponentInChildren<WindowsVoice>();
-                            WindowsVoice.speak(npcTalk); // TODO need to collect enough text til the newline so we don't have broken speech patterns in the middle of constructed sentences e.g. "I am" ... "a guard."...
+                            //WindowsVoice voice = partyGameObject.GetComponentInChildren<WindowsVoice>();
 
                             int firstNull = npcTalk.IndexOf('\0');
                             npcTalk = npcTalk.Substring(0, firstNull);
                             partyText.text = partyText.text + npcTalk;
                         }
+
+                        WindowsVoice.speak(partyText.text); // TODO need to collect enough text til the newline so we don't have broken speech patterns in the middle of constructed sentences e.g. "I am" ... "a guard."...
                     }
                 }
             }

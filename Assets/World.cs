@@ -1581,6 +1581,481 @@ public class World : MonoBehaviour
         return door;
     }
 
+    GameObject CreateCastleLeft()
+    {
+        // create a game object to hold the cube and give it a proper name
+        GameObject castleLeft = new GameObject("Castle Left");
+        castleLeft.name = "Castle Left";
+
+        // add a mesh filter and mesh renderer so we can see this new cube game object 
+        MeshFilter meshFilter = castleLeft.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = castleLeft.AddComponent<MeshRenderer>();
+
+        meshFilter.mesh.vertices = new Vector3[]
+        {
+new Vector3(-0.5f, -0.5f, -0.375f),
+new Vector3(0.5f, -0.5f, -0.375f),
+new Vector3(-0.5f, 0.5f, -0.375f),
+new Vector3(0.5f, 0.5f, -0.375f),
+new Vector3(-0.5f, -0.5f, 0.375f),
+new Vector3(0.5f, -0.5f, 0.375f),
+new Vector3(-0.5f, 0.5f, 0.375f),
+new Vector3(0.5f, 0.5f, 0.375f),
+new Vector3(-0.375f, -0.5f, 0.375f),
+new Vector3(-0.375f, -0.5f, -2.980232E-08f),
+new Vector3(-0.375f, 0.5f, 0.375f),
+new Vector3(-0.375f, 0.5f, -2.980232E-08f),
+new Vector3(-0.375f, -0.5f, 2.980232E-08f),
+new Vector3(-0.375f, -0.5f, -0.375f),
+new Vector3(-0.375f, 0.5f, 2.980232E-08f),
+new Vector3(-0.375f, 0.5f, -0.375f),
+new Vector3(-0.375f, -0.5f, -2.980232E-08f),
+new Vector3(-0.375f, -0.5f, 0.375f),
+new Vector3(-0.375f, 0.5f, -2.980232E-08f),
+new Vector3(-0.375f, 0.5f, 0.375f),
+new Vector3(-0.375f, -0.5f, -0.375f),
+new Vector3(-0.375f, -0.5f, 2.980232E-08f),
+new Vector3(-0.375f, 0.5f, -0.375f),
+new Vector3(-0.375f, 0.5f, 2.980232E-08f),
+new Vector3(-0.5f, -0.5f, -0.375f),
+new Vector3(0.5f, -0.5f, -0.375f),
+new Vector3(-0.5f, 0.5f, -0.375f),
+new Vector3(0.5f, 0.5f, -0.375f),
+new Vector3(-0.5f, -0.5f, 0.375f),
+new Vector3(0.5f, -0.5f, 0.375f),
+new Vector3(-0.5f, 0.5f, 0.375f),
+new Vector3(0.5f, 0.5f, 0.375f),
+new Vector3(-0.375f, 2.235174E-08f, -0.375f),
+new Vector3(0.5f, 2.235174E-08f, -0.375f),
+new Vector3(-0.375f, -2.235174E-08f, 2.980232E-08f),
+new Vector3(0.5f, -2.235174E-08f, 2.980232E-08f),
+new Vector3(-0.375f, 2.235174E-08f, -2.980232E-08f),
+new Vector3(0.5f, 2.235174E-08f, -2.980232E-08f),
+new Vector3(-0.375f, -2.235174E-08f, 0.375f),
+new Vector3(0.5f, -2.235174E-08f, 0.375f)
+        };
+
+        meshFilter.mesh.triangles = new int[]
+        {
+0, 3, 1,
+3, 0, 2,
+6, 4, 7,
+5, 7, 4,
+8, 11, 9,
+11, 8, 10,
+12, 15, 13,
+15, 12, 14,
+16, 19, 17,
+19, 16, 18,
+20, 23, 21,
+23, 20, 22,
+26, 24, 27,
+25, 27, 24,
+28, 31, 29,
+31, 28, 30,
+32, 35, 33,
+35, 32, 34,
+36, 39, 37,
+39, 36, 38
+        };
+
+        meshFilter.mesh.uv = new Vector2[]
+        {
+new Vector2(0f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0.625f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0.625f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0.625f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0.625f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0.625f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0.625f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0.625f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0.625f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0.125f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0.125f, 0.375f),
+new Vector2(1f, 0.375f),
+new Vector2(0.125f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0.125f, 0.375f),
+new Vector2(1f, 0.375f)
+        };
+
+        return castleLeft;
+    }
+
+    GameObject CreateCastleRight()
+    {
+        // create a game object to hold the cube and give it a proper name
+        GameObject CastleRight = new GameObject("Castle Right");
+        CastleRight.name = "Castle Right";
+
+        // add a mesh filter and mesh renderer so we can see this new cube game object 
+        MeshFilter meshFilter = CastleRight.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = CastleRight.AddComponent<MeshRenderer>();
+
+        meshFilter.mesh.vertices = new Vector3[]
+        {
+new Vector3(-0.5f, -0.5f, -0.375f),
+new Vector3(0.5f, -0.5f, -0.375f),
+new Vector3(-0.5f, 0.5f, -0.375f),
+new Vector3(0.5f, 0.5f, -0.375f),
+new Vector3(-0.5f, -0.5f, 0.375f),
+new Vector3(0.5f, -0.5f, 0.375f),
+new Vector3(-0.5f, 0.5f, 0.375f),
+new Vector3(0.5f, 0.5f, 0.375f),
+new Vector3(0.375f, -0.5f, -2.980232E-08f),
+new Vector3(0.375f, -0.5f, 0.375f),
+new Vector3(0.375f, 0.5f, -2.980232E-08f),
+new Vector3(0.375f, 0.5f, 0.375f),
+new Vector3(0.375f, -0.5f, -0.375f),
+new Vector3(0.375f, -0.5f, 2.980232E-08f),
+new Vector3(0.375f, 0.5f, -0.375f),
+new Vector3(0.375f, 0.5f, 2.980232E-08f),
+new Vector3(0.375f, -0.5f, 0.375f),
+new Vector3(0.375f, -0.5f, -2.980232E-08f),
+new Vector3(0.375f, 0.5f, 0.375f),
+new Vector3(0.375f, 0.5f, -2.980232E-08f),
+new Vector3(0.375f, -0.5f, 2.980232E-08f),
+new Vector3(0.375f, -0.5f, -0.375f),
+new Vector3(0.375f, 0.5f, 2.980232E-08f),
+new Vector3(0.375f, 0.5f, -0.375f),
+new Vector3(-0.5f, -0.5f, -0.375f),
+new Vector3(0.5f, -0.5f, -0.375f),
+new Vector3(-0.5f, 0.5f, -0.375f),
+new Vector3(0.5f, 0.5f, -0.375f),
+new Vector3(-0.5f, -0.5f, 0.375f),
+new Vector3(0.5f, -0.5f, 0.375f),
+new Vector3(-0.5f, 0.5f, 0.375f),
+new Vector3(0.5f, 0.5f, 0.375f),
+new Vector3(-0.5f, 2.235174E-08f, -0.375f),
+new Vector3(0.375f, 2.235174E-08f, -0.375f),
+new Vector3(-0.5f, -2.235174E-08f, 2.980232E-08f),
+new Vector3(0.375f, -2.235174E-08f, 2.980232E-08f),
+new Vector3(-0.5f, 2.235174E-08f, -2.980232E-08f),
+new Vector3(0.375f, 2.235174E-08f, -2.980232E-08f),
+new Vector3(-0.5f, -2.235174E-08f, 0.375f),
+new Vector3(0.375f, -2.235174E-08f, 0.375f),
+        };
+
+        meshFilter.mesh.triangles = new int[]
+        {
+0, 3, 1,
+3, 0, 2,
+6, 4, 7,
+5, 7, 4,
+8, 11, 9,
+11, 8, 10,
+12, 15, 13,
+15, 12, 14,
+16, 19, 17,
+19, 16, 18,
+20, 23, 21,
+23, 20, 22,
+26, 24, 27,
+25, 27, 24,
+28, 31, 29,
+31, 28, 30,
+32, 35, 33,
+35, 32, 34,
+36, 39, 37,
+39, 36, 38,
+        };
+
+        meshFilter.mesh.uv = new Vector2[]
+        {
+new Vector2(0f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0f, 1f),
+new Vector2(0.375f, 1f),
+new Vector2(0f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0f, 1f),
+new Vector2(0.375f, 1f),
+new Vector2(0f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0f, 1f),
+new Vector2(0.375f, 1f),
+new Vector2(0f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0f, 1f),
+new Vector2(0.375f, 1f),
+new Vector2(0f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0f, 0f),
+new Vector2(0.875f, 0f),
+new Vector2(0f, 0.375f),
+new Vector2(0.875f, 0.375f),
+new Vector2(0f, 0f),
+new Vector2(0.875f, 0f),
+new Vector2(0f, 0.375f),
+new Vector2(0.875f, 0.375f),
+        };
+
+        return CastleRight;
+    }
+
+    GameObject CreateCastleCenter()
+    {
+        // create a game object to hold the cube and give it a proper name
+        GameObject CastleCenter = new GameObject("Castle Center");
+        CastleCenter.name = "Castle Center";
+
+        // add a mesh filter and mesh renderer so we can see this new cube game object 
+        MeshFilter meshFilter = CastleCenter.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = CastleCenter.AddComponent<MeshRenderer>();
+
+        meshFilter.mesh.vertices = new Vector3[]
+        {
+new Vector3(-0.5f, -0.5f, -0.375f),
+new Vector3(0.5f, -0.5f, -0.375f),
+new Vector3(-0.5f, 0.5f, -0.375f),
+new Vector3(0.5f, 0.5f, -0.375f),
+new Vector3(0f, 0f, 0.375f),
+new Vector3(-0.5f, 0f, 0.375f),
+new Vector3(0f, 0.5f, 0.375f),
+new Vector3(-0.5f, 0.5f, 0.375f),
+new Vector3(-0.5f, -0.5f, -0.375f),
+new Vector3(0.5f, -0.5f, -0.375f),
+new Vector3(-0.5f, 0.5f, -0.375f),
+new Vector3(0.5f, 0.5f, -0.375f),
+new Vector3(0f, 0f, 0.375f),
+new Vector3(0.5f, 0f, 0.375f),
+new Vector3(0f, 0.5f, 0.375f),
+new Vector3(0.5f, 0.5f, 0.375f),
+new Vector3(0f, 0f, 0.375f),
+new Vector3(0.5f, 0f, 0.375f),
+new Vector3(0f, 0.5f, 0.375f),
+new Vector3(0.5f, 0.5f, 0.375f),
+new Vector3(0f, 0f, 0.375f),
+new Vector3(-0.5f, 0f, 0.375f),
+new Vector3(0f, 0.5f, 0.375f),
+new Vector3(-0.5f, 0.5f, 0.375f),
+new Vector3(0.25f, -0.5f, 0.375f),
+new Vector3(0.5f, -0.5f, 0.375f),
+new Vector3(0.25f, 0f, 0.375f),
+new Vector3(0.5f, 0f, 0.375f),
+new Vector3(0f, -0.5f, 0.375f),
+new Vector3(0.25f, -0.5f, 0.375f),
+new Vector3(0f, 0f, 0.375f),
+new Vector3(0.25f, 0f, 0.375f),
+new Vector3(-0.25f, -0.5f, 0.375f),
+new Vector3(0f, -0.5f, 0.375f),
+new Vector3(-0.25f, 0f, 0.375f),
+new Vector3(0f, 0f, 0.375f),
+new Vector3(-0.5f, -0.5f, 0.375f),
+new Vector3(-0.25f, -0.5f, 0.375f),
+new Vector3(-0.5f, 0f, 0.375f),
+new Vector3(-0.25f, 0f, 0.375f),
+new Vector3(0.25f, -0.5f, 0.375f),
+new Vector3(0.5f, -0.5f, 0.375f),
+new Vector3(0.25f, 0f, 0.375f),
+new Vector3(0.5f, 0f, 0.375f),
+new Vector3(0f, -0.5f, 0.375f),
+new Vector3(0.25f, -0.5f, 0.375f),
+new Vector3(0f, 0f, 0.375f),
+new Vector3(0.25f, 0f, 0.375f),
+new Vector3(-0.25f, -0.5f, 0.375f),
+new Vector3(0f, -0.5f, 0.375f),
+new Vector3(-0.25f, 0f, 0.375f),
+new Vector3(0f, 0f, 0.375f),
+new Vector3(-0.5f, -0.5f, 0.375f),
+new Vector3(-0.25f, -0.5f, 0.375f),
+new Vector3(-0.5f, 0f, 0.375f),
+new Vector3(-0.25f, 0f, 0.375f),
+new Vector3(0.5f, 2.980232E-08f, 0.375f),
+new Vector3(0.25f, 2.980232E-08f, 0.375f),
+new Vector3(0.5f, -2.980232E-08f, -0.125f),
+new Vector3(0.25f, -2.980232E-08f, -0.125f),
+new Vector3(0.25f, 2.980232E-08f, 0.375f),
+new Vector3(-2.980232E-08f, 2.980232E-08f, 0.375f),
+new Vector3(0.25f, -2.980232E-08f, -0.125f),
+new Vector3(-2.980232E-08f, -2.980232E-08f, -0.125f),
+new Vector3(2.980232E-08f, 2.980232E-08f, 0.375f),
+new Vector3(-0.25f, 2.980232E-08f, 0.375f),
+new Vector3(2.980232E-08f, -2.980232E-08f, -0.125f),
+new Vector3(-0.25f, -2.980232E-08f, -0.125f),
+new Vector3(-0.25f, 2.980232E-08f, 0.375f),
+new Vector3(-0.5f, 2.980232E-08f, 0.375f),
+new Vector3(-0.25f, -2.980232E-08f, -0.125f),
+new Vector3(-0.5f, -2.980232E-08f, -0.125f),
+new Vector3(0f, 3.061617E-17f, -0.375f),
+new Vector3(0f, 3.061617E-17f, -0.125f),
+new Vector3(0.5f, -3.061617E-17f, -0.375f),
+new Vector3(0.5f, -3.061617E-17f, -0.125f),
+new Vector3(-0.5f, 3.061617E-17f, -0.375f),
+new Vector3(-0.5f, 3.061617E-17f, -0.125f),
+new Vector3(0f, -3.061617E-17f, -0.375f),
+new Vector3(0f, -3.061617E-17f, -0.125f),
+        };
+
+        meshFilter.mesh.triangles = new int[]
+        {
+0, 3, 1,
+3, 0, 2,
+4, 7, 5,
+7, 4, 6,
+10, 8, 11,
+9, 11, 8,
+14, 12, 15,
+13, 15, 12,
+16, 19, 17,
+19, 16, 18,
+22, 20, 23,
+21, 23, 20,
+24, 27, 25,
+27, 24, 26,
+28, 31, 29,
+31, 28, 30,
+32, 35, 33,
+35, 32, 34,
+36, 39, 37,
+39, 36, 38,
+42, 40, 43,
+41, 43, 40,
+46, 44, 47,
+45, 47, 44,
+50, 48, 51,
+49, 51, 48,
+54, 52, 55,
+53, 55, 52,
+56, 59, 57,
+59, 56, 58,
+60, 63, 61,
+63, 60, 62,
+64, 67, 65,
+67, 64, 66,
+68, 71, 69,
+71, 68, 70,
+74, 72, 75,
+73, 75, 72,
+78, 76, 79,
+77, 79, 76,
+        };
+
+        meshFilter.mesh.uv = new Vector2[]
+        {
+new Vector2(0f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0.5f, 0.5f),
+new Vector2(1f, 0.5f),
+new Vector2(0.5f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0f, 0f),
+new Vector2(1f, 0f),
+new Vector2(0f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0.5f, 0.5f),
+new Vector2(1f, 0.5f),
+new Vector2(0.5f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0.5f, 0.5f),
+new Vector2(1f, 0.5f),
+new Vector2(0.5f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0.5f, 0.5f),
+new Vector2(1f, 0.5f),
+new Vector2(0.5f, 1f),
+new Vector2(1f, 1f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+new Vector2(0.125f, 0f),
+new Vector2(0.375f, 0f),
+new Vector2(0.125f, 0.5f),
+new Vector2(0.375f, 0.5f),
+        };
+
+        return CastleCenter;
+    }
+
     GameObject CreatePyramid(float height)
     {
         GameObject pyramid = new GameObject("Pyramid");
@@ -2283,6 +2758,9 @@ public class World : MonoBehaviour
         Shader unlit = Shader.Find("Unlit/Transparent Cutout");
         renderer.material.shader = unlit;
 
+        // add so speech works
+        partyGameObject.AddComponent<UnityEngine.UI.Text>();
+
         /*
         // create the bubble text
         GameObject BubbleText = Instantiate(bubblePrefab);
@@ -2371,6 +2849,24 @@ public class World : MonoBehaviour
             // save the new expanded texture
             expandedTiles[i] = newTile;
         }
+    }
+
+    public void FixMageTile3()
+    {
+        // adjust the pixels on mage tile #3
+        Texture2D currentTile = originalTiles[(int)U4_Decompiled.TILE.MAGE_NPC3];
+
+        // go through all the pixels in the source texture and shift them one pixel
+        for (int height = 0; height < currentTile.height; height++)
+        {
+            for (int width = currentTile.width - 1; width > 0 ; width--)
+            {
+                currentTile.SetPixel(width, height, currentTile.GetPixel((width - 1 + currentTile.width) % currentTile.width, height));
+            }
+        }
+
+        // apply all the previous SetPixel() calls to the texture
+        currentTile.Apply();
     }
 
     public void CreateMap(GameObject mapGameObject, U4_Decompiled.TILE[,] map)
@@ -2613,6 +3109,33 @@ public class World : MonoBehaviour
                 else if (tileIndex == U4_Decompiled.TILE.BRICK_FLOOR_COLUMN)
                 {
                     mapTile = CreatePillar();
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    useExpandedTile = true;
+                    useUIShader = false;
+                }
+                else if (tileIndex == U4_Decompiled.TILE.CASTLE_LEFT)
+                {
+                    mapTile = CreateCastleLeft();
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    useExpandedTile = true;
+                    useUIShader = false;
+                }
+                else if (tileIndex == U4_Decompiled.TILE.CASTLE_RIGHT)
+                {
+                    mapTile = CreateCastleRight();
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    useExpandedTile = true;
+                    useUIShader = false;
+                }
+                else if (tileIndex == U4_Decompiled.TILE.CASTLE_ENTRANCE)
+                {
+                    mapTile = CreateCastleCenter();
                     mapTile.transform.SetParent(terrainGameObject.transform);
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
@@ -3110,6 +3633,36 @@ public class World : MonoBehaviour
                 else if (tileIndex == U4_Decompiled.TILE.BRICK_FLOOR_COLUMN)
                 {
                     mapTile = CreatePillar();
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    useExpandedTile = true;
+                    useUIShader = false;
+                    useLinearTile = false;
+                }
+                else if (tileIndex == U4_Decompiled.TILE.CASTLE_LEFT)
+                {
+                    mapTile = CreateCastleLeft();
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    useExpandedTile = true;
+                    useUIShader = false;
+                    useLinearTile = false;
+                }
+                else if (tileIndex == U4_Decompiled.TILE.CASTLE_RIGHT)
+                {
+                    mapTile = CreateCastleRight();
+                    mapTile.transform.SetParent(terrainGameObject.transform);
+                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    useExpandedTile = true;
+                    useUIShader = false;
+                    useLinearTile = false;
+                }
+                else if (tileIndex == U4_Decompiled.TILE.CASTLE_ENTRANCE)
+                {
+                    mapTile = CreateCastleCenter();
                     mapTile.transform.SetParent(terrainGameObject.transform);
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
@@ -4228,7 +4781,7 @@ public class World : MonoBehaviour
         terrainGameObject.transform.position = position;
         terrainGameObject.transform.rotation = rotation;
 
-        Debug.Log("Combine3 processing time : " + (Time.realtimeSinceStartup - startTime));
+        //Debug.Log("Combine3 processing time : " + (Time.realtimeSinceStartup - startTime));
     }
 
     public void AddFighters(U4_Decompiled.t_68[] currentFighters, U4_Decompiled.tCombat1[] currentCombat)
@@ -4313,6 +4866,14 @@ public class World : MonoBehaviour
             // update the position
             childoffighters.localPosition = new Vector3(currentCombat[fighterIndex]._npcX, 255 - currentCombat[fighterIndex]._npcY, 0);
             childoffighters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+            // make it billboard
+            Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
+            look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+            childoffighters.transform.LookAt(look.transform);
+            Vector3 rot = childoffighters.transform.eulerAngles;
+            childoffighters.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
+
         }
     }
 
@@ -4399,6 +4960,14 @@ public class World : MonoBehaviour
             // update the position
             childofcharacters.localPosition = new Vector3(currentCombat2[characterIndex]._charaX, 255 - currentCombat2[characterIndex]._charaY, 0); // appears to be one off in the Y from the fighters
             childofcharacters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+            // make it billboard
+            Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
+            look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+            childofcharacters.transform.LookAt(look.transform);
+            Vector3 rot = childofcharacters.transform.eulerAngles;
+            childofcharacters.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
+
         }
 
         FindObjectsOfType<MySmoothFollow>()[0].target = characters.transform.GetChild(0);
@@ -4686,6 +5255,13 @@ public class World : MonoBehaviour
                 // update the position
                 childofhits.localPosition = new Vector3(currentHitList[hitIndex].x, 255 - currentHitList[hitIndex].y - 0.01f, 0); // move it slightly in from of the characters and fighters so we can see it.
 
+                // make it billboard
+                Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
+                look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+                childofhits.transform.LookAt(look.transform);
+                Vector3 rot = childofhits.transform.eulerAngles;
+                childofhits.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
+
                 // set as enabled
                 childofhits.gameObject.SetActive(true);
             }
@@ -4876,7 +5452,7 @@ public class World : MonoBehaviour
         checksum += Cast_Ray(ref map, -1,  1, (pos_x - 1), (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN and to the LEFT
         checksum += Cast_Ray(ref map, -1, -1, (pos_x - 1), (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP and to the LEFT
         
-        Debug.Log("Raycast processing time : " + (Time.realtimeSinceStartup - startTime));
+        //Debug.Log("Raycast processing time : " + (Time.realtimeSinceStartup - startTime));
 
         // return the file tile checksum so we can determine if there were any changes from a previous raycase
         return checksum; 
@@ -4930,6 +5506,7 @@ public class World : MonoBehaviour
 
         InitializeEGAPalette();
         LoadTilesEGA();
+        FixMageTile3();
         ExpandTiles();
 
         //InitializeCGAPalette();
