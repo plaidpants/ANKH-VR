@@ -293,14 +293,10 @@ public class World : MonoBehaviour
             new Vector2(1f, 1f),
             new Vector2(0f, 0f),
             new Vector2(1f, 0f),
-            //new Vector2(0f, 0.3125f),
-            //new Vector2(1f, 0.3125f),
             new Vector2(0f, 0.375f),
             new Vector2(1f, 0.375f),
             new Vector2(0f, 0f),
             new Vector2(1f, 0f),
-            //new Vector2(0f, 0.3125f),
-            //new Vector2(1f, 0.3125f),
             new Vector2(0f, 0.375f),
             new Vector2(1f, 0.375f),
             new Vector2(0f, 0.6875f),
@@ -323,7 +319,7 @@ public class World : MonoBehaviour
         MeshRenderer meshRenderer = bridge.AddComponent<MeshRenderer>();
 
         meshFilter.mesh.vertices = new Vector3[]
-        {   
+        {
             new Vector3(-0.5f, -0.5f, -0.5f),
             new Vector3(0.5f, -0.5f, -0.5f),
             new Vector3(-0.5f, -0.1875f, -0.5f),
@@ -362,14 +358,10 @@ public class World : MonoBehaviour
             new Vector2(1f, 0.43f),
             new Vector2(0f, 0.5f),
             new Vector2(1f, 0.5f),
-            //new Vector2(0f, 0.93f),
-            //new Vector2(1f, 0.93f),
             new Vector2(0f, 0.875f),
             new Vector2(1f, 0.875f),
             new Vector2(0f, 0.5f),
             new Vector2(1f, 0.5f),
-            //new Vector2(0f, 0.93f),
-            //new Vector2(1f, 0.93f),
             new Vector2(0f, 0.875f),
             new Vector2(1f, 0.875f),
             new Vector2(0f, 0f),
@@ -1195,7 +1187,7 @@ public class World : MonoBehaviour
         MeshFilter meshFilter = bridge.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = bridge.AddComponent<MeshRenderer>();
 
-        meshFilter.mesh.vertices = new Vector3[] 
+        meshFilter.mesh.vertices = new Vector3[]
         {
             new Vector3(-0.5f, -0.5f, 0.5f),
             new Vector3(0.5f, -0.5f, 0.5f),
@@ -1225,7 +1217,7 @@ public class World : MonoBehaviour
             new Vector3(-0.5f, -0.1875f, -0.5f)
         };
 
-        meshFilter.mesh.triangles = new int[] 
+        meshFilter.mesh.triangles = new int[]
         {
             0, 3, 1,
             3, 0, 2,
@@ -1593,114 +1585,114 @@ public class World : MonoBehaviour
 
         meshFilter.mesh.vertices = new Vector3[]
         {
-new Vector3(-0.5f, -0.5f, -0.375f),
-new Vector3(0.5f, -0.5f, -0.375f),
-new Vector3(-0.5f, 0.5f, -0.375f),
-new Vector3(0.5f, 0.5f, -0.375f),
-new Vector3(-0.5f, -0.5f, 0.375f),
-new Vector3(0.5f, -0.5f, 0.375f),
-new Vector3(-0.5f, 0.5f, 0.375f),
-new Vector3(0.5f, 0.5f, 0.375f),
-new Vector3(-0.375f, -0.5f, 0.375f),
-new Vector3(-0.375f, -0.5f, -2.980232E-08f),
-new Vector3(-0.375f, 0.5f, 0.375f),
-new Vector3(-0.375f, 0.5f, -2.980232E-08f),
-new Vector3(-0.375f, -0.5f, 2.980232E-08f),
-new Vector3(-0.375f, -0.5f, -0.375f),
-new Vector3(-0.375f, 0.5f, 2.980232E-08f),
-new Vector3(-0.375f, 0.5f, -0.375f),
-new Vector3(-0.375f, -0.5f, -2.980232E-08f),
-new Vector3(-0.375f, -0.5f, 0.375f),
-new Vector3(-0.375f, 0.5f, -2.980232E-08f),
-new Vector3(-0.375f, 0.5f, 0.375f),
-new Vector3(-0.375f, -0.5f, -0.375f),
-new Vector3(-0.375f, -0.5f, 2.980232E-08f),
-new Vector3(-0.375f, 0.5f, -0.375f),
-new Vector3(-0.375f, 0.5f, 2.980232E-08f),
-new Vector3(-0.5f, -0.5f, -0.375f),
-new Vector3(0.5f, -0.5f, -0.375f),
-new Vector3(-0.5f, 0.5f, -0.375f),
-new Vector3(0.5f, 0.5f, -0.375f),
-new Vector3(-0.5f, -0.5f, 0.375f),
-new Vector3(0.5f, -0.5f, 0.375f),
-new Vector3(-0.5f, 0.5f, 0.375f),
-new Vector3(0.5f, 0.5f, 0.375f),
-new Vector3(-0.375f, 2.235174E-08f, -0.375f),
-new Vector3(0.5f, 2.235174E-08f, -0.375f),
-new Vector3(-0.375f, -2.235174E-08f, 2.980232E-08f),
-new Vector3(0.5f, -2.235174E-08f, 2.980232E-08f),
-new Vector3(-0.375f, 2.235174E-08f, -2.980232E-08f),
-new Vector3(0.5f, 2.235174E-08f, -2.980232E-08f),
-new Vector3(-0.375f, -2.235174E-08f, 0.375f),
-new Vector3(0.5f, -2.235174E-08f, 0.375f)
+            new Vector3(-0.5f, -0.5f, -0.375f),
+            new Vector3(0.5f, -0.5f, -0.375f),
+            new Vector3(-0.5f, 0.5f, -0.375f),
+            new Vector3(0.5f, 0.5f, -0.375f),
+            new Vector3(-0.5f, -0.5f, 0.375f),
+            new Vector3(0.5f, -0.5f, 0.375f),
+            new Vector3(-0.5f, 0.5f, 0.375f),
+            new Vector3(0.5f, 0.5f, 0.375f),
+            new Vector3(-0.375f, -0.5f, 0.375f),
+            new Vector3(-0.375f, -0.5f, 0.0f),
+            new Vector3(-0.375f, 0.5f, 0.375f),
+            new Vector3(-0.375f, 0.5f, 0.0f),
+            new Vector3(-0.375f, -0.5f, 0.0f),
+            new Vector3(-0.375f, -0.5f, -0.375f),
+            new Vector3(-0.375f, 0.5f, 0.0f),
+            new Vector3(-0.375f, 0.5f, -0.375f),
+            new Vector3(-0.375f, -0.5f, 0.0f),
+            new Vector3(-0.375f, -0.5f, 0.375f),
+            new Vector3(-0.375f, 0.5f, 0.0f),
+            new Vector3(-0.375f, 0.5f, 0.375f),
+            new Vector3(-0.375f, -0.5f, -0.375f),
+            new Vector3(-0.375f, -0.5f, 0.0f),
+            new Vector3(-0.375f, 0.5f, -0.375f),
+            new Vector3(-0.375f, 0.5f, 0.0f),
+            new Vector3(-0.5f, -0.5f, -0.375f),
+            new Vector3(0.5f, -0.5f, -0.375f),
+            new Vector3(-0.5f, 0.5f, -0.375f),
+            new Vector3(0.5f, 0.5f, -0.375f),
+            new Vector3(-0.5f, -0.5f, 0.375f),
+            new Vector3(0.5f, -0.5f, 0.375f),
+            new Vector3(-0.5f, 0.5f, 0.375f),
+            new Vector3(0.5f, 0.5f, 0.375f),
+            new Vector3(-0.375f, 0.0f, -0.375f),
+            new Vector3(0.5f, 0.0f, -0.375f),
+            new Vector3(-0.375f, -0.0f, 0.0f),
+            new Vector3(0.5f, -0.0f, 0.0f),
+            new Vector3(-0.375f, 0.0f, 0.0f),
+            new Vector3(0.5f, 0.0f, 0.0f),
+            new Vector3(-0.375f, -0.0f, 0.375f),
+            new Vector3(0.5f, -0.0f, 0.375f)
         };
 
         meshFilter.mesh.triangles = new int[]
         {
-0, 3, 1,
-3, 0, 2,
-6, 4, 7,
-5, 7, 4,
-8, 11, 9,
-11, 8, 10,
-12, 15, 13,
-15, 12, 14,
-16, 19, 17,
-19, 16, 18,
-20, 23, 21,
-23, 20, 22,
-26, 24, 27,
-25, 27, 24,
-28, 31, 29,
-31, 28, 30,
-32, 35, 33,
-35, 32, 34,
-36, 39, 37,
-39, 36, 38
+            0, 3, 1,
+            3, 0, 2,
+            6, 4, 7,
+            5, 7, 4,
+            8, 11, 9,
+            11, 8, 10,
+            12, 15, 13,
+            15, 12, 14,
+            16, 19, 17,
+            19, 16, 18,
+            20, 23, 21,
+            23, 20, 22,
+            26, 24, 27,
+            25, 27, 24,
+            28, 31, 29,
+            31, 28, 30,
+            32, 35, 33,
+            35, 32, 34,
+            36, 39, 37,
+            39, 36, 38
         };
 
         meshFilter.mesh.uv = new Vector2[]
         {
-new Vector2(0f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0.625f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0.625f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0.625f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0.625f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0.625f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0.625f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0.625f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0.625f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0.125f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0.125f, 0.375f),
-new Vector2(1f, 0.375f),
-new Vector2(0.125f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0.125f, 0.375f),
-new Vector2(1f, 0.375f)
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0.625f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0.625f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0.625f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0.625f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0.625f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0.625f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0.625f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0.625f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0.125f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0.125f, 0.375f),
+            new Vector2(1f, 0.375f),
+            new Vector2(0.125f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0.125f, 0.375f),
+            new Vector2(1f, 0.375f)
         };
 
         return castleLeft;
@@ -1718,114 +1710,114 @@ new Vector2(1f, 0.375f)
 
         meshFilter.mesh.vertices = new Vector3[]
         {
-new Vector3(-0.5f, -0.5f, -0.375f),
-new Vector3(0.5f, -0.5f, -0.375f),
-new Vector3(-0.5f, 0.5f, -0.375f),
-new Vector3(0.5f, 0.5f, -0.375f),
-new Vector3(-0.5f, -0.5f, 0.375f),
-new Vector3(0.5f, -0.5f, 0.375f),
-new Vector3(-0.5f, 0.5f, 0.375f),
-new Vector3(0.5f, 0.5f, 0.375f),
-new Vector3(0.375f, -0.5f, -2.980232E-08f),
-new Vector3(0.375f, -0.5f, 0.375f),
-new Vector3(0.375f, 0.5f, -2.980232E-08f),
-new Vector3(0.375f, 0.5f, 0.375f),
-new Vector3(0.375f, -0.5f, -0.375f),
-new Vector3(0.375f, -0.5f, 2.980232E-08f),
-new Vector3(0.375f, 0.5f, -0.375f),
-new Vector3(0.375f, 0.5f, 2.980232E-08f),
-new Vector3(0.375f, -0.5f, 0.375f),
-new Vector3(0.375f, -0.5f, -2.980232E-08f),
-new Vector3(0.375f, 0.5f, 0.375f),
-new Vector3(0.375f, 0.5f, -2.980232E-08f),
-new Vector3(0.375f, -0.5f, 2.980232E-08f),
-new Vector3(0.375f, -0.5f, -0.375f),
-new Vector3(0.375f, 0.5f, 2.980232E-08f),
-new Vector3(0.375f, 0.5f, -0.375f),
-new Vector3(-0.5f, -0.5f, -0.375f),
-new Vector3(0.5f, -0.5f, -0.375f),
-new Vector3(-0.5f, 0.5f, -0.375f),
-new Vector3(0.5f, 0.5f, -0.375f),
-new Vector3(-0.5f, -0.5f, 0.375f),
-new Vector3(0.5f, -0.5f, 0.375f),
-new Vector3(-0.5f, 0.5f, 0.375f),
-new Vector3(0.5f, 0.5f, 0.375f),
-new Vector3(-0.5f, 2.235174E-08f, -0.375f),
-new Vector3(0.375f, 2.235174E-08f, -0.375f),
-new Vector3(-0.5f, -2.235174E-08f, 2.980232E-08f),
-new Vector3(0.375f, -2.235174E-08f, 2.980232E-08f),
-new Vector3(-0.5f, 2.235174E-08f, -2.980232E-08f),
-new Vector3(0.375f, 2.235174E-08f, -2.980232E-08f),
-new Vector3(-0.5f, -2.235174E-08f, 0.375f),
-new Vector3(0.375f, -2.235174E-08f, 0.375f),
+            new Vector3(-0.5f, -0.5f, -0.375f),
+            new Vector3(0.5f, -0.5f, -0.375f),
+            new Vector3(-0.5f, 0.5f, -0.375f),
+            new Vector3(0.5f, 0.5f, -0.375f),
+            new Vector3(-0.5f, -0.5f, 0.375f),
+            new Vector3(0.5f, -0.5f, 0.375f),
+            new Vector3(-0.5f, 0.5f, 0.375f),
+            new Vector3(0.5f, 0.5f, 0.375f),
+            new Vector3(0.375f, -0.5f, 0.0f),
+            new Vector3(0.375f, -0.5f, 0.375f),
+            new Vector3(0.375f, 0.5f, 0.0f),
+            new Vector3(0.375f, 0.5f, 0.375f),
+            new Vector3(0.375f, -0.5f, -0.375f),
+            new Vector3(0.375f, -0.5f, 0.0f),
+            new Vector3(0.375f, 0.5f, -0.375f),
+            new Vector3(0.375f, 0.5f, 0.0f),
+            new Vector3(0.375f, -0.5f, 0.375f),
+            new Vector3(0.375f, -0.5f, 0.0f),
+            new Vector3(0.375f, 0.5f, 0.375f),
+            new Vector3(0.375f, 0.5f, 0.0f),
+            new Vector3(0.375f, -0.5f, 0.0f),
+            new Vector3(0.375f, -0.5f, -0.375f),
+            new Vector3(0.375f, 0.5f, 0.0f),
+            new Vector3(0.375f, 0.5f, -0.375f),
+            new Vector3(-0.5f, -0.5f, -0.375f),
+            new Vector3(0.5f, -0.5f, -0.375f),
+            new Vector3(-0.5f, 0.5f, -0.375f),
+            new Vector3(0.5f, 0.5f, -0.375f),
+            new Vector3(-0.5f, -0.5f, 0.375f),
+            new Vector3(0.5f, -0.5f, 0.375f),
+            new Vector3(-0.5f, 0.5f, 0.375f),
+            new Vector3(0.5f, 0.5f, 0.375f),
+            new Vector3(-0.5f, 0.0f, -0.375f),
+            new Vector3(0.375f, 0.0f, -0.375f),
+            new Vector3(-0.5f, -0.0f, 0.0f),
+            new Vector3(0.375f, -0.0f, 0.0f),
+            new Vector3(-0.5f, 0.0f, 0.0f),
+            new Vector3(0.375f, 0.0f, 0.0f),
+            new Vector3(-0.5f, -0.0f, 0.375f),
+            new Vector3(0.375f, -0.0f, 0.375f),
         };
 
         meshFilter.mesh.triangles = new int[]
         {
-0, 3, 1,
-3, 0, 2,
-6, 4, 7,
-5, 7, 4,
-8, 11, 9,
-11, 8, 10,
-12, 15, 13,
-15, 12, 14,
-16, 19, 17,
-19, 16, 18,
-20, 23, 21,
-23, 20, 22,
-26, 24, 27,
-25, 27, 24,
-28, 31, 29,
-31, 28, 30,
-32, 35, 33,
-35, 32, 34,
-36, 39, 37,
-39, 36, 38,
+            0, 3, 1,
+            3, 0, 2,
+            6, 4, 7,
+            5, 7, 4,
+            8, 11, 9,
+            11, 8, 10,
+            12, 15, 13,
+            15, 12, 14,
+            16, 19, 17,
+            19, 16, 18,
+            20, 23, 21,
+            23, 20, 22,
+            26, 24, 27,
+            25, 27, 24,
+            28, 31, 29,
+            31, 28, 30,
+            32, 35, 33,
+            35, 32, 34,
+            36, 39, 37,
+            39, 36, 38,
         };
 
         meshFilter.mesh.uv = new Vector2[]
         {
-new Vector2(0f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0f, 1f),
-new Vector2(0.375f, 1f),
-new Vector2(0f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0f, 1f),
-new Vector2(0.375f, 1f),
-new Vector2(0f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0f, 1f),
-new Vector2(0.375f, 1f),
-new Vector2(0f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0f, 1f),
-new Vector2(0.375f, 1f),
-new Vector2(0f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0f, 0f),
-new Vector2(0.875f, 0f),
-new Vector2(0f, 0.375f),
-new Vector2(0.875f, 0.375f),
-new Vector2(0f, 0f),
-new Vector2(0.875f, 0f),
-new Vector2(0f, 0.375f),
-new Vector2(0.875f, 0.375f),
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(0.375f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(0.375f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(0.375f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(0.375f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(0.875f, 0f),
+            new Vector2(0f, 0.375f),
+            new Vector2(0.875f, 0.375f),
+            new Vector2(0f, 0f),
+            new Vector2(0.875f, 0f),
+            new Vector2(0f, 0.375f),
+            new Vector2(0.875f, 0.375f),
         };
 
         return CastleRight;
@@ -1843,236 +1835,227 @@ new Vector2(0.875f, 0.375f),
 
         meshFilter.mesh.vertices = new Vector3[]
         {
-new Vector3(-0.5f, -0.5f, -0.375f),
-new Vector3(0.5f, -0.5f, -0.375f),
-new Vector3(-0.5f, 0.5f, -0.375f),
-new Vector3(0.5f, 0.5f, -0.375f),
-new Vector3(0f, 0f, 0.375f),
-new Vector3(-0.5f, 0f, 0.375f),
-new Vector3(0f, 0.5f, 0.375f),
-new Vector3(-0.5f, 0.5f, 0.375f),
-new Vector3(-0.5f, -0.5f, -0.375f),
-new Vector3(0.5f, -0.5f, -0.375f),
-new Vector3(-0.5f, 0.5f, -0.375f),
-new Vector3(0.5f, 0.5f, -0.375f),
-new Vector3(0f, 0f, 0.375f),
-new Vector3(0.5f, 0f, 0.375f),
-new Vector3(0f, 0.5f, 0.375f),
-new Vector3(0.5f, 0.5f, 0.375f),
-new Vector3(0f, 0f, 0.375f),
-new Vector3(0.5f, 0f, 0.375f),
-new Vector3(0f, 0.5f, 0.375f),
-new Vector3(0.5f, 0.5f, 0.375f),
-new Vector3(0f, 0f, 0.375f),
-new Vector3(-0.5f, 0f, 0.375f),
-new Vector3(0f, 0.5f, 0.375f),
-new Vector3(-0.5f, 0.5f, 0.375f),
-new Vector3(0.25f, -0.5f, 0.375f),
-new Vector3(0.5f, -0.5f, 0.375f),
-new Vector3(0.25f, 0f, 0.375f),
-new Vector3(0.5f, 0f, 0.375f),
-new Vector3(0f, -0.5f, 0.375f),
-new Vector3(0.25f, -0.5f, 0.375f),
-new Vector3(0f, 0f, 0.375f),
-new Vector3(0.25f, 0f, 0.375f),
-new Vector3(-0.25f, -0.5f, 0.375f),
-new Vector3(0f, -0.5f, 0.375f),
-new Vector3(-0.25f, 0f, 0.375f),
-new Vector3(0f, 0f, 0.375f),
-new Vector3(-0.5f, -0.5f, 0.375f),
-new Vector3(-0.25f, -0.5f, 0.375f),
-new Vector3(-0.5f, 0f, 0.375f),
-new Vector3(-0.25f, 0f, 0.375f),
-new Vector3(0.25f, -0.5f, 0.375f),
-new Vector3(0.5f, -0.5f, 0.375f),
-new Vector3(0.25f, 0f, 0.375f),
-new Vector3(0.5f, 0f, 0.375f),
-new Vector3(0f, -0.5f, 0.375f),
-new Vector3(0.25f, -0.5f, 0.375f),
-new Vector3(0f, 0f, 0.375f),
-new Vector3(0.25f, 0f, 0.375f),
-new Vector3(-0.25f, -0.5f, 0.375f),
-new Vector3(0f, -0.5f, 0.375f),
-new Vector3(-0.25f, 0f, 0.375f),
-new Vector3(0f, 0f, 0.375f),
-new Vector3(-0.5f, -0.5f, 0.375f),
-new Vector3(-0.25f, -0.5f, 0.375f),
-new Vector3(-0.5f, 0f, 0.375f),
-new Vector3(-0.25f, 0f, 0.375f),
-new Vector3(0.5f, 2.980232E-08f, 0.375f),
-new Vector3(0.25f, 2.980232E-08f, 0.375f),
-new Vector3(0.5f, -2.980232E-08f, -0.125f),
-new Vector3(0.25f, -2.980232E-08f, -0.125f),
-new Vector3(0.25f, 2.980232E-08f, 0.375f),
-new Vector3(-2.980232E-08f, 2.980232E-08f, 0.375f),
-new Vector3(0.25f, -2.980232E-08f, -0.125f),
-new Vector3(-2.980232E-08f, -2.980232E-08f, -0.125f),
-new Vector3(2.980232E-08f, 2.980232E-08f, 0.375f),
-new Vector3(-0.25f, 2.980232E-08f, 0.375f),
-new Vector3(2.980232E-08f, -2.980232E-08f, -0.125f),
-new Vector3(-0.25f, -2.980232E-08f, -0.125f),
-new Vector3(-0.25f, 2.980232E-08f, 0.375f),
-new Vector3(-0.5f, 2.980232E-08f, 0.375f),
-new Vector3(-0.25f, -2.980232E-08f, -0.125f),
-new Vector3(-0.5f, -2.980232E-08f, -0.125f),
-new Vector3(0f, 3.061617E-17f, -0.375f),
-new Vector3(0f, 3.061617E-17f, -0.125f),
-new Vector3(0.5f, -3.061617E-17f, -0.375f),
-new Vector3(0.5f, -3.061617E-17f, -0.125f),
-new Vector3(-0.5f, 3.061617E-17f, -0.375f),
-new Vector3(-0.5f, 3.061617E-17f, -0.125f),
-new Vector3(0f, -3.061617E-17f, -0.375f),
-new Vector3(0f, -3.061617E-17f, -0.125f),
+            new Vector3(-0.5f, -0.5f, -0.375f),
+            new Vector3(0.5f, -0.5f, -0.375f),
+            new Vector3(-0.5f, 0.5f, -0.375f),
+            new Vector3(0.5f, 0.5f, -0.375f),
+            new Vector3(0f, 0f, 0.375f),
+            new Vector3(-0.5f, 0f, 0.375f),
+            new Vector3(0f, 0.5f, 0.375f),
+            new Vector3(-0.5f, 0.5f, 0.375f),
+            new Vector3(-0.5f, -0.5f, -0.375f),
+            new Vector3(0.5f, -0.5f, -0.375f),
+            new Vector3(-0.5f, 0.5f, -0.375f),
+            new Vector3(0.5f, 0.5f, -0.375f),
+            new Vector3(0f, 0f, 0.375f),
+            new Vector3(0.5f, 0f, 0.375f),
+            new Vector3(0f, 0.5f, 0.375f),
+            new Vector3(0.5f, 0.5f, 0.375f),
+            new Vector3(0f, 0f, 0.375f),
+            new Vector3(0.5f, 0f, 0.375f),
+            new Vector3(0f, 0.5f, 0.375f),
+            new Vector3(0.5f, 0.5f, 0.375f),
+            new Vector3(0f, 0f, 0.375f),
+            new Vector3(-0.5f, 0f, 0.375f),
+            new Vector3(0f, 0.5f, 0.375f),
+            new Vector3(-0.5f, 0.5f, 0.375f),
+            new Vector3(0.25f, -0.5f, 0.375f),
+            new Vector3(0.5f, -0.5f, 0.375f),
+            new Vector3(0.25f, 0f, 0.375f),
+            new Vector3(0.5f, 0f, 0.375f),
+            new Vector3(0f, -0.5f, 0.375f),
+            new Vector3(0.25f, -0.5f, 0.375f),
+            new Vector3(0f, 0f, 0.375f),
+            new Vector3(0.25f, 0f, 0.375f),
+            new Vector3(-0.25f, -0.5f, 0.375f),
+            new Vector3(0f, -0.5f, 0.375f),
+            new Vector3(-0.25f, 0f, 0.375f),
+            new Vector3(0f, 0f, 0.375f),
+            new Vector3(-0.5f, -0.5f, 0.375f),
+            new Vector3(-0.25f, -0.5f, 0.375f),
+            new Vector3(-0.5f, 0f, 0.375f),
+            new Vector3(-0.25f, 0f, 0.375f),
+            new Vector3(0.25f, -0.5f, 0.375f),
+            new Vector3(0.5f, -0.5f, 0.375f),
+            new Vector3(0.25f, 0f, 0.375f),
+            new Vector3(0.5f, 0f, 0.375f),
+            new Vector3(0f, -0.5f, 0.375f),
+            new Vector3(0.25f, -0.5f, 0.375f),
+            new Vector3(0f, 0f, 0.375f),
+            new Vector3(0.25f, 0f, 0.375f),
+            new Vector3(-0.25f, -0.5f, 0.375f),
+            new Vector3(0f, -0.5f, 0.375f),
+            new Vector3(-0.25f, 0f, 0.375f),
+            new Vector3(0f, 0f, 0.375f),
+            new Vector3(-0.5f, -0.5f, 0.375f),
+            new Vector3(-0.25f, -0.5f, 0.375f),
+            new Vector3(-0.5f, 0f, 0.375f),
+            new Vector3(-0.25f, 0f, 0.375f),
+            new Vector3(0.5f, 0.0f, 0.375f),
+            new Vector3(0.25f, 0.0f, 0.375f),
+            new Vector3(0.5f, 0.0f, -0.125f),
+            new Vector3(0.25f, 0.0f, -0.125f),
+            new Vector3(0.25f, 0.0f, 0.375f),
+            new Vector3(0.0f, 0.0f, 0.375f),
+            new Vector3(0.25f, 0.0f, -0.125f),
+            new Vector3(0.0f, 0.0f, -0.125f),
+            new Vector3(0.0f, 0.0f, 0.375f),
+            new Vector3(-0.25f, 0.0f, 0.375f),
+            new Vector3(0.0f, 0.0f, -0.125f),
+            new Vector3(-0.25f, 0.0f, -0.125f),
+            new Vector3(-0.25f, 0.0f, 0.375f),
+            new Vector3(-0.5f, 0.0f, 0.375f),
+            new Vector3(-0.25f, 0.0f, -0.125f),
+            new Vector3(-0.5f, 0.0f, -0.125f),
+            new Vector3(0f, 0.0f, -0.375f),
+            new Vector3(0f, 0.0f, -0.125f),
+            new Vector3(0.5f, 0.0f, -0.375f),
+            new Vector3(0.5f, 0.0f, -0.125f),
+            new Vector3(-0.5f, 0.0f, -0.375f),
+            new Vector3(-0.5f, 0.0f, -0.125f),
+            new Vector3(0f, 0.0f, -0.375f),
+            new Vector3(0f, 0.0f, -0.125f),
         };
 
         meshFilter.mesh.triangles = new int[]
         {
-0, 3, 1,
-3, 0, 2,
-4, 7, 5,
-7, 4, 6,
-10, 8, 11,
-9, 11, 8,
-14, 12, 15,
-13, 15, 12,
-16, 19, 17,
-19, 16, 18,
-22, 20, 23,
-21, 23, 20,
-24, 27, 25,
-27, 24, 26,
-28, 31, 29,
-31, 28, 30,
-32, 35, 33,
-35, 32, 34,
-36, 39, 37,
-39, 36, 38,
-42, 40, 43,
-41, 43, 40,
-46, 44, 47,
-45, 47, 44,
-50, 48, 51,
-49, 51, 48,
-54, 52, 55,
-53, 55, 52,
-56, 59, 57,
-59, 56, 58,
-60, 63, 61,
-63, 60, 62,
-64, 67, 65,
-67, 64, 66,
-68, 71, 69,
-71, 68, 70,
-74, 72, 75,
-73, 75, 72,
-78, 76, 79,
-77, 79, 76,
+            0, 3, 1,
+            3, 0, 2,
+            4, 7, 5,
+            7, 4, 6,
+            10, 8, 11,
+            9, 11, 8,
+            14, 12, 15,
+            13, 15, 12,
+            16, 19, 17,
+            19, 16, 18,
+            22, 20, 23,
+            21, 23, 20,
+            24, 27, 25,
+            27, 24, 26,
+            28, 31, 29,
+            31, 28, 30,
+            32, 35, 33,
+            35, 32, 34,
+            36, 39, 37,
+            39, 36, 38,
+            42, 40, 43,
+            41, 43, 40,
+            46, 44, 47,
+            45, 47, 44,
+            50, 48, 51,
+            49, 51, 48,
+            54, 52, 55,
+            53, 55, 52,
+            56, 59, 57,
+            59, 56, 58,
+            60, 63, 61,
+            63, 60, 62,
+            64, 67, 65,
+            67, 64, 66,
+            68, 71, 69,
+            71, 68, 70,
+            74, 72, 75,
+            73, 75, 72,
+            78, 76, 79,
+            77, 79, 76,
         };
 
         meshFilter.mesh.uv = new Vector2[]
         {
-new Vector2(0f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0.5f, 0.5f),
-new Vector2(1f, 0.5f),
-new Vector2(0.5f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0f, 0f),
-new Vector2(1f, 0f),
-new Vector2(0f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0.5f, 0.5f),
-new Vector2(1f, 0.5f),
-new Vector2(0.5f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0.5f, 0.5f),
-new Vector2(1f, 0.5f),
-new Vector2(0.5f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0.5f, 0.5f),
-new Vector2(1f, 0.5f),
-new Vector2(0.5f, 1f),
-new Vector2(1f, 1f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
-new Vector2(0.125f, 0f),
-new Vector2(0.375f, 0f),
-new Vector2(0.125f, 0.5f),
-new Vector2(0.375f, 0.5f),
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0.5f, 0.5f),
+            new Vector2(1f, 0.5f),
+            new Vector2(0.5f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0.5f, 0.5f),
+            new Vector2(1f, 0.5f),
+            new Vector2(0.5f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0.5f, 0.5f),
+            new Vector2(1f, 0.5f),
+            new Vector2(0.5f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0.5f, 0.5f),
+            new Vector2(1f, 0.5f),
+            new Vector2(0.5f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
+            new Vector2(0.125f, 0f),
+            new Vector2(0.375f, 0f),
+            new Vector2(0.125f, 0.5f),
+            new Vector2(0.375f, 0.5f),
         };
 
         return CastleCenter;
     }
 
-    GameObject CreatePyramid(float height)
+    GameObject CreatePyramid(float height = 1.0f)
     {
         GameObject pyramid = new GameObject("Pyramid");
-        //pyramid.transform.position = Vector3.zero;
-
-        //GameObject pyramid = GameObject.CreatePrimitive(PrimitiveType.Cube);
         pyramid.name = "Pyramid";
 
         MeshFilter meshFilter = pyramid.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = pyramid.AddComponent<MeshRenderer>();
 
-        //MeshFilter meshFilter = pyramid.GetComponent<MeshFilter>();
-
-        Vector3 p0 = new Vector3(0, 0, 0);
-        Vector3 p1 = new Vector3(1, 0, 0);
-        Vector3 p2 = new Vector3(1, 1, 0);
-        Vector3 p3 = new Vector3(0, 1, 0);
         Vector3 p4;
         if (height == 0.0f)
         {
@@ -2082,67 +2065,44 @@ new Vector2(0.375f, 0.5f),
         {
             p4 = new Vector3(0.5f, 0.5f, height);
         }
-        //Vector3 p4 = new Vector3(0.5f, 0.5f, Random.Range(1.0f / Mathf.Sqrt(2), 2.0f));
 
-        Mesh mesh = meshFilter.sharedMesh;
-        if (mesh == null)
+        //meshFilter.mesh = new Mesh();
+        //meshFilter.mesh.Clear();
+        meshFilter.mesh.vertices = new Vector3[] 
         {
-            meshFilter.mesh = new Mesh();
-            mesh = meshFilter.sharedMesh;
-        }
-        mesh.Clear();
-        mesh.vertices = new Vector3[] { p0, p1, p2, p3, p4 };
-        mesh.triangles = new int[] {
+            new Vector3(0, 0, 0),
+            new Vector3(1, 0, 0),
+            new Vector3(1, 1, 0),
+            new Vector3(0, 1, 0), 
+            p4 
+        };
+
+        meshFilter.mesh.triangles = new int[] 
+        {
             4,0,1,
             4,1,2,
             4,2,3,
             4,3,0
-            };
+        };
 
-        Vector2[] uvs = new Vector2[mesh.vertices.Length];
+        Vector2[] uvs = new Vector2[meshFilter.mesh.vertices.Length];
 
         for (int i = 0; i < uvs.Length; i++)
         {
-            uvs[i] = new Vector2(mesh.vertices[i].y, mesh.vertices[i].x);
+            uvs[i] = new Vector2(meshFilter.mesh.vertices[i].y, meshFilter.mesh.vertices[i].x);
         }
 
-        mesh.uv = uvs;
-        mesh.RecalculateNormals();
-        mesh.RecalculateBounds();
-        mesh.Optimize();
-
-        meshFilter.mesh = mesh;
+        meshFilter.mesh.uv = uvs;
+        meshFilter.mesh.RecalculateNormals();
+        meshFilter.mesh.RecalculateBounds();
+        meshFilter.mesh.Optimize();
 
         return pyramid;
     }
 
     bool once = true;
-
     GameObject CreateQuad()
     {
-        /*
-        GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-
-        MeshFilter meshFilter = quad.GetComponent<MeshFilter>();
-
-        if (once)
-        {
-            for (int i = 0; i < meshFilter.mesh.vertices.Length; i++)
-            {
-                Debug.Log("meshFilter.mesh.vertices[" + i + "] = new Vector3(" + meshFilter.mesh.vertices[i].x + "f, " + meshFilter.mesh.vertices[i].y + "f, " + meshFilter.mesh.vertices[i].z + "f);");
-            }
-            for (int i = 0; i < meshFilter.mesh.triangles.Length; i+=3)
-            {
-                Debug.Log("meshFilter.mesh.triangles[" + i + "] = " + meshFilter.mesh.triangles[i] + ", " + meshFilter.mesh.triangles[i + 1] + ", " + meshFilter.mesh.triangles[i + 2] +  ",");
-            }
-            for (int i = 0; i < meshFilter.mesh.uv.Length; i++)
-            {
-                Debug.Log("meshFilter.mesh.uv[" + i + "] = new Vector2(" + meshFilter.mesh.uv[i].x + "f, " + meshFilter.mesh.uv[i].y +"f);");
-            }
-            once = false;
-        }
-        */
-
         GameObject quad = new GameObject("Quad");
 
         quad.name = "Quad";
@@ -2308,6 +2268,8 @@ new Vector2(0.375f, 0.5f),
                         tile == (int)U4_Decompiled.TILE.FOREST ||
                         tile == (int)U4_Decompiled.TILE.COOKING_FIRE ||
                         tile == (int)U4_Decompiled.TILE.SHRINE ||
+                        tile == (int)U4_Decompiled.TILE.ALTAR ||
+                        tile == (int)U4_Decompiled.TILE.CHEST ||
                         tile == (int)U4_Decompiled.TILE.CASTLE ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_LEFT ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_ENTRANCE ||
@@ -2317,11 +2279,11 @@ new Vector2(0.375f, 0.5f),
                         tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM ||
                         tile == (int)U4_Decompiled.TILE.BRIDGE_TOP ||
                         tile == (int)U4_Decompiled.TILE.BRUSH ||
+                        tile == (int)U4_Decompiled.TILE.NIXIE ||
+                        tile == (int)U4_Decompiled.TILE.NIXIE2 ||
                         (tile >= (int)U4_Decompiled.TILE.MISSLE_ATTACK_SMALL && tile <= (int)U4_Decompiled.TILE.MISSLE_ATTACK_RED) ||
                         (tile >= (int)U4_Decompiled.TILE.PARTY && tile <= (int)U4_Decompiled.TILE.SHEPHERD2) ||
                         (tile >= (int)U4_Decompiled.TILE.GUARD && tile <= (int)U4_Decompiled.TILE.LORD_BRITISH2) ||
-                        tile == (int)U4_Decompiled.TILE.NIXIE ||
-                        tile == (int)U4_Decompiled.TILE.NIXIE2 ||
                         (tile >= (int)U4_Decompiled.TILE.SERPENT && tile <= (int)U4_Decompiled.TILE.WATER_SPOUT2) ||
                         (tile >= (int)U4_Decompiled.TILE.BAT && tile <= (int)U4_Decompiled.TILE.TROLL4) ||
                         (tile >= (int)U4_Decompiled.TILE.INSECTS && tile <= (int)U4_Decompiled.TILE.INSECTS4) ||
@@ -2332,7 +2294,7 @@ new Vector2(0.375f, 0.5f),
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // remove the brown line that overlaps the bridge support
-                    else if ((colorIndex == (int)EGA_COLOR.BROWN) &&  tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM && height == 9)
+                    else if ((colorIndex == (int)EGA_COLOR.BROWN) && tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM && height == 9)
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
@@ -2410,7 +2372,7 @@ new Vector2(0.375f, 0.5f),
                             currentTile.SetPixel(width++, currentTile.height - height - 1, color);
                         }
                     }
-                    // everything else just copy all the pixels with no modifications
+                    // everything else just copy all the pixels with no modifications for now
                     else
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, color);
@@ -2429,6 +2391,8 @@ new Vector2(0.375f, 0.5f),
                         tile == (int)U4_Decompiled.TILE.FOREST ||
                         tile == (int)U4_Decompiled.TILE.COOKING_FIRE ||
                         tile == (int)U4_Decompiled.TILE.SHRINE ||
+                        tile == (int)U4_Decompiled.TILE.ALTAR ||
+                        tile == (int)U4_Decompiled.TILE.CHEST ||
                         tile == (int)U4_Decompiled.TILE.CASTLE ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_LEFT ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_ENTRANCE ||
@@ -2438,11 +2402,11 @@ new Vector2(0.375f, 0.5f),
                         tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM ||
                         tile == (int)U4_Decompiled.TILE.BRIDGE_TOP ||
                         tile == (int)U4_Decompiled.TILE.BRUSH ||
+                        tile == (int)U4_Decompiled.TILE.NIXIE ||
+                        tile == (int)U4_Decompiled.TILE.NIXIE2 ||
                         (tile >= (int)U4_Decompiled.TILE.MISSLE_ATTACK_SMALL && tile <= (int)U4_Decompiled.TILE.MISSLE_ATTACK_RED) ||
                         (tile >= (int)U4_Decompiled.TILE.PARTY && tile <= (int)U4_Decompiled.TILE.SHEPHERD2) ||
                         (tile >= (int)U4_Decompiled.TILE.GUARD && tile <= (int)U4_Decompiled.TILE.LORD_BRITISH2) ||
-                        tile == (int)U4_Decompiled.TILE.NIXIE ||
-                        tile == (int)U4_Decompiled.TILE.NIXIE2 ||
                         (tile >= (int)U4_Decompiled.TILE.SERPENT && tile <= (int)U4_Decompiled.TILE.WATER_SPOUT2) ||
                         (tile >= (int)U4_Decompiled.TILE.BAT && tile <= (int)U4_Decompiled.TILE.TROLL4) ||
                         (tile >= (int)U4_Decompiled.TILE.INSECTS && tile <= (int)U4_Decompiled.TILE.INSECTS4) ||
@@ -2531,7 +2495,7 @@ new Vector2(0.375f, 0.5f),
                             currentTile.SetPixel(width++, currentTile.height - height - 1, color);
                         }
                     }
-                    // everything else has not alpha channel
+                    // everything else has no alpha channel defined yet
                     else
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, color);
@@ -2681,9 +2645,11 @@ new Vector2(0.375f, 0.5f),
         }
     }
 
+    [SerializeField]
     U4_Decompiled.TILE[,] entireMapTILEs = new U4_Decompiled.TILE[32 * 8, 32 * 8];
-    GameObject[,] entireMapGameObjects = new GameObject[32 * 8, 32 * 8];
 
+    [SerializeField]
+    GameObject[,] entireMapGameObjects = new GameObject[32 * 8, 32 * 8];
     void LoadWorldMap()
     {
         /*
@@ -2734,6 +2700,553 @@ new Vector2(0.375f, 0.5f),
         }
     }
 
+    // These are different than the map tiles
+    public enum DUNGEON_TILE
+    {
+        NOTHING = 0x00,
+        LADDER_UP = 0x10, // 	Ladder Up
+        LADDER_DOWN = 0x20, // 	Ladder Down
+        LADDER_UP_AND_DOWN = 0x30, // 	Laddr Up & Down
+        TREASURE_CHEST = 0x40, // 	Treasure Chest
+        CEILING_HOLE = 0x50, //	Ceiling Hole
+        FLOOR_HOLE = 0x60, // 	Floor Hole (unused)
+        MAGIC_ORB = 0x70, // 	Magic Orb
+        TRAP_WIND_DARKNESS = 0x80, // 	Winds/Darknes Trap
+        TRAP_FALLING_ROCKS = 0x81, // 	Falling Rock Trap
+        TRAP_PIT = 0x8E, //	Pit Trap
+        FOUNTAIN = 0x90, // 	Plain Fountain
+        FOUNTAIN_HEALING = 0x91, // 	Healing Fountain
+        FOUNTAIN_ACID = 0x92, // 	Acid Fountain
+        FOUNTAIN_CURE = 0x93, // 	Cure Fountain
+        FOUNTAIN_POISIN = 0x94, // 	Poison Fountain
+        FIELD_POISON = 0xA0, // Poison Field
+        FIELD_ENERGY = 0xA1, //  Energy Field
+        FIELD_FIRE = 0xA2, // Fire Field
+        FIELD_SLEEP = 0xA3, //  Sleep Field
+        ALTAR = 0xB0, // Altar
+        DOOR = 0xC0, // Door
+        DUNGEON_ROOM_0 = 0xD0, // D0-DF Dungeon Rooms 0-15
+        DUNGEON_ROOM_1 = 0xD1,
+        DUNGEON_ROOM_2 = 0xD2,
+        DUNGEON_ROOM_3 = 0xD3,
+        DUNGEON_ROOM_4 = 0xD4,
+        DUNGEON_ROOM_5 = 0xD5,
+        DUNGEON_ROOM_6 = 0xD6,
+        DUNGEON_ROOM_7 = 0xD7,
+        DUNGEON_ROOM_8 = 0xD8,
+        DUNGEON_ROOM_9 = 0xD9,
+        DUNGEON_ROOM_10 = 0xDA,
+        DUNGEON_ROOM_11 = 0xDB,
+        DUNGEON_ROOM_12 = 0xDC,
+        DUNGEON_ROOM_13 = 0xDD,
+        DUNGEON_ROOM_14 = 0xDE,
+        DUNGEON_ROOM_15 = 0xDF,
+        DOOR_SECRECT = 0xE0, // Secret Door
+        WALL = 0xF0 //  Wall
+    }
+    public enum DUNGEONS
+    {
+        DECEIT = 0,
+        DESPISE = 1,
+        DESTARD = 2,
+        WRONG = 3,
+        COVETOUS = 4,
+        SHAME = 5,
+        HYTHLOTH = 6,
+        ABYSS = 7,
+        MAX = 8
+    };
+
+    [SerializeField]
+    public struct FLOOR_TRIGGER
+    {
+        public U4_Decompiled.TILE changeTile;
+        public int trigger_x, trigger_y;
+        public int changeTile_x1, changeTile_y1;
+        public int changeTile_x2, changeTile_y2;
+    }
+
+    [SerializeField]
+    public struct DUNGEON_MONSTER
+    {
+        public U4_Decompiled.TILE monster;
+        public int x, y;
+    }
+    [SerializeField]
+    public struct DUNGEON_PARTY_START_LOCATION
+    {
+        public int x, y;
+    }
+    [SerializeField]
+    public struct DUNGEON_ROOM
+    {
+        public FLOOR_TRIGGER[] triggers; // (4 bytes each X 4 triggers possible)
+        public DUNGEON_MONSTER[] monsters; // 16 of them, (0 means no monster and 0's come FIRST)
+        public DUNGEON_PARTY_START_LOCATION[] partyNorthEntry; // 0-7 (north entry)
+        public DUNGEON_PARTY_START_LOCATION[] partyEastEntry; // 0-7 (east entry)
+        public DUNGEON_PARTY_START_LOCATION[] partySouthEntry; // 0-7 (south entry)
+        public DUNGEON_PARTY_START_LOCATION[] partyWestEntry; // 0-7 (west entry)
+        public U4_Decompiled.TILE[,] dungeonRoomMap; // 11x11 map matrix for room
+    }
+    [SerializeField]
+    public struct DUNGEON
+    {
+        public string name;
+        public DUNGEON_TILE[,,] dungeonTILEs; // 8x8x8 map
+        public DUNGEON_ROOM[] dungeonRooms; // 16 or 64 rooms
+    }
+
+    // this is needed to determine which combat map to use for which dungeon tile
+    public int[] convertDungeonTiletoCombat  =
+        { -13, 1, 2, 3, 4, -13, -13, -13, -13, -13, -13, -13, 5, -13, 6, -13 };
+
+    [SerializeField]
+    public DUNGEON[] dungeons = new DUNGEON[(int)DUNGEONS.MAX];
+    void LoadDungeons()
+    {
+        for (int index = 0; index < (int)DUNGEONS.MAX; index++)
+        {
+            int rooms = 0;
+            dungeons[index].name = ((DUNGEONS)index).ToString();
+            dungeons[index].dungeonTILEs = new DUNGEON_TILE[8, 8, 8];
+            if (index == (int)DUNGEONS.ABYSS)
+            {
+                //  Levels 1 & 2 each have 8 rooms
+                //  Levels 3 & 4 each have 8 rooms
+                //  Level 5 has 5 rooms
+                //  Level 6 has 11 rooms
+                //  Level 7 has 4 rooms
+                //  Level 8 has 12 rooms
+                // The D# values still define the order the rooms appear; they simply reset every two dungeon levels. 
+                rooms = 64;
+            }
+            else
+            {
+                rooms = 16;
+            }
+
+            if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + (DUNGEONS)index + ".DNG"))
+            {
+                Debug.Log("Could not find dungeon file " + Application.persistentDataPath + "/u4/" + (DUNGEONS)index + ".DNG");
+                return;
+            }
+
+            // read the file
+            byte[] dungeonFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + "/u4/" + (DUNGEONS)index + ".DNG");
+
+            if (dungeonFileData.Length != 0x200 + 0x100*rooms)
+            {
+                Debug.Log("dungeon file incorrect length " + dungeonFileData.Length);
+                return;
+            }
+
+            int fileIndex = 0;
+
+            for (int z = 0; z < 8; z++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    for (int x = 0; x < 8; x++)
+                    {
+                        dungeons[index].dungeonTILEs[x, 7 - y, z] = (DUNGEON_TILE)dungeonFileData[fileIndex++];
+                    }
+                }
+            }
+
+            dungeons[index].dungeonRooms = new DUNGEON_ROOM[rooms];
+
+            for (int room = 0; room < rooms; room++)
+            {
+                dungeons[index].dungeonRooms[room].triggers = new FLOOR_TRIGGER[4];
+                dungeons[index].dungeonRooms[room].monsters = new DUNGEON_MONSTER[16];
+                dungeons[index].dungeonRooms[room].partyNorthEntry = new DUNGEON_PARTY_START_LOCATION[8];
+                dungeons[index].dungeonRooms[room].partyEastEntry = new DUNGEON_PARTY_START_LOCATION[8];
+                dungeons[index].dungeonRooms[room].partySouthEntry = new DUNGEON_PARTY_START_LOCATION[8];
+                dungeons[index].dungeonRooms[room].partyWestEntry = new DUNGEON_PARTY_START_LOCATION[8];
+                dungeons[index].dungeonRooms[room].dungeonRoomMap = new U4_Decompiled.TILE[11, 11];
+
+                // get the triggers
+                for (int i = 0; i < 4; i++)
+                {
+                    dungeons[index].dungeonRooms[room].triggers[i].changeTile = (U4_Decompiled.TILE)dungeonFileData[fileIndex++];
+                    dungeons[index].dungeonRooms[room].triggers[i].trigger_x = dungeonFileData[fileIndex] >> 4;
+                    dungeons[index].dungeonRooms[room].triggers[i].trigger_y = dungeonFileData[fileIndex++] & 0xf;
+                    dungeons[index].dungeonRooms[room].triggers[i].changeTile_x1 = dungeonFileData[fileIndex] >> 4;
+                    dungeons[index].dungeonRooms[room].triggers[i].changeTile_y1 = dungeonFileData[fileIndex++] & 0xf;
+                    dungeons[index].dungeonRooms[room].triggers[i].changeTile_x2 = dungeonFileData[fileIndex] >> 4;
+                    dungeons[index].dungeonRooms[room].triggers[i].changeTile_y2 = dungeonFileData[fileIndex++] & 0xf;
+                }
+
+                // get the monsters
+                for (int i = 0; i < 16; i++)
+                {
+                    dungeons[index].dungeonRooms[room].monsters[i].monster = (U4_Decompiled.TILE)dungeonFileData[fileIndex++];
+                }
+                for (int i = 0; i < 16; i++)
+                {
+                    dungeons[index].dungeonRooms[room].monsters[i].x = dungeonFileData[fileIndex++];
+                }
+                for (int i = 0; i < 16; i++)
+                {
+                    dungeons[index].dungeonRooms[room].monsters[i].y = dungeonFileData[fileIndex++];
+                }
+
+                // get party start positions
+                for (int i = 0; i < 8; i++)
+                {
+                    dungeons[index].dungeonRooms[room].partyNorthEntry[i].x = dungeonFileData[fileIndex++];
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    dungeons[index].dungeonRooms[room].partyNorthEntry[i].y = dungeonFileData[fileIndex++];
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    dungeons[index].dungeonRooms[room].partyEastEntry[i].x = dungeonFileData[fileIndex++];
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    dungeons[index].dungeonRooms[room].partyEastEntry[i].y = dungeonFileData[fileIndex++];
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    dungeons[index].dungeonRooms[room].partySouthEntry[i].x = dungeonFileData[fileIndex++];
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    dungeons[index].dungeonRooms[room].partySouthEntry[i].y = dungeonFileData[fileIndex++];
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    dungeons[index].dungeonRooms[room].partyWestEntry[i].x = dungeonFileData[fileIndex++];
+                }
+                for (int i = 0; i < 8; i++)
+                {
+                    dungeons[index].dungeonRooms[room].partyWestEntry[i].y = dungeonFileData[fileIndex++];
+                }
+
+                for (int y = 0; y < 11; y++)
+                {
+                    for (int x = 0; x < 11; x++)
+                    {
+                        dungeons[index].dungeonRooms[room].dungeonRoomMap[x, y] = (U4_Decompiled.TILE)dungeonFileData[fileIndex++];
+                    }
+                }
+
+                fileIndex += 7; // skip over unused buffer
+            }
+        }
+    }
+    public void AddMonsters(GameObject dungeonRoomGameObject, ref DUNGEON_ROOM dungeonRoom)
+    {
+        GameObject monstersGameObject = new GameObject("Monsters");
+        monstersGameObject.transform.SetParent(dungeonRoomGameObject.transform);
+
+        // add all the monsters
+        for (int i = 0; i < 16; i++)
+        {
+            U4_Decompiled.TILE  monsterTile = dungeonRoom.monsters[i].monster;
+
+            if (monsterTile != 0)
+            {
+                GameObject monsterGameObject = CreateQuad();
+                monsterGameObject.name = monsterTile.ToString();
+
+                // get the renderer
+                MeshRenderer renderer = monsterGameObject.GetComponent<MeshRenderer>();
+
+                // intially the texture is null
+                renderer.material.mainTexture = null;
+
+                // set the shader
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+
+                // there is at least one case where the dungeon monster tile refers to an energy field.
+                // TODO: see if these are actually monsters or just static objects in the actual game,
+                // for now billboard them like actual monsters.
+                if ((monsterTile >= U4_Decompiled.TILE.POISON_FIELD) && (monsterTile <= U4_Decompiled.TILE.SLEEP_FIELD))
+                {
+                    renderer.material.mainTexture = combinedLinearTexture;
+                    renderer.material.mainTextureOffset = new Vector2((float)((int)monsterTile * 16) / (float)renderer.material.mainTexture.width, 0.0f);
+                    renderer.material.mainTextureScale = new Vector2((float)16.0f / (float)renderer.material.mainTexture.width, 1.0f);
+
+                    Animate1 animate = monsterGameObject.AddComponent<Animate1>();
+                }
+                else
+                {
+                    // add our little animator script and set the tile
+                    Animate3 animate = monsterGameObject.AddComponent<Animate3>();
+                    animate.npcTile = 0;
+                    animate.world = this;
+                    animate.ObjectRenderer = renderer;
+
+                    animate.SetNPCTile(monsterTile);
+                }
+
+                // rotate the monster game object into position after creating
+                monsterGameObject.transform.position = new Vector3(dungeonRoom.monsters[i].x, 10 - dungeonRoom.monsters[i].y, 0);
+                monsterGameObject.transform.eulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+                // make it billboard
+                //Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
+                //look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+                //monsterGameObject.transform.LookAt(look.transform);
+                //Vector3 rot = monsterGameObject.transform.eulerAngles;
+                //monsterGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
+
+                // set this as a parent of the monsters game object
+                monsterGameObject.transform.SetParent(monstersGameObject.transform);
+            }
+        }
+    }
+    public GameObject CreateDungeonRoom(ref DUNGEON_ROOM dungeonRoom)
+    {
+        GameObject mapGameObject = new GameObject();
+        CreateMap(mapGameObject, dungeonRoom.dungeonRoomMap, false);
+        mapGameObject.transform.position = Vector3.zero;
+        mapGameObject.transform.localEulerAngles = Vector3.zero;
+        AddMonsters(mapGameObject, ref dungeonRoom);
+        return mapGameObject;
+    }
+    public void CreateDungeonRooms(GameObject dungeonsRoomsObject)
+    {
+        for (int i = 0; i < (int)DUNGEONS.MAX; i++)
+        {
+            for (int room = 0; room < dungeons[i].dungeonRooms.Length; room++)
+            {
+                GameObject dungeonRoomObject = CreateDungeonRoom(ref dungeons[i].dungeonRooms[room]);
+                dungeonRoomObject.transform.SetParent(dungeonsRoomsObject.transform);
+                dungeonRoomObject.name = ((DUNGEONS)i).ToString() + " room #" + room;
+                dungeonRoomObject.transform.localPosition = new Vector3((room % 16) * 11, 0, (i + (room/16)) * 11);
+                dungeonRoomObject.transform.eulerAngles = new Vector3(90.0f, 0f, 0f);
+            }
+        }
+    }
+    public void CreateDungeons(GameObject dungeonsGameObject)
+    {
+        for (int index = 0; index < (int)DUNGEONS.MAX; index++)
+        {
+            GameObject dungeonGameObject = new GameObject();
+            dungeonGameObject.name = ((DUNGEONS)index).ToString();
+            dungeonGameObject.transform.SetParent(dungeonsGameObject.transform);
+
+            for (int z = 0; z < 8; z++)
+            {
+                GameObject dungeonLevelGameObject = new GameObject();
+                dungeonLevelGameObject.name = ((DUNGEONS)index).ToString() + " Level #" + z;
+                dungeonLevelGameObject.transform.SetParent(dungeonGameObject.transform);
+                for (int y = 0; y < 8; y++)
+                {
+                    for (int x = 0; x < 8; x++)
+                    {
+                        GameObject mapTile;
+                        U4_Decompiled.TILE tileIndex;
+
+                        if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.WALL)
+                        {
+                            mapTile = CreatePartialCube(true, true, true, true);
+                            tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                        }
+                        else if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.NOTHING)
+                        {
+                            mapTile = CreatePartialCube(true, true, true, true);
+                            tileIndex = U4_Decompiled.TILE.LARGE_ROCKS;
+                        }
+                        else if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.LADDER_UP)
+                        {
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.LADDER_UP;
+                        }
+                        else if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.LADDER_DOWN)
+                        {
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.LADDER_DOWN;
+                        }
+                        else if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.LADDER_UP_AND_DOWN)
+                        {
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.LADDER_DOWN; // TODO: need to overlap the up and down tiles, but this will do for now
+                        }
+                        else if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.TREASURE_CHEST)
+                        {
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.CHEST;
+                        }
+                        else if ((dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.FOUNTAIN) ||
+                                (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.FOUNTAIN_CURE) ||
+                                (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.FOUNTAIN_HEALING) ||
+                                (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.FOUNTAIN_POISIN) ||
+                                (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.FOUNTAIN_ACID))
+                        {
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.SHALLOW_WATER;
+                        }
+                        else if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.FIELD_ENERGY)
+                        {
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.ENERGY_FIELD;
+                        }
+                        else if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.FIELD_FIRE)
+                        {
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.FIRE_FIELD;
+                        }
+                        else if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.FIELD_POISON)
+                        {
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.POISON_FIELD;
+                        }
+                        else if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.FIELD_SLEEP)
+                        {
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.SLEEP_FIELD;
+                        }
+                        else if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.DOOR)
+                        {
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.DOOR;
+                        }
+                        else if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.DOOR_SECRECT)
+                        {
+                            mapTile = CreatePartialCube(true, true, true, true);
+                            tileIndex = U4_Decompiled.TILE.SECRET_BRICK_WALL;
+                        }
+                        else if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.ALTAR)
+                        {
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.ALTAR;
+                        }
+                        else if (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.MAGIC_ORB)
+                        {
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.MISSLE_ATTACK_BLUE; // TODO: need to find out what this is??? and find an tile for it.
+                        }
+                        else if ((dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.TRAP_FALLING_ROCKS) ||
+                            (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.TRAP_WIND_DARKNESS) ||
+                            (dungeons[index].dungeonTILEs[x, y, z] == DUNGEON_TILE.TRAP_PIT))
+                        {
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.TILED_FLOOR;
+                        }
+                        else
+                        {
+                            mapTile = CreateQuad(); 
+                            tileIndex = U4_Decompiled.TILE.TILED_FLOOR;
+                        }
+
+                        mapTile.transform.SetParent(dungeonLevelGameObject.transform);
+                        mapTile.transform.localPosition = new Vector3(x, y, 7-z);
+                        Renderer renderer = mapTile.GetComponent<MeshRenderer>();
+                        renderer.material.shader = Shader.Find("Unlit/Transparent Cutout"); 
+                        renderer.material.mainTexture = expandedTiles[(int)tileIndex];
+                        renderer.material.mainTextureOffset = new Vector2((float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
+                        renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
+                    }
+                }
+            }
+
+            // rotate dungeon into place
+            dungeonGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+        }
+    }
+
+    GameObject CreateDungeonBlock(U4_Decompiled.TILE tileIndex)
+    {
+        GameObject dungeonBlockGameObject = new GameObject();
+        dungeonBlockGameObject.name = tileIndex.ToString();
+
+        for (int y = 0; y < 11; y++)
+        {
+            for (int x = 0; x < 11; x++)
+            {
+                GameObject mapTile;
+
+                if (tileIndex == U4_Decompiled.TILE.BRICK_WALL)
+                {
+                    mapTile = CreatePartialCube(true, true, true, true);
+                }
+                else if (tileIndex == U4_Decompiled.TILE.TILED_FLOOR)
+                {
+                    mapTile = CreateQuad();
+                }
+                else
+                {
+                    mapTile = CreateQuad();
+                }
+
+                mapTile.transform.SetParent(dungeonBlockGameObject.transform);
+                mapTile.transform.localPosition = new Vector3(x, y, 0);
+                Renderer renderer = mapTile.GetComponent<MeshRenderer>();
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.mainTexture = expandedTiles[(int)tileIndex];
+                renderer.material.mainTextureOffset = new Vector2((float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
+                renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
+            }
+        }
+
+        // rotate dungeon into place
+        // do this after creating all the blocks
+        //dungeonBlockGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+
+        return dungeonBlockGameObject;
+    }
+    GameObject CreateDungeonExpandedLevel(DUNGEONS dungeon, int level)
+    {
+        GameObject dungeonLevel = new GameObject();
+        dungeonLevel.name = dungeon.ToString() + " Level #" + level;
+
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                GameObject dungeonBlockGameObject;
+                DUNGEON_TILE dungeonTile;
+
+                dungeonTile = dungeons[(int)dungeon].dungeonTILEs[x, y, level];
+                if (dungeonTile == DUNGEON_TILE.WALL)
+                {
+                    dungeonBlockGameObject = CreateDungeonBlock(U4_Decompiled.TILE.BRICK_WALL);
+                    dungeonBlockGameObject.name = dungeonTile.ToString();
+                }
+                else if ((dungeonTile >= DUNGEON_TILE.DUNGEON_ROOM_0) &&
+                        (dungeonTile <= DUNGEON_TILE.DUNGEON_ROOM_15))
+                {
+                    int room;
+                    // special case the ABYSS as it has 64 rooms instead of 16 like the others
+                    if (dungeon == DUNGEONS.ABYSS)
+                    {
+                        room = (int)dungeonTile - (int)DUNGEON_TILE.DUNGEON_ROOM_0 + (level >> 1) * 16;
+                    }
+                    else
+                    {
+                        room = (int)dungeonTile - (int)DUNGEON_TILE.DUNGEON_ROOM_0;
+                    }
+                    dungeonBlockGameObject = CreateDungeonRoom(ref dungeons[(int)dungeon].dungeonRooms[room]);
+                    dungeonBlockGameObject.name = "Room #" + room;
+                }
+                else
+                {
+                    // use a combat map as the dungeon room base on the dungeon tile
+                    int combat = convertDungeonTiletoCombat[(int)dungeons[(int)dungeon].dungeonTILEs[x, y, level] >> 4] + (int)U4_Decompiled.COMBAT_TERRAIN.DNG0;
+                    dungeonBlockGameObject = GameObject.Instantiate(CombatTerrains[combat]);
+                    dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+                    dungeonBlockGameObject.SetActive(true);
+                    dungeonBlockGameObject.name = dungeonTile.ToString();
+                }
+                //else
+                //{
+                //    dungeonBlockGameObject = CreateDungeonBlock(U4_Decompiled.TILE.TILED_FLOOR);
+                //}
+
+                dungeonBlockGameObject.transform.SetParent(dungeonLevel.transform);
+                dungeonBlockGameObject.transform.localPosition = new Vector3(x * 11, y * 11, 0);
+            }
+        }
+
+        dungeonLevel.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+
+        return dungeonLevel;
+    }
     void CreateParty()
     {
         // create player/party object to display texture
@@ -2869,7 +3382,7 @@ new Vector2(0.375f, 0.5f),
         currentTile.Apply();
     }
 
-    public void CreateMap(GameObject mapGameObject, U4_Decompiled.TILE[,] map)
+    public void CreateMap(GameObject mapGameObject, U4_Decompiled.TILE[,] map, bool lookAtCamera = true)
     {
         GameObject terrainGameObject;
         GameObject animatedTerrrainGameObject;
@@ -2977,7 +3490,8 @@ new Vector2(0.375f, 0.5f),
                     useUIShader = false;
                 }
                 // Letters, make into short cubes
-                else if ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE))
+                else if (((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE))
+                    || (tileIndex >= U4_Decompiled.TILE.ARCHITECTURE))
                 {
                     U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
                     U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
@@ -3047,6 +3561,8 @@ new Vector2(0.375f, 0.5f),
                     (tileIndex == U4_Decompiled.TILE.VILLAGE) ||
                     (tileIndex == U4_Decompiled.TILE.RUINS) ||
                     (tileIndex == U4_Decompiled.TILE.ANKH) ||
+                    (tileIndex == U4_Decompiled.TILE.ALTAR) ||
+                    (tileIndex == U4_Decompiled.TILE.CHEST) ||
                     (tileIndex == U4_Decompiled.TILE.LADDER_UP) ||
                     (tileIndex == U4_Decompiled.TILE.LADDER_DOWN) ||
                     (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
@@ -3055,17 +3571,23 @@ new Vector2(0.375f, 0.5f),
                     // create a billboard gameobject
                     //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad); 
                     mapTile = CreateQuad();
+                    mapTile.name = tileIndex.ToString();
                     mapTile.transform.SetParent(billboardTerrrainGameObject.transform);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+                    location = new Vector3(x, map.GetLength(1) - 1 - y + 0.001f, 0.0f); // move it just a bit into the back
                     // need to move it here first and rotate it into place before we can get the results of LookAt()
                     mapTile.transform.localPosition = location;
-                    mapTile.transform.localEulerAngles = new Vector3(-180.0f, -90.0f, 90.0f);
-                    Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these bulboards
-                    look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-                    mapTile.transform.LookAt(look.transform);
-                    //mapTile.transform.forward = new Vector3(Camera.main.transform.forward.x, transform.forward.y, Camera.main.transform.forward.z);
-                    rotation = mapTile.transform.localEulerAngles; // new Vector3(rotx, -90f, 90.0f);
-                    rotation.x = rotation.x - 180.0f;
+                    //mapTile.transform.localEulerAngles = new Vector3(-180.0f, -90.0f, 90.0f);
+                    rotation = new Vector3(-90.0f, 180.0f, 180.0f);
+
+                    if (lookAtCamera)
+                    {
+                        Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these bulboards
+                        look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+                        mapTile.transform.LookAt(look.transform);
+                        //mapTile.transform.forward = new Vector3(Camera.main.transform.forward.x, transform.forward.y, Camera.main.transform.forward.z);
+                        rotation = mapTile.transform.localEulerAngles; // new Vector3(rotx, -90f, 90.0f);
+                        rotation.x = rotation.x - 180.0f;
+                    }
 
                     useExpandedTile = true;
                     useUIShader = true;
@@ -3266,7 +3788,8 @@ new Vector2(0.375f, 0.5f),
                     rotation = Vector3.zero;
                 }
                 // Letters, make into short cubes
-                else if ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE))
+                else if (((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE))
+                    || (tileIndex >= U4_Decompiled.TILE.ARCHITECTURE))
                 {
                     U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
                     U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
@@ -3490,7 +4013,8 @@ new Vector2(0.375f, 0.5f),
                     useLinearTile = false;
                 }
                 // Letters, make into short cubes
-                else if ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE))
+                else if (((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE)) 
+                    || (tileIndex >= U4_Decompiled.TILE.ARCHITECTURE))
                 {
                     U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
                     U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
@@ -4093,7 +4617,7 @@ new Vector2(0.375f, 0.5f),
             //Debug.Log("memory start " + GC_MemoryStart + " end " + GC_MemoryEnd + " diff " + (GC_MemoryEnd - GC_MemoryStart));
 
             // Create a mesh filter and renderer
-            if (staticCount > 1)
+            if (staticCount > 0)
             {
                 filter.mesh = new Mesh();
                 filter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -4237,7 +4761,7 @@ new Vector2(0.375f, 0.5f),
             }
 
             // create a new mesh and combine them if there is anything to combine
-            if (staticCount > 1)
+            if (staticCount > 0)
             {
                 filter.mesh = new Mesh();
                 // the world map has more the 64K elements, need to use 32 bit ints
@@ -5579,6 +6103,20 @@ new Vector2(0.375f, 0.5f),
         Settlements[(int)U4_Decompiled.LOCATIONS.BUCCANEERS_DEN] = GameObject.Find("DEN");
         Settlements[(int)U4_Decompiled.LOCATIONS.VESPER] = GameObject.Find("VESPER");
         Settlements[(int)U4_Decompiled.LOCATIONS.COVE] = GameObject.Find("COVE");
+
+        CreateLinearTextureAtlas(ref originalTiles);
+
+        // load all dungeons
+        LoadDungeons();
+        GameObject dungeonsRoomsGameObject = new GameObject("Dungeon Rooms");
+        CreateDungeonRooms(dungeonsRoomsGameObject);
+        //GameObject dungeonsGameObject = new GameObject("Dungeons");
+        //CreateDungeons(dungeonsGameObject);
+
+        for (int i = 0; i < 8; i++)
+        {
+            GameObject dungeonExpandedLevelGameObject = CreateDungeonExpandedLevel(DUNGEONS.DESPISE, i);
+        }
     }
 
     // Update is called once per frame

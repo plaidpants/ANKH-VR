@@ -134,7 +134,7 @@ public class Animate3 : MonoBehaviour
             ObjectRenderer.material.mainTexture = world.originalTiles[(int)animationFrameIndexes[frame]];
 
             timer -= timerExpired;
-            timerExpired = animationPeriod;
+            timerExpired = Random.Range(0.01f, 1.0f);
         }
     }
 }

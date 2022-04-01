@@ -17,8 +17,9 @@ public class Animate1 : MonoBehaviour
         }
         // if it exists then animate the UV
         else
-        { 
-            waterRenderer.material.mainTextureOffset = new Vector2(0.0f, Time.time * animationPeriod % 1.0f);
+        {
+            
+            waterRenderer.material.mainTextureOffset = new Vector2(waterRenderer.material.mainTextureOffset.x, Time.time * animationPeriod % 1.0f);
         }
     }
 }

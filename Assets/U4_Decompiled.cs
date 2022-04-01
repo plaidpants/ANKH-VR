@@ -613,36 +613,49 @@ public class U4_Decompiled : MonoBehaviour
     };
 
     public tNPC[] _npc = new tNPC[32];
+    public enum SEX
+    {
+        MALE = 0xb,
+        FEMALE = 0xc
+    };
+
+    public enum STATE
+    {
+        GOOD = 'G',
+        POISIONED = 'P',
+        SLEEPING = 'S',
+        DEAD = 'D'
+    };
+
+    public enum CLASS
+    {
+        MAGE = 0,
+        BARD = 1,
+        FIGHTER = 2,
+        DRUID = 3,
+        TINKER = 4,
+        PALADIN = 5,
+        RANGER = 6,
+        SHEPHERD = 7
+    };
 
     [System.Serializable]
-    public struct tChara /*size:0x27*/
+    public struct Character
     {
-        /*+00*/
-        public ushort[] _HP; //2
-        /*+04*/
-        public ushort _XP;
-        /*+06*/
-        public ushort _str;
-        /*+08*/
-        public ushort _dex;
-        /*+0a*/
-        public ushort _int;
-        /*+0c*/
-        public ushort _MP;
-        /*+0e*/
+        public ushort hitPoint;
+        public ushort hitPointsMaximum;
+        public ushort experiencePoints;
+        public ushort strength;
+        public ushort dexterity;
+        public ushort intelligence;
+        public ushort magicPoints;
         public byte[] __0e; //2
-        /*+10*/
-        public WEAPON _weapon;
-        /*+12*/
-        public ARMOR _armor;
-        /*+14*/
-        public string _name; // char _name[16];
-        /*+24*/
-        public byte p_24;/*sex char*/
-        /*+25*/
-        public byte _class;
-        /*+26*/
-        public byte _stat;
+        public WEAPON currentWeapon;
+        public ARMOR currentArmor;
+        public string name; // char _name[16];
+        public SEX sex;
+        public CLASS Class;
+        public STATE state;
     };
 
     [System.Serializable]
@@ -654,7 +667,7 @@ public class U4_Decompiled : MonoBehaviour
         /*+004*/
         public uint _moves;
         /*+008*/
-        public tChara[] chara; //8
+        public Character[] chara; //8
         /*+140*/
         public uint _food;
         /*+144*/
@@ -798,10 +811,9 @@ public class U4_Decompiled : MonoBehaviour
         textDisplay = textGameObject.GetComponent<Text>();
 
         // allocate storage for Party globals
-        Party.chara = new tChara[8];
+        Party.chara = new Character[8];
         for (int i = 0; i < 8; i++)
         {
-            Party.chara[i]._HP = new ushort[2];
             Party.chara[i].__0e = new byte[2];
         }
         Party._armors = new ushort[8];
@@ -1398,22 +1410,22 @@ public class U4_Decompiled : MonoBehaviour
             buffer_index = 0x008;
             for (int i = 0; i < 8; i++)
             {
-                Party.chara[i]._HP[0] = buffer[buffer_index++];
-                Party.chara[i]._HP[1] = buffer[buffer_index++];
-                Party.chara[i]._XP = buffer[buffer_index++];
-                Party.chara[i]._str = buffer[buffer_index++];
-                Party.chara[i]._int = buffer[buffer_index++];
-                Party.chara[i]._MP = buffer[buffer_index++];
+                Party.chara[i].hitPoint = buffer[buffer_index++];
+                Party.chara[i].hitPointsMaximum = buffer[buffer_index++];
+                Party.chara[i].experiencePoints = buffer[buffer_index++];
+                Party.chara[i].strength = buffer[buffer_index++];
+                Party.chara[i].intelligence = buffer[buffer_index++];
+                Party.chara[i].magicPoints = buffer[buffer_index++];
 
                 Party.chara[i].__0e[0] = buffer[buffer_index++];
                 Party.chara[i].__0e[1] = buffer[buffer_index++];
-                Party.chara[i]._weapon = (WEAPON)buffer[buffer_index++];
-                Party.chara[i]._armor = (ARMOR)buffer[buffer_index++];
-                Party.chara[i]._name = "" + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++]
+                Party.chara[i].currentWeapon = (WEAPON)buffer[buffer_index++];
+                Party.chara[i].currentArmor = (ARMOR)buffer[buffer_index++];
+                Party.chara[i].name = "" + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++]
                     + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++];
-                Party.chara[i].p_24 = buffer[buffer_index++];
-                Party.chara[i]._class = buffer[buffer_index++];
-                Party.chara[i]._stat = buffer[buffer_index++];
+                Party.chara[i].sex = (SEX)buffer[buffer_index++];
+                Party.chara[i].Class = (CLASS)buffer[buffer_index++];
+                Party.chara[i].state = (STATE)buffer[buffer_index++];
             }
             Party._food = System.BitConverter.ToUInt32(buffer, 0x140);
             Party._gold = System.BitConverter.ToUInt16(buffer, 0x144);
