@@ -873,7 +873,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582030271}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.88, y: 1.52, z: 7.18}
+  m_LocalPosition: {x: 3.875, y: 1.53125, z: 7.1875}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 246932416}
@@ -1720,7 +1720,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 999847450}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 76.690475, y: 24.85988, z: -0.85604}
+  m_LocalPosition: {x: 76.6875, y: 24.875, z: -0.84375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2558,6 +2558,7 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   worldMapFilepath: /u4/WORLD.MAP
   u4: {fileID: 0}
+  convertDungeonTiletoCombat: f3ffffff01000000020000000300000004000000f3fffffff3fffffff3fffffff3fffffff3fffffff3fffffff3ffffff05000000f3ffffff06000000f3ffffff
   combinedTexture: {fileID: 0}
   combinedMaterial: {fileID: 0}
   textureAtlasPowerOf2: 0
@@ -2569,8 +2570,6 @@ MonoBehaviour:
   adjustx: 0
   adjusty: 0
   adjustz: 0
-  adjust1: -0.5
-  adjust2: -1
   timerPeriod: 0.02
   convertMe: {fileID: 0}
 --- !u!4 &1753957574
@@ -2660,7 +2659,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &2006084672
 Light:
   m_ObjectHideFlags: 0
