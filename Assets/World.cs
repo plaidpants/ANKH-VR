@@ -5311,20 +5311,13 @@ new Vector2(0.5f, 0.625f),
                     (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
                     (tileIndex == U4_Decompiled.TILE.CASTLE))
                 {
-                    // create a billboard gameobject
-                    //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
                     mapTile = CreateQuad();
                     mapTile.transform.SetParent(billboardTerrrainGameObject.transform);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    // need to move it here first and rotate it into place before we can get the results of LookAt()
-                    mapTile.transform.localPosition = location;
-                    mapTile.transform.localEulerAngles = new Vector3(-180.0f, -90.0f, 90.0f);
-                    Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these bulboards
-                    look.position = new Vector3(u4.Party._x, map.GetLength(1) - 1 - (u4.Party._y + 5), 0.0f);
-                    mapTile.transform.LookAt(look.transform);
-                    //mapTile.transform.forward = new Vector3(Camera.main.transform.forward.x, transform.forward.y, Camera.main.transform.forward.z);
-                    rotation = mapTile.transform.localEulerAngles;
-                    rotation = new Vector3(rotation.x + adjustx, rotation.y + adjusty, rotation.z + adjustz);
+                    // put this in a resonable rotation, combine3() will do the actual lookat rotaion just before displaying
+                    rotation = new Vector3(-90.0f, -90.0f, 90.0f);
+
+
 
                     useExpandedTile = true;
                     useUIShader = true;
@@ -5557,7 +5550,6 @@ new Vector2(0.5f, 0.625f),
                 entireMapGameObjects[x, y] = mapTile;
             }
         }
-
     }
 
     public void followWorld()
@@ -6413,6 +6405,7 @@ new Vector2(0.5f, 0.625f),
                         }
                         else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
                             (tileIndex == U4_Decompiled.TILE.TOWN) ||
+                            (tileIndex == U4_Decompiled.TILE.VILLAGE) ||
                             (tileIndex == U4_Decompiled.TILE.ANKH) ||
                             (tileIndex == U4_Decompiled.TILE.LADDER_UP) ||
                             (tileIndex == U4_Decompiled.TILE.LADDER_DOWN) ||
@@ -6464,6 +6457,7 @@ new Vector2(0.5f, 0.625f),
                         else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
                             (tileIndex == U4_Decompiled.TILE.TOWN) ||
                             (tileIndex == U4_Decompiled.TILE.ANKH) ||
+                            (tileIndex == U4_Decompiled.TILE.VILLAGE) ||
                             (tileIndex == U4_Decompiled.TILE.LADDER_UP) ||
                             (tileIndex == U4_Decompiled.TILE.LADDER_DOWN) ||
                             (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
@@ -6474,11 +6468,13 @@ new Vector2(0.5f, 0.625f),
 
                             mapTile.transform.localPosition = Vector3.zero;
                             mapTile.transform.localRotation = Quaternion.identity;
-                            mapTile.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f); //rotate it like it whill be eventually
+                            // temp rotate it like it will be eventually
+                            mapTile.transform.localEulerAngles = new Vector3(-90.0f, 90.0f, -90.0f); 
+                            // get the location of where we will look from so we can create a LookAt() rotation
                             Vector3 look = new Vector3(u4.Party._x - saveLocalPosition.x, 0.0f, (255 - (u4.Party._y + 5)) - saveLocalPosition.y);
                             Quaternion rotation1 = Quaternion.LookRotation(look);
                             mapTile.transform.rotation = rotation1;
-                            mapTile.transform.localEulerAngles = new Vector3(mapTile.transform.localEulerAngles.x - 90.0f + adjustx, mapTile.transform.localEulerAngles.y + adjusty, mapTile.transform.localEulerAngles.z + adjustz); // rotate it back to the way it was
+                            mapTile.transform.localEulerAngles = new Vector3( rotation1.eulerAngles.y + 90f, 90f, - 90f);
 
                             // restore position
                             mapTile.transform.localPosition = saveLocalPosition;
@@ -6506,7 +6502,7 @@ new Vector2(0.5f, 0.625f),
             }
 
             // combine the meshes and set the game object material
-            if (countTerrain > 1)
+            if (countTerrain > 0)
             {
                 terrainFilter.mesh = new Mesh();
                 terrainFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -6516,7 +6512,7 @@ new Vector2(0.5f, 0.625f),
                 terrainRenderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
             }
 
-            if (countAnimatedTerrrain > 1)
+            if (countAnimatedTerrrain > 0)
             {
                 animatedTerrrainFilter.mesh = new Mesh();
                 animatedTerrrainFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -6533,7 +6529,7 @@ new Vector2(0.5f, 0.625f),
                 }
             }
 
-            if (countBillboardTerrrain > 1)
+            if (countBillboardTerrrain > 0)
             {
                 billboardFilter.mesh = new Mesh();
                 billboardFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -6959,11 +6955,6 @@ new Vector2(0.5f, 0.625f),
             }
         }
     }
-
-    public float adjustx;
-    public float adjusty;
-    public float adjustz;
-
     public void AddHits(List<U4_Decompiled.hit> currentHitList)
     {
         // have we finished creating the world
@@ -7536,7 +7527,7 @@ new Vector2(0.5f, 0.625f),
             // if last checksum does not match we need to regenerate the scene because the raycast is different
             // TODO also if we are sitting on a blank tile we are probably surrounded by something like trees so we need to regenerate
             // check if any of the surrounding tiles are emtpy also
-            if (lastChecksum != currentChecksum)
+            //if (lastChecksum != currentChecksum)
             {
                 // save the checksum
                 lastChecksum = currentChecksum;
