@@ -498,6 +498,7 @@ public class U4_Decompiled : MonoBehaviour
         COVE = 16,
 
         // Dungeons
+        DUNGEONS = 17,
         DECEIT = 17,
         DESPISE = 18,
         DESTARD = 19,
@@ -1537,7 +1538,14 @@ public class U4_Decompiled : MonoBehaviour
             // keep the part game object in sync with the game
             if (partyGameObject)
             {
-                partyGameObject.transform.localPosition = new Vector3(Party._x, 255 - Party._y, 0);
+                if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING) || (current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP) || (current_mode == MODE.COMBAT_ROOM))
+                {
+                    partyGameObject.transform.localPosition = new Vector3(Party._x, 255 - Party._y, 0);
+                }
+                else if (current_mode == MODE.DUNGEON)
+                {
+                    partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
+                }
             }
         }
     }
