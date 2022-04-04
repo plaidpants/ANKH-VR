@@ -1712,6 +1712,7 @@ MonoBehaviour:
   hit_time_period: 0.25
   D_96F8: 0
   D_946C: 0
+  rotateTransform: {fileID: 582030273}
 --- !u!4 &999847452
 Transform:
   m_ObjectHideFlags: 0
@@ -2551,6 +2552,7 @@ MonoBehaviour:
   activeCharacter: {fileID: 0}
   hits: {fileID: 0}
   moongate: {fileID: 0}
+  dungeon: {fileID: 0}
   partyGameObject: {fileID: 0}
   Settlements: []
   CombatTerrains: []
@@ -2567,9 +2569,6 @@ MonoBehaviour:
   combinedExpandedTexture: {fileID: 0}
   combinedExpandedMaterial: {fileID: 0}
   textureExpandedAtlasPowerOf2: 0
-  adjustx: 0
-  adjusty: 0
-  adjustz: 0
   timerPeriod: 0.02
   convertMe: {fileID: 0}
 --- !u!4 &1753957574

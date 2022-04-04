@@ -4220,7 +4220,7 @@ new Vector2(0.5f, 0.625f),
         CreateMap(mapGameObject, dungeonRoom.dungeonRoomMap, false);
         mapGameObject.transform.position = Vector3.zero;
         mapGameObject.transform.localEulerAngles = Vector3.zero;
-        AddMonsters(mapGameObject, ref dungeonRoom);
+        //AddMonsters(mapGameObject, ref dungeonRoom);
         return mapGameObject;
     }
     public void CreateDungeonRooms(GameObject dungeonsRoomsObject)
@@ -6879,7 +6879,7 @@ new Vector2(0.5f, 0.625f),
         //Debug.Log("Combine3 processing time : " + (Time.realtimeSinceStartup - startTime));
     }
 
-    public void AddFighters(U4_Decompiled.t_68[] currentFighters, U4_Decompiled.tCombat1[] currentCombat)
+    public void AddFighters(U4_Decompiled.t_68[] currentFighters, U4_Decompiled.tCombat1[] currentCombat, int offsetx = 0, int offsety = 0)
     {
         // have we finished creating the world
         if (fighters == null)
@@ -6959,7 +6959,7 @@ new Vector2(0.5f, 0.625f),
 
 
             // update the position
-            childoffighters.localPosition = new Vector3(currentCombat[fighterIndex]._npcX, 255 - currentCombat[fighterIndex]._npcY, 0);
+            childoffighters.localPosition = new Vector3(currentCombat[fighterIndex]._npcX + offsetx, 255 - currentCombat[fighterIndex]._npcY + offsety, 0);
             childoffighters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
 
             // make it billboard
@@ -6972,7 +6972,7 @@ new Vector2(0.5f, 0.625f),
         }
     }
 
-    public void AddCharacters(U4_Decompiled.tCombat2[] currentCombat2, U4_Decompiled.tParty currentParty, U4_Decompiled.t_68[] currentFighters)
+    public void AddCharacters(U4_Decompiled.tCombat2[] currentCombat2, U4_Decompiled.tParty currentParty, U4_Decompiled.t_68[] currentFighters, int offsetx = 0, int offsety = 0)
     {
         // have we finished creating the world
         if (characters == null)
@@ -7053,7 +7053,7 @@ new Vector2(0.5f, 0.625f),
             childofcharacters.GetComponent<Animate3>().SetNPCTile(npcTile);
   
             // update the position
-            childofcharacters.localPosition = new Vector3(currentCombat2[characterIndex]._charaX, 255 - currentCombat2[characterIndex]._charaY, 0); // appears to be one off in the Y from the fighters
+            childofcharacters.localPosition = new Vector3(currentCombat2[characterIndex]._charaX + offsetx, 255 - currentCombat2[characterIndex]._charaY + offsety, 0); // appears to be one off in the Y from the fighters
             childofcharacters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
 
             // make it billboard
@@ -7062,7 +7062,6 @@ new Vector2(0.5f, 0.625f),
             childofcharacters.transform.LookAt(look.transform);
             Vector3 rot = childofcharacters.transform.eulerAngles;
             childofcharacters.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
-
         }
 
         FindObjectsOfType<MySmoothFollow>()[0].target = characters.transform.GetChild(0);
@@ -7284,7 +7283,7 @@ new Vector2(0.5f, 0.625f),
             }
         }
     }
-    public void AddHits(List<U4_Decompiled.hit> currentHitList)
+    public void AddHits(List<U4_Decompiled.hit> currentHitList, int offsetx = 0, int offsety = 0)
     {
         // have we finished creating the world
         if (hits == null)
@@ -7343,7 +7342,7 @@ new Vector2(0.5f, 0.625f),
                 childofhits.GetComponent<Renderer>().material.mainTexture = originalTiles[(int)hitTile];
 
                 // update the position
-                childofhits.localPosition = new Vector3(currentHitList[hitIndex].x, 255 - currentHitList[hitIndex].y - 0.01f, 0); // move it slightly in from of the characters and fighters so we can see it.
+                childofhits.localPosition = new Vector3(currentHitList[hitIndex].x + offsetx, 255 - currentHitList[hitIndex].y - 0.01f + offsety, 0); // move it slightly in from of the characters and fighters so we can see it.
 
                 // make it billboard
                 Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
@@ -7363,7 +7362,7 @@ new Vector2(0.5f, 0.625f),
         }
     }
 
-    public void AddActiveCharacter(U4_Decompiled.activeCharacter currentActiveCharacter)
+    public void AddActiveCharacter(U4_Decompiled.activeCharacter currentActiveCharacter, int offsetx = 0, int offsety = 0)
     {
         if (activeCharacter == null)
         {
@@ -7389,7 +7388,7 @@ new Vector2(0.5f, 0.625f),
 
         if (currentActiveCharacter.active)
         {
-            Vector3 location = new Vector3(currentActiveCharacter.x, 0.01f, entireMapTILEs.GetLength(1) - 1 - currentActiveCharacter.y);
+            Vector3 location = new Vector3(currentActiveCharacter.x, 0.01f + offsetx, entireMapTILEs.GetLength(1) - 1 - currentActiveCharacter.y + offsety);
             activeCharacter.transform.localPosition = location;
             activeCharacter.SetActive(true);
         }
@@ -7797,7 +7796,7 @@ new Vector2(0.5f, 0.625f),
                     CombatTerrains[i].gameObject.SetActive(false);
                 }
             }
-            else if ((u4.current_mode == U4_Decompiled.MODE.COMBAT)  || (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP /* TODO: this could be the inn or shop or camp need to figure out which */ ) || (u4.current_mode == U4_Decompiled.MODE.COMBAT_ROOM) /* this is a dungeon room */)
+            else if ((u4.current_mode == U4_Decompiled.MODE.COMBAT)  || (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP /* TODO: this could be the inn or shop or camp need to figure out which */ ))
             {
                 AddFighters(u4.Fighters, u4.Combat1);
                 AddCharacters(u4.Combat2, u4.Party, u4.Fighters);
@@ -7825,6 +7824,35 @@ new Vector2(0.5f, 0.625f),
                     {
                         CombatTerrains[i].gameObject.SetActive(false);
                     }
+                }
+            }
+            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_ROOM) /* this is a dungeon room */
+            {
+                AddFighters(u4.Fighters, u4.Combat1, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
+                AddCharacters(u4.Combat2, u4.Party, u4.Fighters, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
+                followWorld();
+                AddHits(u4.currentHits, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
+                AddActiveCharacter(u4.currentActiveCharacter, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
+                terrain.SetActive(false);
+                animatedTerrrain.SetActive(false);
+                billboardTerrrain.SetActive(false);
+                fighters.SetActive(true);
+                characters.SetActive(true);
+                npcs.SetActive(false);
+                party.SetActive(false);
+                moongate.SetActive(false);
+                // check if we have the dungeon already created, create it if not
+                DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled.LOCATIONS.DUNGEONS);
+                if (dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
+                {
+                    Destroy(dungeon);
+                    dungeon = CreateDungeonExpandedLevel(dun, u4.Party._z);
+                }
+                dungeon.SetActive(true);
+
+                for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                {
+                    CombatTerrains[i].gameObject.SetActive(false);
                 }
             }
             else if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
@@ -7867,6 +7895,16 @@ new Vector2(0.5f, 0.625f),
                 }
             }
         }
+
+        
+
+        // make party a billboard
+        Transform look = Camera.main.transform;
+        look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+        partyGameObject.transform.LookAt(look.transform);
+        Vector3 rot = partyGameObject.transform.eulerAngles;
+        partyGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
+
 
         // we've moved, regenerate the raycast, TODO NPCs can also affect the raycast when moving, need to check them also or redo raycast more often
         if ((u4.Party._x != lastRaycastPlayer_posx) || (u4.Party._y != lastRaycastPlayer_posy))
