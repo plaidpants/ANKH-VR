@@ -3865,6 +3865,7 @@ public class World : MonoBehaviour
 
     [SerializeField]
     GameObject[,] entireMapGameObjects = new GameObject[32 * 8, 32 * 8];
+
     void LoadWorldMap()
     {
         /*
@@ -4042,8 +4043,7 @@ public class World : MonoBehaviour
         DOOR_SECRECT = 0xE0, 
         WALL = 0xF0
     */
-    // only the upper nibble defines the dungeon tile, the lower nibble is use for active dungeon monsters
-    //{ -13, 1, 2, 3, 4, -13, -13, -13, -13, -13, -13, -13, -13 /* 5 make secret door just regular hallway */, -13, 6, -13 };
+    // only the upper nibble defines the dungeon tile, the lower nibble is used for active dungeon monsters
     public U4_Decompiled.COMBAT_TERRAIN[] convertDungeonTiletoCombat2  =
     { 
         U4_Decompiled.COMBAT_TERRAIN.DNG0, // NOTHING -> hallway
@@ -4156,7 +4156,7 @@ public class World : MonoBehaviour
                     dungeons[index].dungeonRooms[room].monsters[i].y = dungeonFileData[fileIndex++];
                 }
 
-                // get party start positions
+                // get party start positions for each room entry direction
                 for (int i = 0; i < 8; i++)
                 {
                     dungeons[index].dungeonRooms[room].partyNorthEntry[i].x = dungeonFileData[fileIndex++];
@@ -4277,8 +4277,7 @@ public class World : MonoBehaviour
         {
             for (int i = 0; i < 16; i++) // TODO figure out how many can be in the dungeon level
             {
-                // a child object for each fighters entry in the table
-                //GameObject fighterGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                // a child object for each dungeon monster entry in the table
                 GameObject dungeonMonsterGameObject = CreateQuad();
 
                 // get the renderer
@@ -4291,7 +4290,7 @@ public class World : MonoBehaviour
                 Shader unlit = Shader.Find("Unlit/Transparent Cutout");
                 renderer.material.shader = unlit;
 
-                // add our little animator script and set the tile
+                // add our little animator script and set the tile to zero
                 Animate3 animate = dungeonMonsterGameObject.AddComponent<Animate3>();
                 animate.npcTile = 0;
                 animate.world = this;
@@ -4314,11 +4313,6 @@ public class World : MonoBehaviour
         }
 
         int monsterIndex = 0;
-
-        // TIL_90 + ((bp06 & 0xf) << 2) - 4 + D_8CFA)
-        // D_8CFA is random (0-3)
-        // bp06 is the dungeon tile from x8x8x8
-        // TIL_90 is the rat, first of the 4 tile monsters
 
         // add all the monsters found in the dungeon map
         for (int y = 0; y < 8; y++)
@@ -4430,89 +4424,90 @@ public class World : MonoBehaviour
                     {
                         GameObject mapTile;
                         U4_Decompiled.TILE tileIndex;
+                        DUNGEON_TILE dungeonTile = dungeons[index].dungeonTILEs[z][x, y];
 
-                        if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.WALL)
+                        if (dungeonTile == DUNGEON_TILE.WALL)
                         {
                             mapTile = CreatePartialCube(true, true, true, true);
                             tileIndex = U4_Decompiled.TILE.BRICK_WALL;
                         }
-                        else if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.NOTHING)
+                        else if (dungeonTile == DUNGEON_TILE.NOTHING)
                         {
-                            mapTile = CreatePartialCube(true, true, true, true);
-                            tileIndex = U4_Decompiled.TILE.LARGE_ROCKS;
+                            mapTile = CreateQuad();
+                            tileIndex = U4_Decompiled.TILE.TILED_FLOOR;
                         }
-                        else if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.LADDER_UP)
+                        else if (dungeonTile == DUNGEON_TILE.LADDER_UP)
                         {
                             mapTile = CreateQuad();
                             tileIndex = U4_Decompiled.TILE.LADDER_UP;
                         }
-                        else if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.LADDER_DOWN)
+                        else if (dungeonTile == DUNGEON_TILE.LADDER_DOWN)
                         {
                             mapTile = CreateQuad();
                             tileIndex = U4_Decompiled.TILE.LADDER_DOWN;
                         }
-                        else if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.LADDER_UP_AND_DOWN)
+                        else if (dungeonTile == DUNGEON_TILE.LADDER_UP_AND_DOWN)
                         {
                             mapTile = CreateQuad();
                             tileIndex = U4_Decompiled.TILE.LADDER_DOWN; // TODO: need to overlap the up and down tiles, but this will do for now
                         }
-                        else if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.TREASURE_CHEST)
+                        else if (dungeonTile == DUNGEON_TILE.TREASURE_CHEST)
                         {
                             mapTile = CreateQuad();
                             tileIndex = U4_Decompiled.TILE.CHEST;
                         }
-                        else if ((dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.FOUNTAIN) ||
-                                (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.FOUNTAIN_CURE) ||
-                                (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.FOUNTAIN_HEALING) ||
-                                (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.FOUNTAIN_POISIN) ||
-                                (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.FOUNTAIN_ACID))
+                        else if ((dungeonTile == DUNGEON_TILE.FOUNTAIN) ||
+                                (dungeonTile == DUNGEON_TILE.FOUNTAIN_CURE) ||
+                                (dungeonTile == DUNGEON_TILE.FOUNTAIN_HEALING) ||
+                                (dungeonTile == DUNGEON_TILE.FOUNTAIN_POISIN) ||
+                                (dungeonTile == DUNGEON_TILE.FOUNTAIN_ACID))
                         {
                             mapTile = CreateQuad();
                             tileIndex = U4_Decompiled.TILE.SHALLOW_WATER;
                         }
-                        else if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.FIELD_ENERGY)
+                        else if (dungeonTile == DUNGEON_TILE.FIELD_ENERGY)
                         {
                             mapTile = CreateQuad();
                             tileIndex = U4_Decompiled.TILE.ENERGY_FIELD;
                         }
-                        else if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.FIELD_FIRE)
+                        else if (dungeonTile == DUNGEON_TILE.FIELD_FIRE)
                         {
                             mapTile = CreateQuad();
                             tileIndex = U4_Decompiled.TILE.FIRE_FIELD;
                         }
-                        else if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.FIELD_POISON)
+                        else if (dungeonTile == DUNGEON_TILE.FIELD_POISON)
                         {
                             mapTile = CreateQuad();
                             tileIndex = U4_Decompiled.TILE.POISON_FIELD;
                         }
-                        else if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.FIELD_SLEEP)
+                        else if (dungeonTile == DUNGEON_TILE.FIELD_SLEEP)
                         {
                             mapTile = CreateQuad();
                             tileIndex = U4_Decompiled.TILE.SLEEP_FIELD;
                         }
-                        else if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.DOOR)
+                        else if (dungeonTile == DUNGEON_TILE.DOOR)
                         {
                             mapTile = CreateQuad();
                             tileIndex = U4_Decompiled.TILE.DOOR;
                         }
-                        else if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.DOOR_SECRECT)
+                        else if (dungeonTile == DUNGEON_TILE.DOOR_SECRECT)
                         {
                             mapTile = CreatePartialCube(true, true, true, true);
                             tileIndex = U4_Decompiled.TILE.SECRET_BRICK_WALL;
                         }
-                        else if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.ALTAR)
+                        else if (dungeonTile == DUNGEON_TILE.ALTAR)
                         {
                             mapTile = CreateQuad();
                             tileIndex = U4_Decompiled.TILE.ALTAR;
                         }
-                        else if (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.MAGIC_ORB)
+                        else if (dungeonTile == DUNGEON_TILE.MAGIC_ORB)
                         {
                             mapTile = CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.MISSLE_ATTACK_BLUE; // TODO: need to find out what this is??? and find an tile for it.
+                            tileIndex = U4_Decompiled.TILE.MISSLE_ATTACK_BLUE;
                         }
-                        else if ((dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.TRAP_FALLING_ROCKS) ||
-                            (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.TRAP_WIND_DARKNESS) ||
-                            (dungeons[index].dungeonTILEs[z][x, y] == DUNGEON_TILE.TRAP_PIT))
+                        else if ((dungeonTile == DUNGEON_TILE.TRAP_FALLING_ROCKS) ||
+                            (dungeonTile == DUNGEON_TILE.TRAP_WIND_DARKNESS) ||
+                            (dungeonTile == DUNGEON_TILE.TRAP_PIT))
                         {
                             mapTile = CreateQuad();
                             tileIndex = U4_Decompiled.TILE.TILED_FLOOR;
@@ -4841,6 +4836,7 @@ public class World : MonoBehaviour
                         || (dungeonTile == DUNGEON_TILE.TRAP_WIND_DARKNESS)
                         )
                 {
+                    // TODO figure out what to do with these traps
                     U4_Decompiled.TILE[,] map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level], 
                         ref dungeons[(int)dungeon].dungeonRooms, 
@@ -4860,10 +4856,72 @@ public class World : MonoBehaviour
                         || (dungeonTile == DUNGEON_TILE.FOUNTAIN_HEALING)
                         || (dungeonTile == DUNGEON_TILE.FOUNTAIN_POISIN))
                 {
+                    // TODO make a pretty fountain
                     U4_Decompiled.TILE[,] map = CreateDungeonHallway(
-                        ref dungeons[(int)dungeon].dungeonTILEs[level], 
-                        ref dungeons[(int)dungeon].dungeonRooms, 
+                        ref dungeons[(int)dungeon].dungeonTILEs[level],
+                        ref dungeons[(int)dungeon].dungeonRooms,
                         x, y, level, U4_Decompiled.TILE.SHALLOW_WATER);
+
+                    dungeonBlockGameObject = new GameObject();
+                    CreateMap(dungeonBlockGameObject, map);
+
+                    dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+                    dungeonBlockGameObject.SetActive(true);
+
+                    dungeonBlockGameObject.name = dungeonTile.ToString();
+                }
+                else if (dungeonTile == DUNGEON_TILE.FIELD_ENERGY)
+                {
+                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(
+                        ref dungeons[(int)dungeon].dungeonTILEs[level],
+                        ref dungeons[(int)dungeon].dungeonRooms,
+                        x, y, level, U4_Decompiled.TILE.ENERGY_FIELD);
+
+                    dungeonBlockGameObject = new GameObject();
+                    CreateMap(dungeonBlockGameObject, map);
+
+                    dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+                    dungeonBlockGameObject.SetActive(true);
+
+                    dungeonBlockGameObject.name = dungeonTile.ToString();
+                }
+                else if (dungeonTile == DUNGEON_TILE.FIELD_FIRE)
+                {
+                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(
+                        ref dungeons[(int)dungeon].dungeonTILEs[level],
+                        ref dungeons[(int)dungeon].dungeonRooms,
+                        x, y, level, U4_Decompiled.TILE.FIRE_FIELD);
+
+                    dungeonBlockGameObject = new GameObject();
+                    CreateMap(dungeonBlockGameObject, map);
+
+                    dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+                    dungeonBlockGameObject.SetActive(true);
+
+                    dungeonBlockGameObject.name = dungeonTile.ToString();
+                }
+                else if (dungeonTile == DUNGEON_TILE.FIELD_POISON)
+                {
+                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(
+                        ref dungeons[(int)dungeon].dungeonTILEs[level],
+                        ref dungeons[(int)dungeon].dungeonRooms,
+                        x, y, level, U4_Decompiled.TILE.POISON_FIELD);
+
+                    dungeonBlockGameObject = new GameObject();
+                    CreateMap(dungeonBlockGameObject, map);
+
+                    dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
+                    dungeonBlockGameObject.SetActive(true);
+
+                    dungeonBlockGameObject.name = dungeonTile.ToString();
+                }
+                else if (dungeonTile == DUNGEON_TILE.FIELD_SLEEP)
+                {
+                    // TODO make a pretty fountain
+                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(
+                        ref dungeons[(int)dungeon].dungeonTILEs[level],
+                        ref dungeons[(int)dungeon].dungeonRooms,
+                        x, y, level, U4_Decompiled.TILE.SLEEP_FIELD);
 
                     dungeonBlockGameObject = new GameObject();
                     CreateMap(dungeonBlockGameObject, map);
@@ -4890,6 +4948,7 @@ public class World : MonoBehaviour
                 }
                 else if (dungeonTile == DUNGEON_TILE.MAGIC_ORB)
                 {
+                    // TODO make orb into a billboard
                     U4_Decompiled.TILE[,] map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level], 
                         ref dungeons[(int)dungeon].dungeonRooms, 
@@ -4906,6 +4965,7 @@ public class World : MonoBehaviour
                 }
                 else if (dungeonTile == DUNGEON_TILE.ALTAR)
                 {
+                    // TODO make altar into a billboard
                     U4_Decompiled.TILE[,] map = CreateDungeonHallway(ref dungeons[(int)dungeon].dungeonTILEs[level], 
                         ref dungeons[(int)dungeon].dungeonRooms, 
                         x, y, level, U4_Decompiled.TILE.ALTAR);
@@ -4917,7 +4977,6 @@ public class World : MonoBehaviour
                     dungeonBlockGameObject.SetActive(true);
 
                     dungeonBlockGameObject.name = dungeonTile.ToString();
-
                 }
                 else
                 {
@@ -5019,10 +5078,8 @@ public class World : MonoBehaviour
                     CreateMap(dungeonBlockGameObject, map);
                     dungeonBlockGameObject.name = "Combat map hallway " + ((U4_Decompiled.COMBAT_TERRAIN)combat).ToString();
 
-                    //dungeonBlockGameObject = GameObject.Instantiate(CombatTerrains[combat]);
                     dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     dungeonBlockGameObject.SetActive(true);
-                    //dungeonBlockGameObject.name = dungeonTile.ToString();
                 }
                 //else
                 //{
@@ -5034,7 +5091,7 @@ public class World : MonoBehaviour
             }
         }
 
-        // TODO cannot combine yet as the combat areas are already combined, need to rebuild them into the dungeon
+        // TODO cannot combine yet as the  areas are already combined, need to rebuild them into the dungeon
         //Combine(dungeonLevel);
 
         dungeonLevel.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
@@ -5158,6 +5215,7 @@ public class World : MonoBehaviour
         }
     }
 
+    // TODO fix horse tile also
     public void FixMageTile3()
     {
         // adjust the pixels on mage tile #3
@@ -5497,7 +5555,6 @@ public class World : MonoBehaviour
                 // all other terrain tiles are flat
                 else
                 {
-                    //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
                     mapTile = CreateQuad();
                     // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
                     // TODO may need to have single textures for the three water tiles if we want to use UV animation to show wind direction
@@ -5520,7 +5577,6 @@ public class World : MonoBehaviour
                         useExpandedTile = true;
                         useUIShader = false;
                     }
-
                 }
 
                 mapTile.transform.localEulerAngles = rotation;
@@ -5695,7 +5751,6 @@ public class World : MonoBehaviour
                 // all other terrain tiles are flat
                 else
                 {
-                    //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
                     mapTile = CreateQuad();
 
                     // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
@@ -5713,7 +5768,6 @@ public class World : MonoBehaviour
                         location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                         rotation = Vector3.zero;
                     }
-
                 }
 
                 mapTile.transform.localEulerAngles = rotation;
@@ -5931,8 +5985,6 @@ public class World : MonoBehaviour
                     // put this in a resonable rotation, combine3() will do the actual lookat rotaion just before displaying
                     rotation = new Vector3(-90.0f, -90.0f, 90.0f);
 
-
-
                     useExpandedTile = true;
                     useUIShader = true;
                     useLinearTile = false;
@@ -6050,7 +6102,6 @@ public class World : MonoBehaviour
                 // all other terrain tiles are flat
                 else
                 {
-                    //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
                     mapTile = CreateQuad();
 
                     // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
@@ -6880,7 +6931,6 @@ public class World : MonoBehaviour
         combinedExpandedMaterial.mainTexture = combinedExpandedTexture;
     }
 
-
     private void Combine3(GameObject mapGameObject,
         ref U4_Decompiled.TILE [,] map, 
         int offset_x,
@@ -7246,7 +7296,6 @@ public class World : MonoBehaviour
                 childoffighters.GetComponent<Animate3>().SetNPCTile(U4_Decompiled.TILE.SLEEP);
             }
 
-
             // update the position
             childoffighters.localPosition = new Vector3(currentCombat[fighterIndex]._npcX + offsetx, 255 - currentCombat[fighterIndex]._npcY + offsety, 0);
             childoffighters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
@@ -7257,7 +7306,6 @@ public class World : MonoBehaviour
             childoffighters.transform.LookAt(look.transform);
             Vector3 rot = childoffighters.transform.eulerAngles;
             childoffighters.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
-
         }
     }
 
@@ -7991,7 +8039,7 @@ public class World : MonoBehaviour
 
         
         // create all the dungeons and all the levels
-        /*
+        
         for (int dungeon = 0; dungeon < (int)DUNGEONS.MAX; dungeon++)
         {
             for (int level = 0; level < 8; level++)
@@ -8000,7 +8048,7 @@ public class World : MonoBehaviour
                 dungeonExpandedLevelGameObject.transform.position = new Vector3(dungeon * 100, -level * 10, 0);
             }
         }
-        */
+        
 
         //GameObject dungeonExpandedLevelGameObject = CreateDungeonExpandedLevel(DUNGEONS.DESPISE, 0);
 
