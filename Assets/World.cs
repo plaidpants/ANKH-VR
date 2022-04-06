@@ -25,6 +25,8 @@ public class World : MonoBehaviour
     public GameObject hits;
     public GameObject moongate;
     public GameObject dungeon;
+    public GameObject dungeonMonsters;
+
 
     public GameObject partyGameObject;
 
@@ -3925,6 +3927,7 @@ new Vector2(0.5f, 0.625f),
         CEILING_HOLE = 0x50, //	Ceiling Hole
         FLOOR_HOLE = 0x60, // 	Floor Hole (unused)
         MAGIC_ORB = 0x70, // 	Magic Orb
+        TRAP = 0x80,
         TRAP_WIND_DARKNESS = 0x80, // 	Winds/Darknes Trap
         TRAP_FALLING_ROCKS = 0x81, // 	Falling Rock Trap
         TRAP_PIT = 0x8E, //	Pit Trap
@@ -3933,12 +3936,14 @@ new Vector2(0.5f, 0.625f),
         FOUNTAIN_ACID = 0x92, // 	Acid Fountain
         FOUNTAIN_CURE = 0x93, // 	Cure Fountain
         FOUNTAIN_POISIN = 0x94, // 	Poison Fountain
+        FIELD = 0xa0,
         FIELD_POISON = 0xA0, // Poison Field
         FIELD_ENERGY = 0xA1, //  Energy Field
         FIELD_FIRE = 0xA2, // Fire Field
         FIELD_SLEEP = 0xA3, //  Sleep Field
         ALTAR = 0xB0, // Altar
         DOOR = 0xC0, // Door
+        DUNGEON_ROOM = 0xd0,
         DUNGEON_ROOM_0 = 0xD0, // D0-DF Dungeon Rooms 0-15
         DUNGEON_ROOM_1 = 0xD1,
         DUNGEON_ROOM_2 = 0xD2,
@@ -4011,10 +4016,56 @@ new Vector2(0.5f, 0.625f),
     }
 
     // this is needed to determine which combat map to use for which dungeon tile
-    public int[] convertDungeonTiletoCombat  =
-        { -13, 1, 2, 3, 4, -13, -13, -13, -13, -13, -13, -13, 5, -13, 6, -13 };
+    /*
+        DNG0 = 16, // hallway
+        DNG1 = 17, // ladder up
+        DNG2 = 18, // ladder down
+        DNG3 = 19, // ladder up and down
+        DNG4 = 20, // chest
+        DNG5 = 21, // doorway
+        DNG6 = 22, // secret doorway
+    */
+    /*
+        NOTHING = 0x00,
+        LADDER_UP = 0x10, 
+        LADDER_DOWN = 0x20, 
+        LADDER_UP_AND_DOWN = 0x30, 
+        TREASURE_CHEST = 0x40, 
+        CEILING_HOLE = 0x50,
+        FLOOR_HOLE = 0x60,
+        MAGIC_ORB = 0x70,
+        TRAP = 0x80,
+        FOUNTAIN = 0x90,
+        FIELD = 0xa0,
+        ALTAR = 0xB0, 
+        DOOR = 0xC0, 
+        DUNGEON_ROOM = 0xd0,
+        DOOR_SECRECT = 0xE0, 
+        WALL = 0xF0
+    */
+    // only the upper nibble defines the dungeon tile, the lower nibble is use for active dungeon monsters
+    //{ -13, 1, 2, 3, 4, -13, -13, -13, -13, -13, -13, -13, -13 /* 5 make secret door just regular hallway */, -13, 6, -13 };
+    public U4_Decompiled.COMBAT_TERRAIN[] convertDungeonTiletoCombat2  =
+    { 
+        U4_Decompiled.COMBAT_TERRAIN.DNG0, // NOTHING -> hallway
+        U4_Decompiled.COMBAT_TERRAIN.DNG1, // LADDER_UP -> ladder up
+        U4_Decompiled.COMBAT_TERRAIN.DNG2, // LADDER_DOWN -> ladder down
+        U4_Decompiled.COMBAT_TERRAIN.DNG3, // LADDER_UP_AND_DOWN -> ladder up and down
+        U4_Decompiled.COMBAT_TERRAIN.DNG4, // TREASURE_CHEST -> chest
+        U4_Decompiled.COMBAT_TERRAIN.DNG0, // CEILING_HOLE -> hallway
+        U4_Decompiled.COMBAT_TERRAIN.DNG0, // FLOOR_HOLE -> hallway
+        U4_Decompiled.COMBAT_TERRAIN.DNG0, // MAGIC_ORB -> hallway
+        U4_Decompiled.COMBAT_TERRAIN.DNG0, // TRAP -> hallway
+        U4_Decompiled.COMBAT_TERRAIN.DNG0, // FOUNTAIN -> hallway
+        U4_Decompiled.COMBAT_TERRAIN.DNG0, // FIELD -> hallway
+        U4_Decompiled.COMBAT_TERRAIN.DNG0, // ALTAR -> hallway
+        U4_Decompiled.COMBAT_TERRAIN.DNG5, // DOOR -> doorway 
+        U4_Decompiled.COMBAT_TERRAIN.DNG0, // DUNGEON_ROOM -> hallway
+        U4_Decompiled.COMBAT_TERRAIN.DNG0, // DOOR_SECRECT -> secret doorway  /* DNG6 make secret door just regular hallway as we do the secret door/wall on the ajacent room/hallway */
+        U4_Decompiled.COMBAT_TERRAIN.DNG0  // WALL -> hallway, just in case
+    };
 
-    [SerializeField]
+[SerializeField]
     public DUNGEON[] dungeons = new DUNGEON[(int)DUNGEONS.MAX];
     void LoadDungeons()
     {
@@ -4214,13 +4265,137 @@ new Vector2(0.5f, 0.625f),
             }
         }
     }
+    public void AddDungeonMapMonsters()
+    {
+        // have we finished creating the world
+        if (dungeonMonsters == null)
+        {
+            return;
+        }
+
+        // need to create npc game objects if none are present
+        if (dungeonMonsters.transform.childCount != 16)
+        {
+            for (int i = 0; i < 16; i++) // TODO figure out how many can be in the dungeon level
+            {
+                // a child object for each fighters entry in the table
+                //GameObject fighterGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                GameObject dungeonMonsterGameObject = CreateQuad();
+
+                // get the renderer
+                MeshRenderer renderer = dungeonMonsterGameObject.GetComponent<MeshRenderer>();
+
+                // intially the texture is null
+                renderer.material.mainTexture = null;
+
+                // set the shader
+                Shader unlit = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.shader = unlit;
+
+                // add our little animator script and set the tile
+                Animate3 animate = dungeonMonsterGameObject.AddComponent<Animate3>();
+                animate.npcTile = 0;
+                animate.world = this;
+                animate.ObjectRenderer = renderer;
+
+                // rotate the fighters game object into position after creating
+                Vector3 fightersLocation = new Vector3(0, 255, 0);
+                dungeonMonsterGameObject.transform.localPosition = fightersLocation;
+                dungeonMonsterGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+                // set this as a parent of the fighters game object
+                dungeonMonsterGameObject.transform.SetParent(dungeonMonsters.transform);
+
+                // set as intially disabled
+                dungeonMonsterGameObject.SetActive(false);
+            }
+
+            // rotate characters into place
+            dungeonMonsters.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+        }
+
+        int monsterIndex = 0;
+
+        // TIL_90 + ((bp06 & 0xf) << 2) - 4 + D_8CFA)
+        // D_8CFA is random (0-3)
+        // bp06 is the dungeon tile from x8x8x8
+        // TIL_90 is the rat, first of the 4 tile monsters
+
+        // add all the monsters found in the dungeon map
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                // get a dungeonTile in the dungeon map
+                DUNGEON_TILE dungeonTile = (DUNGEON_TILE)u4.tMap8x8x8[u4.Party._z, y, x];
+
+                // check upper nibble to see if there is anything to render
+                int checkDungeonTile = (int)dungeonTile & 0xf0;
+
+                if (checkDungeonTile == (int)DUNGEON_TILE.TRAP ||
+                    checkDungeonTile == (int)DUNGEON_TILE.FOUNTAIN ||
+                    checkDungeonTile == (int)DUNGEON_TILE.FIELD ||
+                    checkDungeonTile == (int)DUNGEON_TILE.ALTAR || // extra because I don't render these as dungeon monster sprites like the original game
+                    checkDungeonTile == (int)DUNGEON_TILE.MAGIC_ORB || // extra because I don't render these as dungeon monster sprites like the original game
+                    checkDungeonTile >= (int)DUNGEON_TILE.DUNGEON_ROOM)
+                {
+                    continue;
+                }
+
+                // dungeon monster is stored in the low nibble of the dungeon tile
+                // TODO DUNGEONTILE does not account for this.
+                checkDungeonTile = (int)dungeonTile & 0x0f;
+
+                // zero means no monster at that dungeon location
+                if (checkDungeonTile == 0)
+                {
+                    continue;
+                }
+
+                // convert the monster nibble into a map tile
+                U4_Decompiled.TILE monsterTile = (U4_Decompiled.TILE)((checkDungeonTile << 2) - 4 + U4_Decompiled.TILE.RAT);
+
+                // did we create enough monster child game objects
+                if (monsterIndex < dungeonMonsters.transform.childCount)
+                {
+                    // get the corresponding monster game object
+                    Transform childofmonsters = dungeonMonsters.transform.GetChild(monsterIndex++);
+
+                    // set it active
+                    childofmonsters.gameObject.SetActive(true);
+
+                    // update the tile of the game object
+                    childofmonsters.GetComponent<Animate3>().SetNPCTile(monsterTile);
+
+                    // update the position
+                    childofmonsters.localPosition = new Vector3(x * 11 + 5, (7 - y) * 11 + 5, 0);
+                    childofmonsters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+                    // make it billboard
+                    Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
+                    look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+                    childofmonsters.transform.LookAt(look.transform);
+                    Vector3 rot = childofmonsters.transform.eulerAngles;
+                    childofmonsters.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
+                } 
+            }
+        }
+
+        // set any remaining monsters to not active
+        for (; monsterIndex < dungeonMonsters.transform.childCount; monsterIndex++)
+        {
+            // get the corresponding monster game object
+            Transform childofmonsters = dungeonMonsters.transform.GetChild(monsterIndex);
+            childofmonsters.gameObject.SetActive(false);
+        }
+    }
     public GameObject CreateDungeonRoom(ref DUNGEON_ROOM dungeonRoom)
     {
         GameObject mapGameObject = new GameObject();
         CreateMap(mapGameObject, dungeonRoom.dungeonRoomMap, false);
         mapGameObject.transform.position = Vector3.zero;
         mapGameObject.transform.localEulerAngles = Vector3.zero;
-        //AddMonsters(mapGameObject, ref dungeonRoom);
+        AddMonsters(mapGameObject, ref dungeonRoom);
         return mapGameObject;
     }
     public void CreateDungeonRooms(GameObject dungeonsRoomsObject)
@@ -4395,21 +4570,49 @@ new Vector2(0.5f, 0.625f),
                 }
 
                 // walls
-                if ((left == DUNGEON_TILE.WALL) && (y == 1))
+                if (((left == DUNGEON_TILE.WALL) || (left == DUNGEON_TILE.DOOR_SECRECT)) && (y == 1))
                 {
-                    tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                    if ((x == 5) && (left == DUNGEON_TILE.DOOR_SECRECT))
+                    {
+                        tileIndex = U4_Decompiled.TILE.SECRET_BRICK_WALL;
+                    }
+                    else
+                    {
+                        tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                    }
                 }
-                if ((above == DUNGEON_TILE.WALL) && (x == 1))
+                if (((above == DUNGEON_TILE.WALL) || (above == DUNGEON_TILE.DOOR_SECRECT)) && (x == 1))
                 {
-                    tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                    if ((y == 5) && (above == DUNGEON_TILE.DOOR_SECRECT))
+                    {
+                        tileIndex = U4_Decompiled.TILE.SECRET_BRICK_WALL;
+                    }
+                    else
+                    {
+                        tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                    }
                 }
-                if ((right == DUNGEON_TILE.WALL) && (x == 9))
+                if (((right == DUNGEON_TILE.WALL) || (right == DUNGEON_TILE.DOOR_SECRECT)) && (x == 9))
                 {
-                    tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                    if ((y == 5) && (right == DUNGEON_TILE.DOOR_SECRECT))
+                    {
+                        tileIndex = U4_Decompiled.TILE.SECRET_BRICK_WALL;
+                    }
+                    else
+                    {
+                        tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                    }
                 }
-                if ((below == DUNGEON_TILE.WALL) && (y == 9))
+                if (((below == DUNGEON_TILE.WALL) || (below == DUNGEON_TILE.DOOR_SECRECT)) && (y == 9))
                 {
-                    tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                    if ((x == 5) && (below == DUNGEON_TILE.DOOR_SECRECT))
+                    {
+                        tileIndex = U4_Decompiled.TILE.SECRET_BRICK_WALL;
+                    }
+                    else
+                    {
+                        tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                    }
                 }
 
                 // rooms
@@ -4497,35 +4700,35 @@ new Vector2(0.5f, 0.625f),
                 }
 
                 //corners
-                if ((x <= 1) && (y <= 1) && (diagonalLeftAbove == DUNGEON_TILE.WALL))
+                if ((x <= 1) && (y <= 1) && ((diagonalLeftAbove == DUNGEON_TILE.WALL) || (diagonalLeftAbove == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalLeftAbove >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalLeftAbove <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
                     tileIndex = U4_Decompiled.TILE.BRICK_WALL;
                 }
-                if ((x >= 9) && (y <= 1) && (diagonalRightAbove == DUNGEON_TILE.WALL))
+                if ((x >= 9) && (y <= 1) && ((diagonalRightAbove == DUNGEON_TILE.WALL) || (diagonalRightAbove == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalRightAbove >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalRightAbove <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
                     tileIndex = U4_Decompiled.TILE.BRICK_WALL;
                 }
-                if ((x >= 9) && (y >= 9) && (diagonalRightBelow == DUNGEON_TILE.WALL))
+                if ((x >= 9) && (y >= 9) && ((diagonalRightBelow == DUNGEON_TILE.WALL) || (diagonalRightBelow == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalRightBelow >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalRightBelow <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
                     tileIndex = U4_Decompiled.TILE.BRICK_WALL;
                 }
-                if ((x <= 1) && (y >= 9) && (diagonalLeftBelow == DUNGEON_TILE.WALL))
+                if ((x <= 1) && (y >= 9) && ((diagonalLeftBelow == DUNGEON_TILE.WALL) || (diagonalLeftBelow == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalLeftBelow >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalLeftBelow <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
                     tileIndex = U4_Decompiled.TILE.BRICK_WALL;
                 }
-                if ((x == 0) && (y == 0) && (diagonalLeftAbove == DUNGEON_TILE.WALL))
+                if ((x == 0) && (y == 0) && ((diagonalLeftAbove == DUNGEON_TILE.WALL) || (diagonalLeftAbove == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalLeftAbove >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalLeftAbove <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
                     tileIndex = U4_Decompiled.TILE.BLANK;
                 }
-                if ((x == 10) && (y == 0) && (diagonalRightAbove == DUNGEON_TILE.WALL))
+                if ((x == 10) && (y == 0) && ((diagonalRightAbove == DUNGEON_TILE.WALL) || (diagonalRightAbove == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalRightAbove >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalRightAbove <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
                     tileIndex = U4_Decompiled.TILE.BLANK;
                 }
-                if ((x == 10) && (y == 10) && (diagonalRightBelow == DUNGEON_TILE.WALL))
+                if ((x == 10) && (y == 10) && ((diagonalRightBelow == DUNGEON_TILE.WALL) || (diagonalRightBelow == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalRightBelow >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalRightBelow <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
                     tileIndex = U4_Decompiled.TILE.BLANK;
                 }
-                if ((x == 0) && (y == 10) && (diagonalLeftBelow == DUNGEON_TILE.WALL))
+                if ((x == 0) && (y == 10) && ((diagonalLeftBelow == DUNGEON_TILE.WALL) || (diagonalLeftBelow == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalLeftBelow >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalLeftBelow <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
                     tileIndex = U4_Decompiled.TILE.BLANK;
                 }
@@ -4604,9 +4807,13 @@ new Vector2(0.5f, 0.625f),
             for (int x = 0; x < 8; x++)
             {
                 GameObject dungeonBlockGameObject;
-                DUNGEON_TILE dungeonTile;
 
-                dungeonTile = dungeons[(int)dungeon].dungeonTILEs[level][x, y];
+                DUNGEON_TILE dungeonTile = dungeons[(int)dungeon].dungeonTILEs[level][x, y];
+                DUNGEON_TILE aboveDungeonTile = dungeons[(int)dungeon].dungeonTILEs[level][x, (y - 1 + 8) % 8];
+                DUNGEON_TILE belowDungeonTile = dungeons[(int)dungeon].dungeonTILEs[level][x, (y + 1) % 8];
+                DUNGEON_TILE leftDungeonTile = dungeons[(int)dungeon].dungeonTILEs[level][(x - 1 + 8) % 8, y];
+                DUNGEON_TILE rightDungeonTile = dungeons[(int)dungeon].dungeonTILEs[level][(x + 1) % 8, y];
+
                 if (dungeonTile == DUNGEON_TILE.WALL)
                 {
                     //dungeonBlockGameObject = CreateDungeonBlock(U4_Decompiled.TILE.BRICK_WALL);
@@ -4716,17 +4923,96 @@ new Vector2(0.5f, 0.625f),
                 else
                 {
                     // use a combat map as the dungeon room base on the dungeon tile
-                    int combat = convertDungeonTiletoCombat[(int)dungeons[(int)dungeon].dungeonTILEs[level][x, y] >> 4] + (int)U4_Decompiled.COMBAT_TERRAIN.DNG0;
+                    int combat = (int)convertDungeonTiletoCombat2[(int)dungeons[(int)dungeon].dungeonTILEs[level][x, y] >> 4];
 
                     // get a halway that fits
                     U4_Decompiled.TILE[,] map = CreateDungeonHallway(ref dungeons[(int)dungeon].dungeonTILEs[level], ref dungeons[(int)dungeon].dungeonRooms, x, y, level);
 
-                    // copy the center of the combat map into the hallway
-                    for (int copy_y = 2; copy_y < 9; copy_y++)
+                    // check if we need to flip the door map
+                    if ((dungeonTile == DUNGEON_TILE.DOOR) && 
+                        (aboveDungeonTile == DUNGEON_TILE.WALL) && 
+                        (belowDungeonTile == DUNGEON_TILE.WALL) && 
+                        (leftDungeonTile != DUNGEON_TILE.WALL) && 
+                        (rightDungeonTile != DUNGEON_TILE.WALL))
                     {
-                        for (int copy_x = 2; copy_x < 9; copy_x++)
+                        // copy the center of the combat map into the hallway
+                        for (int copy_y = 2; copy_y < 9; copy_y++)
                         {
-                            map[copy_x, copy_y] = combatMaps[combat][copy_x, copy_y];
+                            for (int copy_x = 2; copy_x < 9; copy_x++)
+                            {
+                                map[copy_x, copy_y] = combatMaps[combat][copy_y, copy_x]; // need to flip the door map
+                            }
+                        }
+                    }
+                    else if ((dungeonTile == DUNGEON_TILE.DOOR) &&
+                        (aboveDungeonTile == DUNGEON_TILE.WALL) &&
+                        (belowDungeonTile != DUNGEON_TILE.WALL) &&
+                        (leftDungeonTile != DUNGEON_TILE.WALL) &&
+                        (rightDungeonTile != DUNGEON_TILE.WALL))
+                    {
+                        // copy half of the combat map into the hallway
+                        for (int copy_y = 5; copy_y < 9; copy_y++)
+                        {
+                            for (int copy_x = 2; copy_x < 9; copy_x++)
+                            {
+                                map[copy_x, copy_y] = combatMaps[combat][copy_y, copy_x];
+                            }
+                        }
+                    }
+                    else if ((dungeonTile == DUNGEON_TILE.DOOR) &&
+                       (aboveDungeonTile != DUNGEON_TILE.WALL) &&
+                       (belowDungeonTile == DUNGEON_TILE.WALL) &&
+                       (leftDungeonTile != DUNGEON_TILE.WALL) &&
+                       (rightDungeonTile != DUNGEON_TILE.WALL))
+                    {
+                        // copy half of the combat map into the hallway
+                        for (int copy_y = 2; copy_y < 6; copy_y++)
+                        {
+                            for (int copy_x = 2; copy_x < 9; copy_x++)
+                            {
+                                map[copy_x, copy_y] = combatMaps[combat][copy_y, copy_x];
+                            }
+                        }
+                    }
+                    else if ((dungeonTile == DUNGEON_TILE.DOOR) &&
+                      (aboveDungeonTile != DUNGEON_TILE.WALL) &&
+                      (belowDungeonTile != DUNGEON_TILE.WALL) &&
+                      (leftDungeonTile == DUNGEON_TILE.WALL) &&
+                      (rightDungeonTile != DUNGEON_TILE.WALL))
+                    {
+                        // copy half of the combat map into the hallway
+                        for (int copy_y = 5; copy_y < 9; copy_y++)
+                        {
+                            for (int copy_x = 2; copy_x < 9; copy_x++)
+                            {
+                                map[copy_x, copy_y] = combatMaps[combat][copy_x, copy_y];
+                            }
+                        }
+                    }
+                    else if ((dungeonTile == DUNGEON_TILE.DOOR) &&
+                      (aboveDungeonTile != DUNGEON_TILE.WALL) &&
+                      (belowDungeonTile != DUNGEON_TILE.WALL) &&
+                      (leftDungeonTile != DUNGEON_TILE.WALL) &&
+                      (rightDungeonTile == DUNGEON_TILE.WALL))
+                    {
+                        // copy half of the combat map into the hallway
+                        for (int copy_y = 2; copy_y < 6; copy_y++)
+                        {
+                            for (int copy_x = 2; copy_x < 9; copy_x++)
+                            {
+                                map[copy_x, copy_y] = combatMaps[combat][copy_x, copy_y];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // copy the center of the combat map into the hallway
+                        for (int copy_y = 2; copy_y < 9; copy_y++)
+                        {
+                            for (int copy_x = 2; copy_x < 9; copy_x++)
+                            {
+                                map[copy_x, copy_y] = combatMaps[combat][copy_x, copy_y];
+                            }
                         }
                     }
 
@@ -7388,7 +7674,7 @@ new Vector2(0.5f, 0.625f),
 
         if (currentActiveCharacter.active)
         {
-            Vector3 location = new Vector3(currentActiveCharacter.x, 0.01f + offsetx, entireMapTILEs.GetLength(1) - 1 - currentActiveCharacter.y + offsety);
+            Vector3 location = new Vector3(currentActiveCharacter.x + offsetx, 0.01f, entireMapTILEs.GetLength(1) - 1 - currentActiveCharacter.y + offsety);
             activeCharacter.transform.localPosition = location;
             activeCharacter.SetActive(true);
         }
@@ -7600,6 +7886,10 @@ new Vector2(0.5f, 0.625f),
         dungeon.transform.SetParent(transform);
         dungeon.transform.localPosition = Vector3.zero;
         dungeon.transform.localRotation = Quaternion.identity;
+        dungeonMonsters = new GameObject("dungeon monsters");
+        dungeonMonsters.transform.SetParent(transform);
+        dungeonMonsters.transform.localPosition = Vector3.zero;
+        dungeonMonsters.transform.localRotation = Quaternion.identity;
 
         InitializeEGAPalette();
         LoadTilesEGA();
@@ -7696,8 +7986,9 @@ new Vector2(0.5f, 0.625f),
         //CreateDungeons(dungeonsGameObject);
         */
 
-        /*
+        
         // create all the dungeons and all the levels
+        /*
         for (int dungeon = 0; dungeon < (int)DUNGEONS.MAX; dungeon++)
         {
             for (int level = 0; level < 8; level++)
@@ -7768,6 +8059,7 @@ new Vector2(0.5f, 0.625f),
                 party.SetActive(true);
                 moongate.SetActive(true);
                 dungeon.SetActive(false);
+                dungeonMonsters.SetActive(false);
 
                 for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
                 {
@@ -7790,6 +8082,7 @@ new Vector2(0.5f, 0.625f),
                 party.SetActive(true);
                 moongate.SetActive(false);
                 dungeon.SetActive(false);
+                dungeonMonsters.SetActive(false);
 
                 for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
                 {
@@ -7811,8 +8104,19 @@ new Vector2(0.5f, 0.625f),
                 party.SetActive(false);
                 moongate.SetActive(false);
                 dungeon.SetActive(false);
+                dungeonMonsters.SetActive(false);
 
-                int currentCombatTerrain = (int)u4.Convert_Tile_to_Combat_Terrian(u4.current_tile);
+                int currentCombatTerrain;
+
+                if ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
+                {
+                      currentCombatTerrain = (int)convertDungeonTiletoCombat2[(int)u4.current_tile >> 4];
+                    //currentCombatTerrain = convertDungeonTiletoCombat[(int)dungeons[(int)u4.Party._loc - (int)U4_Decompiled.COMBAT_TERRAIN.DNG0].dungeonTILEs[u4.Party._z][u4.Party._x, 7 - u4.Party._y] >> 4] + (int)U4_Decompiled.COMBAT_TERRAIN.DNG0;
+                }
+                else
+                {
+                    currentCombatTerrain = (int)u4.Convert_Tile_to_Combat_Terrian(u4.current_tile);
+                }
 
                 for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
                 {
@@ -7841,6 +8145,7 @@ new Vector2(0.5f, 0.625f),
                 npcs.SetActive(false);
                 party.SetActive(false);
                 moongate.SetActive(false);
+                dungeonMonsters.SetActive(false);
                 // check if we have the dungeon already created, create it if not
                 DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled.LOCATIONS.DUNGEONS);
                 if (dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
@@ -7861,6 +8166,7 @@ new Vector2(0.5f, 0.625f),
                 followWorld();
                 AddHits(u4.currentHits);
                 AddActiveCharacter(u4.currentActiveCharacter);
+                AddDungeonMapMonsters();
                 terrain.SetActive(false);
                 animatedTerrrain.SetActive(false);
                 billboardTerrrain.SetActive(false);
@@ -7869,6 +8175,7 @@ new Vector2(0.5f, 0.625f),
                 npcs.SetActive(false);
                 party.SetActive(true);
                 moongate.SetActive(false);
+                dungeonMonsters.SetActive(true);
                 // check if we have the dungeon already created, create it if not
                 DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled.LOCATIONS.DUNGEONS);
                 if (dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
@@ -7896,15 +8203,12 @@ new Vector2(0.5f, 0.625f),
             }
         }
 
-        
-
         // make party a billboard
         Transform look = Camera.main.transform;
         look.position = new Vector3(look.position.x, 0.0f, look.position.z);
         partyGameObject.transform.LookAt(look.transform);
         Vector3 rot = partyGameObject.transform.eulerAngles;
         partyGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
-
 
         // we've moved, regenerate the raycast, TODO NPCs can also affect the raycast when moving, need to check them also or redo raycast more often
         if ((u4.Party._x != lastRaycastPlayer_posx) || (u4.Party._y != lastRaycastPlayer_posy))

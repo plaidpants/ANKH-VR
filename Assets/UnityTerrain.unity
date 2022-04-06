@@ -873,7 +873,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582030271}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.875, y: 1.53125, z: 7.1875}
+  m_LocalPosition: {x: 3.875, y: 2, z: 7.1875}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 246932416}
@@ -895,7 +895,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  distance: 5
+  distance: 7
   height: 5
   rotationDamping: 0
   heightDamping: 0
@@ -2553,6 +2553,7 @@ MonoBehaviour:
   hits: {fileID: 0}
   moongate: {fileID: 0}
   dungeon: {fileID: 0}
+  dungeonMonsters: {fileID: 0}
   partyGameObject: {fileID: 0}
   Settlements: []
   CombatTerrains: []
@@ -2560,7 +2561,7 @@ MonoBehaviour:
   tileCGAFilepath: /u4/SHAPES.CGA
   worldMapFilepath: /u4/WORLD.MAP
   u4: {fileID: 0}
-  convertDungeonTiletoCombat: f3ffffff01000000020000000300000004000000f3fffffff3fffffff3fffffff3fffffff3fffffff3fffffff3ffffff05000000f3ffffff06000000f3ffffff
+  convertDungeonTiletoCombat2: 10000000110000001200000013000000140000001000000010000000100000001000000010000000100000001000000015000000100000001000000010000000
   combinedTexture: {fileID: 0}
   combinedMaterial: {fileID: 0}
   textureAtlasPowerOf2: 0

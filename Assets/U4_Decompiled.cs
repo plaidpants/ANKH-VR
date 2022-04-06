@@ -770,7 +770,7 @@ public class U4_Decompiled : MonoBehaviour
         GRASS = 0,
         BRIDGE = 1,
         BRICK = 2,
-        DUNGEON = 3,
+        DUNGEON = 3, // all tiles, used outside
         HILL = 4,
         FOREST = 5,
         BRUSH = 6,
@@ -784,13 +784,13 @@ public class U4_Decompiled : MonoBehaviour
 
         INN = 14,
         SHRINE = 15,
-        DNG0 = 16,
-        DNG1 = 17,
-        DNG2 = 18,
-        DNG3 = 19,
-        DNG4 = 20,
-        DNG5 = 21,
-        DNG6 = 22,
+        DNG0 = 16, // hallway
+        DNG1 = 17, // ladder up
+        DNG2 = 18, // ladder down
+        DNG3 = 19, // ladder up and down
+        DNG4 = 20, // chest
+        DNG5 = 21, // doorway
+        DNG6 = 22, // secret doorway
         MAX = 23
     };
 
@@ -1016,19 +1016,111 @@ public class U4_Decompiled : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            main_keyboardHit((char)KEYS.VK_DOWN);
+            if ((current_mode == MODE.COMBAT_ROOM) ||
+                    ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+            {
+                if (Party._dir == DIRECTION.NORTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_DOWN);
+                }
+                else if (Party._dir == DIRECTION.EAST)
+                {
+                    main_keyboardHit((char)KEYS.VK_LEFT);
+                }
+                else if (Party._dir == DIRECTION.SOUTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_UP);
+                }
+                else if (Party._dir == DIRECTION.WEST)
+                {
+                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                }
+            }
+            else
+            {
+                main_keyboardHit((char)KEYS.VK_DOWN);
+            }
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            main_keyboardHit((char)KEYS.VK_UP);
+            if ((current_mode == MODE.COMBAT_ROOM)||
+                    ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+            {
+                if (Party._dir == DIRECTION.NORTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_UP);
+                }
+                else if (Party._dir == DIRECTION.EAST)
+                {
+                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                }
+                else if (Party._dir == DIRECTION.SOUTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_DOWN);
+                }
+                else if (Party._dir == DIRECTION.WEST)
+                {
+                    main_keyboardHit((char)KEYS.VK_LEFT);
+                }
+            }
+            else
+            {
+                main_keyboardHit((char)KEYS.VK_UP);
+            }
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            main_keyboardHit((char)KEYS.VK_LEFT);
+            if ((current_mode == MODE.COMBAT_ROOM) ||
+                    ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+            {
+                if (Party._dir == DIRECTION.NORTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_LEFT);
+                }
+                else if (Party._dir == DIRECTION.EAST)
+                {
+                    main_keyboardHit((char)KEYS.VK_UP);
+                }
+                else if (Party._dir == DIRECTION.SOUTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                }
+                else if (Party._dir == DIRECTION.WEST)
+                {
+                    main_keyboardHit((char)KEYS.VK_DOWN);
+                }
+            }
+            else
+            {
+                main_keyboardHit((char)KEYS.VK_LEFT);
+            }
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            main_keyboardHit((char)KEYS.VK_RIGHT);
+            if ((current_mode == MODE.COMBAT_ROOM)||
+                    ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+            {
+                if (Party._dir == DIRECTION.NORTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                }
+                else if (Party._dir == DIRECTION.EAST)
+                {
+                    main_keyboardHit((char)KEYS.VK_DOWN);
+                }
+                else if (Party._dir == DIRECTION.SOUTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_LEFT);
+                }
+                else if (Party._dir == DIRECTION.WEST)
+                {
+                    main_keyboardHit((char)KEYS.VK_UP);
+                }
+            }
+            else
+            {
+                main_keyboardHit((char)KEYS.VK_RIGHT);
+            }
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -1537,7 +1629,7 @@ public class U4_Decompiled : MonoBehaviour
             // keep the party game object in sync with the game
             if (partyGameObject)
             {
-                if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING) || (current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP))
+                if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING) || (current_mode == MODE.COMBAT_CAMP))
                 {
                     partyGameObject.transform.localPosition = new Vector3(Party._x, 255 - Party._y, 0);
                     if (Camera.main.transform.eulerAngles.y != 0)
@@ -1549,12 +1641,82 @@ public class U4_Decompiled : MonoBehaviour
                         Camera.main.clearFlags = CameraClearFlags.Skybox;
                     }
                 }
+                else if (current_mode == MODE.COMBAT)
+                {
+                    if ((Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
+                    {
+                        partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
+                        if (Camera.main.transform.eulerAngles.y != 0)
+                        {
+                            //rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+
+                            // if we are going to do rotation then we need to adjust the directional controls when in combat in the dungeon also
+                            if (rotateTransform)
+                            {
+                                if (Party._dir == DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                                {
+                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                                }
+                                else if (Party._dir == DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                                {
+                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                                }
+                                else if (Party._dir == DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                                {
+                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                                }
+                                else if (Party._dir == DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                                {
+                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                                }
+                            }
+                        }
+                        if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
+                        {
+                            Camera.main.clearFlags = CameraClearFlags.SolidColor;
+                        }
+                    }
+                    else
+                    {
+                        partyGameObject.transform.localPosition = new Vector3(Party._x, 255 - Party._y, 0);
+                        if (Camera.main.transform.eulerAngles.y != 0)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                        }
+                        if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+                        {
+                            Camera.main.clearFlags = CameraClearFlags.Skybox;
+                        }
+                    }
+                }
                 else if (current_mode == MODE.COMBAT_ROOM)
                 {
                     partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
                     if (Camera.main.transform.eulerAngles.y != 0)
                     {
-                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                        //rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+
+                        //TODO if we are going to do rotation then we need to adjust the directional controls when in combat in the dungeon
+                        
+                        if (rotateTransform)
+                        {
+                            if (Party._dir == DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (Party._dir == DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (Party._dir == DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (Party._dir == DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                            }
+                        }
                     }
                     if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
                     {
