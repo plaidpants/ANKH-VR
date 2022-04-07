@@ -3347,6 +3347,96 @@ public class World : MonoBehaviour
         WHITE = 15
     };
 
+    // unfortuantly the game engine never saves this information after loading the combat terrain in function C_7C65()
+    // the code is not re-entrant so I cannot just expose and call the function directly so I need to re-implement the 
+    // logic here so I can on the fly determine the combat terrain to display by exposing the interal variables used in the
+    // original function.
+
+    // TODO: this does not handle the INN or shop or camp case  (e.g. In the middle of the night, while out for a stroll...)
+    // TODO: ship to shore combat showed the ship to ship combat terrain while playing, need to check where this is wrong, enum or code
+    public U4_Decompiled.COMBAT_TERRAIN Convert_Tile_to_Combat_Terrian(U4_Decompiled.TILE tile)
+    {
+        U4_Decompiled.COMBAT_TERRAIN combat_terrain;
+
+        if (u4.Party._tile <= U4_Decompiled.TILE.SHIP_SOUTH || (U4_Decompiled.TILE)((byte)u4.current_tile & ~3) == U4_Decompiled.TILE.SHIP_WEST)
+        {
+            if (u4.D_96F8 == U4_Decompiled.TILE.PIRATE_WEST)
+            {
+                combat_terrain = U4_Decompiled.COMBAT_TERRAIN.SHIPSHIP;
+            }
+            else if (u4.D_946C <= U4_Decompiled.TILE.SHALLOW_WATER)
+            {
+                combat_terrain = U4_Decompiled.COMBAT_TERRAIN.SHIPSEA;
+            }
+            else
+            {
+                combat_terrain = U4_Decompiled.COMBAT_TERRAIN.SHIPSHOR;
+            }
+        }
+        else
+        {
+            if (u4.D_96F8 == U4_Decompiled.TILE.PIRATE_WEST)
+            {
+                combat_terrain = U4_Decompiled.COMBAT_TERRAIN.SHORSHIP;
+            }
+            else if (u4.D_946C <= U4_Decompiled.TILE.SHALLOW_WATER)
+            {
+                combat_terrain = U4_Decompiled.COMBAT_TERRAIN.SHORE;
+            }
+            else
+            {
+                switch (tile)
+                {
+                    case U4_Decompiled.TILE.SWAMP:
+                        {
+                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.MARSH;
+                            break;
+                        }
+                    case U4_Decompiled.TILE.BRUSH:
+                        {
+                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.BRUSH;
+                            break;
+                        }
+                    case U4_Decompiled.TILE.FOREST:
+                        {
+                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.FOREST;
+                            break;
+                        }
+                    case U4_Decompiled.TILE.HILLS:
+                        {
+                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.HILL;
+                            break;
+                        }
+                    case U4_Decompiled.TILE.DUNGEON:
+                        {
+                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.DUNGEON;
+                            break;
+                        }
+                    case U4_Decompiled.TILE.BRICK_FLOOR:
+                        {
+                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.BRICK;
+                            break;
+                        }
+                    case U4_Decompiled.TILE.BRIDGE:
+                    case U4_Decompiled.TILE.BRIDGE_TOP:
+                    case U4_Decompiled.TILE.BRIDGE_BOTTOM:
+                    case U4_Decompiled.TILE.WOOD_FLOOR:
+                        {
+                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.BRIDGE;
+                            break;
+                        }
+                    default:
+                        {
+                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.GRASS;
+                            break;
+                        }
+                }
+            }
+        }
+
+        return combat_terrain;
+    }
+
     void InitializeEGAPalette()
     {
         // create a EGA color palette
@@ -4044,7 +4134,7 @@ public class World : MonoBehaviour
         WALL = 0xF0
     */
     // only the upper nibble defines the dungeon tile, the lower nibble is used for active dungeon monsters
-    public U4_Decompiled.COMBAT_TERRAIN[] convertDungeonTiletoCombat2  =
+    public U4_Decompiled.COMBAT_TERRAIN[] convertDungeonTileToCombat  =
     { 
         U4_Decompiled.COMBAT_TERRAIN.DNG0, // NOTHING -> hallway
         U4_Decompiled.COMBAT_TERRAIN.DNG1, // LADDER_UP -> ladder up
@@ -4981,7 +5071,7 @@ public class World : MonoBehaviour
                 else
                 {
                     // use a combat map as the dungeon room base on the dungeon tile
-                    int combat = (int)convertDungeonTiletoCombat2[(int)dungeons[(int)dungeon].dungeonTILEs[level][x, y] >> 4];
+                    int combat = (int)convertDungeonTileToCombat[(int)dungeons[(int)dungeon].dungeonTILEs[level][x, y] >> 4];
 
                     // get a halway that fits
                     U4_Decompiled.TILE[,] map = CreateDungeonHallway(ref dungeons[(int)dungeon].dungeonTILEs[level], ref dungeons[(int)dungeon].dungeonRooms, x, y, level);
@@ -5098,6 +5188,9 @@ public class World : MonoBehaviour
 
         return dungeonLevel;
     }
+
+    public GameObject GameText;
+
     void CreateParty()
     {
         // create player/party object to display texture
@@ -6217,11 +6310,15 @@ public class World : MonoBehaviour
         }
     }
 
-    public void followWorld()
+    public void followWorld(GameObject follow)
     {
         // hook the player game object into the camera and the game engine
-        FindObjectsOfType<MySmoothFollow>()[0].target = partyGameObject.transform;
-        u4.partyGameObject = partyGameObject;
+        MySmoothFollow myScript = FindObjectsOfType<MySmoothFollow>()[0];
+
+        if (myScript.target != follow.transform)
+        {
+            myScript.target = follow.transform;
+        }
     }
 
     // this one will go two layers deep to avoid an implementation that relies on recursion
@@ -6399,7 +6496,7 @@ public class World : MonoBehaviour
         int originalSize;
         int pow2;
         Texture2D combinedTexture;
-        Material material;
+        //Material material;
         Texture2D texture;
         Mesh mesh;
         Hashtable textureAtlas = new Hashtable();
@@ -8038,8 +8135,8 @@ public class World : MonoBehaviour
         */
 
         
-        // create all the dungeons and all the levels
-        
+        // create all the dungeons and all the levels, this will take a while so be prepared to wait, but it is cool and worth the wait
+        /*
         for (int dungeon = 0; dungeon < (int)DUNGEONS.MAX; dungeon++)
         {
             for (int level = 0; level < 8; level++)
@@ -8048,7 +8145,7 @@ public class World : MonoBehaviour
                 dungeonExpandedLevelGameObject.transform.position = new Vector3(dungeon * 100, -level * 10, 0);
             }
         }
-        
+        */
 
         //GameObject dungeonExpandedLevelGameObject = CreateDungeonExpandedLevel(DUNGEONS.DESPISE, 0);
 
@@ -8098,9 +8195,9 @@ public class World : MonoBehaviour
             {
                 AddNPCs(u4._npc);
                 AddMoongate();
-                followWorld();
                 AddHits(u4.currentHits);
                 AddActiveCharacter(u4.currentActiveCharacter);
+                followWorld(partyGameObject);
                 terrain.SetActive(true);
                 animatedTerrrain.SetActive(true);
                 billboardTerrrain.SetActive(true);
@@ -8121,9 +8218,9 @@ public class World : MonoBehaviour
             {
                 AddNPCs(u4._npc);
                 AddMoongate();
-                followWorld();
                 AddHits(u4.currentHits);
                 AddActiveCharacter(u4.currentActiveCharacter);
+                followWorld(partyGameObject);
                 terrain.SetActive(true);
                 animatedTerrrain.SetActive(true);
                 billboardTerrrain.SetActive(true);
@@ -8142,42 +8239,66 @@ public class World : MonoBehaviour
             }
             else if ((u4.current_mode == U4_Decompiled.MODE.COMBAT)  || (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP /* TODO: this could be the inn or shop or camp need to figure out which */ ))
             {
-                AddFighters(u4.Fighters, u4.Combat1);
-                AddCharacters(u4.Combat2, u4.Party, u4.Fighters);
-                AddHits(u4.currentHits);
-                AddActiveCharacter(u4.currentActiveCharacter);
-                terrain.SetActive(false);
-                animatedTerrrain.SetActive(false);
-                billboardTerrrain.SetActive(false);
-                fighters.SetActive(true);
-                characters.SetActive(true);
-                npcs.SetActive(false);
-                party.SetActive(false);
-                moongate.SetActive(false);
-                dungeon.SetActive(false);
-                dungeonMonsters.SetActive(false);
-
-                int currentCombatTerrain;
-
                 if ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
                 {
-                      currentCombatTerrain = (int)convertDungeonTiletoCombat2[(int)u4.current_tile >> 4];
-                    //currentCombatTerrain = convertDungeonTiletoCombat[(int)dungeons[(int)u4.Party._loc - (int)U4_Decompiled.COMBAT_TERRAIN.DNG0].dungeonTILEs[u4.Party._z][u4.Party._x, 7 - u4.Party._y] >> 4] + (int)U4_Decompiled.COMBAT_TERRAIN.DNG0;
+                    AddFighters(u4.Fighters, u4.Combat1, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
+                    AddCharacters(u4.Combat2, u4.Party, u4.Fighters, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
+                    AddHits(u4.currentHits, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
+                    AddActiveCharacter(u4.currentActiveCharacter, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
+                    followWorld(activeCharacter);
+                    terrain.SetActive(false);
+                    animatedTerrrain.SetActive(false);
+                    billboardTerrrain.SetActive(false);
+                    fighters.SetActive(true);
+                    characters.SetActive(true);
+                    npcs.SetActive(false);
+                    party.SetActive(false);
+                    moongate.SetActive(false);
+                    dungeonMonsters.SetActive(false);
+                    // check if we have the dungeon already created, create it if not
+                    DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled.LOCATIONS.DUNGEONS);
+                    if (dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
+                    {
+                        Destroy(dungeon);
+                        dungeon = CreateDungeonExpandedLevel(dun, u4.Party._z);
+                    }
+                    dungeon.SetActive(true);
+
+                    for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                    {
+                        CombatTerrains[i].gameObject.SetActive(false);
+                    }
                 }
                 else
                 {
-                    currentCombatTerrain = (int)u4.Convert_Tile_to_Combat_Terrian(u4.current_tile);
-                }
+                    AddFighters(u4.Fighters, u4.Combat1);
+                    AddCharacters(u4.Combat2, u4.Party, u4.Fighters);
+                    AddHits(u4.currentHits);
+                    AddActiveCharacter(u4.currentActiveCharacter);
+                    followWorld(activeCharacter);
+                    terrain.SetActive(false);
+                    animatedTerrrain.SetActive(false);
+                    billboardTerrrain.SetActive(false);
+                    fighters.SetActive(true);
+                    characters.SetActive(true);
+                    npcs.SetActive(false);
+                    party.SetActive(false);
+                    moongate.SetActive(false);
+                    dungeon.SetActive(false);
+                    dungeonMonsters.SetActive(false);
+                    
+                    int currentCombatTerrain = (int)Convert_Tile_to_Combat_Terrian(u4.current_tile);
 
-                for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
-                {
-                    if (i == currentCombatTerrain)
+                    for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
                     {
-                        CombatTerrains[i].gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        CombatTerrains[i].gameObject.SetActive(false);
+                        if (i == currentCombatTerrain)
+                        {
+                            CombatTerrains[i].gameObject.SetActive(true);
+                        }
+                        else
+                        {
+                            CombatTerrains[i].gameObject.SetActive(false);
+                        }
                     }
                 }
             }
@@ -8185,9 +8306,9 @@ public class World : MonoBehaviour
             {
                 AddFighters(u4.Fighters, u4.Combat1, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
                 AddCharacters(u4.Combat2, u4.Party, u4.Fighters, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
-                followWorld();
                 AddHits(u4.currentHits, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
                 AddActiveCharacter(u4.currentActiveCharacter, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
+                followWorld(activeCharacter);
                 terrain.SetActive(false);
                 animatedTerrrain.SetActive(false);
                 billboardTerrrain.SetActive(false);
@@ -8214,10 +8335,10 @@ public class World : MonoBehaviour
             else if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
             {
                 AddNPCs(u4._npc);
-                followWorld();
                 AddHits(u4.currentHits);
                 AddActiveCharacter(u4.currentActiveCharacter);
                 AddDungeonMapMonsters();
+                followWorld(partyGameObject);
                 terrain.SetActive(false);
                 animatedTerrrain.SetActive(false);
                 billboardTerrrain.SetActive(false);
@@ -8366,7 +8487,139 @@ public class World : MonoBehaviour
                 }
             }
         }
+
+        // keep the party game object in sync with the game
+        if (partyGameObject)
+        {
+            if ((u4.current_mode == U4_Decompiled.MODE.OUTDOORS) || (u4.current_mode == U4_Decompiled.MODE.BUILDING) || (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP))
+            {
+                partyGameObject.transform.localPosition = new Vector3(u4.Party._x, 255 - u4.Party._y, 0);
+                if (Camera.main.transform.eulerAngles.y != 0)
+                {
+                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                }
+                if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+                {
+                    Camera.main.clearFlags = CameraClearFlags.Skybox;
+                }
+            }
+            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT)
+            {
+                if ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
+                {
+                    //partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
+                    if (Camera.main.transform.eulerAngles.y != 0)
+                    {
+                        //rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+
+                        // if we are going to do rotation then we need to adjust the directional controls when in combat in the dungeon also
+                        if (rotateTransform)
+                        {
+                            if (u4.Party._dir == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (u4.Party._dir == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (u4.Party._dir == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (u4.Party._dir == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                            }
+                        }
+                    }
+                    if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
+                    {
+                        Camera.main.clearFlags = CameraClearFlags.SolidColor;
+                    }
+                }
+                else
+                {
+                    //partyGameObject.transform.localPosition = new Vector3(Party._x, 255 - Party._y, 0);
+                    if (Camera.main.transform.eulerAngles.y != 0)
+                    {
+                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                    }
+                    if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+                    {
+                        Camera.main.clearFlags = CameraClearFlags.Skybox;
+                    }
+                }
+            }
+            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_ROOM)
+            {
+                //partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
+                if (Camera.main.transform.eulerAngles.y != 0)
+                {
+                    //rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+
+                    //TODO if we are going to do rotation then we need to adjust the directional controls when in combat in the dungeon
+
+                    if (rotateTransform)
+                    {
+                        if (u4.Party._dir == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                        }
+                        else if (u4.Party._dir == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                        }
+                        else if (u4.Party._dir == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                        }
+                        else if (u4.Party._dir == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                        }
+                    }
+                }
+                if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
+                {
+                    Camera.main.clearFlags = CameraClearFlags.SolidColor;
+                }
+            }
+            else if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
+            {
+                if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
+                {
+                    Camera.main.clearFlags = CameraClearFlags.SolidColor;
+                }
+                partyGameObject.transform.localPosition = new Vector3(u4.Party._x * 11 + 5, (7 - u4.Party._y) * 11 + 5, 0);
+                if (rotateTransform)
+                {
+                    if (u4.Party._dir == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                    {
+                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                    }
+                    else if (u4.Party._dir == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                    {
+                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                    }
+                    else if (u4.Party._dir == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                    {
+                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                    }
+                    else if (u4.Party._dir == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                    {
+                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                    }
+                }
+            }
+
+            if (u4.gameText != null && GameText != null)
+            {
+                GameText.GetComponent<UnityEngine.UI.Text>().text = u4.gameText;
+            }
+        }
     }
 
+    public Transform rotateTransform;
     public GameObject convertMe;
 }

@@ -1236,9 +1236,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2765fbfc6779ab2408366f3eea832140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textGameObject: {fileID: 2101250206}
+  gameText: 
+  npcText: 
   current_tile: 0
-  partyGameObject: {fileID: 0}
   timerPeriod: 0.05
   current_mode: 0
   moongate_tile: 0
@@ -1707,12 +1707,9 @@ MonoBehaviour:
     _gtile: 0
     _sleeping: 0
     _chtile: 0
-  textDisplay: {fileID: 0}
-  TextGameObject: {fileID: 0}
   hit_time_period: 0.25
   D_96F8: 0
   D_946C: 0
-  rotateTransform: {fileID: 582030273}
 --- !u!4 &999847452
 Transform:
   m_ObjectHideFlags: 0
@@ -2562,6 +2559,7 @@ MonoBehaviour:
   worldMapFilepath: /u4/WORLD.MAP
   u4: {fileID: 0}
   convertDungeonTiletoCombat2: 10000000110000001200000013000000140000001000000010000000100000001000000010000000100000001000000015000000100000001000000010000000
+  GameText: {fileID: 2101250206}
   combinedTexture: {fileID: 0}
   combinedMaterial: {fileID: 0}
   textureAtlasPowerOf2: 0
@@ -2571,6 +2569,7 @@ MonoBehaviour:
   combinedExpandedMaterial: {fileID: 0}
   textureExpandedAtlasPowerOf2: 0
   timerPeriod: 0.02
+  rotateTransform: {fileID: 582030273}
   convertMe: {fileID: 0}
 --- !u!4 &1753957574
 Transform:

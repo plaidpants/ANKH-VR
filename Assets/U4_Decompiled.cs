@@ -4,13 +4,13 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using System.Threading;
 using UnityEngine.UI;
-//using SpeechLib;
 
 public class U4_Decompiled : MonoBehaviour
 {
     private Thread trd;
 
-    public GameObject textGameObject;
+    public string gameText;
+    public string npcText;
 
     // tiles
     public enum TILE
@@ -414,6 +414,7 @@ public class U4_Decompiled : MonoBehaviour
         EAST = 2,
         SOUTH = 3
     }
+
     public enum MODE
     {
         VISION = 0,
@@ -561,8 +562,6 @@ public class U4_Decompiled : MonoBehaviour
 
     public static extern int main_NPC_Text(byte[] buffer, int length);
 
-    public GameObject partyGameObject;
-
     float timer = 0.0f;
     float timerExpired = 0.0f;
     public float timerPeriod = 0.02f; // the game operates on a 300ms Sleep() so we want to update things faster than that
@@ -614,6 +613,7 @@ public class U4_Decompiled : MonoBehaviour
     };
 
     public tNPC[] _npc = new tNPC[32];
+
     public enum SEX
     {
         MALE = 0xb,
@@ -627,6 +627,7 @@ public class U4_Decompiled : MonoBehaviour
         SLEEPING = 'S',
         DEAD = 'D'
     };
+
     public enum CLASS
     {
         MAGE = 0,
@@ -763,7 +764,7 @@ public class U4_Decompiled : MonoBehaviour
 
     public t_68[] Fighters = new t_68[16];
 
-    public TILE[,] map = new TILE[11, 11];
+    public TILE[,] displayTileMap = new TILE[11, 11];
     public enum COMBAT_TERRAIN
     {
         // this order and numbering is important up to at least CAMP
@@ -801,15 +802,9 @@ public class U4_Decompiled : MonoBehaviour
         main();
     }
 
-    public Text textDisplay;
-
-    public GameObject TextGameObject;
-
     // Start is called before the first frame update
     void Start()
     {
-        textDisplay = textGameObject.GetComponent<Text>();
-
         // allocate storage for Party globals
         Party.chara = new Character[8];
         for (int i = 0; i < 8; i++)
@@ -827,102 +822,12 @@ public class U4_Decompiled : MonoBehaviour
         trd.Start();
     }
 
-    // unfortuantly the game engine never saves this information after loading the combat terrain in function C_7C65()
-    // the code is not re-entrant so I cannot just expose and call the function directly so I need to re-implement the 
-    // logic here so I can on the fly determine the combat terrain to display by exposing the interal variables used in the
-    // original function.
-
-    // TODO: this does not handle the INN or shop or camp case  (e.g. In the middle of the night, while out for a stroll...)
-    // TODO: ship to shore combat showed the ship to ship combat terrain while playing, need to check where this is wrong, enum or code
-    public COMBAT_TERRAIN Convert_Tile_to_Combat_Terrian(TILE tile)
-    {
-        COMBAT_TERRAIN combat_terrain;
-
-        if (Party._tile <= TILE.SHIP_SOUTH || (TILE)((byte)current_tile & ~3) == TILE.SHIP_WEST)
-        {
-            if (D_96F8 == TILE.PIRATE_WEST)
-            {
-                combat_terrain = COMBAT_TERRAIN.SHIPSHIP;
-            }
-            else if (D_946C <= TILE.SHALLOW_WATER)
-            {
-                combat_terrain = COMBAT_TERRAIN.SHIPSEA;
-            }
-            else
-            {
-                combat_terrain = COMBAT_TERRAIN.SHIPSHOR;
-            }
-        }
-        else
-        {
-            if (D_96F8 == TILE.PIRATE_WEST)
-            {
-                combat_terrain = COMBAT_TERRAIN.SHORSHIP;
-            }
-            else if (D_946C <= TILE.SHALLOW_WATER)
-            {
-                combat_terrain = COMBAT_TERRAIN.SHORE;
-            }
-            else
-            {
-                switch (tile)
-                {
-                    case TILE.SWAMP:
-                    {
-                        combat_terrain = COMBAT_TERRAIN.MARSH;
-                        break;
-                    }
-                    case TILE.BRUSH:
-                    {
-                        combat_terrain = COMBAT_TERRAIN.BRUSH;
-                        break;
-                    }
-                    case TILE.FOREST:
-                    {
-                        combat_terrain = COMBAT_TERRAIN.FOREST;
-                        break;
-                    }
-                    case TILE.HILLS:
-                    {
-                        combat_terrain = COMBAT_TERRAIN.HILL;
-                        break;
-                    }
-                    case TILE.DUNGEON:
-                    {
-                        combat_terrain = COMBAT_TERRAIN.DUNGEON;
-                        break;
-                    }
-                    case TILE.BRICK_FLOOR:
-                    {
-                        combat_terrain = COMBAT_TERRAIN.BRICK;
-                        break;
-                    }
-                    case TILE.BRIDGE:
-                    case TILE.BRIDGE_TOP:
-                    case TILE.BRIDGE_BOTTOM:
-                    case TILE.WOOD_FLOOR:
-                    {
-                        combat_terrain = COMBAT_TERRAIN.BRIDGE;
-                        break;
-                    }
-                    default:
-                    {
-                        combat_terrain = COMBAT_TERRAIN.GRASS;
-                        break;
-                    }
-                }
-            }
-        }
-
-        return combat_terrain;
-    }
-
     void OnApplicationQuit()
     {
         //trd.Abort();
         // CAUTION: this will cleanly exit the DLL, however is some areas such as combat this will not work and you will
         // need to kill the unity editor process to be able to restart. The abort function will cause the Unity editor to exit which
-        // is not desired. Using the exit() function in the DLL will also exit the unity editore which is also not disired. This
+        // is not desired. Using the exit() function in the DLL will also exit the unity editor which is also not desired. This
         // was the best solution I could come up with for the moment. In the final app all threads will be exiting when quiting so
         // it is not an issue there, only when using the Unity editor do we have trouble. If Unity would load and unload the DLL at runtime
         // this would be a better solution but Unity 3D unfortantly loads any project DLLs at editor launch and keeps them loaded until you
@@ -944,6 +849,7 @@ public class U4_Decompiled : MonoBehaviour
         VK_HOME = 0x24
     };
 
+    [SerializeField]
     public struct activeCharacter
     {
         public bool active;
@@ -951,6 +857,7 @@ public class U4_Decompiled : MonoBehaviour
         public byte x, y;
     }
 
+    [SerializeField]
     public activeCharacter currentActiveCharacter;
 
     public float hit_time_period = 0.25f;
@@ -1302,29 +1209,24 @@ public class U4_Decompiled : MonoBehaviour
             // check if we have any new text to add
             if (text_size != 0)
             {
-                // create the text if it is not present already
-                if (textDisplay == null)
-                {
-                    textDisplay = textGameObject.GetComponent<Text>();
-                }
 
                 // remove the animated whirlpool from the text last character if we have some new text
-                if (textDisplay.text.Length > 2)
+                if (gameText.Length > 2)
                 {
-                    textDisplay.text = textDisplay.text.Remove(textDisplay.text.Length - 1);
+                    gameText = gameText.Remove(gameText.Length - 1);
                 }
 
-                // add the ACSII encoded text to the display text plus readd the whirlpool character
-                textDisplay.text = textDisplay.text + enc.GetString(buffer, 0, text_size) + (char)(0x1c + (int)(Time.time / 2 ) % 4);
+                // add the ACSII encoded text to the display text plus read the whirlpool character
+                gameText = gameText + enc.GetString(buffer, 0, text_size) + (char)(0x1c + (int)(Time.time / 2 ) % 4);
 
-                // remove all but the last 20 lines of text from the tex buffer
+                // remove all but the last 20 lines of text from the text buffer
                 int newline_count = 0;
                 int i;
                 const int MAX_NEWLINES = 20;
-                for (i = textDisplay.text.Length - 1; (i > 0) && (newline_count < MAX_NEWLINES); i--)
+                for (i = gameText.Length - 1; (i > 0) && (newline_count < MAX_NEWLINES); i--)
                 {
                     // check for a newline
-                    if (textDisplay.text[i] == '\n')
+                    if (gameText[i] == '\n')
                     {
                         // count the newlines
                         newline_count++;
@@ -1334,18 +1236,18 @@ public class U4_Decompiled : MonoBehaviour
                 // if we have enough lines cut the string 
                 if (newline_count == MAX_NEWLINES)
                 {
-                    textDisplay.text = textDisplay.text.Substring(i + 2);
+                    gameText = gameText.Substring(i + 2);
                 }
             }
 
             // animate the spining whirlpool character by removing and adding to the end of the text the update whirlpool character
-            if (textDisplay.text.Length > 0)
+            if (gameText.Length > 0)
             {
-                textDisplay.text = textDisplay.text.Remove(textDisplay.text.Length - 1) + (char)(0x1c + (Time.time * 10) % 4);
+                gameText = gameText.Remove(gameText.Length - 1) + (char)(0x1c + (Time.time * 10) % 4);
             }
             else
             {
-                textDisplay.text = "" + (char)(0x1c + (Time.time * 10) % 4);
+                gameText = "" + (char)(0x1c + (Time.time * 10) % 4);
             }
 
             // read the circular npc text buffer from the game engine
@@ -1354,29 +1256,22 @@ public class U4_Decompiled : MonoBehaviour
             // check if we have any new npc text to add
             if (text_size != 0)
             {
-                if (partyGameObject != null)
+                npcText = "";
+
+                for (int i = 0; i < text_size; i++)
                 {
-                    Text partyText = partyGameObject.GetComponentInChildren<Text>();
-                    if (partyText != null)
-                    {
-                        partyText.text = "";
+                    //int npcIndex = buffer[i * 500];
+                    //partyText.text = partyText.text + npcIndex + " : " + /* Settlements[(int)Party._loc].GetComponent<Settlement>().npcStrings[_npc[npcIndex]._tlkidx - 1][0] + " says : " + */
+                    string npcTalk = enc.GetString(buffer, i * 500 + 1, 500);
 
-                        for (int i = 0; i < text_size; i++)
-                        {
-                            int npcIndex = buffer[i * 500];
-                            //partyText.text = partyText.text + npcIndex + " : " + /* Settlements[(int)Party._loc].GetComponent<Settlement>().npcStrings[_npc[npcIndex]._tlkidx - 1][0] + " says : " + */
-                            string npcTalk = enc.GetString(buffer, i * 500 + 1, 500);
-
-                            //WindowsVoice voice = partyGameObject.GetComponentInChildren<WindowsVoice>();
-
-                            int firstNull = npcTalk.IndexOf('\0');
-                            npcTalk = npcTalk.Substring(0, firstNull);
-                            partyText.text = partyText.text + npcTalk;
-                        }
-
-                        WindowsVoice.speak(partyText.text); // TODO need to collect enough text til the newline so we don't have broken speech patterns in the middle of constructed sentences e.g. "I am" ... "a guard."...
-                    }
+                    int firstNull = npcTalk.IndexOf('\0');
+                    npcTalk = npcTalk.Substring(0, firstNull);
+                    npcText = npcText + npcTalk;
                 }
+
+                // TODO move this out of the game engine monitor
+                // TODO need to collect enough text til the newline so we don't have broken speech patterns in the middle of constructed sentences e.g. "I am" ... "a guard."...
+                WindowsVoice.speak(npcText); 
             }
 
             D_96F8 = main_D_96F8();
@@ -1622,137 +1517,9 @@ public class U4_Decompiled : MonoBehaviour
             {
                 for (int x = 0; x < 11; x++)
                 {
-                    map[x, y] = (TILE)buffer[buffer_index++];
-                }
-            }
-
-            // keep the party game object in sync with the game
-            if (partyGameObject)
-            {
-                if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING) || (current_mode == MODE.COMBAT_CAMP))
-                {
-                    partyGameObject.transform.localPosition = new Vector3(Party._x, 255 - Party._y, 0);
-                    if (Camera.main.transform.eulerAngles.y != 0)
-                    {
-                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                    }
-                    if (Camera.main.clearFlags != CameraClearFlags.Skybox)
-                    {
-                        Camera.main.clearFlags = CameraClearFlags.Skybox;
-                    }
-                }
-                else if (current_mode == MODE.COMBAT)
-                {
-                    if ((Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
-                    {
-                        partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
-                        if (Camera.main.transform.eulerAngles.y != 0)
-                        {
-                            //rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-
-                            // if we are going to do rotation then we need to adjust the directional controls when in combat in the dungeon also
-                            if (rotateTransform)
-                            {
-                                if (Party._dir == DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
-                                {
-                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
-                                }
-                                else if (Party._dir == DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
-                                {
-                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                                }
-                                else if (Party._dir == DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
-                                {
-                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
-                                }
-                                else if (Party._dir == DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
-                                {
-                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
-                                }
-                            }
-                        }
-                        if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
-                        {
-                            Camera.main.clearFlags = CameraClearFlags.SolidColor;
-                        }
-                    }
-                    else
-                    {
-                        partyGameObject.transform.localPosition = new Vector3(Party._x, 255 - Party._y, 0);
-                        if (Camera.main.transform.eulerAngles.y != 0)
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                        }
-                        if (Camera.main.clearFlags != CameraClearFlags.Skybox)
-                        {
-                            Camera.main.clearFlags = CameraClearFlags.Skybox;
-                        }
-                    }
-                }
-                else if (current_mode == MODE.COMBAT_ROOM)
-                {
-                    partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
-                    if (Camera.main.transform.eulerAngles.y != 0)
-                    {
-                        //rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-
-                        //TODO if we are going to do rotation then we need to adjust the directional controls when in combat in the dungeon
-                        
-                        if (rotateTransform)
-                        {
-                            if (Party._dir == DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
-                            }
-                            else if (Party._dir == DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                            }
-                            else if (Party._dir == DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
-                            }
-                            else if (Party._dir == DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
-                            }
-                        }
-                    }
-                    if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
-                    {
-                        Camera.main.clearFlags = CameraClearFlags.SolidColor;
-                    }
-                }
-                else if (current_mode == MODE.DUNGEON)
-                {
-                    if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
-                    {
-                        Camera.main.clearFlags = CameraClearFlags.SolidColor;
-                    }
-                    partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
-                    if (rotateTransform)
-                    {
-                        if (Party._dir == DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
-                        }
-                        else if (Party._dir == DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                        }
-                        else if (Party._dir == DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
-                        }
-                        else if (Party._dir == DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
-                        }
-                    }
+                    displayTileMap[x, y] = (TILE)buffer[buffer_index++];
                 }
             }
         }
     }
-
-    public Transform rotateTransform;
 }
