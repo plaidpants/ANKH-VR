@@ -559,8 +559,10 @@ public class U4_Decompiled : MonoBehaviour
     [DllImport("UN_U4.dll")]
     public static extern TILE  main_D_9141(); // moongate tile
     [DllImport("UN_U4.dll")]
-
     public static extern int main_NPC_Text(byte[] buffer, int length);
+    [DllImport("UN_U4.dll")]
+    public static extern int main_Sound(byte[] buffer, int length);
+    
 
     float timer = 0.0f;
     float timerExpired = 0.0f;
@@ -884,6 +886,8 @@ public class U4_Decompiled : MonoBehaviour
 
     public System.Text.ASCIIEncoding enc;
 
+    public AudioClip[] soundEffects = new AudioClip[11];
+
     // Update is called once per frame
     void Update()
     {
@@ -1196,6 +1200,19 @@ public class U4_Decompiled : MonoBehaviour
             // update the timer
             timer = timer - timerExpired;
             timerExpired = timerPeriod;
+
+            main_Sound(buffer, buffer.Length);
+            int soundCount = buffer[0];
+            for (int i = 0; i < soundCount; i++)
+            {
+                int sound = buffer[i * 2 + 1];
+                int length = buffer[i * 2 + 2];
+                Debug.Log("Sound # " + sound + " Length " + length);
+                if (sound < soundEffects.Length)
+                {
+                    AudioSource.PlayClipAtPoint(soundEffects[sound], Camera.main.transform.position);
+                }
+            }
 
             // create an ASCII encoder if needed
             if (enc == null)

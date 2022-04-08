@@ -29,9 +29,11 @@ public class World : MonoBehaviour
     public GameObject dungeonMonsters;
     public GameObject partyGameObject;
 
-    public GameObject[] Settlements;
+    //public GameObject[] Settlements;
     public GameObject[] CombatTerrains;
 
+    public string tileApple2Filepath1 = "/u4/SHP0.B"; 
+    public string tileApple2Filepath2 = "/u4/SHP1.B";
     public string tileEGAFilepath = "/u4/SHAPES.EGA";
     public string tileCGAFilepath = "/u4/SHAPES.CGA";
     public string worldMapFilepath = "/u4/WORLD.MAP";
@@ -3327,25 +3329,6 @@ public class World : MonoBehaviour
 
         return wedge;
     }
-    enum EGA_COLOR
-    {
-        BLACK = 0,
-        BLUE = 1,
-        GREEN = 2,
-        CYAN = 3,
-        RED = 4,
-        MEGENTA = 5,
-        BROWN = 6,
-        LIGHT_GRAY = 7,
-        DARK_GRAY = 8,
-        BRIGHT_BLUE = 9,
-        BRIGHT_GREEN = 10,
-        BRIGHT_CYAN = 11,
-        BRIGHT_RED = 12,
-        BRIGHT_MEGENTA = 13,
-        BRIGHT_YELLOW = 14,
-        WHITE = 15
-    };
 
     // unfortuantly the game engine never saves this information after loading the combat terrain in function C_7C65()
     // the code is not re-entrant so I cannot just expose and call the function directly so I need to re-implement the 
@@ -3437,29 +3420,7 @@ public class World : MonoBehaviour
         return combat_terrain;
     }
 
-    void InitializeEGAPalette()
-    {
-        // create a EGA color palette
-        EGAColorPalette = new Color[16];
-        ColorUtility.TryParseHtmlString("#000000", out EGAColorPalette[0]);
-        ColorUtility.TryParseHtmlString("#0000AA", out EGAColorPalette[1]);
-        ColorUtility.TryParseHtmlString("#00AA00", out EGAColorPalette[2]);
-        ColorUtility.TryParseHtmlString("#00AAAA", out EGAColorPalette[3]);
-        ColorUtility.TryParseHtmlString("#AA0000", out EGAColorPalette[4]);
-        ColorUtility.TryParseHtmlString("#AA00AA", out EGAColorPalette[5]);
-        ColorUtility.TryParseHtmlString("#AA5500", out EGAColorPalette[6]);
-        ColorUtility.TryParseHtmlString("#AAAAAA", out EGAColorPalette[7]);
-        ColorUtility.TryParseHtmlString("#555555", out EGAColorPalette[8]);
-        ColorUtility.TryParseHtmlString("#5555FF", out EGAColorPalette[9]);
-        ColorUtility.TryParseHtmlString("#55FF55", out EGAColorPalette[10]);
-        ColorUtility.TryParseHtmlString("#55FFFF", out EGAColorPalette[11]);
-        ColorUtility.TryParseHtmlString("#FF5555", out EGAColorPalette[12]);
-        ColorUtility.TryParseHtmlString("#FF55FF", out EGAColorPalette[13]);
-        ColorUtility.TryParseHtmlString("#FFFF55", out EGAColorPalette[14]);
-        ColorUtility.TryParseHtmlString("#FFFFFF", out EGAColorPalette[15]);
-    }
-
-    enum CGA_COLOR
+    enum EGA_COLOR
     {
         BLACK = 0,
         BLUE = 1,
@@ -3469,20 +3430,415 @@ public class World : MonoBehaviour
         MEGENTA = 5,
         BROWN = 6,
         LIGHT_GRAY = 7,
+        DARK_GRAY = 8,
+        BRIGHT_BLUE = 9,
+        BRIGHT_GREEN = 10,
+        BRIGHT_CYAN = 11,
+        BRIGHT_RED = 12,
+        BRIGHT_MEGENTA = 13,
+        BRIGHT_YELLOW = 14,
+        WHITE = 15,
+        MAX = 16
+    };
+
+    void InitializeEGAPalette()
+    {
+        // create a EGA color palette
+        EGAColorPalette = new Color[(int)EGA_COLOR.MAX];
+        ColorUtility.TryParseHtmlString("#000000", out EGAColorPalette[(int)EGA_COLOR.BLACK]);
+        ColorUtility.TryParseHtmlString("#0000AA", out EGAColorPalette[(int)EGA_COLOR.BLUE]);
+        ColorUtility.TryParseHtmlString("#00AA00", out EGAColorPalette[(int)EGA_COLOR.GREEN]);
+        ColorUtility.TryParseHtmlString("#00AAAA", out EGAColorPalette[(int)EGA_COLOR.CYAN]);
+        ColorUtility.TryParseHtmlString("#AA0000", out EGAColorPalette[(int)EGA_COLOR.RED]);
+        ColorUtility.TryParseHtmlString("#AA00AA", out EGAColorPalette[(int)EGA_COLOR.MEGENTA]);
+        ColorUtility.TryParseHtmlString("#AA5500", out EGAColorPalette[(int)EGA_COLOR.BROWN]);
+        ColorUtility.TryParseHtmlString("#AAAAAA", out EGAColorPalette[(int)EGA_COLOR.LIGHT_GRAY]);
+        ColorUtility.TryParseHtmlString("#555555", out EGAColorPalette[(int)EGA_COLOR.DARK_GRAY]);
+        ColorUtility.TryParseHtmlString("#5555FF", out EGAColorPalette[(int)EGA_COLOR.BRIGHT_BLUE]);
+        ColorUtility.TryParseHtmlString("#55FF55", out EGAColorPalette[(int)EGA_COLOR.BRIGHT_GREEN]);
+        ColorUtility.TryParseHtmlString("#55FFFF", out EGAColorPalette[(int)EGA_COLOR.BRIGHT_CYAN]);
+        ColorUtility.TryParseHtmlString("#FF5555", out EGAColorPalette[(int)EGA_COLOR.BRIGHT_RED]);
+        ColorUtility.TryParseHtmlString("#FF55FF", out EGAColorPalette[(int)EGA_COLOR.BRIGHT_MEGENTA]);
+        ColorUtility.TryParseHtmlString("#FFFF55", out EGAColorPalette[(int)EGA_COLOR.BRIGHT_YELLOW]);
+        ColorUtility.TryParseHtmlString("#FFFFFF", out EGAColorPalette[(int)EGA_COLOR.WHITE]);
+    }
+
+    enum CGA_COLOR
+    {
+        BLACK = 0,
+        CYAN = 1,
+        MEGENTA = 2,
+        WHITE = 3,
+        MAX = 4
     };
 
     void InitializeCGAPalette()
     {
         // create CGA color palette
-        CGAColorPalette = new Color[8];
-        ColorUtility.TryParseHtmlString("#000000", out CGAColorPalette[0]);
-        ColorUtility.TryParseHtmlString("#0000AA", out CGAColorPalette[1]);
-        ColorUtility.TryParseHtmlString("#00AA00", out CGAColorPalette[2]);
-        ColorUtility.TryParseHtmlString("#00AAAA", out CGAColorPalette[3]);
-        ColorUtility.TryParseHtmlString("#AA0000", out CGAColorPalette[4]);
-        ColorUtility.TryParseHtmlString("#AA00AA", out CGAColorPalette[5]);
-        ColorUtility.TryParseHtmlString("#AA5500", out CGAColorPalette[6]);
-        ColorUtility.TryParseHtmlString("#AAAAAA", out CGAColorPalette[7]);
+        CGAColorPalette = new Color[(int)CGA_COLOR.MAX];
+        ColorUtility.TryParseHtmlString("#000000", out CGAColorPalette[(int)CGA_COLOR.BLACK]);
+        ColorUtility.TryParseHtmlString("#00AAAA", out CGAColorPalette[(int)CGA_COLOR.CYAN]);
+        ColorUtility.TryParseHtmlString("#AA00AA", out CGAColorPalette[(int)CGA_COLOR.MEGENTA]);
+        ColorUtility.TryParseHtmlString("#AAAAAA", out CGAColorPalette[(int)CGA_COLOR.WHITE]);
+    }
+
+    enum APPLE2_COLOR
+    {
+        BLACK = 0,
+        GREEN = 1,
+        PURPLE = 2,
+        BLUE = 3,
+        ORANGE = 4,
+        GREENWHITE = 5,
+        PURPLEWHITE = 6,
+        BLUEWHITE = 7,
+        ORANGEWHITE = 8,
+        GREENBLACK = 9,
+        PURPLEBLACK = 10,
+        BLUEBLACK = 11,
+        ORANGEBLACK = 12,
+        WHITE = 13,
+        MAX = 14
+    };
+
+    public Color[] Apple2ColorPalette;
+
+    void InitializeApple2Palette()
+    {
+        // create CGA color palette
+        Apple2ColorPalette = new Color[(int)APPLE2_COLOR.MAX];
+        ColorUtility.TryParseHtmlString("#000000", out Apple2ColorPalette[(int)APPLE2_COLOR.BLACK]);
+        ColorUtility.TryParseHtmlString("#38CB00", out Apple2ColorPalette[(int)APPLE2_COLOR.GREEN]);
+        ColorUtility.TryParseHtmlString("#C734FF", out Apple2ColorPalette[(int)APPLE2_COLOR.PURPLE]);
+        ColorUtility.TryParseHtmlString("#0DA1FF", out Apple2ColorPalette[(int)APPLE2_COLOR.BLUE]);
+        ColorUtility.TryParseHtmlString("#F25E00", out Apple2ColorPalette[(int)APPLE2_COLOR.ORANGE]);
+
+        ColorUtility.TryParseHtmlString("#9ACB88", out Apple2ColorPalette[(int)APPLE2_COLOR.GREENWHITE]);
+        ColorUtility.TryParseHtmlString("#E8ABFF", out Apple2ColorPalette[(int)APPLE2_COLOR.PURPLEWHITE]);
+        ColorUtility.TryParseHtmlString("#ABDFFF", out Apple2ColorPalette[(int)APPLE2_COLOR.BLUEWHITE]);
+        ColorUtility.TryParseHtmlString("#F2C1A2", out Apple2ColorPalette[(int)APPLE2_COLOR.ORANGEWHITE]);
+
+        ColorUtility.TryParseHtmlString("#124000", out Apple2ColorPalette[(int)APPLE2_COLOR.GREENBLACK]);
+        ColorUtility.TryParseHtmlString("#320D40", out Apple2ColorPalette[(int)APPLE2_COLOR.PURPLEBLACK]);
+        ColorUtility.TryParseHtmlString("#042940", out Apple2ColorPalette[(int)APPLE2_COLOR.BLUEBLACK]);
+        ColorUtility.TryParseHtmlString("#401900", out Apple2ColorPalette[(int)APPLE2_COLOR.ORANGEBLACK]);
+
+        ColorUtility.TryParseHtmlString("#FFFFFF", out Apple2ColorPalette[(int)APPLE2_COLOR.WHITE]);
+    }
+
+    Color Apple2ColorOdd(bool highBitSet, bool previousPixel, bool pixel, bool nextPixel)
+    {
+        Color color;
+
+        if (!previousPixel && !pixel && !nextPixel) //000
+        {
+            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
+        }
+        else if (previousPixel && !pixel && !nextPixel) //100
+        {
+            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
+        }
+        else if (!previousPixel && pixel && !nextPixel) //010
+        {
+            if (highBitSet)
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.BLUE];
+            }
+            else
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.PURPLE];
+            }
+        }
+        else if (previousPixel && pixel && !nextPixel) //110
+        {
+            if (highBitSet)
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.BLUEWHITE];
+            }
+            else
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.PURPLEWHITE];
+            }
+        }
+        else if (!previousPixel && !pixel && nextPixel) //001
+        {
+            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
+        }
+        else if (previousPixel && !pixel && nextPixel) //101
+        {
+            if (highBitSet)
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.ORANGEBLACK];
+            }
+            else
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.GREENBLACK];
+            }
+        }
+        else if (!previousPixel && pixel && nextPixel) //011
+        {
+            if (highBitSet)
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.BLUEWHITE];
+            }
+            else
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.PURPLEWHITE];
+            }
+        }
+        else if (previousPixel && pixel && nextPixel) //111
+        {
+            color = Apple2ColorPalette[(int)APPLE2_COLOR.WHITE];
+        }
+        else
+        {
+            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
+        }
+
+        return color;
+    }
+
+    Color Apple2ColorEven(bool highBitSet, bool previousPixel, bool pixel, bool nextPixel)
+    {
+        Color color;
+
+        if (!previousPixel && !pixel && !nextPixel) //000
+        {
+            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
+        }
+        else if (previousPixel && !pixel && !nextPixel) //100
+        {
+            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
+        }
+        else if (!previousPixel && pixel && !nextPixel) //010
+        {
+            if (highBitSet)
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.ORANGE];
+            }
+            else
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.GREEN];
+            }
+        }
+        else if (previousPixel && pixel && !nextPixel) //110
+        {
+            if (highBitSet)
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.ORANGEWHITE];
+            }
+            else
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.GREENWHITE];
+            }
+        }
+        else if (!previousPixel && !pixel && nextPixel) //001
+        {
+            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
+        }
+        else if (previousPixel && !pixel && nextPixel) //101
+        {
+            if (highBitSet)
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.BLUEBLACK];
+            }
+            else
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.PURPLEBLACK];
+            }
+        }
+        else if (!previousPixel && pixel && nextPixel) //011
+        {
+            if (highBitSet)
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.ORANGEWHITE];
+            }
+            else
+            {
+                color = Apple2ColorPalette[(int)APPLE2_COLOR.GREENWHITE];
+            }
+        }
+        else if (previousPixel && pixel && nextPixel)
+        {
+            color = Apple2ColorPalette[(int)APPLE2_COLOR.WHITE];
+        }
+        else
+        {
+            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
+        }
+
+        return color;
+    }
+
+    Color Apple2ColorBW(bool highBitSet, bool previousPixel, bool pixel, bool nextPixel)
+    {
+        Color color;
+
+        if (!pixel) //000
+        {
+            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
+        }
+        else //111
+        {
+            color = Apple2ColorPalette[(int)APPLE2_COLOR.WHITE];
+        }
+
+        return color;
+    }
+
+    void LoadTilesApple2()
+    {
+        if (!System.IO.File.Exists(Application.persistentDataPath + tileApple2Filepath1))
+        {
+            Debug.Log("Could not find Apple2 tiles file " + Application.persistentDataPath + tileApple2Filepath1);
+            return;
+        }
+
+        // read the file
+        byte[] fileData1 = System.IO.File.ReadAllBytes(Application.persistentDataPath + tileApple2Filepath1);
+
+        if (fileData1.Length != 4 * 1024)
+        {
+            Debug.Log("Apple2 Tiles file incorrect length " + fileData1.Length);
+            return;
+        }
+
+        if (!System.IO.File.Exists(Application.persistentDataPath + tileApple2Filepath2))
+        {
+            Debug.Log("Could not find Apple2 tiles file " + Application.persistentDataPath + tileApple2Filepath2);
+            return;
+        }
+
+        // read the file
+        byte[] fileData2 = System.IO.File.ReadAllBytes(Application.persistentDataPath + tileApple2Filepath2);
+
+        if (fileData2.Length != 4 * 1024)
+        {
+            Debug.Log("Apple2 Tiles file incorrect length " + fileData2.Length);
+            return;
+        }
+
+        // allocate an array of textures
+        originalTiles = new Texture2D[256];
+
+        // there are 256 tiles in the file
+        for (int tile = 0; tile < 256; tile++)
+        {
+            // create a texture for this tile
+            Texture2D currentTile = new Texture2D(14, 16, TextureFormat.RGBA32, false);
+
+            // we want pixles not fuzzy images
+            currentTile.filterMode = FilterMode.Point;
+
+            // assign this texture to the tile array index
+            originalTiles[tile] = currentTile;
+
+            // manually go through the data and set the (x,y) pixels to the tile based on the input file using the Apple2 color palette
+            for (int height = 0; height < currentTile.height; height++)
+            {
+                for (int width = 0; width < currentTile.width - 2; /* width incremented below */ )
+                {
+                    bool highBitSet; 
+                    bool previousPixel;
+                    bool pixel;
+                    bool nextPixel;
+                    Color color;
+
+                    int y = currentTile.height - height - 1;
+
+                    // go to the next byte in the file
+                    int index = height * 256 + tile;
+
+                    // get the first file pixel block
+                    int pixelBlock = fileData1[index];
+
+                    // go through the first half of the tile from the first file
+                    highBitSet = (pixelBlock & 0x80) != 0;
+
+                    // assume no tiling on the side of the tile
+                    previousPixel = false;
+                    pixel = (pixelBlock & 0x01) != 0;
+                    nextPixel = (pixelBlock & 0x02) != 0;
+                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+                    previousPixel = pixel;
+                    pixel = nextPixel;
+                    nextPixel = (pixelBlock & 0x04) != 0;
+                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+                    previousPixel = pixel;
+                    pixel = nextPixel;
+                    nextPixel = (pixelBlock & 0x08) != 0;
+                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+                    previousPixel = pixel;
+                    pixel = nextPixel;
+                    nextPixel = (pixelBlock & 0x10) != 0;
+                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+                    previousPixel = pixel;
+                    pixel = nextPixel;
+                    nextPixel = (pixelBlock & 0x20) != 0;
+                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+                    previousPixel = pixel;
+                    pixel = nextPixel;
+                    nextPixel = (pixelBlock & 0x40) != 0;
+                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+                    previousPixel = pixel;
+                    pixel = nextPixel;
+                    // next pixel is in the other file
+                    pixelBlock = fileData2[index];
+                    nextPixel = (pixelBlock & 0x01) != 0;
+                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+
+                    // do the second half of the tile from the other file
+                    highBitSet = (pixelBlock & 0x80) != 0;
+
+                    previousPixel = pixel;
+                    pixel = nextPixel;
+                    nextPixel = (pixelBlock & 0x02) != 0;
+                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+                    previousPixel = pixel;
+                    pixel = nextPixel;
+                    nextPixel = (pixelBlock & 0x04) != 0;
+                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+                    previousPixel = pixel;
+                    pixel = nextPixel;
+                    nextPixel = (pixelBlock & 0x08) != 0;
+                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+                    previousPixel = pixel;
+                    pixel = nextPixel;
+                    nextPixel = (pixelBlock & 0x10) != 0;
+                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+                    previousPixel = pixel;
+                    pixel = nextPixel;
+                    nextPixel = (pixelBlock & 0x20) != 0;
+                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+                    previousPixel = pixel;
+                    pixel = nextPixel;
+                    nextPixel = (pixelBlock & 0x40) != 0;
+                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+                    previousPixel = pixel;
+                    pixel = nextPixel;
+                    // assume no tiling on the side of the tile
+                    nextPixel = false;
+                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    currentTile.SetPixel(width++, y, color);
+                }
+            }
+
+            // Actually apply all previous SetPixel and SetPixels changes from above
+            currentTile.Apply();
+        }
     }
 
     void LoadTilesEGA()
@@ -3522,7 +3878,7 @@ public class World : MonoBehaviour
             // assign this texture to the tile array index
             originalTiles[tile] = currentTile;
 
-            // manually go through the data and set the (x,y) pixels to the tile based on the input file using the CGA color palette
+            // manually go through the data and set the (x,y) pixels to the tile based on the input file using the EGA color palette
             for (int height = 0; height < currentTile.height; height++)
             {
                 for (int width = 0; width < currentTile.width; /* width incremented below */ )
@@ -3596,7 +3952,7 @@ public class World : MonoBehaviour
                         }
                     }
                     // others where we need to make green an alpha channel also like towns/ruins/villages
-                    // so the grass speckels don't show when we use the tile standing upright
+                    // so the grass speckels don't show when we use the tile as a billboard
                     else if (((colorIndex == (int)EGA_COLOR.BLACK) || (colorIndex == (int)EGA_COLOR.GREEN)) &&
                         (tile == (int)U4_Decompiled.TILE.VILLAGE ||
                         tile == (int)U4_Decompiled.TILE.TOWN ||
@@ -3822,36 +4178,38 @@ public class World : MonoBehaviour
             {
                 for (int width = 0; width < currentTile.width; /* width incremented below */ )
                 {
-                    int colorIndex = (fileData[index + 0x20] & 0xC0) >> 6;
-                    Color color = EGAColorPalette[colorIndex];
+                    int colorIndex;
+
+                    colorIndex = (fileData[index + 0x20] & 0xC0) >> 6;
+                    Color color = CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width, currentTile.height - height - 2, color);
 
-                    colorIndex = (fileData[index] & 0xC0) >> 6;
-                    color = EGAColorPalette[colorIndex];
+                    colorIndex = (fileData[index + 0x00] & 0xC0) >> 6;
+                    color = CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width++, currentTile.height - height - 1, color);
 
                     colorIndex = (fileData[index + 0x20] & 0x30) >> 4;
-                    color = EGAColorPalette[colorIndex];
+                    color = CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width, currentTile.height - height - 2, color);
 
-                    colorIndex = (fileData[index] & 0x30) >> 4;
-                    color = EGAColorPalette[colorIndex];
+                    colorIndex = (fileData[index + 0x00] & 0x30) >> 4;
+                    color = CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width++, currentTile.height - height - 1, color);
 
                     colorIndex = (fileData[index + 0x20] & 0x0C) >> 2;
-                    color = EGAColorPalette[colorIndex];
+                    color = CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width, currentTile.height - height - 2, color);
 
-                    colorIndex = (fileData[index] & 0x0C) >> 2;
-                    color = EGAColorPalette[colorIndex];
+                    colorIndex = (fileData[index + 0x00] & 0x0C) >> 2;
+                    color = CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width++, currentTile.height - height - 1, color);
 
                     colorIndex = (fileData[index + 0x20] & 0x03) >> 0;
-                    color = EGAColorPalette[colorIndex];
+                    color = CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width, currentTile.height - height - 2, color);
 
-                    colorIndex = (fileData[index] & 0x03) >> 0;
-                    color = EGAColorPalette[colorIndex];
+                    colorIndex = (fileData[index + 0x00] & 0x03) >> 0;
+                    color = CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width++, currentTile.height - height - 1, color);
 
                     // go to the next byte in the file
@@ -3950,7 +4308,55 @@ public class World : MonoBehaviour
         }
     }
 
-    [SerializeField]
+    void CreateCombatTerrains()
+    { 
+        // create a game object to store the combat terrain game objects, this should be at the top with no parent same as the world
+        GameObject combatTerrainsObject = new GameObject();
+        combatTerrainsObject.name = "Combat Terrains";
+
+        CombatTerrains = new GameObject[(int)U4_Decompiled.COMBAT_TERRAIN.MAX];
+
+        // go through all the combat terrains and load their maps and create a game object to hold them
+        // as a child of the above combat terrains game object
+        for (int i = 0; i<(int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+        {
+            // allocate space for the individual map
+            combatMaps[i] = new U4_Decompiled.TILE[11, 11];
+            // allocate space for the monster and party starting positions
+            combatMonsterStartPositions[i] = new CombatMonsterStartPositions[16];
+            combatPartyStartPositions[i] = new CombatPartyStartPositions[8];
+
+            // load the combat map from the original files
+            LoadCombatMap("/u4/" + ((U4_Decompiled.COMBAT_TERRAIN) i).ToString() + ".CON",
+                ref combatMaps[i],
+                ref combatMonsterStartPositions[i],
+                ref combatPartyStartPositions[i]);
+
+            // create a game object to hold it and set it as a child of the combat terrains game object
+            GameObject gameObject = new GameObject();
+            gameObject.transform.SetParent(combatTerrainsObject.transform);
+
+            // set it's name to match the combat terrain being created
+            gameObject.name = ((U4_Decompiled.COMBAT_TERRAIN) i).ToString();
+
+            // create the combat terrain based on the loaded map
+            CreateMap(gameObject, combatMaps[i]);
+
+            // Disable it initially
+            gameObject.SetActive(false);
+
+            // Position the combat map in place
+            gameObject.transform.position = new Vector3(0, 0, entireMapTILEs.GetLength(1) - combatMaps[i].GetLength(1)); ;
+
+            // rotate map into place
+            gameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+
+            // save the game object in the array
+            CombatTerrains[i] = gameObject;
+        }
+    }
+
+[SerializeField]
     U4_Decompiled.TILE[,] entireMapTILEs = new U4_Decompiled.TILE[32 * 8, 32 * 8];
 
     [SerializeField]
@@ -4009,7 +4415,7 @@ public class World : MonoBehaviour
     // These are different than the map tiles
     public enum DUNGEON_TILE
     {
-        NOTHING = 0x00,
+        HALLWAY = 0x00,
         LADDER_UP = 0x10, // 	Ladder Up
         LADDER_DOWN = 0x20, // 	Ladder Down
         LADDER_UP_AND_DOWN = 0x30, // 	Laddr Up & Down
@@ -4026,14 +4432,14 @@ public class World : MonoBehaviour
         FOUNTAIN_ACID = 0x92, // 	Acid Fountain
         FOUNTAIN_CURE = 0x93, // 	Cure Fountain
         FOUNTAIN_POISIN = 0x94, // 	Poison Fountain
-        FIELD = 0xa0,
+        FIELD = 0xA0,
         FIELD_POISON = 0xA0, // Poison Field
         FIELD_ENERGY = 0xA1, //  Energy Field
         FIELD_FIRE = 0xA2, // Fire Field
         FIELD_SLEEP = 0xA3, //  Sleep Field
         ALTAR = 0xB0, // Altar
         DOOR = 0xC0, // Door
-        DUNGEON_ROOM = 0xd0,
+        DUNGEON_ROOM = 0xD0,
         DUNGEON_ROOM_0 = 0xD0, // D0-DF Dungeon Rooms 0-15
         DUNGEON_ROOM_1 = 0xD1,
         DUNGEON_ROOM_2 = 0xD2,
@@ -4116,7 +4522,7 @@ public class World : MonoBehaviour
         DNG6 = 22, // secret doorway
     */
     /*
-        NOTHING = 0x00,
+        HALLWAY = 0x00,
         LADDER_UP = 0x10, 
         LADDER_DOWN = 0x20, 
         LADDER_UP_AND_DOWN = 0x30, 
@@ -4136,7 +4542,7 @@ public class World : MonoBehaviour
     // only the upper nibble defines the dungeon tile, the lower nibble is used for active dungeon monsters
     public U4_Decompiled.COMBAT_TERRAIN[] convertDungeonTileToCombat  =
     { 
-        U4_Decompiled.COMBAT_TERRAIN.DNG0, // NOTHING -> hallway
+        U4_Decompiled.COMBAT_TERRAIN.DNG0, // HALLWAY -> hallway
         U4_Decompiled.COMBAT_TERRAIN.DNG1, // LADDER_UP -> ladder up
         U4_Decompiled.COMBAT_TERRAIN.DNG2, // LADDER_DOWN -> ladder down
         U4_Decompiled.COMBAT_TERRAIN.DNG3, // LADDER_UP_AND_DOWN -> ladder up and down
@@ -4154,7 +4560,261 @@ public class World : MonoBehaviour
         U4_Decompiled.COMBAT_TERRAIN.DNG0  // WALL -> hallway, just in case
     };
 
-[SerializeField]
+    public enum NPC_MOVEMENT_MODE
+    {
+        FIXED = 0x00,
+        WANDER = 0x01,
+        FOLLOW = 0x80,
+        ATTACK = 0xff
+    };
+
+    public enum NPC_STRING_INDEX
+    {
+        NAME = 0,
+        PRONOUN = 1, //  (He, She or It)
+        LOOK_DESCRIPTION = 2,
+        JOB_RESPONSE = 3,
+        HEALTH_RESPONSE = 4,
+        KEYWORD1_RESPONSE = 5,
+        KEYWORD2_RESPONSE = 6,
+        QUESTION = 7,
+        QUESTION_YES_RESPONSE = 8,
+        QUESTION_NO_RESPONSE = 9,
+        KEYWORD1 = 10,
+        KEYWORD2 = 11
+    };
+
+    // these need to line up with U4_Decompiled.LOCATIONS so we can convert from Party._loc to this enum and the LOCATIONS enum, LBC_1 is a special case
+    public enum SETTLEMENT
+    {
+        // Castles
+        LCB_1 = 0,
+        LCB_2 = 1,
+        LYCAEUM = 2,
+        EMPATH = 3,
+        SERPENT = 4,
+
+        // Townes
+        MOONGLOW = 5,
+        BRITAIN = 6,
+        JHELOM = 7,
+        YEW = 8,
+        MINOC = 9,
+        TRINSIC = 10,
+        SKARA = 11,
+        MAGINCIA = 12,
+
+        // Villages
+        PAWS = 13,
+        DEN = 14,
+        VESPER = 15,
+        COVE = 16,
+        MAX = 17
+    }
+
+    public struct npc
+    {
+        public U4_Decompiled.TILE tile;
+        public byte pos_x;
+        public byte pos_y;
+        public NPC_MOVEMENT_MODE movement;
+        public int conversationIndex;
+        public List<string> strings;
+        public int probabilityOfTurningAway;
+        public bool questionAffectHumility;
+        public int questionTriggerIndex;
+    };
+
+    public npc[][] settlementNPCs = new npc[(int)SETTLEMENT.MAX][]; //32
+    public int[][] npcQuestionTriggerIndex = new int[(int)SETTLEMENT.MAX][]; //16
+    public bool[][] npcQuestionAffectHumility = new bool[(int)SETTLEMENT.MAX][]; //16
+    public int[][] npcProbabilityOfTurningAway = new int[(int)SETTLEMENT.MAX][]; //16
+    public List<string>[][] npcStrings = new List<string>[(int)SETTLEMENT.MAX][]; //16
+    public U4_Decompiled.TILE[][,] settlementMap = new U4_Decompiled.TILE[(int)SETTLEMENT.MAX][,]; //32,32
+
+    void LoadSettlements()
+    {
+        /* 
+           Offset 	Length (in bytes) 	Purpose
+           0x0 	    1024 	32x32 town map matrix
+           0x400 	32 	    Tile for NPCs 0-31
+           0x420 	32 	    Start_x for NPCs 0-31
+           0x440 	32 	    Start_y for NPCs 0-31
+           0x460 	32 	    Repetition of 0x400-0x41F
+           0x480 	32 	    Repetition of 0x420-0x43F
+           0x4A0 	32 	    Repetition of 0x440-0x45F
+           0x4C0 	32 	    Movement_behavior for NPCs 0-31 (0x0-fixed, 0x1-wander, 0x80-follow, 0xFF-attack)
+           0x4E0 	32 	    Conversion index (tlk file) for NPCs 0-31 
+        */
+
+        for (int settlement = 0; settlement < (int)SETTLEMENT.MAX; settlement++)
+        {
+            settlementNPCs[settlement] = new npc[32];
+            npcQuestionTriggerIndex[settlement] = new int[16];
+            npcQuestionAffectHumility[settlement] = new bool[16];
+            npcProbabilityOfTurningAway[settlement] = new int[16];
+            npcStrings[settlement] = new List<string>[16];
+            settlementMap[settlement] = new U4_Decompiled.TILE[32,32];
+
+            if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + ((SETTLEMENT)settlement).ToString() + ".ULT"))
+            {
+                Debug.Log("Could not find settlement file " + Application.persistentDataPath + "/u4/" + ((SETTLEMENT)settlement).ToString() + ".ULT");
+                continue;
+            }
+
+            // read the file
+            byte[] settlementFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + "/u4/" + ((SETTLEMENT)settlement).ToString() + ".ULT");
+
+            if (settlementFileData.Length != 1280)
+            {
+                Debug.Log("Settlement file incorrect length " + settlementFileData.Length);
+                continue;
+            }
+
+            /*
+                Offset 	Length (in bytes) 	Purpose
+                0x0 	1 	Question Flag (3=JOB, 4=HEALTH, 5=KEYWORD1, 6=KEYWORD2)
+                0x1 	1 	Does Response Affect Humility? (0=No, 1=Yes)
+                0x2 	1 	Probability of Turning Away (out of 256)
+                0x3 	Varies 	Name
+                Varies 	Varies 	Pronoun (He, She or It)
+                Varies 	Varies 	LOOK Description
+                Varies 	Varies 	JOB Response
+                Varies 	Varies 	HEALTH Response
+                Varies 	Varies 	KEYWORD 1 Response
+                Varies 	Varies 	KEYWORD 2 Response
+                Varies 	Varies 	Yes/No Question
+                Varies 	Varies 	YES Response
+                Varies 	Varies 	NO Response
+                Varies 	Varies 	KEYWORD 1
+                Varies 	Varies 	KEYWORD 2
+                Varies-0x119 	Varies 	00000....  
+            */
+
+            if (settlement == (int)SETTLEMENT.LCB_1 || settlement == (int)SETTLEMENT.LCB_2)
+            {
+                if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + "LCB" + ".TLK"))
+                {
+                    Debug.Log("Could not find settlement talk file " + Application.persistentDataPath + "/u4/" + "LCB" + ".TLK");
+                    continue;
+                }
+            }
+            else
+            {
+                if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + (SETTLEMENT)settlement + ".TLK"))
+                {
+                    Debug.Log("Could not find settlement talk file " + Application.persistentDataPath + "/u4/" + (SETTLEMENT)settlement + ".TLK");
+                    continue;
+                }
+            }
+
+            byte[] talkFileData;
+
+            if (settlement == (int)SETTLEMENT.LCB_1 || settlement == (int)SETTLEMENT.LCB_2)
+            {
+                // read the file
+                talkFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + "/u4/" + "LCB" + ".TLK");
+            }
+            else
+            {
+                // read the file
+                talkFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + "/u4/" + (SETTLEMENT)settlement + ".TLK");
+            }
+
+            if (talkFileData.Length != 4608)
+            {
+                Debug.Log("Settlement talk file incorrect length " + talkFileData.Length);
+                continue;
+            }
+
+            for (int talkIndex = 0; talkIndex < 16; talkIndex++)
+            {
+                npcStrings[settlement][talkIndex] = new List<string>();
+
+                npcQuestionTriggerIndex[settlement][talkIndex] = talkFileData[talkIndex * 288];
+                if (talkFileData[(talkIndex * 288) + 1] != 0)
+                {
+                    npcQuestionAffectHumility[settlement][talkIndex] = true;
+                }
+                else
+                {
+                    npcQuestionAffectHumility[settlement][talkIndex] = false;
+                }
+                npcProbabilityOfTurningAway[settlement][talkIndex] = talkFileData[talkIndex * 288 + 2];
+
+                string s;
+                int stringIndex = 3;
+
+                // search for strings in the .TLK file
+                do
+                {
+                    // reset string
+                    s = "";
+
+                    // manually construct the string because C# doesn't work with null terminated C strings well
+                    for (int i = 0; (i < 100) && (talkFileData[talkIndex * 288 + stringIndex] != 0); i++)
+                    {
+                        s += (char)talkFileData[talkIndex * 288 + stringIndex++];
+                    }
+
+                    // if the string is of any size add it to the list
+                    if (s.Length != 0)
+                    {
+                        npcStrings[settlement][talkIndex].Add(s);
+                    }
+
+                    // skip over null terminator to go to the next string
+                    stringIndex++;
+
+                    // continue to search for strings until we are past the end of the record or the last string is zero length 
+                } while ((s.Length != 0) && (stringIndex < 285));
+            }
+
+            // load settlement map data
+            int bufferIndex = 0;
+
+            for (int height = 0; height < 32; height++)
+            {
+                for (int width = 0; width < 32; width++)
+                {
+                    U4_Decompiled.TILE tileIndex = (U4_Decompiled.TILE)settlementFileData[bufferIndex++];
+                    settlementMap[settlement][width, height] = tileIndex;
+                }
+            }
+
+            // load npc data from the map data
+            for (int npcIndex = 0; npcIndex < 32; npcIndex++)
+            {
+                U4_Decompiled.TILE npcTile = (U4_Decompiled.TILE)settlementFileData[0x400 + npcIndex];
+                settlementNPCs[settlement][npcIndex].tile = npcTile;
+
+                // zero indicates unused
+                if (npcTile != 0)
+                {
+                    settlementNPCs[settlement][npcIndex].pos_x = settlementFileData[0x420 + npcIndex];
+                    settlementNPCs[settlement][npcIndex].pos_y = settlementFileData[0x440 + npcIndex];
+                    settlementNPCs[settlement][npcIndex].movement = (NPC_MOVEMENT_MODE)settlementFileData[0x4C0 + npcIndex];
+                    int conversationIndex = settlementFileData[0x4E0 + npcIndex];
+                    settlementNPCs[settlement][npcIndex].conversationIndex = conversationIndex;
+                    // grab the talk data and add it to this structure
+                    // zero indicates unused
+                    if (conversationIndex != 0)
+                    {
+                        // this can be 128 for one vendor in Vincent, not sure why? TODO
+                        if ((conversationIndex - 1) < npcStrings.Length)
+                        {
+                            settlementNPCs[settlement][npcIndex].strings = npcStrings[settlement][conversationIndex - 1];
+                            settlementNPCs[settlement][npcIndex].questionAffectHumility = npcQuestionAffectHumility[settlement][conversationIndex - 1];
+                            settlementNPCs[settlement][npcIndex].probabilityOfTurningAway = npcProbabilityOfTurningAway[settlement][conversationIndex - 1];
+                            settlementNPCs[settlement][npcIndex].questionTriggerIndex = npcQuestionTriggerIndex[settlement][conversationIndex - 1];
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    [SerializeField]
     public DUNGEON[] dungeons = new DUNGEON[(int)DUNGEONS.MAX];
     void LoadDungeons()
     {
@@ -4165,13 +4825,6 @@ public class World : MonoBehaviour
             dungeons[index].dungeonTILEs = new DUNGEON_TILE[8][,];
             if (index == (int)DUNGEONS.ABYSS)
             {
-                //  Levels 1 & 2 each have 8 rooms
-                //  Levels 3 & 4 each have 8 rooms
-                //  Level 5 has 5 rooms
-                //  Level 6 has 11 rooms
-                //  Level 7 has 4 rooms
-                //  Level 8 has 12 rooms
-                // The D# values still define the order the rooms appear; they simply reset every two dungeon levels. 
                 rooms = 64;
             }
             else
@@ -4196,14 +4849,14 @@ public class World : MonoBehaviour
 
             int fileIndex = 0;
 
-            for (int z = 0; z < 8; z++)
+            for (int level = 0; level < 8; level++)
             {
-                dungeons[index].dungeonTILEs[z] = new DUNGEON_TILE[8, 8];
+                dungeons[index].dungeonTILEs[level] = new DUNGEON_TILE[8, 8];
                 for (int y = 0; y < 8; y++)
                 {
                     for (int x = 0; x < 8; x++)
                     {
-                        dungeons[index].dungeonTILEs[z][x, 7 - y] = (DUNGEON_TILE)dungeonFileData[fileIndex++];
+                        dungeons[index].dungeonTILEs[level][x, 7 - y] = (DUNGEON_TILE)dungeonFileData[fileIndex++];
                     }
                 }
             }
@@ -4322,8 +4975,8 @@ public class World : MonoBehaviour
                 if ((monsterTile >= U4_Decompiled.TILE.POISON_FIELD) && (monsterTile <= U4_Decompiled.TILE.SLEEP_FIELD))
                 {
                     renderer.material.mainTexture = combinedLinearTexture;
-                    renderer.material.mainTextureOffset = new Vector2((float)((int)monsterTile * 16) / (float)renderer.material.mainTexture.width, 0.0f);
-                    renderer.material.mainTextureScale = new Vector2((float)16.0f / (float)renderer.material.mainTexture.width, 1.0f);
+                    renderer.material.mainTextureOffset = new Vector2((float)((int)monsterTile * originalTileWidth) / (float)renderer.material.mainTexture.width, 0.0f);
+                    renderer.material.mainTextureScale = new Vector2((float)originalTileWidth / (float)renderer.material.mainTexture.width, 1.0f);
 
                     Animate1 animate = monsterGameObject.AddComponent<Animate1>();
                 }
@@ -4521,7 +5174,7 @@ public class World : MonoBehaviour
                             mapTile = CreatePartialCube(true, true, true, true);
                             tileIndex = U4_Decompiled.TILE.BRICK_WALL;
                         }
-                        else if (dungeonTile == DUNGEON_TILE.NOTHING)
+                        else if (dungeonTile == DUNGEON_TILE.HALLWAY)
                         {
                             mapTile = CreateQuad();
                             tileIndex = U4_Decompiled.TILE.TILED_FLOOR;
@@ -4920,7 +5573,7 @@ public class World : MonoBehaviour
                     dungeonBlockGameObject = CreateDungeonRoom(ref dungeons[(int)dungeon].dungeonRooms[room]);
                     dungeonBlockGameObject.name = "Room #" + room;
                 }
-                else if ((dungeonTile == DUNGEON_TILE.NOTHING) 
+                else if ((dungeonTile == DUNGEON_TILE.HALLWAY) 
                         || (dungeonTile == DUNGEON_TILE.TRAP_FALLING_ROCKS)
                         || (dungeonTile == DUNGEON_TILE.TRAP_PIT)
                         || (dungeonTile == DUNGEON_TILE.TRAP_WIND_DARKNESS)
@@ -5207,7 +5860,7 @@ public class World : MonoBehaviour
         MeshRenderer renderer = partyGameObject.GetComponent<MeshRenderer>();
 
         // set the tile
-        renderer.material.mainTexture = expandedTiles[31]; // this tile number 31 is in the Party structure under tile.
+        renderer.material.mainTexture = expandedTiles[(int)U4_Decompiled.TILE.PARTY];
         renderer.material.mainTextureOffset = new Vector2((float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
         renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
 
@@ -5251,17 +5904,26 @@ public class World : MonoBehaviour
     // platforms may require textures be certain integer multiples of 2 this function will allow
     // a larger than one pixel border around the tile.
     const int TILE_BORDER_SIZE = 1;
+    int expandedTileWidth;
+    int expandedTileHeight;
+    int originalTileWidth;
+    int originalTileHeight;
+
     public void ExpandTiles()
     {
         // allocate some textures pointers
         expandedTiles = new Texture2D[256];
+        expandedTileWidth = originalTiles[0].width + 2 * TILE_BORDER_SIZE;
+        expandedTileHeight = originalTiles[0].height + 2 * TILE_BORDER_SIZE;
+        originalTileWidth = originalTiles[0].width;
+        originalTileHeight = originalTiles[0].height;
 
         // go through all the original tiles
         for (int i = 0; i < 256; i++)
         {
             // create a new slightly larger texture with boarder for this tile
             Texture2D currentTile = originalTiles[i];
-            Texture2D newTile = new Texture2D(currentTile.width + 2 * TILE_BORDER_SIZE, currentTile.height + 2 * TILE_BORDER_SIZE, TextureFormat.RGBA32, false);
+            Texture2D newTile = new Texture2D(expandedTileWidth, expandedTileHeight, TextureFormat.RGBA32, false);
 
             // we want pixles not fuzzy images
             newTile.filterMode = FilterMode.Point;
@@ -5796,7 +6458,7 @@ public class World : MonoBehaviour
                     rotation = new Vector3(0.0f, 180.0f, 0.0f); // rotate mountains to show their best side
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                 }
-                // make dungeon entrace into pyramid, rotate so it faces the right direction
+                // make dungeon entrance into pyramid, rotate so it faces the right direction
                 else if (tileIndex == U4_Decompiled.TILE.DUNGEON)
                 {
                     mapTile = CreatePyramid(0.2f);
@@ -6206,7 +6868,7 @@ public class World : MonoBehaviour
                         mapTile.transform.SetParent(animatedTerrrainGameObject.transform);
                         location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                         rotation = Vector3.zero;
-                        // since we animate the texture using uv we cannot use the expanded tiles and need to use the original ones
+                        // since we animate the texture using uv we cannot use the expanded tiles and need to use the linear ones
                         useExpandedTile = false;
                         useLinearTile = true;
                         useUIShader = false;
@@ -6247,16 +6909,16 @@ public class World : MonoBehaviour
                 {
                     renderer.material = combinedExpandedMaterial;
                     renderer.material.mainTexture = combinedExpandedTexture;
-                    renderer.material.mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)tileIndex % 16) * 18)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)tileIndex / 16) * 18)) / (float)renderer.material.mainTexture.height);
-                    renderer.material.mainTextureScale = new Vector2((float)(18 - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(18 - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
+                    renderer.material.mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)tileIndex % 16) * expandedTileWidth)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)tileIndex / 16) * expandedTileHeight)) / (float)renderer.material.mainTexture.height);
+                    renderer.material.mainTextureScale = new Vector2((float)(originalTileWidth) / (float)renderer.material.mainTexture.width, (float)(originalTileHeight) / (float)renderer.material.mainTexture.height);
                 
                 }
                 else if (useLinearTile)
                 {
                     renderer.material = combinedLinearMaterial;
                     renderer.material.mainTexture = combinedLinearTexture;
-                    renderer.material.mainTextureOffset = new Vector2((float)((int)tileIndex * 16) / (float)renderer.material.mainTexture.width, 0.0f);
-                    renderer.material.mainTextureScale = new Vector2((float)16.0f / (float)renderer.material.mainTexture.width, 1.0f);
+                    renderer.material.mainTextureOffset = new Vector2((float)((int)tileIndex * originalTileWidth) / (float)renderer.material.mainTexture.width, 0.0f);
+                    renderer.material.mainTextureScale = new Vector2((float)originalTileWidth / (float)renderer.material.mainTexture.width, 1.0f);
                 }
                 else
                 {
@@ -6271,7 +6933,7 @@ public class World : MonoBehaviour
                 Vector2[] uv = new Vector2[mesh.uv.Length];
                 Vector2 textureAtlasOffset;
 
-                textureAtlasOffset = new Vector2((int)tileIndex % textureExpandedAtlasPowerOf2 * 18, (int)tileIndex / textureExpandedAtlasPowerOf2 * 18);
+                textureAtlasOffset = new Vector2((int)tileIndex % textureExpandedAtlasPowerOf2 * expandedTileWidth, (int)tileIndex / textureExpandedAtlasPowerOf2 * expandedTileHeight);
                 for (int u = 0; u < mesh.uv.Length; u++)
                 {
                     Vector2 mainTextureOffset;
@@ -6279,13 +6941,13 @@ public class World : MonoBehaviour
 
                     if (useExpandedTile)
                     {
-                        mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)tileIndex % 16) * 18)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)tileIndex / 16) * 18)) / (float)renderer.material.mainTexture.height);
-                        mainTextureScale = new Vector2((float)(18 - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(18 - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
+                        mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)tileIndex % 16) * expandedTileWidth)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)tileIndex / 16) * expandedTileHeight)) / (float)renderer.material.mainTexture.height);
+                        mainTextureScale = new Vector2((float)(originalTileWidth) / (float)renderer.material.mainTexture.width, (float)(originalTileHeight) / (float)renderer.material.mainTexture.height);
                     }
                     else if (useLinearTile)
                     {
-                        mainTextureOffset = new Vector2((float)((int)tileIndex * 16) / (float)renderer.material.mainTexture.width, 0.0f);
-                        mainTextureScale = new Vector2((float)16 / (float)renderer.material.mainTexture.width, 1.0f);
+                        mainTextureOffset = new Vector2((float)((int)tileIndex * originalTileWidth) / (float)renderer.material.mainTexture.width, 0.0f);
+                        mainTextureScale = new Vector2((float)originalTileWidth / (float)renderer.material.mainTexture.width, 1.0f);
                     }
                     else
                     {
@@ -6492,8 +7154,10 @@ public class World : MonoBehaviour
      */
     private void Combine(GameObject gameObject, bool useMipMaps = false, TextureFormat textureFormat = TextureFormat.RGBA32, bool destroy = true)
     {
-        int size;
-        int originalSize;
+        int sizeW;
+        int sizeH;
+        int originalSizeW;
+        int originalSizeH;
         int pow2;
         Texture2D combinedTexture;
         //Material material;
@@ -6531,15 +7195,18 @@ public class World : MonoBehaviour
             Texture checkTexture = objectsToCombine[0].GetComponent<MeshRenderer>().material.mainTexture;
             if (checkTexture && checkTexture.width > 0)
             {
-                originalSize = checkTexture.width;
+                originalSizeW = checkTexture.width;
+                originalSizeH = checkTexture.height;
             }
             else
             {
-                originalSize = 2 * TILE_BORDER_SIZE + 16;
+                originalSizeW = expandedTileWidth;
+                originalSizeH = expandedTileHeight;
             }
             pow2 = GetTextureSquareSize(objectsToCombine);
-            size = pow2 * originalSize;
-            combinedTexture = new Texture2D(size, size, textureFormat, useMipMaps);
+            sizeW = pow2 * originalSizeW;
+            sizeH = pow2 * originalSizeH;
+            combinedTexture = new Texture2D(sizeW, sizeH, textureFormat, useMipMaps);
             combinedTexture.filterMode = FilterMode.Point;
 
             // Create the combined square texture (remember to ensure the total size of the texture isn't
@@ -6550,10 +7217,10 @@ public class World : MonoBehaviour
                 texture = (Texture2D)objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture;
                 if (texture && !textureAtlas.ContainsKey(texture))
                 {
-                    int x = (index % pow2) * originalSize;
-                    int y = (index / pow2) * originalSize;
+                    int x = (index % pow2) * originalSizeW;
+                    int y = (index / pow2) * originalSizeH;
 
-                    combinedTexture.SetPixels(x, y, originalSize, originalSize, texture.GetPixels());
+                    combinedTexture.SetPixels(x, y, originalSizeW, originalSizeH, texture.GetPixels());
 
                     x = index % pow2;
                     y = index / pow2;
@@ -6658,8 +7325,9 @@ public class World : MonoBehaviour
     // This version creates a horizontal texture atlas so we can do UV animation for things like water and lava.
     private void Combine2(GameObject gameObject, bool useMipMaps = false, TextureFormat textureFormat = TextureFormat.RGBA32, bool destroy = true)
     {
-        int size;
-        int originalSize;
+        int sizeW;
+        int originalSizeW;
+        int originalSizeH;
         int textureCount;
         Texture2D combinedTexture;
         Material material;
@@ -6693,10 +7361,11 @@ public class World : MonoBehaviour
 
         if (objectsToCombine.Length > 0)
         {
-            originalSize = objectsToCombine[0].GetComponent<MeshRenderer>().material.mainTexture.width;
+            originalSizeW = objectsToCombine[0].GetComponent<MeshRenderer>().material.mainTexture.width;
+            originalSizeH = objectsToCombine[0].GetComponent<MeshRenderer>().material.mainTexture.height;
             textureCount = GetTextureSize(objectsToCombine);
-            size = textureCount * originalSize;
-            combinedTexture = new Texture2D(size, originalSize, textureFormat, useMipMaps);
+            sizeW = textureCount * originalSizeW;
+            combinedTexture = new Texture2D(sizeW, originalSizeH, textureFormat, useMipMaps);
             combinedTexture.filterMode = FilterMode.Point;
 
             // Create the combined texture (remember to ensure the total size of the texture isn't
@@ -6707,10 +7376,10 @@ public class World : MonoBehaviour
                 texture = (Texture2D)objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture;
                 if (!textureAtlas.ContainsKey(texture))
                 {
-                    int x = index * originalSize;
+                    int x = index * originalSizeW;
                     int y = 0;
 
-                    combinedTexture.SetPixels(x, y, originalSize, originalSize, texture.GetPixels());
+                    combinedTexture.SetPixels(x, y, originalSizeW, originalSizeH, texture.GetPixels());
 
                     x = index;
                     y = 0;
@@ -6803,8 +7472,10 @@ public class World : MonoBehaviour
     public int textureAtlasPowerOf2;
     void CreateSquareTextureAtlas(ref Texture2D[] tilesTextures, bool useMipMaps = false, TextureFormat textureFormat = TextureFormat.RGBA32)
     {
-        int size;
-        int originalSize;
+        int sizeW;
+        int sizeH;
+        int originalSizeW;
+        int originalSizeH;
         Texture2D texture;
 
         // figure out the square size power of 2 factor for the number of textures we have
@@ -6848,13 +7519,15 @@ public class World : MonoBehaviour
         }
 
         // get the texture size used from the first one
-        originalSize = tilesTextures[0].width;
+        originalSizeW = tilesTextures[0].width;
+        originalSizeH = tilesTextures[0].height;
 
         // calc full size of texture atlas
-        size = textureAtlasPowerOf2 * originalSize;
+        sizeW = textureAtlasPowerOf2 * originalSizeW;
+        sizeH = textureAtlasPowerOf2 * originalSizeH;
 
         // creare a new combined texture big enough to hold all the textures
-        combinedTexture = new Texture2D(size, size, textureFormat, useMipMaps);
+        combinedTexture = new Texture2D(sizeW, sizeH, textureFormat, useMipMaps);
         // we want our pixels
         combinedTexture.filterMode = FilterMode.Point;
 
@@ -6866,10 +7539,10 @@ public class World : MonoBehaviour
             texture = (Texture2D)tilesTextures[i];
             if (texture && !textureAtlasHashTable.ContainsKey(texture))
             {
-                int x = (index % textureAtlasPowerOf2) * originalSize;
-                int y = (index / textureAtlasPowerOf2) * originalSize;
+                int x = (index % textureAtlasPowerOf2) * originalSizeW;
+                int y = (index / textureAtlasPowerOf2) * originalSizeH;
 
-                combinedTexture.SetPixels(x, y, originalSize, originalSize, texture.GetPixels());
+                combinedTexture.SetPixels(x, y, originalSizeW, originalSizeH, texture.GetPixels());
 
                 x = index % textureAtlasPowerOf2;
                 y = index / textureAtlasPowerOf2;
@@ -6889,8 +7562,9 @@ public class World : MonoBehaviour
     public Material combinedLinearMaterial;
     void CreateLinearTextureAtlas(ref Texture2D[] tilesTextures, bool useMipMaps = false, TextureFormat textureFormat = TextureFormat.RGBA32)
     {
-        int size;
-        int originalSize;
+        int sizeW;
+        int originalSizeW;
+        int originalSizeH;
         Texture2D texture;
 
         // figure out the square size power of 2 factor for the number of textures we have
@@ -6914,13 +7588,14 @@ public class World : MonoBehaviour
         }
 
         // get the texture size used from the first one
-        originalSize = tilesTextures[0].width;
+        originalSizeW = tilesTextures[0].width; 
+        originalSizeH = tilesTextures[0].height;
 
         // calc full size of texture atlas
-        size = tilesTextures.Length * originalSize;
+        sizeW = tilesTextures.Length * originalSizeW;
 
         // creare a new combined texture big enough to hold all the textures
-        combinedLinearTexture = new Texture2D(size, originalSize, textureFormat, useMipMaps);
+        combinedLinearTexture = new Texture2D(sizeW, originalSizeH, textureFormat, useMipMaps);
         // we want our pixels
         combinedLinearTexture.filterMode = FilterMode.Point;
 
@@ -6932,10 +7607,10 @@ public class World : MonoBehaviour
             texture = (Texture2D)tilesTextures[i];
             if (texture)
             {
-                int x = index * originalSize;
+                int x = index * originalSizeW;
                 int y = 0;
 
-                combinedLinearTexture.SetPixels(x, y, originalSize, originalSize, texture.GetPixels());
+                combinedLinearTexture.SetPixels(x, y, originalSizeW, originalSizeH, texture.GetPixels());
                 index++;
             }
         }
@@ -6953,8 +7628,10 @@ public class World : MonoBehaviour
 
     void CreateExpandedTextureAtlas(ref Texture2D[] tilesTextures, bool useMipMaps = false, TextureFormat textureFormat = TextureFormat.RGBA32)
     {
-        int size;
-        int originalSize;
+        int sizeW; 
+        int sizeH;
+        int originalSizeW; 
+        int originalSizeH;
 
         // figure out the square size power of 2 factor for the number of textures we have
         if (tilesTextures.Length == 0)
@@ -6997,13 +7674,15 @@ public class World : MonoBehaviour
         }
 
         // get the texture size used from the first one
-        originalSize = tilesTextures[0].width;
+        originalSizeW = tilesTextures[0].width;
+        originalSizeH = tilesTextures[0].height;
 
         // calc full square size of texture atlas
-        size = textureExpandedAtlasPowerOf2 * originalSize;
+        sizeW = textureExpandedAtlasPowerOf2 * originalSizeW;
+        sizeH = textureExpandedAtlasPowerOf2 * originalSizeH;
 
         // creare a new combined texture big enough to hold all the textures
-        combinedExpandedTexture = new Texture2D(size, size, textureFormat, useMipMaps);
+        combinedExpandedTexture = new Texture2D(sizeW, sizeH, textureFormat, useMipMaps);
         // we want our pixels
         combinedExpandedTexture.filterMode = FilterMode.Point;
 
@@ -7014,10 +7693,10 @@ public class World : MonoBehaviour
             Texture2D texture = tilesTextures[i];
             if (texture)
             {
-                int x = (i % textureExpandedAtlasPowerOf2) * originalSize;
-                int y = (i / textureExpandedAtlasPowerOf2) * originalSize;
+                int x = (i % textureExpandedAtlasPowerOf2) * originalSizeW;
+                int y = (i / textureExpandedAtlasPowerOf2) * originalSizeH;
 
-                combinedExpandedTexture.SetPixels(x, y, originalSize, originalSize, texture.GetPixels());
+                combinedExpandedTexture.SetPixels(x, y, originalSizeW, originalSizeH, texture.GetPixels());
             }
         }
         // apply all the pixles we copied in the loop above
@@ -7647,16 +8326,16 @@ public class World : MonoBehaviour
                 // inside buildings we need to check extra stuff
                 if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
                 {
-                    Settlement settlement;
+                    SETTLEMENT settlement;
 
                     // get the current settlement, need to special case BRITANNIA as the castle has two levels, use the ladder to determine which level
                     if ((u4.Party._loc == U4_Decompiled.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == U4_Decompiled.TILE.LADDER_DOWN))
                     {
-                        settlement = Settlements[0].GetComponent<Settlement>();
+                        settlement = SETTLEMENT.LCB_1;
                     }
                     else
                     {
-                        settlement = Settlements[(int)u4.Party._loc].GetComponent<Settlement>();
+                        settlement = (SETTLEMENT)u4.Party._loc;
                     }
 
                     // set the name of the game object to match the npc
@@ -7666,7 +8345,7 @@ public class World : MonoBehaviour
                     }
                     else
                     {
-                        childofnpcs.name = settlement.npcStrings[currentNpcs[npcIndex]._tlkidx - 1][0];
+                        childofnpcs.name = npcStrings[(int)settlement][currentNpcs[npcIndex]._tlkidx - 1][0];
                     }
 
                     // adjust position based on the offset of the raycastSettlementMap due to the player position
@@ -8039,92 +8718,35 @@ public class World : MonoBehaviour
         dungeonMonsters.transform.localPosition = Vector3.zero;
         dungeonMonsters.transform.localRotation = Quaternion.identity;
 
-        InitializeEGAPalette();
-        LoadTilesEGA();
+        //InitializeEGAPalette();
+        //LoadTilesEGA();
+        //InitializeCGAPalette();
+        //LoadTilesCGA();
+        InitializeApple2Palette();
+        LoadTilesApple2();
+
         FixMageTile3();
         ExpandTiles();
 
-        //InitializeCGAPalette();
-        //LoadTilesCGA();
+        CreateLinearTextureAtlas(ref originalTiles);
 
         // load the entire world map
         LoadWorldMap();
 
-        // create the part game object
-        CreateParty();
-
-        // create a game object to store the combat terrain game objects, this should be at the top with no parent same as the world
-        GameObject combatTerrainsObject = new GameObject();
-        combatTerrainsObject.name = "Combat Terrains";
-
-        CombatTerrains = new GameObject[(int)U4_Decompiled.COMBAT_TERRAIN.MAX];
-
-        // go through all the combat terrains and load their maps and create a game object to hold them
-        // as a child of the above combat terrains game object
-        for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
-        {
-            // allocate space for the individual map
-            combatMaps[i] = new U4_Decompiled.TILE[11, 11];
-            // allocate space for the monster and party starting positions
-            combatMonsterStartPositions[i] = new CombatMonsterStartPositions[16];
-            combatPartyStartPositions[i] = new CombatPartyStartPositions[8];
-
-            // load the combat map from the original files
-            LoadCombatMap("/u4/" + ((U4_Decompiled.COMBAT_TERRAIN)i).ToString() + ".CON", 
-                ref combatMaps[i], 
-                ref combatMonsterStartPositions[i], 
-                ref combatPartyStartPositions[i]);
-
-            // create a game object to hold it and set it as a child of the combat terrains game object
-            GameObject gameObject = new GameObject();
-            gameObject.transform.SetParent(combatTerrainsObject.transform);
-
-            // set it's name to match the combat terrain being created
-            gameObject.name = ((U4_Decompiled.COMBAT_TERRAIN)i).ToString();
-
-            // create the combat terrain based on the loaded map
-            CreateMap(gameObject, combatMaps[i]);
-
-            // Disable it initially
-            gameObject.SetActive(false);
-
-            // Position the combat map in place
-            gameObject.transform.position = new Vector3(0, 0, entireMapTILEs.GetLength(1) - combatMaps[i].GetLength(1)); ;
-
-            // rotate map into place
-            gameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
-
-            // save the game object in the array
-            CombatTerrains[i] = gameObject;
-        }
-
-        // get a reference to the game engine
-        u4 = FindObjectOfType<U4_Decompiled>();
-
-        // assign settlement game objects
-        Settlements = new GameObject[17];
-        Settlements[(int)U4_Decompiled.LOCATIONS.BRITANNIA] = GameObject.Find("LBC_1");
-        Settlements[(int)0] = GameObject.Find("LBC_2"); // actual location of the upper and lower levels is determined by the location of the ladders
-        Settlements[(int)U4_Decompiled.LOCATIONS.THE_LYCAEUM] = GameObject.Find("LYCAEUM");
-        Settlements[(int)U4_Decompiled.LOCATIONS.EMPATH_ABBY] = GameObject.Find("EMPATH");
-        Settlements[(int)U4_Decompiled.LOCATIONS.SERPENT_HOLD] = GameObject.Find("SERPENT");
-        Settlements[(int)U4_Decompiled.LOCATIONS.MOONGLOW] = GameObject.Find("MOONGLOW");
-        Settlements[(int)U4_Decompiled.LOCATIONS.BRITAIN] = GameObject.Find("BRITAIN");
-        Settlements[(int)U4_Decompiled.LOCATIONS.JHELOM] = GameObject.Find("JHELOM");
-        Settlements[(int)U4_Decompiled.LOCATIONS.YEW] = GameObject.Find("YEW");
-        Settlements[(int)U4_Decompiled.LOCATIONS.MINOC] = GameObject.Find("MINOC");
-        Settlements[(int)U4_Decompiled.LOCATIONS.TRINSIC] = GameObject.Find("TRINSIC");
-        Settlements[(int)U4_Decompiled.LOCATIONS.SKARA_BRAE] = GameObject.Find("SKARA");
-        Settlements[(int)U4_Decompiled.LOCATIONS.MAGINCIA] = GameObject.Find("MAGINCIA");
-        Settlements[(int)U4_Decompiled.LOCATIONS.PAWS] = GameObject.Find("PAWS");
-        Settlements[(int)U4_Decompiled.LOCATIONS.BUCCANEERS_DEN] = GameObject.Find("DEN");
-        Settlements[(int)U4_Decompiled.LOCATIONS.VESPER] = GameObject.Find("VESPER");
-        Settlements[(int)U4_Decompiled.LOCATIONS.COVE] = GameObject.Find("COVE");
-
-        CreateLinearTextureAtlas(ref originalTiles);
+        //load all settlements
+        LoadSettlements();
 
         // load all dungeons
         LoadDungeons();
+
+        // create the part game object
+        CreateParty();
+
+        // Create the combat terrains
+        CreateCombatTerrains();
+
+        // get a reference to the game engine
+        u4 = FindObjectOfType<U4_Decompiled>();
 
         //GameObject dungeonsRoomsGameObject = new GameObject("Dungeon Rooms");
         //CreateDungeonRooms(dungeonsRoomsGameObject);
@@ -8133,7 +8755,6 @@ public class World : MonoBehaviour
         //GameObject dungeonsGameObject = new GameObject("Dungeons");
         //CreateDungeons(dungeonsGameObject);
         */
-
         
         // create all the dungeons and all the levels, this will take a while so be prepared to wait, but it is cool and worth the wait
         /*
@@ -8557,8 +9178,6 @@ public class World : MonoBehaviour
                 if (Camera.main.transform.eulerAngles.y != 0)
                 {
                     //rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-
-                    //TODO if we are going to do rotation then we need to adjust the directional controls when in combat in the dungeon
 
                     if (rotateTransform)
                     {
