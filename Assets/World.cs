@@ -5850,7 +5850,7 @@ public class World : MonoBehaviour
         //partyGameObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
         partyGameObject = CreateQuad();
         partyGameObject.transform.SetParent(party.transform);
-
+        
         // rotate the npc game object after creating and addition of child
         partyGameObject.transform.localPosition = new Vector3(0, 0, 0); 
         //partyGameObject.transform.localEulerAngles = new Vector3(90.0f, 180.0f, 0);
@@ -8630,38 +8630,53 @@ public class World : MonoBehaviour
             return checksum;
         }
 
-        // set all visible tiles in the destination raycast map to blank to start
-        for (int y = 0; y < raycastMap.GetLength(1); y++)
+        // disable raycast outdoors when in the ballon and it is airborne, just copy all the tiles instead
+        if ((u4.Party._tile == U4_Decompiled.TILE.BALOON) && (u4.Party.f_1dc == 1))
         {
-            for (int x = 0; x < raycastMap.GetLength(0); x++)
+            for (int y = 0; y < raycastMap.GetLength(1); y++)
             {
-                raycastMap[x, y] = U4_Decompiled.TILE.BLANK;
+                for (int x = 0; x < raycastMap.GetLength(0); x++)
+                {
+                     raycastMap[x, y] = map[(x + offset_x + map.GetLength(0)) % map.GetLength(0), (y + offset_y + map.GetLength(1)) % map.GetLength(1)];
+                }
             }
         }
+        else
+        {
+            // set all visible tiles in the destination raycast map to blank to start
+            for (int y = 0; y < raycastMap.GetLength(1); y++)
+            {
+                for (int x = 0; x < raycastMap.GetLength(0); x++)
+                {
+                    raycastMap[x, y] = U4_Decompiled.TILE.BLANK;
+                }
+            }
 
-        // copy the starting position as it is alway visible given the map offset
-        U4_Decompiled.TILE currentTile = map[pos_x, pos_y];
-        raycastMap[pos_x - offset_x, pos_y - offset_y] = currentTile;
-        checksum += (int)currentTile; // add current tile to the checksum
+            // copy the starting position as it is alway visible given the map offset
+            U4_Decompiled.TILE currentTile = map[pos_x, pos_y];
+            raycastMap[pos_x - offset_x, pos_y - offset_y] = currentTile;
+            checksum += (int)currentTile; // add current tile to the checksum
 
-        // cast out recusively from the starting position
-        checksum += Cast_Ray(ref map,  0, -1, pos_x, (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP
-        checksum += Cast_Ray(ref map,  0,  1, pos_x, (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN
-        checksum += Cast_Ray(ref map, -1,  0, (pos_x - 1), pos_y, ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray LEFT
-        checksum += Cast_Ray(ref map,  1,  0, (pos_x + 1), pos_y, ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray RIGHT
-        checksum += Cast_Ray(ref map,  1,  1, (pos_x + 1), (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN and to the RIGHT
-        checksum += Cast_Ray(ref map,  1, -1, (pos_x + 1), (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP and to the RIGHT
-        checksum += Cast_Ray(ref map, -1,  1, (pos_x - 1), (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN and to the LEFT
-        checksum += Cast_Ray(ref map, -1, -1, (pos_x - 1), (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP and to the LEFT
-        
-        //Debug.Log("Raycast processing time : " + (Time.realtimeSinceStartup - startTime));
+            // cast out recusively from the starting position
+            checksum += Cast_Ray(ref map, 0, -1, pos_x, (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP
+            checksum += Cast_Ray(ref map, 0, 1, pos_x, (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN
+            checksum += Cast_Ray(ref map, -1, 0, (pos_x - 1), pos_y, ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray LEFT
+            checksum += Cast_Ray(ref map, 1, 0, (pos_x + 1), pos_y, ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray RIGHT
+            checksum += Cast_Ray(ref map, 1, 1, (pos_x + 1), (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN and to the RIGHT
+            checksum += Cast_Ray(ref map, 1, -1, (pos_x + 1), (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP and to the RIGHT
+            checksum += Cast_Ray(ref map, -1, 1, (pos_x - 1), (pos_y + 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray DOWN and to the LEFT
+            checksum += Cast_Ray(ref map, -1, -1, (pos_x - 1), (pos_y - 1), ref raycastMap, offset_x, offset_y, wrapTile); // Cast a ray UP and to the LEFT
+
+            //Debug.Log("Raycast processing time : " + (Time.realtimeSinceStartup - startTime));
+        }
 
         // return the file tile checksum so we can determine if there were any changes from a previous raycase
         return checksum; 
     }
 
-    int lastRaycastPlayer_posx = 0;
-    int lastRaycastPlayer_posy = 0;
+    int lastRaycastPlayer_posx = -1;
+    int lastRaycastPlayer_posy = -1;
+    int lastRaycastPlayer_f_1dc = -1;
 
     // create a temp TILE map array to hold the combat terrains as we load them
     U4_Decompiled.TILE[][,] combatMaps = new U4_Decompiled.TILE[(int)U4_Decompiled.COMBAT_TERRAIN.MAX][,];
@@ -8718,12 +8733,12 @@ public class World : MonoBehaviour
         dungeonMonsters.transform.localPosition = Vector3.zero;
         dungeonMonsters.transform.localRotation = Quaternion.identity;
 
-        //InitializeEGAPalette();
-        //LoadTilesEGA();
+        InitializeEGAPalette();
+        LoadTilesEGA();
         //InitializeCGAPalette();
         //LoadTilesCGA();
-        InitializeApple2Palette();
-        LoadTilesApple2();
+        //InitializeApple2Palette();
+        //LoadTilesApple2();
 
         FixMageTile3();
         ExpandTiles();
@@ -8992,6 +9007,15 @@ public class World : MonoBehaviour
                 {
                     party.GetComponentInChildren<Renderer>().material.mainTexture = expandedTiles[(int)u4.Party._tile];
                     party.name = u4.Party._tile.ToString();
+
+                    if ((u4.Party._tile == U4_Decompiled.TILE.BALOON) && (u4.Party.f_1dc == 1))
+                    {
+                        party.transform.position = new Vector3(party.transform.position.x, 1, party.transform.position.z);
+                    }
+                    else
+                    {
+                        party.transform.position = new Vector3(party.transform.position.x, 0, party.transform.position.z);
+                    }
                 }
             }
         }
@@ -9004,7 +9028,7 @@ public class World : MonoBehaviour
         partyGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
 
         // we've moved, regenerate the raycast, TODO NPCs can also affect the raycast when moving, need to check them also or redo raycast more often
-        if ((u4.Party._x != lastRaycastPlayer_posx) || (u4.Party._y != lastRaycastPlayer_posy))
+        if ((u4.Party._x != lastRaycastPlayer_posx) || (u4.Party._y != lastRaycastPlayer_posy) || (u4.Party.f_1dc != lastRaycastPlayer_f_1dc))
         {
             Vector3 location = Vector3.zero;
 

@@ -1461,10 +1461,11 @@ sfx_magic2:
             if (lastMode != current_mode)
             {
                 lastMode = current_mode;
+                // TODO add better cross fade between musics?
+                // TODO move this out of the game engine interface
                 Camera.main.GetComponent<AudioSource>().Stop();
                 if (current_mode == U4_Decompiled.MODE.OUTDOORS)
                 {
-
                     Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.WANDERER - 1];
                 }
                 else if (current_mode == U4_Decompiled.MODE.BUILDING)
@@ -1480,6 +1481,10 @@ sfx_magic2:
                     {
                         Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.TOWNS - 1];
                     }
+                }
+                else if (current_mode == U4_Decompiled.MODE.DUNGEON)
+                {
+                    Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.DUNGEON - 1];
                 }
                 else if (current_mode == U4_Decompiled.MODE.COMBAT)
                 {
@@ -1500,13 +1505,14 @@ sfx_magic2:
 
                 Camera.main.GetComponent<AudioSource>().Play();
             }
+
             main_Sound(buffer, buffer.Length);
             int soundCount = buffer[0];
             for (int i = 0; i < soundCount; i++)
             {
                 int sound = buffer[i * 2 + 1];
                 int length = buffer[i * 2 + 2];
-                Debug.Log("Sound " + (SOUND_EFFECT)sound + " Length " + length);
+                //Debug.Log("Sound " + (SOUND_EFFECT)sound + " Length " + length);
                 if (sound < soundEffects.Length)
                 {
                     // TODO need to wait for sound to complete before playing the next one
