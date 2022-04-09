@@ -56,6 +56,7 @@ public class U4_Decompiled : MonoBehaviour
         SHIP_SOUTH = 0x13,
 
         /*horse W/E*/
+        HORSE = 0x14,
         HORSE_WEST = 0x14,
         HORSE_EAST = 0x15,
 
@@ -773,7 +774,7 @@ public class U4_Decompiled : MonoBehaviour
         GRASS = 0,
         BRIDGE = 1,
         BRICK = 2,
-        DUNGEON = 3, // all tiles, used outside
+        DUNGEON = 3, // just all tiles, used outside when on dungeon entrance
         HILL = 4,
         FOREST = 5,
         BRUSH = 6,
@@ -886,7 +887,263 @@ public class U4_Decompiled : MonoBehaviour
 
     public System.Text.ASCIIEncoding enc;
 
+
+    public AudioClip[] music = new AudioClip[9];
+
+    // order played in the original intro, from http://www.applevault.com/ultima/
+    public enum MUSIC
+    {
+        NONE = 0,
+        TOWNS = 1,
+        SHOPPING = 2,
+        DUNGEON = 3,
+        CASTLES = 4,
+        RULEBRIT = 5,
+        WANDERER = 6, // OUTSIDE
+        COMBAT = 7,
+        SHRINES = 8,
+        FANFARE = 9,
+        MAX = 10
+    }
+
     public AudioClip[] soundEffects = new AudioClip[11];
+
+    public enum SOUND_EFFECT
+    {
+        FOOTSTEP = 0,
+        BLOCKED = 1,
+        WHAT = 2,
+        CANNON = 3,
+        PLAYER_ATTACK = 4,
+        FOE_ATTACK = 5,
+        PLAYER_HITS = 6,
+        FOE_HITS = 7,
+        FLEE = 8,
+        SPELL_EFFECT = 9, // length is the fequency of the magic high pitch tone
+        SPELL_CAST = 10, // length is the number or short random tones
+        WHIRL_POOL = 11,
+        TWISTER = 12
+    };
+
+
+    /* 
+    sound sample information from DOS version for sound 9 & 10, measured manually
+
+    40 up down cycles per random tone for sound 10
+
+    cure
+    sound 10 length 5 followed by
+    sound 9 length 98
+
+    heal
+    sound 10 length 10 followed by
+    sound 9 length 103, total length 1.103s 51 pulses in .022 seconds or 2318 pulses per second for a total of 2557 pulses over 1.103s
+    103 -> 1.103s -> ratio is 93
+
+    moongate 
+    sound 9 lenth 160, total length 1.685s  42 pulses in .028 seconds or 1500 pulses per second or 2527.5 pulses over 1.685s
+    160 -> 1.685 -> ratio is 95
+
+    assumed 2560 total pulses over ~length/94 seconds
+    */
+
+    /* from apple2 assembly
+sfx_magic1:
+	stx zp_sfx_duration
+@1:
+	jsr rand // get a random value
+	ldx #$28 // 40
+@2:
+	tay  // y = a i.e. use random value in y
+@3:
+	dey // y--
+	bne @3 // if y == 0, delay loop
+	bit hw_SPEAKER
+	dex // x-- count to 40
+	bne @2
+	dec zp_sfx_duration  // length
+	bne @1
+	rts
+    */
+    AudioClip CreateMagicSpecialEffectSound(int length)
+    {
+        float sampleRate = 44100;
+        float max = 500f;
+        float min = 200f;
+        int channels = 2;
+        int cycles = 20;
+        int count = 0;
+        float frequency = min;
+        float[] fequencies = new float[length];
+        float[] data;
+        float phase = 0;
+        float sampleCount = 0f;
+
+        // make some random frequencies and calc total samples based on those frequencies
+        for (int i = 0; i < length; i++)
+        {
+            frequency = Random.Range(min, max);
+            sampleCount += (float)cycles * sampleRate / frequency;
+            fequencies[i] = frequency;
+        }
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            phase += 2 * Mathf.PI * frequency / sampleRate;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // sine wave
+                //data[i + j] = Mathf.Sin(phase);
+
+                // square wave
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.5f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase >= 2 * Mathf.PI)
+            {
+                phase -= 2 * Mathf.PI;
+                count++;
+            }
+
+            // switch to a new frequency after so many cycles
+            if (count > cycles)
+            {
+                count = 0;
+                frequency = Random.Range(min, max);
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("magic", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
+
+    /* from apple2 assembly
+sfx_magic2:
+	stx sfx_m2_ctr2
+	lda #$01
+	sta sfx_m2_ctr1
+@1:
+	lda #$30
+	sta zp_sfx_duration
+@2:
+	ldx sfx_m2_ctr2
+@3:
+	dex
+	bne @3
+	bit hw_SPEAKER
+	ldx sfx_m2_ctr1
+@4:
+	dex
+	bne @4
+	bit hw_SPEAKER
+	dec zp_sfx_duration
+	bne @2
+	dec sfx_m2_ctr2
+	inc sfx_m2_ctr1
+	lda sfx_m2_ctr1
+	cmp #$1b
+	bne @1
+@5:
+	lda #$30
+	sta zp_sfx_duration
+@6:
+	ldx sfx_m2_ctr2
+@7:
+	dex
+	bne @7
+	bit hw_SPEAKER
+	ldx sfx_m2_ctr1
+@8:
+	dex
+	bne @8
+	bit hw_SPEAKER
+	dec zp_sfx_duration
+	bne @6
+	dec sfx_m2_ctr1
+	inc sfx_m2_ctr2
+	lda sfx_m2_ctr1
+	cmp #$00
+	bne @5
+	rts
+    */
+
+    public float adjustSound = 94f;
+
+    AudioClip CreateMagicEffectsSpecialEffectSound(int length)
+    {
+        float sampleRate = 44100;
+        int channels = 2;
+        int cycles = 2560;
+        int count = 0;
+        float frequency;
+        float[] data;
+        float phase1 = 0;
+        float phase2 = 0;
+        float sampleCount;
+
+        frequency = cycles / ((float)length / adjustSound);
+        sampleCount = (float)cycles * sampleRate / frequency;
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            phase1 += 2 * Mathf.PI * frequency / sampleRate;
+            phase2 += Mathf.PI / sampleCount;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // 1/2 sine wave
+                float data1 = Mathf.Abs(Mathf.Sin(phase1)) * Mathf.Sin(phase2);
+
+                // clamp it
+                if (data1 > 0.5f)
+                {
+                    data1 = 0.5f;
+                }
+
+                // store it
+                data[i + j] = data1;
+
+                // square wave
+                //data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.5f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase1 >= 2 * Mathf.PI)
+            {
+                phase1 -= 2 * Mathf.PI;
+                count++;
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("magic", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
+
+    MODE lastMode = (MODE)(-1);
 
     // Update is called once per frame
     void Update()
@@ -1201,16 +1458,78 @@ public class U4_Decompiled : MonoBehaviour
             timer = timer - timerExpired;
             timerExpired = timerPeriod;
 
+            if (lastMode != current_mode)
+            {
+                lastMode = current_mode;
+                Camera.main.GetComponent<AudioSource>().Stop();
+                if (current_mode == U4_Decompiled.MODE.OUTDOORS)
+                {
+
+                    Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.WANDERER - 1];
+                }
+                else if (current_mode == U4_Decompiled.MODE.BUILDING)
+                {
+                    if ((Party._loc == LOCATIONS.BRITANNIA) ||
+                        (Party._loc == LOCATIONS.THE_LYCAEUM) ||
+                        (Party._loc == LOCATIONS.EMPATH_ABBY) ||
+                        (Party._loc == LOCATIONS.SERPENT_HOLD))
+                    {
+                        Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.CASTLES - 1];
+                    }
+                    else
+                    {
+                        Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.TOWNS - 1];
+                    }
+                }
+                else if (current_mode == U4_Decompiled.MODE.COMBAT)
+                {
+                    Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.COMBAT - 1];
+                }
+                else if (current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
+                {
+                    Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.COMBAT - 1];
+                }
+                else if (current_mode == U4_Decompiled.MODE.COMBAT_ROOM)
+                {
+                    Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.COMBAT -1];
+                }
+                else
+                {
+                    Camera.main.GetComponent<AudioSource>().clip = null;
+                }
+
+                Camera.main.GetComponent<AudioSource>().Play();
+            }
             main_Sound(buffer, buffer.Length);
             int soundCount = buffer[0];
             for (int i = 0; i < soundCount; i++)
             {
                 int sound = buffer[i * 2 + 1];
                 int length = buffer[i * 2 + 2];
-                Debug.Log("Sound # " + sound + " Length " + length);
+                Debug.Log("Sound " + (SOUND_EFFECT)sound + " Length " + length);
                 if (sound < soundEffects.Length)
                 {
-                    AudioSource.PlayClipAtPoint(soundEffects[sound], Camera.main.transform.position);
+                    // TODO need to wait for sound to complete before playing the next one
+                    // TODO need to make game engine wait until sound has played before allowing it to continue
+                    // TODO move this out of the game engine interface
+                    // TODO programatically create all the sounds instead of relying on sampled sounds
+                    // TODO cache sounds already created
+                    // TODO pre-create basic sfx at startup
+                    // TODO get source information of sound to better position it for 3D sound, monster, moongate, player, etc. e.g. currently moongate plays at old moongate position not at new position
+                    if (sound == (int)SOUND_EFFECT.SPELL_CAST)
+                    {
+                        AudioClip clip = CreateMagicSpecialEffectSound(length);
+                        AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
+                    }
+                    else if (sound == (int)SOUND_EFFECT.SPELL_EFFECT)
+                    {
+                        AudioClip clip = CreateMagicEffectsSpecialEffectSound(length);
+                        AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
+                    }
+                    else
+                    {
+                        AudioSource.PlayClipAtPoint(soundEffects[sound], Camera.main.transform.position);
+                    }
                 }
             }
 
