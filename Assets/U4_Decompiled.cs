@@ -404,6 +404,7 @@ public class U4_Decompiled : MonoBehaviour
         BALRON2 = 0xFd,
         BALRON3 = 0xFe,
         BALRON4 = 0xFf,
+        MAX = 0x100
     };
 
     public TILE current_tile;

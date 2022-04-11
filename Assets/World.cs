@@ -6089,8 +6089,8 @@ public class World : MonoBehaviour
             for (int x = 0; x < map.GetLength(0); x++)
             {
                 GameObject mapTile;
-                Vector3 location = Vector3.zero;
-                Vector3 rotation = Vector3.zero;
+                Vector3 location;
+                Vector3 rotation;
                 U4_Decompiled.TILE tileIndex;
 
                 tileIndex = map[x, y];
@@ -6542,13 +6542,363 @@ public class World : MonoBehaviour
         }
     }
 
+    public GameObject CreateMapTileObject(GameObject terrainGameObject, GameObject billboardTerrrainGameObject, GameObject animatedTerrrainGameObject, U4_Decompiled.TILE tileIndex, ref U4_Decompiled.TILE[,] map, int x, int y, bool allWalls)
+    {
+        GameObject mapTile;
+        Vector3 location = Vector3.zero;
+        Vector3 rotation = Vector3.zero;
+
+        bool useExpandedTile;
+        bool useLinearTile;
+
+        // solid object, brick, rocks etc. make into cubes
+        if (CheckTileForOpacity(tileIndex))
+        {
+            if (allWalls == false)
+            {
+                U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
+                U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
+                U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
+                U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+
+                if (y > 0)
+                    aboveTile = map[x, y - 1];
+                if (y < map.GetLength(1) - 1)
+                    belowTile = map[x, y + 1];
+                if (x > 0)
+                    leftTile = map[x - 1, y];
+                if (x < map.GetLength(0) - 1)
+                    rightTile = map[x + 1, y];
+
+                mapTile = CreatePartialCube(!CheckTileForOpacity(leftTile), !CheckTileForOpacity(rightTile), !CheckTileForOpacity(aboveTile), !CheckTileForOpacity(belowTile));
+            }
+            else
+            {
+                mapTile = CreatePartialCube();
+            }
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+            rotation = Vector3.zero;
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        // Letters, make into short cubes
+        else if (((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE))
+            || (tileIndex == U4_Decompiled.TILE.ARCHITECTURE))
+        {
+            if (allWalls == false)
+            {
+                U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
+                U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
+                U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
+                U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+
+                if (y > 0)
+                    aboveTile = map[x, y - 1];
+                if (y < map.GetLength(1) - 1)
+                    belowTile = map[x, y + 1];
+                if (x > 0)
+                    leftTile = map[x - 1, y];
+                if (x < map.GetLength(0) - 1)
+                    rightTile = map[x + 1, y];
+
+                mapTile = CreatePartialCube(!CheckShortTileForOpacity(leftTile), !CheckShortTileForOpacity(rightTile), !CheckShortTileForOpacity(aboveTile), !CheckShortTileForOpacity(belowTile));
+            }
+            else
+            {
+                mapTile = CreatePartialCube();
+
+            }
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            mapTile.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.25f);
+            rotation = Vector3.zero;
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        // make mountains into pyramids
+        else if (tileIndex == U4_Decompiled.TILE.MOUNTAINS)
+        {
+            mapTile = CreatePyramid(1.0f);
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(0.0f, 180.0f, 0.0f); // rotate mountatins to show their best side
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        // make dungeon entrace into pyramid, rotate so it faces the right direction
+        else if (tileIndex == U4_Decompiled.TILE.DUNGEON)
+        {
+            mapTile = CreatePyramid(0.2f);
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(0.0f, 180.0f, 90.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        // make brush and hills into short pyramids
+        else if ((tileIndex == U4_Decompiled.TILE.BRUSH) || (tileIndex == U4_Decompiled.TILE.HILLS))
+        {
+            mapTile = CreatePyramid(0.15f);
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(0.0f, 180.0f, 90.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        // make rocks into little bigger short pyramids since you cannot walk over them
+        else if (tileIndex == U4_Decompiled.TILE.SMALL_ROCKS)
+        {
+            mapTile = CreatePyramid(0.25f);
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(0.0f, 180.0f, 90.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        // tress we need to stand upright and face the camera
+        else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
+            (tileIndex == U4_Decompiled.TILE.TOWN) ||
+            (tileIndex == U4_Decompiled.TILE.VILLAGE) ||
+            (tileIndex == U4_Decompiled.TILE.RUINS) ||
+            (tileIndex == U4_Decompiled.TILE.SHRINE) ||
+            (tileIndex == U4_Decompiled.TILE.ANKH) ||
+            (tileIndex == U4_Decompiled.TILE.LADDER_UP) ||
+            (tileIndex == U4_Decompiled.TILE.LADDER_DOWN) ||
+            (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
+            (tileIndex == U4_Decompiled.TILE.CASTLE))
+        {
+            mapTile = CreateQuad();
+            mapTile.transform.SetParent(billboardTerrrainGameObject.transform);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+            // put this in a resonable rotation, combine3() will do the actual lookat rotaion just before displaying
+            rotation = new Vector3(-90.0f, -90.0f, 90.0f);
+
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        else if (tileIndex == U4_Decompiled.TILE.BRIDGE)
+        {
+            mapTile = CreateBridge();
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        else if (tileIndex == U4_Decompiled.TILE.BRIDGE_TOP)
+        {
+            mapTile = CreateBridgeUpper();
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        else if (tileIndex == U4_Decompiled.TILE.BRIDGE_BOTTOM)
+        {
+            mapTile = CreateBridgeLower();
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        else if ((tileIndex == U4_Decompiled.TILE.DOOR) || (tileIndex == U4_Decompiled.TILE.LOCKED_DOOR))
+        {
+            mapTile = CreateDoor();
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        else if (tileIndex == U4_Decompiled.TILE.BRICK_FLOOR_COLUMN)
+        {
+            mapTile = CreatePillar();
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        else if (tileIndex == U4_Decompiled.TILE.SHIP_MAST)
+        {
+            mapTile = CreateMast();
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        else if (tileIndex == U4_Decompiled.TILE.SHIP_WHEEL)
+        {
+            mapTile = CreateWheel();
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        else if (tileIndex == U4_Decompiled.TILE.CHEST)
+        {
+            mapTile = CreateChest();
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        else if (tileIndex == U4_Decompiled.TILE.CASTLE_LEFT)
+        {
+            mapTile = CreateCastleLeft();
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        else if (tileIndex == U4_Decompiled.TILE.CASTLE_RIGHT)
+        {
+            mapTile = CreateCastleRight();
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        else if (tileIndex == U4_Decompiled.TILE.CASTLE_ENTRANCE)
+        {
+            mapTile = CreateCastleCenter();
+            mapTile.transform.SetParent(terrainGameObject.transform);
+            rotation = new Vector3(-90.0f, 0.0f, 0.0f);
+            location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
+            useExpandedTile = true;
+            useLinearTile = false;
+        }
+        // all other terrain tiles are flat
+        else
+        {
+            mapTile = CreateQuad();
+
+            // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
+            // TODO may need to have single textures for the three water tiles if we want to use UV animation to show wind direction
+            if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) ||
+                (tileIndex >= U4_Decompiled.TILE.POISON_FIELD && tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD)
+                || (tileIndex == U4_Decompiled.TILE.LAVA))
+            {
+                mapTile.transform.SetParent(animatedTerrrainGameObject.transform);
+                location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
+                rotation = Vector3.zero;
+                // since we animate the texture using uv we cannot use the expanded tiles and need to use the linear ones
+                useExpandedTile = false;
+                useLinearTile = true;
+            }
+            else
+            {
+                mapTile.transform.SetParent(terrainGameObject.transform);
+                location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
+                rotation = Vector3.zero;
+                useExpandedTile = true;
+                useLinearTile = false;
+            }
+        }
+
+        mapTile.transform.localEulerAngles = rotation;
+        mapTile.transform.localPosition = location;
+
+        // all terrain is static, used by combine below to merge meshes
+        mapTile.isStatic = true;
+
+        // set the shader
+        Renderer renderer = mapTile.GetComponent<MeshRenderer>();
+        renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+
+        // set the tile and texture offset and scale
+
+        if (useExpandedTile)
+        {
+            renderer.material = combinedExpandedMaterial;
+            renderer.material.mainTexture = combinedExpandedTexture;
+            renderer.material.mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)tileIndex % 16) * expandedTileWidth)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)tileIndex / 16) * expandedTileHeight)) / (float)renderer.material.mainTexture.height);
+            renderer.material.mainTextureScale = new Vector2((float)(originalTileWidth) / (float)renderer.material.mainTexture.width, (float)(originalTileHeight) / (float)renderer.material.mainTexture.height);
+
+        }
+        else if (useLinearTile)
+        {
+            renderer.material = combinedLinearMaterial;
+            renderer.material.mainTexture = combinedLinearTexture;
+            renderer.material.mainTextureOffset = new Vector2((float)((int)tileIndex * originalTileWidth) / (float)renderer.material.mainTexture.width, 0.0f);
+            renderer.material.mainTextureScale = new Vector2((float)originalTileWidth / (float)renderer.material.mainTexture.width, 1.0f);
+        }
+        else
+        {
+            renderer.material.mainTexture = originalTiles[(int)tileIndex];
+            renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
+            renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
+        }
+
+        Mesh mesh = mapTile.GetComponent<MeshFilter>().mesh;
+        Vector2[] uv = new Vector2[mesh.uv.Length];
+        Vector2 textureAtlasOffset;
+
+        textureAtlasOffset = new Vector2((int)tileIndex % textureExpandedAtlasPowerOf2 * expandedTileWidth, (int)tileIndex / textureExpandedAtlasPowerOf2 * expandedTileHeight);
+        for (int u = 0; u < mesh.uv.Length; u++)
+        {
+            Vector2 mainTextureOffset;
+            Vector2 mainTextureScale;
+
+            if (useExpandedTile)
+            {
+                mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)tileIndex % 16) * expandedTileWidth)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)tileIndex / 16) * expandedTileHeight)) / (float)renderer.material.mainTexture.height);
+                mainTextureScale = new Vector2((float)(originalTileWidth) / (float)renderer.material.mainTexture.width, (float)(originalTileHeight) / (float)renderer.material.mainTexture.height);
+            }
+            else if (useLinearTile)
+            {
+                mainTextureOffset = new Vector2((float)((int)tileIndex * originalTileWidth) / (float)renderer.material.mainTexture.width, 0.0f);
+                mainTextureScale = new Vector2((float)originalTileWidth / (float)renderer.material.mainTexture.width, 1.0f);
+            }
+            else
+            {
+                mainTextureOffset = new Vector2(0.0f, 0.0f);
+                mainTextureScale = new Vector2(1.0f, 1.0f);
+            }
+
+            uv[u] = Vector2.Scale(mesh.uv[u], mainTextureScale);
+            uv[u] += (textureAtlasOffset + mainTextureOffset);
+        }
+        mesh.uv = uv;
+
+        renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
+        renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
+
+        // disable these as we don't need them in the actual game only for mesh combine
+        mapTile.SetActive(false);
+
+        return mapTile;
+    }
+
+    GameObject[] allMapTilesGameObjects = null;
+
+    GameObject GetCachedTileGameObject(GameObject terrainGameObject, GameObject billboardTerrrainGameObject, GameObject animatedTerrrainGameObject, U4_Decompiled.TILE tileIndex, ref U4_Decompiled.TILE[,] map, int x, int y, bool allWalls)
+    {
+        if (allMapTilesGameObjects == null)
+        {
+            allMapTilesGameObjects = new GameObject[(int)U4_Decompiled.TILE.MAX];
+            for (int i = 0; i < (int)U4_Decompiled.TILE.MAX; i++)
+            {
+                allMapTilesGameObjects[i] = CreateMapTileObject(terrainGameObject, billboardTerrrainGameObject, animatedTerrrainGameObject, (U4_Decompiled.TILE)i, ref map, 0, 0, true);
+            }
+        }
+
+        return allMapTilesGameObjects[(int)tileIndex];
+    }
+
     public void CreateMapSubsetPass2(GameObject mapGameObject, ref U4_Decompiled.TILE[,] map, ref GameObject[,] mapGameObjects, bool allWalls = false)
     {
         GameObject terrainGameObject;
         GameObject animatedTerrrainGameObject;
         GameObject billboardTerrrainGameObject;
-        bool useExpandedTile;
-        bool useLinearTile;
 
         // create the terrain child object if it does not exist
         Transform terrainTransform = mapGameObject.transform.Find("terrain");
@@ -6611,9 +6961,6 @@ public class World : MonoBehaviour
         {
             for (int x = 0; x < map.GetLength(0); x++)
             {
-                GameObject mapTile;
-                Vector3 location = Vector3.zero;
-                Vector3 rotation = Vector3.zero;
                 U4_Decompiled.TILE tileIndex;
 
                 tileIndex = map[x, y];
@@ -6624,329 +6971,10 @@ public class World : MonoBehaviour
                     // skip it
                     continue;
                 }
-                // solid object, brick, rocks etc. make into cubes
-                else if (CheckTileForOpacity(tileIndex))
-                {
-                    if (allWalls == false)
-                    {
-                        U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
-                        U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
-                        U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
-                        U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
 
-                        if (y > 0)
-                            aboveTile = map[x, y - 1];
-                        if (y < map.GetLength(1) - 1)
-                            belowTile = map[x, y + 1];
-                        if (x > 0)
-                            leftTile = map[x - 1, y];
-                        if (x < map.GetLength(0) - 1)
-                            rightTile = map[x + 1, y];
-
-                        mapTile = CreatePartialCube(!CheckTileForOpacity(leftTile), !CheckTileForOpacity(rightTile), !CheckTileForOpacity(aboveTile), !CheckTileForOpacity(belowTile));
-                    }
-                    else
-                    {
-                        mapTile = CreatePartialCube();
-                    }
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    rotation = Vector3.zero;
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                // Letters, make into short cubes
-                else if (((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE)) 
-                    || (tileIndex == U4_Decompiled.TILE.ARCHITECTURE))
-                {
-                    if (allWalls == false)
-                    {
-                        U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
-                        U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
-                        U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
-                        U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
-
-                        if (y > 0)
-                            aboveTile = map[x, y - 1];
-                        if (y < map.GetLength(1) - 1)
-                            belowTile = map[x, y + 1];
-                        if (x > 0)
-                            leftTile = map[x - 1, y];
-                        if (x < map.GetLength(0) - 1)
-                            rightTile = map[x + 1, y];
-
-                        mapTile = CreatePartialCube(!CheckShortTileForOpacity(leftTile), !CheckShortTileForOpacity(rightTile), !CheckShortTileForOpacity(aboveTile), !CheckShortTileForOpacity(belowTile));
-                    }
-                    else
-                    {
-                        mapTile = CreatePartialCube();
-
-                    }
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    mapTile.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.25f);
-                    rotation = Vector3.zero;
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                // make mountains into pyramids
-                else if (tileIndex == U4_Decompiled.TILE.MOUNTAINS)
-                {
-                    mapTile = CreatePyramid(1.0f);
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(0.0f, 180.0f, 0.0f); // rotate mountatins to show their best side
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                // make dungeon entrace into pyramid, rotate so it faces the right direction
-                else if (tileIndex == U4_Decompiled.TILE.DUNGEON)
-                {
-                    mapTile = CreatePyramid(0.2f);
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(0.0f, 180.0f, 90.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f); 
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                // make brush and hills into short pyramids
-                else if ((tileIndex == U4_Decompiled.TILE.BRUSH) || (tileIndex == U4_Decompiled.TILE.HILLS))
-                {
-                    mapTile = CreatePyramid(0.15f);
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(0.0f, 180.0f, 90.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                // make rocks into little bigger short pyramids since you cannot walk over them
-                else if (tileIndex == U4_Decompiled.TILE.SMALL_ROCKS)
-                {
-                    mapTile = CreatePyramid(0.25f);
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(0.0f, 180.0f, 90.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                // tress we need to stand upright and face the camera
-                else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
-                    (tileIndex == U4_Decompiled.TILE.TOWN) ||
-                    (tileIndex == U4_Decompiled.TILE.VILLAGE) ||
-                    (tileIndex == U4_Decompiled.TILE.RUINS) ||
-                    (tileIndex == U4_Decompiled.TILE.SHRINE) ||
-                    (tileIndex == U4_Decompiled.TILE.ANKH) ||
-                    (tileIndex == U4_Decompiled.TILE.LADDER_UP) ||
-                    (tileIndex == U4_Decompiled.TILE.LADDER_DOWN) ||
-                    (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
-                    (tileIndex == U4_Decompiled.TILE.CASTLE))
-                {
-                    mapTile = CreateQuad();
-                    mapTile.transform.SetParent(billboardTerrrainGameObject.transform);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    // put this in a resonable rotation, combine3() will do the actual lookat rotaion just before displaying
-                    rotation = new Vector3(-90.0f, -90.0f, 90.0f);
-
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                else if (tileIndex == U4_Decompiled.TILE.BRIDGE)
-                {
-                    mapTile = CreateBridge();
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                else if (tileIndex == U4_Decompiled.TILE.BRIDGE_TOP)
-                {
-                    mapTile = CreateBridgeUpper();
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                else if (tileIndex == U4_Decompiled.TILE.BRIDGE_BOTTOM)
-                {
-                    mapTile = CreateBridgeLower();
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                else if ((tileIndex == U4_Decompiled.TILE.DOOR) || (tileIndex == U4_Decompiled.TILE.LOCKED_DOOR))
-                {
-                    mapTile = CreateDoor();
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                else if (tileIndex == U4_Decompiled.TILE.BRICK_FLOOR_COLUMN)
-                {
-                    mapTile = CreatePillar();
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                else if (tileIndex == U4_Decompiled.TILE.SHIP_MAST)
-                {
-                    mapTile = CreateMast();
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                else if (tileIndex == U4_Decompiled.TILE.SHIP_WHEEL)
-                {
-                    mapTile = CreateWheel();
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                else if (tileIndex == U4_Decompiled.TILE.CHEST)
-                {
-                    mapTile = CreateChest();
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                else if (tileIndex == U4_Decompiled.TILE.CASTLE_LEFT)
-                {
-                    mapTile = CreateCastleLeft();
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                else if (tileIndex == U4_Decompiled.TILE.CASTLE_RIGHT)
-                {
-                    mapTile = CreateCastleRight();
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                else if (tileIndex == U4_Decompiled.TILE.CASTLE_ENTRANCE)
-                {
-                    mapTile = CreateCastleCenter();
-                    mapTile.transform.SetParent(terrainGameObject.transform);
-                    rotation = new Vector3(-90.0f, 0.0f, 0.0f);
-                    location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
-                    useExpandedTile = true;
-                    useLinearTile = false;
-                }
-                // all other terrain tiles are flat
-                else
-                {
-                    mapTile = CreateQuad();
-
-                    // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
-                    // TODO may need to have single textures for the three water tiles if we want to use UV animation to show wind direction
-                    if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) ||
-                        (tileIndex >= U4_Decompiled.TILE.POISON_FIELD && tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD)
-                        || (tileIndex == U4_Decompiled.TILE.LAVA))
-                    {
-                        mapTile.transform.SetParent(animatedTerrrainGameObject.transform);
-                        location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
-                        rotation = Vector3.zero;
-                        // since we animate the texture using uv we cannot use the expanded tiles and need to use the linear ones
-                        useExpandedTile = false;
-                        useLinearTile = true;
-                    }
-                    else
-                    {
-                        mapTile.transform.SetParent(terrainGameObject.transform);
-                        location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
-                        rotation = Vector3.zero;
-                        useExpandedTile = true;
-                        useLinearTile = false;
-                    }
-                }
-
-                mapTile.transform.localEulerAngles = rotation;
-                mapTile.transform.localPosition = location;
-
-                // all terrain is static, used by combine below to merge meshes
-                mapTile.isStatic = true;
-
-                // set the shader
-                Renderer renderer = mapTile.GetComponent<MeshRenderer>();
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
-
-                // set the tile and texture offset and scale
-                
-                if (useExpandedTile)
-                {
-                    renderer.material = combinedExpandedMaterial;
-                    renderer.material.mainTexture = combinedExpandedTexture;
-                    renderer.material.mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)tileIndex % 16) * expandedTileWidth)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)tileIndex / 16) * expandedTileHeight)) / (float)renderer.material.mainTexture.height);
-                    renderer.material.mainTextureScale = new Vector2((float)(originalTileWidth) / (float)renderer.material.mainTexture.width, (float)(originalTileHeight) / (float)renderer.material.mainTexture.height);
-                
-                }
-                else if (useLinearTile)
-                {
-                    renderer.material = combinedLinearMaterial;
-                    renderer.material.mainTexture = combinedLinearTexture;
-                    renderer.material.mainTextureOffset = new Vector2((float)((int)tileIndex * originalTileWidth) / (float)renderer.material.mainTexture.width, 0.0f);
-                    renderer.material.mainTextureScale = new Vector2((float)originalTileWidth / (float)renderer.material.mainTexture.width, 1.0f);
-                }
-                else
-                {
-                    renderer.material.mainTexture = originalTiles[(int)tileIndex];
-                    renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
-                    renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
-                }
-                
-                Mesh mesh = mapTile.GetComponent<MeshFilter>().mesh;
-                Vector2[] uv = new Vector2[mesh.uv.Length];
-                Vector2 textureAtlasOffset;
-
-                textureAtlasOffset = new Vector2((int)tileIndex % textureExpandedAtlasPowerOf2 * expandedTileWidth, (int)tileIndex / textureExpandedAtlasPowerOf2 * expandedTileHeight);
-                for (int u = 0; u < mesh.uv.Length; u++)
-                {
-                    Vector2 mainTextureOffset;
-                    Vector2 mainTextureScale;
-
-                    if (useExpandedTile)
-                    {
-                        mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)tileIndex % 16) * expandedTileWidth)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)tileIndex / 16) * expandedTileHeight)) / (float)renderer.material.mainTexture.height);
-                        mainTextureScale = new Vector2((float)(originalTileWidth) / (float)renderer.material.mainTexture.width, (float)(originalTileHeight) / (float)renderer.material.mainTexture.height);
-                    }
-                    else if (useLinearTile)
-                    {
-                        mainTextureOffset = new Vector2((float)((int)tileIndex * originalTileWidth) / (float)renderer.material.mainTexture.width, 0.0f);
-                        mainTextureScale = new Vector2((float)originalTileWidth / (float)renderer.material.mainTexture.width, 1.0f);
-                    }
-                    else
-                    {
-                        mainTextureOffset = new Vector2(0.0f, 0.0f);
-                        mainTextureScale = new Vector2(1.0f, 1.0f);
-                    }
-
-                    uv[u] = Vector2.Scale(mesh.uv[u], mainTextureScale);
-                    uv[u] += (textureAtlasOffset + mainTextureOffset);
-                }
-                mesh.uv = uv;
-
-                renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
-                renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
-
-                // disable these as we don't need them in the actual game only for mesh combine
-                mapTile.SetActive(false);
+                // create the gameObject tile
+                //GameObject mapTile = CreateMapTileObject(terrainGameObject, billboardTerrrainGameObject, animatedTerrrainGameObject, tileIndex, ref map, x, y, allWalls);
+                GameObject mapTile = GetCachedTileGameObject(terrainGameObject, billboardTerrrainGameObject, animatedTerrrainGameObject, tileIndex, ref map, x, y, allWalls);
 
                 // stash the game object in the array
                 mapGameObjects[x, y] = mapTile;
@@ -7446,7 +7474,6 @@ public class World : MonoBehaviour
         gameObject.transform.position = position;
         gameObject.transform.rotation = rotation;
     }
-
 
     public Texture2D combinedTexture;
     public Material combinedMaterial;
@@ -8002,7 +8029,7 @@ public class World : MonoBehaviour
             }
 
             // cleanup any unused resources now
-            //Resources.UnloadUnusedAssets(); // this can take a really long time, use only when nessesary
+            Resources.UnloadUnusedAssets(); // this can take a really long time if you have a lot of objects, keep the object count down and use only when nessesary
         }
 
         // Restore the game object position
