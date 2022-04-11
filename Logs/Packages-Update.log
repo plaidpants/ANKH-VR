@@ -45,3 +45,11 @@ The following packages were updated:
   com.unity.xr.management from version 4.0.1 to 4.2.0
   com.unity.xr.oculus from version 1.8.1 to 1.11.2
   com.unity.xr.windowsmr from version 4.4.1 to 4.6.1
+
+=== Sat Apr  9 21:37:48 2022
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.xr.oculus from version 1.11.2 to 1.12.0

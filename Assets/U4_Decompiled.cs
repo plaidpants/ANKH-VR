@@ -563,7 +563,12 @@ public class U4_Decompiled : MonoBehaviour
     public static extern int main_NPC_Text(byte[] buffer, int length);
     [DllImport("UN_U4.dll")]
     public static extern int main_Sound(byte[] buffer, int length);
-    
+    [DllImport("UN_U4.dll")]
+    public static extern int main_D_17FA(); 
+    [DllImport("UN_U4.dll")]
+    public static extern int main_D_17FC(); 
+    [DllImport("UN_U4.dll")]
+    public static extern int main_D_17FE();
 
     float timer = 0.0f;
     float timerExpired = 0.0f;
@@ -1862,6 +1867,14 @@ sfx_magic2:
                     displayTileMap[x, y] = (TILE)buffer[buffer_index++];
                 }
             }
+
+            door_x = main_D_17FA();
+            door_y =  main_D_17FC();
+            door_timer = main_D_17FE();
         }
     }
+
+    public int door_x;
+    public int door_y;
+    public int door_timer;
 }

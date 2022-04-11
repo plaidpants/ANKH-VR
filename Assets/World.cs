@@ -40,7 +40,7 @@ public class World : MonoBehaviour
 
     public U4_Decompiled u4;
 
-    U4_Decompiled.TILE[,] raycastSettlementMap = new U4_Decompiled.TILE[32, 32];
+    U4_Decompiled.TILE[,] raycastSettlementMap = new U4_Decompiled.TILE[64, 64];
     U4_Decompiled.TILE[,] raycastOutdoorMap = new U4_Decompiled.TILE[64, 64];
 
     const int MAP_CHUNK = 1;
@@ -2086,6 +2086,11 @@ public class World : MonoBehaviour
 
         return wheel;
     }
+
+    Vector3[] BridgeMeshVertices = null;
+    int[] BridgeMeshTriangles = null;
+    Vector2[] BridgeMeshUV = null;
+
     GameObject CreateBridge()
     {
         // create a game object to hold the cube and give it a proper name
@@ -2096,83 +2101,96 @@ public class World : MonoBehaviour
         MeshFilter meshFilter = bridge.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = bridge.AddComponent<MeshRenderer>();
 
-        meshFilter.mesh.vertices = new Vector3[]
+        if (BridgeMeshVertices == null)
         {
-            new Vector3(-0.5f, -0.5f, 0.5f),
-            new Vector3(0.5f, -0.5f, 0.5f),
-            new Vector3(-0.5f, -0.1875f, 0.5f),
-            new Vector3(0.5f, -0.1875f, 0.5f),
-            new Vector3(-0.5f, -0.5f, -0.5f),
-            new Vector3(0.5f, -0.5f, -0.5f),
-            new Vector3(-0.5f, -0.1875f, -0.5f),
-            new Vector3(0.5f, -0.1875f, -0.5f),
-            new Vector3(-0.5f, -0.5f, 0.0f),
-            new Vector3(0.5f, -0.5f, 0.0f),
-            new Vector3(-0.5f, -0.5f, 0.5f),
-            new Vector3(0.5f, -0.5f, 0.5f),
-            new Vector3(-0.5f, -0.5f, -0.5f),
-            new Vector3(0.5f, -0.5f, -0.5f),
-            new Vector3(-0.5f, -0.5f, 0.0f),
-            new Vector3(0.5f, -0.5f, 0.0f),
+            meshFilter.mesh.vertices = new Vector3[]
+            {
+                new Vector3(-0.5f, -0.5f, 0.5f),
+                new Vector3(0.5f, -0.5f, 0.5f),
+                new Vector3(-0.5f, -0.1875f, 0.5f),
+                new Vector3(0.5f, -0.1875f, 0.5f),
+                new Vector3(-0.5f, -0.5f, -0.5f),
+                new Vector3(0.5f, -0.5f, -0.5f),
+                new Vector3(-0.5f, -0.1875f, -0.5f),
+                new Vector3(0.5f, -0.1875f, -0.5f),
+                new Vector3(-0.5f, -0.5f, 0.0f),
+                new Vector3(0.5f, -0.5f, 0.0f),
+                new Vector3(-0.5f, -0.5f, 0.5f),
+                new Vector3(0.5f, -0.5f, 0.5f),
+                new Vector3(-0.5f, -0.5f, -0.5f),
+                new Vector3(0.5f, -0.5f, -0.5f),
+                new Vector3(-0.5f, -0.5f, 0.0f),
+                new Vector3(0.5f, -0.5f, 0.0f),
 
-            // double sided sides
-            new Vector3(0.5f, -0.5f, 0.5f),
-            new Vector3(-0.5f, -0.5f, 0.5f),
-            new Vector3(0.5f, -0.1875f, 0.5f),
-            new Vector3(-0.5f, -0.1875f, 0.5f),
-            new Vector3(0.5f, -0.5f, -0.5f),
-            new Vector3(-0.5f, -0.5f, -0.5f),
-            new Vector3(0.5f, -0.1875f, -0.5f),
-            new Vector3(-0.5f, -0.1875f, -0.5f)
-        };
+                // double sided sides
+                new Vector3(0.5f, -0.5f, 0.5f),
+                new Vector3(-0.5f, -0.5f, 0.5f),
+                new Vector3(0.5f, -0.1875f, 0.5f),
+                new Vector3(-0.5f, -0.1875f, 0.5f),
+                new Vector3(0.5f, -0.5f, -0.5f),
+                new Vector3(-0.5f, -0.5f, -0.5f),
+                new Vector3(0.5f, -0.1875f, -0.5f),
+                new Vector3(-0.5f, -0.1875f, -0.5f)
+            };
 
-        meshFilter.mesh.triangles = new int[]
-        {
-            0, 3, 1,
-            3, 0, 2,
-            4, 7, 5,
-            7, 4, 6,
-            8, 11, 9,
-            11, 8, 10,
-            12, 15, 13,
-            15, 12, 14,
+            meshFilter.mesh.triangles = new int[]
+            {
+                0, 3, 1,
+                3, 0, 2,
+                4, 7, 5,
+                7, 4, 6,
+                8, 11, 9,
+                11, 8, 10,
+                12, 15, 13,
+                15, 12, 14,
 
-            // double sided sides
-            16, 19, 17,
-            19, 16, 18,
-            20, 23, 21,
-            23, 20, 22,
-        };
+                // double sided sides
+                16, 19, 17,
+                19, 16, 18,
+                20, 23, 21,
+                23, 20, 22,
+            };
 
-        meshFilter.mesh.uv = new Vector2[]
-        {
-            new Vector2(0f, 0.6875f), // 11
-            new Vector2(1f, 0.6875f), // 11
-            new Vector2(0f, 1f),
-            new Vector2(1f, 1f),
-            new Vector2(0f, 0.6875f), // 11
-            new Vector2(1f, 0.6875f), // 11
-            new Vector2(0f, 1f),
-            new Vector2(1f, 1f),
-            new Vector2(0f, 0.3125f), // 6
-            new Vector2(1f, 0.3125f), // 6
-            new Vector2(0f, 0.6875f), // 11
-            new Vector2(1f, 0.6875f), // 11
-            new Vector2(0f, 0.3125f), // 6
-            new Vector2(1f, 0.3125f), // 6
-            new Vector2(0f, 0.6875f), // 11
-            new Vector2(1f, 0.6875f), // 11
+            meshFilter.mesh.uv = new Vector2[]
+            {
+                new Vector2(0f, 0.6875f), // 11
+                new Vector2(1f, 0.6875f), // 11
+                new Vector2(0f, 1f),
+                new Vector2(1f, 1f),
+                new Vector2(0f, 0.6875f), // 11
+                new Vector2(1f, 0.6875f), // 11
+                new Vector2(0f, 1f),
+                new Vector2(1f, 1f),
+                new Vector2(0f, 0.3125f), // 6
+                new Vector2(1f, 0.3125f), // 6
+                new Vector2(0f, 0.6875f), // 11
+                new Vector2(1f, 0.6875f), // 11
+                new Vector2(0f, 0.3125f), // 6
+                new Vector2(1f, 0.3125f), // 6
+                new Vector2(0f, 0.6875f), // 11
+                new Vector2(1f, 0.6875f), // 11
             
-            // double sided sides
-            new Vector2(0f, 0.6875f), // 11
-            new Vector2(1f, 0.6875f), // 11
-            new Vector2(0f, 1f),
-            new Vector2(1f, 1f),
-            new Vector2(0f, 0.6875f), // 11
-            new Vector2(1f, 0.6875f), // 11
-            new Vector2(0f, 1f),
-            new Vector2(1f, 1f)
-        };
+                // double sided sides
+                new Vector2(0f, 0.6875f), // 11
+                new Vector2(1f, 0.6875f), // 11
+                new Vector2(0f, 1f),
+                new Vector2(1f, 1f),
+                new Vector2(0f, 0.6875f), // 11
+                new Vector2(1f, 0.6875f), // 11
+                new Vector2(0f, 1f),
+                new Vector2(1f, 1f)
+            };
+
+            BridgeMeshVertices = meshFilter.mesh.vertices;
+            BridgeMeshTriangles = meshFilter.mesh.triangles; 
+            BridgeMeshUV = meshFilter.mesh.uv;
+        }
+        else
+        {
+            meshFilter.mesh.vertices = BridgeMeshVertices;
+            meshFilter.mesh.triangles = BridgeMeshTriangles;
+            meshFilter.mesh.uv = BridgeMeshUV;
+        }
 
         return bridge;
     }
@@ -3012,6 +3030,11 @@ public class World : MonoBehaviour
     }
 
     bool once = true;
+
+    Vector3[] QuadMeshVerticies = null;
+    int[] QuadMeshTriangles = null;
+    Vector2[] QuadMeshUV = null;
+
     GameObject CreateQuad()
     {
         GameObject quad = new GameObject("Quad");
@@ -3021,38 +3044,44 @@ public class World : MonoBehaviour
         MeshFilter meshFilter = quad.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = quad.AddComponent<MeshRenderer>();
 
-        if (meshFilter.mesh == null)
+        if (QuadMeshVerticies == null)
         {
-            meshFilter.mesh = new Mesh();
+            meshFilter.mesh.vertices = new Vector3[]
+            {
+                new Vector3(-0.5f, -0.5f, 0.0f),
+                new Vector3(0.5f, -0.5f, 0.0f),
+                new Vector3(-0.5f, 0.5f, 0.0f),
+                new Vector3(0.5f, 0.5f, 0.0f)
+            };
+
+            meshFilter.mesh.triangles = new int[]
+            {
+                0, 3, 1,
+                3, 0, 2
+            };
+
+            meshFilter.mesh.uv = new Vector2[]
+            {
+                new Vector2(0, 0),
+                new Vector2(1, 0),
+                new Vector2(0, 1),
+                new Vector2(1, 1)
+            };
+
+            meshFilter.mesh.RecalculateNormals();
+            meshFilter.mesh.RecalculateBounds();
+            meshFilter.mesh.Optimize();
+
+            QuadMeshVerticies = meshFilter.mesh.vertices;
+            QuadMeshTriangles = meshFilter.mesh.triangles;
+            QuadMeshUV = meshFilter.mesh.uv;
         }
-
-        meshFilter.mesh.Clear();
-
-        meshFilter.mesh.vertices = new Vector3[]
+        else
         {
-            new Vector3(-0.5f, -0.5f, 0.0f),
-            new Vector3(0.5f, -0.5f, 0.0f),
-            new Vector3(-0.5f, 0.5f, 0.0f),
-            new Vector3(0.5f, 0.5f, 0.0f)
-        };
-
-        meshFilter.mesh.triangles = new int[]
-        {
-            0, 3, 1,
-            3, 0, 2
-        };
-
-        meshFilter.mesh.uv = new Vector2[]
-        {
-            new Vector2(0, 0),
-            new Vector2(1, 0),
-            new Vector2(0, 1),
-            new Vector2(1, 1)
-        };
-
-        meshFilter.mesh.RecalculateNormals();
-        meshFilter.mesh.RecalculateBounds();
-        meshFilter.mesh.Optimize();
+            meshFilter.mesh.vertices = QuadMeshVerticies;
+            meshFilter.mesh.triangles = QuadMeshTriangles;
+            meshFilter.mesh.uv = QuadMeshUV;
+        }
 
         return quad;
     }
@@ -3896,6 +3925,7 @@ public class World : MonoBehaviour
                         tile == (int)U4_Decompiled.TILE.COOKING_FIRE ||
                         tile == (int)U4_Decompiled.TILE.SHRINE ||
                         tile == (int)U4_Decompiled.TILE.ALTAR ||
+                        tile == (int)U4_Decompiled.TILE.BALOON ||
                         //tile == (int)U4_Decompiled.TILE.CHEST ||
                         tile == (int)U4_Decompiled.TILE.CASTLE ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_LEFT ||
@@ -4019,6 +4049,7 @@ public class World : MonoBehaviour
                         tile == (int)U4_Decompiled.TILE.COOKING_FIRE ||
                         tile == (int)U4_Decompiled.TILE.SHRINE ||
                         tile == (int)U4_Decompiled.TILE.ALTAR ||
+                        tile == (int)U4_Decompiled.TILE.BALOON ||
                         //tile == (int)U4_Decompiled.TILE.CHEST ||
                         tile == (int)U4_Decompiled.TILE.CASTLE ||
                         tile == (int)U4_Decompiled.TILE.CASTLE_LEFT ||
@@ -4356,11 +4387,12 @@ public class World : MonoBehaviour
         }
     }
 
-[SerializeField]
+    [SerializeField]
     U4_Decompiled.TILE[,] entireMapTILEs = new U4_Decompiled.TILE[32 * 8, 32 * 8];
 
     [SerializeField]
     GameObject[,] entireMapGameObjects = new GameObject[32 * 8, 32 * 8];
+    GameObject[][,] settlementsMapGameObjects = new GameObject[(int)SETTLEMENT.MAX][,];
 
     void LoadWorldMap()
     {
@@ -5030,8 +5062,7 @@ public class World : MonoBehaviour
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                Shader unlit = Shader.Find("Unlit/Transparent Cutout");
-                renderer.material.shader = unlit;
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
 
                 // add our little animator script and set the tile to zero
                 Animate3 animate = dungeonMonsterGameObject.AddComponent<Animate3>();
@@ -5865,8 +5896,7 @@ public class World : MonoBehaviour
         renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
 
         // set the shader
-        Shader unlit = Shader.Find("Unlit/Transparent Cutout");
-        renderer.material.shader = unlit;
+        renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
 
         // add so speech works
         partyGameObject.AddComponent<UnityEngine.UI.Text>();
@@ -5995,7 +6025,6 @@ public class World : MonoBehaviour
         GameObject animatedTerrrainGameObject;
         GameObject billboardTerrrainGameObject;
         bool useExpandedTile;
-        bool useUIShader;
 
         // create the terrain child object if it does not exist
         Transform terrainTransform = mapGameObject.transform.Find("terrain");
@@ -6094,7 +6123,6 @@ public class World : MonoBehaviour
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     rotation = Vector3.zero;
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 // Letters, make into short cubes
                 else if (((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE))
@@ -6120,7 +6148,6 @@ public class World : MonoBehaviour
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.25f);
                     rotation = Vector3.zero;
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.DIAGONAL_WATER_ARCHITECTURE1)
                 {
@@ -6129,7 +6156,6 @@ public class World : MonoBehaviour
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.25f);
                     rotation = Vector3.zero;
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 // make mountains into pyramids
                 else if (tileIndex == U4_Decompiled.TILE.MOUNTAINS)
@@ -6139,7 +6165,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(0.0f, 180.0f, 0.0f); // rotate mountains to show their best side
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 // make dungeon entrace into pyramid, rotate so it faces the right direction
                 else if (tileIndex == U4_Decompiled.TILE.DUNGEON)
@@ -6149,7 +6174,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(0.0f, 180.0f, 90.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 // make brush and hills into short pyramids
                 else if ((tileIndex == U4_Decompiled.TILE.BRUSH) || (tileIndex == U4_Decompiled.TILE.HILLS))
@@ -6159,7 +6183,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(0.0f, 180.0f, 90.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 // make rocks into little bigger short pyramids since you cannot walk over them
                 else if (tileIndex == U4_Decompiled.TILE.SMALL_ROCKS)
@@ -6169,7 +6192,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(0.0f, 180.0f, 90.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 // trees we need to stand upright and face the camera
                 else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
@@ -6206,7 +6228,6 @@ public class World : MonoBehaviour
                     }
 
                     useExpandedTile = true;
-                    useUIShader = true;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.BRIDGE)
                 {
@@ -6215,7 +6236,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.BRIDGE_TOP)
                 {
@@ -6224,7 +6244,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.BRIDGE_BOTTOM)
                 {
@@ -6233,7 +6252,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 else if ((tileIndex == U4_Decompiled.TILE.DOOR) || (tileIndex == U4_Decompiled.TILE.LOCKED_DOOR))
                 {
@@ -6242,7 +6260,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.BRICK_FLOOR_COLUMN)
                 {
@@ -6251,7 +6268,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.SHIP_MAST)
                 {
@@ -6260,7 +6276,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.SHIP_WHEEL)
                 {
@@ -6269,7 +6284,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.CHEST)
                 {
@@ -6278,7 +6292,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.CASTLE_LEFT)
                 {
@@ -6287,7 +6300,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.CASTLE_RIGHT)
                 {
@@ -6296,7 +6308,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.CASTLE_ENTRANCE)
                 {
@@ -6305,7 +6316,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                 }
                 // all other terrain tiles are flat
                 else
@@ -6322,7 +6332,6 @@ public class World : MonoBehaviour
                         rotation = Vector3.zero;
                         // since we animate the texture using uv we cannot use the expanded tiles and need to use the original ones
                         useExpandedTile = false;
-                        useUIShader = false;
                     }
                     else
                     {
@@ -6330,7 +6339,6 @@ public class World : MonoBehaviour
                         location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                         rotation = Vector3.zero;
                         useExpandedTile = true;
-                        useUIShader = false;
                     }
                 }
 
@@ -6341,17 +6349,8 @@ public class World : MonoBehaviour
                 mapTile.isStatic = true;
 
                 // set the shader
-                Shader unlit;
-                if (useUIShader)
-                {
-                    unlit = Shader.Find("Unlit/Transparent Cutout");
-                }
-                else
-                {
-                    unlit = Shader.Find("Unlit/Transparent Cutout");
-                }
                 Renderer renderer = mapTile.GetComponent<MeshRenderer>();
-                renderer.material.shader = unlit;
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
 
                 // set the tile and texture offset and scale
                 if (useExpandedTile)
@@ -6543,13 +6542,12 @@ public class World : MonoBehaviour
         }
     }
 
-    public void CreateMapSubsetPass2(GameObject mapGameObject, ref U4_Decompiled.TILE[,] map)
+    public void CreateMapSubsetPass2(GameObject mapGameObject, ref U4_Decompiled.TILE[,] map, ref GameObject[,] mapGameObjects, bool allWalls = false)
     {
         GameObject terrainGameObject;
         GameObject animatedTerrrainGameObject;
         GameObject billboardTerrrainGameObject;
         bool useExpandedTile;
-        bool useUIShader;
         bool useLinearTile;
 
         // create the terrain child object if it does not exist
@@ -6629,53 +6627,66 @@ public class World : MonoBehaviour
                 // solid object, brick, rocks etc. make into cubes
                 else if (CheckTileForOpacity(tileIndex))
                 {
-                    U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+                    if (allWalls == false)
+                    {
+                        U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
+                        U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
+                        U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
+                        U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
 
-                    if (y > 0)
-                        aboveTile = map[x, y - 1];
-                    if (y < map.GetLength(1) - 1)
-                        belowTile = map[x, y + 1];
-                    if (x > 0)
-                        leftTile = map[x - 1, y];
-                    if (x < map.GetLength(0) - 1)
-                        rightTile = map[x + 1, y];
+                        if (y > 0)
+                            aboveTile = map[x, y - 1];
+                        if (y < map.GetLength(1) - 1)
+                            belowTile = map[x, y + 1];
+                        if (x > 0)
+                            leftTile = map[x - 1, y];
+                        if (x < map.GetLength(0) - 1)
+                            rightTile = map[x + 1, y];
 
-                    mapTile = CreatePartialCube(!CheckTileForOpacity(leftTile), !CheckTileForOpacity(rightTile), !CheckTileForOpacity(aboveTile), !CheckTileForOpacity(belowTile));
+                        mapTile = CreatePartialCube(!CheckTileForOpacity(leftTile), !CheckTileForOpacity(rightTile), !CheckTileForOpacity(aboveTile), !CheckTileForOpacity(belowTile));
+                    }
+                    else
+                    {
+                        mapTile = CreatePartialCube();
+                    }
                     mapTile.transform.SetParent(terrainGameObject.transform);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     rotation = Vector3.zero;
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 // Letters, make into short cubes
                 else if (((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE)) 
                     || (tileIndex == U4_Decompiled.TILE.ARCHITECTURE))
                 {
-                    U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+                    if (allWalls == false)
+                    {
+                        U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
+                        U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
+                        U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
+                        U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
 
-                    if (y > 0)
-                        aboveTile = map[x, y - 1];
-                    if (y < map.GetLength(1) - 1)
-                        belowTile = map[x, y + 1];
-                    if (x > 0)
-                        leftTile = map[x - 1, y];
-                    if (x < map.GetLength(0) - 1)
-                        rightTile = map[x + 1, y];
+                        if (y > 0)
+                            aboveTile = map[x, y - 1];
+                        if (y < map.GetLength(1) - 1)
+                            belowTile = map[x, y + 1];
+                        if (x > 0)
+                            leftTile = map[x - 1, y];
+                        if (x < map.GetLength(0) - 1)
+                            rightTile = map[x + 1, y];
 
-                    mapTile = CreatePartialCube(!CheckShortTileForOpacity(leftTile), !CheckShortTileForOpacity(rightTile), !CheckShortTileForOpacity(aboveTile), !CheckShortTileForOpacity(belowTile));
+                        mapTile = CreatePartialCube(!CheckShortTileForOpacity(leftTile), !CheckShortTileForOpacity(rightTile), !CheckShortTileForOpacity(aboveTile), !CheckShortTileForOpacity(belowTile));
+                    }
+                    else
+                    {
+                        mapTile = CreatePartialCube();
+
+                    }
                     mapTile.transform.SetParent(terrainGameObject.transform);
                     mapTile.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.25f);
                     rotation = Vector3.zero;
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 // make mountains into pyramids
@@ -6686,7 +6697,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(0.0f, 180.0f, 0.0f); // rotate mountatins to show their best side
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 // make dungeon entrace into pyramid, rotate so it faces the right direction
@@ -6697,7 +6707,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(0.0f, 180.0f, 90.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f); 
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 // make brush and hills into short pyramids
@@ -6708,7 +6717,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(0.0f, 180.0f, 90.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 // make rocks into little bigger short pyramids since you cannot walk over them
@@ -6719,7 +6727,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(0.0f, 180.0f, 90.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 // tress we need to stand upright and face the camera
@@ -6741,7 +6748,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, -90.0f, 90.0f);
 
                     useExpandedTile = true;
-                    useUIShader = true;
                     useLinearTile = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.BRIDGE)
@@ -6751,7 +6757,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.BRIDGE_TOP)
@@ -6761,7 +6766,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.BRIDGE_BOTTOM)
@@ -6771,7 +6775,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 else if ((tileIndex == U4_Decompiled.TILE.DOOR) || (tileIndex == U4_Decompiled.TILE.LOCKED_DOOR))
@@ -6781,7 +6784,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.BRICK_FLOOR_COLUMN)
@@ -6791,7 +6793,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.SHIP_MAST)
@@ -6801,7 +6802,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.SHIP_WHEEL)
@@ -6811,7 +6811,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.CHEST)
@@ -6821,7 +6820,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.CASTLE_LEFT)
@@ -6831,7 +6829,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.CASTLE_RIGHT)
@@ -6841,7 +6838,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 else if (tileIndex == U4_Decompiled.TILE.CASTLE_ENTRANCE)
@@ -6851,7 +6847,6 @@ public class World : MonoBehaviour
                     rotation = new Vector3(-90.0f, 0.0f, 0.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
-                    useUIShader = false;
                     useLinearTile = false;
                 }
                 // all other terrain tiles are flat
@@ -6871,7 +6866,6 @@ public class World : MonoBehaviour
                         // since we animate the texture using uv we cannot use the expanded tiles and need to use the linear ones
                         useExpandedTile = false;
                         useLinearTile = true;
-                        useUIShader = false;
                     }
                     else
                     {
@@ -6879,7 +6873,6 @@ public class World : MonoBehaviour
                         location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                         rotation = Vector3.zero;
                         useExpandedTile = true;
-                        useUIShader = false;
                         useLinearTile = false;
                     }
                 }
@@ -6891,17 +6884,8 @@ public class World : MonoBehaviour
                 mapTile.isStatic = true;
 
                 // set the shader
-                Shader unlit;
-                if (useUIShader)
-                {
-                    unlit = Shader.Find("Unlit/Transparent Cutout");
-                }
-                else
-                {
-                    unlit = Shader.Find("Unlit/Transparent Cutout");
-                }
                 Renderer renderer = mapTile.GetComponent<MeshRenderer>();
-                renderer.material.shader = unlit;
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
 
                 // set the tile and texture offset and scale
                 
@@ -6927,8 +6911,6 @@ public class World : MonoBehaviour
                     renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
                 }
                 
-                //renderer.material = combinedExpandedMaterial;
-                //renderer.material.mainTexture = combinedExpandedTexture;
                 Mesh mesh = mapTile.GetComponent<MeshFilter>().mesh;
                 Vector2[] uv = new Vector2[mesh.uv.Length];
                 Vector2 textureAtlasOffset;
@@ -6967,7 +6949,7 @@ public class World : MonoBehaviour
                 mapTile.SetActive(false);
 
                 // stash the game object in the array
-                entireMapGameObjects[x, y] = mapTile;
+                mapGameObjects[x, y] = mapTile;
             }
         }
     }
@@ -7712,8 +7694,9 @@ public class World : MonoBehaviour
         int offset_x,
         int offset_y,
         ref GameObject [,] mapGameObjects,
-        bool useMipMaps = false, 
-        TextureFormat textureFormat = TextureFormat.RGBA32)
+        bool useMipMaps, 
+        TextureFormat textureFormat,
+        bool wrap)
     {
         GameObject terrainGameObject;
         GameObject animatedTerrrainGameObject;
@@ -7773,12 +7756,12 @@ public class World : MonoBehaviour
         }
 
         // save current position on this gameObject so we can set it to zero so the localToWorldMatrix works correctly below
-        Vector3 position = mapGameObject.transform.position;
-        Quaternion rotation = mapGameObject.transform.rotation;
+        //Vector3 position = mapGameObject.transform.position;
+        //Quaternion rotation = mapGameObject.transform.rotation;
 
         // set the game objects position to the zero location and rotation
-        mapGameObject.transform.position = Vector3.zero;
-        mapGameObject.transform.rotation = Quaternion.identity;
+        //mapGameObject.transform.position = Vector3.zero;
+        //mapGameObject.transform.rotation = Quaternion.identity;
 
         // Create a mesh filter and renderer on this gameObject if needed
         MeshFilter terrainFilter = terrainGameObject.GetComponent<MeshFilter>();
@@ -7831,14 +7814,29 @@ public class World : MonoBehaviour
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    int x = (i + offset_x + mapGameObjects.GetLength(0)) % mapGameObjects.GetLength(0);
-                    int y = (j + offset_y + mapGameObjects.GetLength(1)) % mapGameObjects.GetLength(1);
-                    U4_Decompiled.TILE tileIndex = entireMapTILEs[x, y];
+                    U4_Decompiled.TILE tileIndex = map[i, j];
 
                     // only count them if the raycaster has copied the tile
-                    if (map[i, j] != U4_Decompiled.TILE.BLANK)
+                    if (tileIndex != U4_Decompiled.TILE.BLANK)
                     {
-                        if (tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER)
+                        int x;
+                        int y;
+
+                        // only count them if wrapping or inside bounds
+                        if (wrap == false)
+                        {
+                            x = i + offset_x;
+                            y = j + offset_y;
+
+                            if ((x > mapGameObjects.GetLength(0) - 1) || (y > mapGameObjects.GetLength(1) - 1) || x < 0 || y < 0)
+                            {
+                                continue;
+                            }
+                        }
+
+                        if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) || 
+                            ((tileIndex >= U4_Decompiled.TILE.POISON_FIELD) && (tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD)) || 
+                            (tileIndex == U4_Decompiled.TILE.LAVA))
                         {
                             // increment the count
                             countAnimatedTerrrain++;
@@ -7866,28 +7864,48 @@ public class World : MonoBehaviour
             terrainCombine = new CombineInstance[countTerrain];
             animatedTerrrainCombine = new CombineInstance[countAnimatedTerrrain];
             billboardTerrrainCombine = new CombineInstance[countBillboardTerrrain];
-
+            
             // reset the counters
             countTerrain = 0;
             countAnimatedTerrrain = 0;
             countBillboardTerrrain = 0;
 
-            // add all the meshes to the combine arrays
+            // add all the meshes into the combine arrays
             for (int i = 0; i < map.GetLength(0); i++)
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
+                    U4_Decompiled.TILE tileIndex = map[i, j];
+
                     // only add them if the raycaster has copied the tile
-                    if (map[i, j] != U4_Decompiled.TILE.BLANK)
+                    if (tileIndex != U4_Decompiled.TILE.BLANK)
                     {
-                        int x = (i + offset_x + mapGameObjects.GetLength(0)) % mapGameObjects.GetLength(0);
-                        int y = (j + offset_y + mapGameObjects.GetLength(1)) % mapGameObjects.GetLength(1);
-                        U4_Decompiled.TILE tileIndex = entireMapTILEs[x, y];
+                        int x;
+                        int y;
 
-                        // need to adjust the position for wrapping
-                        mapGameObjects[x, y].transform.localPosition = new Vector3(i + offset_x, mapGameObjects.GetLength(1) - 1 - (j + offset_y), mapGameObjects[x, y].transform.localPosition.z);
+                        if (wrap)
+                        {
+                            x = (i + offset_x + mapGameObjects.GetLength(0)) % mapGameObjects.GetLength(0);
+                            y = (j + offset_y + mapGameObjects.GetLength(1)) % mapGameObjects.GetLength(1);
 
-                        if (tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER)
+                            // need to adjust the position for wrapping
+                            mapGameObjects[x, y].transform.localPosition = new Vector3(i + offset_x, mapGameObjects.GetLength(1) - 1 - (j + offset_y), mapGameObjects[x, y].transform.localPosition.z);
+                        }
+                        else
+                        {
+                            x = i + offset_x;
+                            y = j + offset_y;
+
+                            if ((x > mapGameObjects.GetLength(0) - 1) || (y > mapGameObjects.GetLength(1) - 1) || x < 0 || y < 0)
+                            {
+                                continue;
+                            }
+                            mapGameObjects[x, y].transform.localPosition = new Vector3(x, mapGameObjects.GetLength(1) - 1 - y, mapGameObjects[x, y].transform.localPosition.z);
+                        }
+
+                        if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) ||
+                            ((tileIndex >= U4_Decompiled.TILE.POISON_FIELD) && (tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD)) ||
+                            (tileIndex == U4_Decompiled.TILE.LAVA))
                         {
                             // add the game object mesh to the list we want to combine
                             animatedTerrrainCombine[countAnimatedTerrrain].mesh = mapGameObjects[x, y].GetComponent<MeshFilter>().mesh;
@@ -7948,7 +7966,7 @@ public class World : MonoBehaviour
             // combine the meshes and set the game object material
             if (countTerrain > 0)
             {
-                terrainFilter.mesh = new Mesh();
+                //terrainFilter.mesh = new Mesh();
                 terrainFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                 terrainFilter.mesh.CombineMeshes(terrainCombine);
                 terrainRenderer.material = combinedExpandedMaterial;
@@ -7958,7 +7976,7 @@ public class World : MonoBehaviour
 
             if (countAnimatedTerrrain > 0)
             {
-                animatedTerrrainFilter.mesh = new Mesh();
+                //animatedTerrrainFilter.mesh = new Mesh();
                 animatedTerrrainFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                 animatedTerrrainFilter.mesh.CombineMeshes(animatedTerrrainCombine);
                 animatedTerrrainRenderer.material = combinedLinearMaterial;
@@ -7975,7 +7993,7 @@ public class World : MonoBehaviour
 
             if (countBillboardTerrrain > 0)
             {
-                billboardFilter.mesh = new Mesh();
+                //billboardFilter.mesh = new Mesh();
                 billboardFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                 billboardFilter.mesh.CombineMeshes(billboardTerrrainCombine);
                 billboardRenderer.material = combinedExpandedMaterial;
@@ -7984,12 +8002,12 @@ public class World : MonoBehaviour
             }
 
             // cleanup any unused resources now
-            //Resources.UnloadUnusedAssets(); // this takes a really long time and checks everything for collection
+            //Resources.UnloadUnusedAssets(); // this can take a really long time, use only when nessesary
         }
 
         // Restore the game object position
-        terrainGameObject.transform.position = position;
-        terrainGameObject.transform.rotation = rotation;
+        //terrainGameObject.transform.position = position;
+        //terrainGameObject.transform.rotation = rotation;
 
         //Debug.Log("Combine3 processing time : " + (Time.realtimeSinceStartup - startTime));
     }
@@ -8018,8 +8036,7 @@ public class World : MonoBehaviour
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                Shader unlit = Shader.Find("Unlit/Transparent Cutout");
-                renderer.material.shader = unlit;
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
 
                 // add our little animator script and set the tile
                 Animate3 animate = fighterGameObject.AddComponent<Animate3>();
@@ -8109,8 +8126,7 @@ public class World : MonoBehaviour
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                Shader unlit = Shader.Find("Unlit/Transparent Cutout");
-                renderer.material.shader = unlit;
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
 
                 // add our little animator script and set the tile
                 Animate3 animate = characterGameObject.AddComponent<Animate3>();
@@ -8193,8 +8209,6 @@ public class World : MonoBehaviour
         // need to create moongate child game objects if none is present
         if (moongate.transform.childCount != 1)
         {
-            Shader unlit;
-
             // create the moongate object
             GameObject moongateGameObject = CreateQuad();
 
@@ -8205,8 +8219,7 @@ public class World : MonoBehaviour
             renderer.material.mainTexture = null;
 
             // set the shader
-            unlit = Shader.Find("Unlit/Transparent Cutout");
-            renderer.material.shader = unlit;
+            renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
 
             // rotate the moongate game object into position after creating
             Vector3 moongateLocation = new Vector3(0, 255, 0);
@@ -8227,7 +8240,7 @@ public class World : MonoBehaviour
 
         renderer.material.mainTexture = originalTiles[(int)u4.moongate_tile];
 
-        // get adjusted position based on the offset of the raycastSettlementMap due to the player position
+        // get adjusted position based on the offset of the raycastOutdoorMap due to the player position
         int posx = u4.moongate_x - (lastRaycastPlayer_posx - raycastOutdoorMap.GetLength(0) / 2 - 1);
         int posy = u4.moongate_y - (lastRaycastPlayer_posy - raycastOutdoorMap.GetLength(1) / 2 - 1);
         // can we see the npc
@@ -8276,8 +8289,7 @@ public class World : MonoBehaviour
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                Shader unlit = Shader.Find("Unlit/Transparent Cutout");
-                renderer.material.shader = unlit;
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
 
                 // add our little animator script and set the tile
                 Animate3 animate = npcGameObject.AddComponent<Animate3>();
@@ -8329,7 +8341,7 @@ public class World : MonoBehaviour
                     SETTLEMENT settlement;
 
                     // get the current settlement, need to special case BRITANNIA as the castle has two levels, use the ladder to determine which level
-                    if ((u4.Party._loc == U4_Decompiled.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == U4_Decompiled.TILE.LADDER_DOWN))
+                    if ((u4.Party._loc == U4_Decompiled.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == U4_Decompiled.TILE.LADDER_UP))
                     {
                         settlement = SETTLEMENT.LCB_1;
                     }
@@ -8420,8 +8432,7 @@ public class World : MonoBehaviour
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                Shader unlit = Shader.Find("Unlit/Transparent Cutout");
-                renderer.material.shader = unlit;
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
 
                 // rotate the hit game object into position after creating
                 Vector3 npcLocation = new Vector3(0, 255, 0);
@@ -8484,11 +8495,10 @@ public class World : MonoBehaviour
             activeCharacter.transform.localPosition = Vector3.zero;
             activeCharacter.transform.localRotation = Quaternion.identity;
             activeCharacter.name = "Active Character";
-            // set the shader
-            Shader wireframe = Shader.Find("Custom/Geometry/Wireframe");
-            //Shader.Find("Custom/Geometry/Wireframe").EnableKeyword("_REMOVEDIAG_ON")
             MeshRenderer renderer = activeCharacter.GetComponent<MeshRenderer>();
-            renderer.material.shader = wireframe;
+            // set the shader
+            renderer.material.shader = Shader.Find("Custom/Geometry/Wireframe");
+            //Shader.Find("Custom/Geometry/Wireframe").EnableKeyword("_REMOVEDIAG_ON")
             renderer.material.SetFloat("_WireframeVal", 0.03f);
             renderer.material.SetFloat("_RemoveDiag", 1);
             renderer.material.SetColor("_FrontColor", Color.yellow);
@@ -8674,9 +8684,11 @@ public class World : MonoBehaviour
         return checksum; 
     }
 
+    // changes in these require redrawing the map
     int lastRaycastPlayer_posx = -1;
     int lastRaycastPlayer_posy = -1;
     int lastRaycastPlayer_f_1dc = -1;
+    bool last_door_timer = false;
 
     // create a temp TILE map array to hold the combat terrains as we load them
     U4_Decompiled.TILE[][,] combatMaps = new U4_Decompiled.TILE[(int)U4_Decompiled.COMBAT_TERRAIN.MAX][,];
@@ -8686,6 +8698,7 @@ public class World : MonoBehaviour
     {
         // this object needs to move around so it needs to be above the other which are based on the whole world map
         mainTerrain = new GameObject("Main Terrain");
+
         // create game object under us to hold these sub categories of things
         terrain = new GameObject("terrain");
         terrain.transform.SetParent(mainTerrain.transform);
@@ -8733,6 +8746,7 @@ public class World : MonoBehaviour
         dungeonMonsters.transform.localPosition = Vector3.zero;
         dungeonMonsters.transform.localRotation = Quaternion.identity;
 
+        // initialize the palette and load the tiles
         InitializeEGAPalette();
         LoadTilesEGA();
         //InitializeCGAPalette();
@@ -8740,10 +8754,16 @@ public class World : MonoBehaviour
         //InitializeApple2Palette();
         //LoadTilesApple2();
 
+        // fix a tile
         FixMageTile3();
+
+        // expand the tiles
         ExpandTiles();
 
+        // create texture atlas
         CreateLinearTextureAtlas(ref originalTiles);
+        CreateSquareTextureAtlas(ref originalTiles);
+        CreateExpandedTextureAtlas(ref expandedTiles);
 
         // load the entire world map
         LoadWorldMap();
@@ -8763,6 +8783,21 @@ public class World : MonoBehaviour
         // get a reference to the game engine
         u4 = FindObjectOfType<U4_Decompiled>();
 
+        // initialize hidden map
+        hiddenWorldMapGameObject = new GameObject("Hidden World Map");
+        CreateMapSubsetPass2(hiddenWorldMapGameObject, ref entireMapTILEs, ref entireMapGameObjects);
+
+        GameObject hiddenSettlementsMaps = new GameObject("Hidden Settlements Maps");
+        for (int i = 0; i < (int)SETTLEMENT.MAX; i++)
+        {
+            GameObject settlementGameObject = new GameObject(((SETTLEMENT)i).ToString());
+            settlementGameObject.transform.SetParent(hiddenSettlementsMaps.transform);
+            settlementsMapGameObjects[i] = new GameObject[32, 32];
+            CreateMapSubsetPass2(settlementGameObject, ref settlementMap[i], ref settlementsMapGameObjects[i], true);
+        }
+
+        // Some test stuff, commented out for the moment
+
         //GameObject dungeonsRoomsGameObject = new GameObject("Dungeon Rooms");
         //CreateDungeonRooms(dungeonsRoomsGameObject);
 
@@ -8770,7 +8805,7 @@ public class World : MonoBehaviour
         //GameObject dungeonsGameObject = new GameObject("Dungeons");
         //CreateDungeons(dungeonsGameObject);
         */
-        
+
         // create all the dungeons and all the levels, this will take a while so be prepared to wait, but it is cool and worth the wait
         /*
         for (int dungeon = 0; dungeon < (int)DUNGEONS.MAX; dungeon++)
@@ -8787,6 +8822,7 @@ public class World : MonoBehaviour
 
         //GameObject dr = CreateDungeonRoom(ref dungeons[(int)DUNGEONS.WRONG].dungeonRooms[5]);
 
+        /*
         GameObject wedge = CreateWedge();
         Renderer renderer = wedge.GetComponent<Renderer>();
         renderer.material.mainTexture = expandedTiles[(int)U4_Decompiled.TILE.DIAGONAL_WATER_ARCHITECTURE4];
@@ -8804,6 +8840,7 @@ public class World : MonoBehaviour
         renderer.material.mainTexture = expandedTiles[(int)U4_Decompiled.TILE.WOOD_FLOOR];
         renderer.material.mainTextureOffset = new Vector2((float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
         renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
+    */
     }
 
     // Update is called once per frame
@@ -8812,7 +8849,7 @@ public class World : MonoBehaviour
     public float timerPeriod = 0.02f;
     int lastChecksum = -1;
     int currentChecksum = 0;
-    GameObject test; 
+    GameObject hiddenWorldMapGameObject; 
 
     // Update is called once per frame
     void Update()
@@ -9028,13 +9065,17 @@ public class World : MonoBehaviour
         partyGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
 
         // we've moved, regenerate the raycast, TODO NPCs can also affect the raycast when moving, need to check them also or redo raycast more often
-        if ((u4.Party._x != lastRaycastPlayer_posx) || (u4.Party._y != lastRaycastPlayer_posy) || (u4.Party.f_1dc != lastRaycastPlayer_f_1dc))
+        if ((u4.Party._x != lastRaycastPlayer_posx) || (u4.Party._y != lastRaycastPlayer_posy) || // player moved
+            (u4.Party.f_1dc != lastRaycastPlayer_f_1dc) || // balloon flying or grounded
+            ((u4.door_timer > 0) != last_door_timer)) // door has opened or closed
         {
             Vector3 location = Vector3.zero;
 
             // update the last raycast position
             lastRaycastPlayer_posx = u4.Party._x;
             lastRaycastPlayer_posy = u4.Party._y;
+            lastRaycastPlayer_f_1dc = u4.Party.f_1dc; // flying in the balloon or not
+            last_door_timer = (u4.door_timer > 0);
 
             if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
             {
@@ -9052,7 +9093,7 @@ public class World : MonoBehaviour
             }
             else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
             {
-                // generate a new raycast and get a checksum
+                // generate a new raycast based on game engine map and get a checksum
                 currentChecksum = raycast(ref u4.tMap32x32, 
                     u4.Party._x, 
                     u4.Party._y, 
@@ -9068,37 +9109,60 @@ public class World : MonoBehaviour
             // if last checksum does not match we need to regenerate the scene because the raycast is different
             // TODO also if we are sitting on a blank tile we are probably surrounded by something like trees so we need to regenerate
             // check if any of the surrounding tiles are emtpy also
-            //if (lastChecksum != currentChecksum)
+            //if (false) //(lastChecksum != currentChecksum)
             {
                 // save the checksum
                 lastChecksum = currentChecksum;
 
-
                 // create the game object children with meshes and textures
                 if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
                 {
-                    if (test == null)
-                    {
-                        test = new GameObject();
-                        CreateSquareTextureAtlas(ref originalTiles);
-                        ExpandTiles();
-                        CreateExpandedTextureAtlas(ref expandedTiles);
-                        CreateLinearTextureAtlas(ref originalTiles);
-                        CreateMapSubsetPass2(test, ref entireMapTILEs);
-                    }
-
-                    Combine3(mainTerrain, ref raycastOutdoorMap, u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1, u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1, ref entireMapGameObjects);
+                    Combine3(mainTerrain, 
+                        ref raycastOutdoorMap, 
+                        u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1, 
+                        u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1, 
+                        ref entireMapGameObjects,
+                        false, 
+                        TextureFormat.RGBA32, 
+                        true);
                     
                     location = Vector3.zero;
-                    terrain.transform.eulerAngles = Vector3.zero; // reset back to zero, TODO: figure out who is modifiying this
+                    //terrain.transform.eulerAngles = Vector3.zero; // reset back to zero, TODO: figure out who is modifiying this
                 }
                 else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
                 {
-                    CreateMap(mainTerrain, raycastSettlementMap);
+                    
+                    SETTLEMENT settlement;
+                    // get the current settlement, need to special case BRITANNIA as the castle has two levels, use the ladder to determine which level
+                    if ((u4.Party._loc == U4_Decompiled.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == U4_Decompiled.TILE.LADDER_UP))
+                    {
+                        settlement = SETTLEMENT.LCB_1;
+                    }
+                    else
+                    {
+                        settlement = (SETTLEMENT)u4.Party._loc;
+                    }
 
+                    Combine3(mainTerrain, 
+                        ref raycastSettlementMap, 
+                        u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1, 
+                        u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1, 
+                        ref settlementsMapGameObjects[(int)settlement],
+                        false,
+                        TextureFormat.RGBA32,
+                        false);
+
+                    //location = Vector3.zero;
+                    //terrain.transform.eulerAngles = Vector3.zero; // reset back to zero, TODO: figure out who is modifiying this
+
+                    location = new Vector3(0, 0, 224);
+                    
+                    /*
+                    CreateMap(mainTerrain, raycastSettlementMap);
                     location = new Vector3(
                         ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK, 0,
                         entireMapTILEs.GetLength(1) - ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK - raycastSettlementMap.GetLength(1));
+                    */
                 }
 
                 // Position the map in place
@@ -9107,6 +9171,7 @@ public class World : MonoBehaviour
                 // rotate map into place
                 mainTerrain.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
 
+                /* used to manually create meshes
                 if (once)
                 {
                     if (convertMe)
@@ -9130,6 +9195,7 @@ public class World : MonoBehaviour
                         once = false;
                     }
                 }
+                */
             }
         }
 
