@@ -82,29 +82,27 @@ public class U4_Decompiled : MonoBehaviour
         PARTY = 0x1F,
 
         /* 2-tile animation character */
-
-        /*mage*/
         MAGE = 0x20,
         MAGE2 = 0x21,
-        /*bard*/
+
         BARD = 0x22,
         BARD2 = 0x21,
-        /*fighter*/
+
         FIGHTER = 0x24,
         FIGHTER2 = 0x25,
-        /*druid*/
+
         DRUID = 0x26,
         DRUID2 = 0x27,
-        /*tinker*/
+
         TINKER = 0x28,
         TINKER2 = 0x29,
-        /*paladin*/
+
         PALADIN = 0x2A,
         PALADIN2 = 0x2B,
-        /*ranger*/
+
         RANGER = 0x2C,
         RANGER2 = 0x2D,
-        /*shepherd*/
+
         SHEPHERD = 0x2E,
         SHEPHERD2 = 0x2F,
 
@@ -136,6 +134,7 @@ public class U4_Decompiled : MonoBehaviour
         WOOD_FLOOR = 0x3F,
 
         /*moongate 4 phases*/
+        MOONGATE = 0x40,
         MOONGATE1 = 0x40,
         MOONGATE2 = 0x41,
         MOONGATE3 = 0x42,
@@ -167,29 +166,27 @@ public class U4_Decompiled : MonoBehaviour
         MISSLE_ATTACK_RED = 0x4F,
 
         /* 2-tile animation NPCs */
-
-        /*guard*/
         GUARD = 0x50,
         GUARD2 = 0x51,
-        /*merchant*/
+
         MERCHANT = 0x52,
         MERCHANT2 = 0x53,
-        /*bard*/
+
         BARD_NPC = 0x54,
         BARD_NPC2 = 0x55,
-        /*jester*/
+
         JESTER = 0x56,
         JESTER2 = 0x57,
-        /*beggar*/
+
         BEGGAR = 0x58,
         BEGGAR2 = 0x59,
-        /*child*/
+
         CHILD = 0x5A,
         CHILD2 = 0x5B,
-        /*bull*/
+
         BULL = 0x5C,
         BULL2 = 0x5D,
-        /*lord british*/
+
         LORD_BRITISH = 0x5E,
         LORD_BRITISH2 = 0x5F,
 
@@ -221,7 +218,7 @@ public class U4_Decompiled : MonoBehaviour
         Y = 0x78,
         Z = 0x79,
 
-        /*<space>*/
+        /* <space> */
         SPACE = 0x7A,
 
         /* brackets */
@@ -235,175 +232,173 @@ public class U4_Decompiled : MonoBehaviour
         /* brick wall */
         BRICK_WALL = 0x7F,
 
-        /* 2-tile monsters */
-
         /*pirate W N E S*/
         PIRATE = 0x80,
         PIRATE_WEST = 0x80,
         PIRATE_NORTH = 0x81,
         PIRATE_EAST = 0x82,
         PIRATE_SOUTH = 0x83,
-        /*nixie*/
+
+        /* 2-tile monsters */
         NIXIE = 0x84,
         NIXIE2 = 0x85,
-        /*squid*/
+
         SQUID = 0x86,
         SQUID2 = 0x87,
-        /*serpent*/
+
         SERPENT = 0x88,
         SERPENT2 = 0x89,
-        /*seahorse*/
+
         SEAHORSE = 0x8A,
         SEAHORSE2 = 0x8B,
-        /*whirlpool*/
+
         WHIRLPOOL = 0x8C,
         WHIRLPOOL2 = 0x8D,
-        /*twister*/
+
         WATER_SPOUT = 0x8E,
         WATER_SPOUT2 = 0x8F,
 
         /* 4-tile monsters */
-
-        /*rat*/
         RAT = 0x90,
         RAT2 = 0x91,
         RAT3 = 0x92,
         RAT4 = 0x93,
-        /*bat*/
+
         BAT = 0x94,
         BAT2 = 0x95,
         BAT3 = 0x96,
         BAT4 = 0x97,
-        /*spider*/
+
         SPIDER = 0x98,
         SPIDER2 = 0x99,
         SPIDER3 = 0x9a,
         SPIDER4 = 0x9b,
-        /*ghost*/
+
         GHOST = 0x9C,
         GHOST2 = 0x9D,
         GHOST3 = 0x9E,
         GHOST4 = 0x9F,
-        /*slime*/
+
         SLIME = 0xA0,
         SLIME2 = 0xA1,
         SLIME3 = 0xA2,
         SLIME4 = 0xA3,
-        /*troll*/
+
         TROLL = 0xA4,
         TROLL2 = 0xA5,
         TROLL3 = 0xA6,
         TROLL4 = 0xA7,
-        /*gremlin*/
+
         GREMLIN = 0xA8,
         GREMLIN2 = 0xA9,
         GREMLIN3 = 0xAa,
         GREMLIN4 = 0xAb,
-        /*mimic*/
+
         MIMIC = 0xAC,
         MIMIC2 = 0xAd,
         MIMIC3 = 0xAe,
         MIMIC4 = 0xAf,
-        /*reaper*/
+
         REAPER = 0xB0,
         REAPER2 = 0xB1,
         REAPER3 = 0xB2,
         REAPER4 = 0xB3,
-        /*insects*/
+
         INSECTS = 0xB4,
         INSECTS2 = 0xB5,
         INSECTS3 = 0xB6,
         INSECTS4 = 0xB7,
-        /*gazer*/
+
         GAZER = 0xB8,
         GAZER2 = 0xB9,
         GAZER3 = 0xBa,
         GAZER4 = 0xBb,
-        /*phantom*/
+
         PHANTOM = 0xBC,
         PHANTOM2 = 0xBD,
         PHANTOM3 = 0xBE,
         PHANTOM4 = 0xBF,
-        /*orc*/
+
         ORC = 0xC0,
         ORC2 = 0xC1,
         ORC3 = 0xC2,
         ORC4 = 0xC3,
-        /*skeleton*/
+
         SKELETON = 0xC4,
         SKELETON2 = 0xC5,
         SKELETON3 = 0xC6,
         SKELETON4 = 0xC7,
-        /*rogue*/
+
         ROGUE = 0xC8,
         ROGUE2 = 0xC9,
         ROGUE3 = 0xCa,
         ROGUE4 = 0xCb,
-        /*python*/
+
         PYTHON = 0xCC,
         PYTHON2 = 0xCd,
         PYTHON3 = 0xCe,
         PYTHON4 = 0xCf,
-        /*ettin*/
+
         ETTIN = 0xD0,
         ETTIN2 = 0xD1,
         ETTIN3 = 0xD2,
         ETTIN4 = 0xD3,
-        /*headless*/
+
         HEADLESS = 0xD4,
         HEADLESS2 = 0xD5,
         HEADLESS3 = 0xD6,
         HEADLESS4 = 0xD7,
-        /*cyclops*/
+
         CYCLOPS = 0xD8,
         CYCLOPS2 = 0xD9,
         CYCLOPS3 = 0xDa,
         CYCLOPS4 = 0xDb,
-        /*wisp*/
+
         WISP = 0xDC,
         WISP2 = 0xDD,
         WISP3 = 0xDE,
         WISP4 = 0xDF,
-        /*mage*/
+
         MAGE_NPC = 0xE0,
         MAGE_NPC2 = 0xE1,
         MAGE_NPC3 = 0xE2,
         MAGE_NPC4 = 0xE3,
-        /*lyche*/
+
         LYCHE = 0xE4,
         LYCHE2 = 0xE5,
         LYCHE3 = 0xE6,
         LYCHE4 = 0xE7,
-        /*lava lizard*/
+
         LAVA_LIZARD = 0xE8,
         LAVA_LIZARD2 = 0xE9,
         LAVA_LIZARD3 = 0xEa,
         LAVA_LIZARD4 = 0xEb,
-        /*zorn*/
+
         ZORN = 0xEC,
         ZORN2 = 0xEd,
         ZORN3 = 0xEe,
         ZORN4 = 0xEf,
-        /*daemon*/
+
         DAEMON = 0xF0,
         DAEMON2 = 0xF1,
         DAEMON3 = 0xF2,
         DAEMON4 = 0xF3,
-        /*hydra*/
+
         HYDRA = 0xF4,
         HYDRA2 = 0xF5,
         HYDRA3 = 0xF6,
         HYDRA4 = 0xF7,
-        /*dragon*/
+
         DRAGON = 0xF8,
         DRAGON2 = 0xF9,
         DRAGON3 = 0xFa,
         DRAGON4 = 0xFb,
-        /*balron*/
+
         BALRON = 0xFC,
         BALRON2 = 0xFd,
         BALRON3 = 0xFe,
         BALRON4 = 0xFf,
+
         MAX = 0x100
     };
 
@@ -479,7 +474,7 @@ public class U4_Decompiled : MonoBehaviour
         OUTDOORS = 0,
 
         // Castles
-        BRITANNIA = 1,
+        BRITANNIA = 1, // first and second floor is determined by the ladder up or down direction at [3, 3] in the map
         THE_LYCAEUM = 2,
         EMPATH_ABBY = 3,
         SERPENT_HOLD = 4,
@@ -522,6 +517,7 @@ public class U4_Decompiled : MonoBehaviour
         HUMILITY = 32
     };
 
+    // interface to the game engine
     [DllImport("UN_U4.dll")]
     public static extern void main();
     [DllImport("UN_U4.dll")]
@@ -578,11 +574,14 @@ public class U4_Decompiled : MonoBehaviour
     // buffer used to read stuff from the game engine
     byte[] buffer = new byte[10000];
 
+    // game engine map buffers
     public TILE[,] tMap32x32 = new TILE[32, 32];
     public byte[,,] tMap8x8x8 = new byte[8, 8, 8];
 
+    // game engine game mode
     public MODE current_mode;
 
+    // game engine active moongate infomation
     public TILE moongate_tile;
     public int moongate_x; 
     public int moongate_y;
@@ -777,10 +776,11 @@ public class U4_Decompiled : MonoBehaviour
     public enum COMBAT_TERRAIN
     {
         // this order and numbering is important up to at least CAMP
+        // the names are also important as they are used to load the filenames from the original game
         GRASS = 0,
         BRIDGE = 1,
         BRICK = 2,
-        DUNGEON = 3, // just all tiles, used outside when on dungeon entrance
+        DUNGEON = 3, // just all tiles, used outside when on dungeon entrance, not inside a dungeon
         HILL = 4,
         FOREST = 5,
         BRUSH = 6,
@@ -834,7 +834,7 @@ public class U4_Decompiled : MonoBehaviour
     void OnApplicationQuit()
     {
         //trd.Abort();
-        // CAUTION: this will cleanly exit the DLL, however is some areas such as combat this will not work and you will
+        // CAUTION: this will cleanly exit the DLL in most cases, however is some areas such as combat this will not work and you will
         // need to kill the unity editor process to be able to restart. The abort function will cause the Unity editor to exit which
         // is not desired. Using the exit() function in the DLL will also exit the unity editor which is also not desired. This
         // was the best solution I could come up with for the moment. In the final app all threads will be exiting when quiting so
@@ -880,8 +880,8 @@ public class U4_Decompiled : MonoBehaviour
     }
 
     public List<hit> currentHits = new List<hit>() { };
-    public TILE D_96F8;
-    public TILE D_946C;
+    public TILE D_96F8; // tile under attacker tile (used when pirate attack to determine combat map to use)
+    public TILE D_946C; // attacker tile (used when pirate attack to determine combat map to use)
 
     public struct mapPosition
     {
@@ -892,7 +892,6 @@ public class U4_Decompiled : MonoBehaviour
     public mapPosition D_95A5;
 
     public System.Text.ASCIIEncoding enc;
-
 
     public AudioClip[] music = new AudioClip[9];
 
@@ -1086,6 +1085,7 @@ sfx_magic2:
 	rts
     */
 
+    // used to tune the magic effect tone
     public float adjustSound = 94f;
 
     AudioClip CreateMagicEffectsSpecialEffectSound(int length)
@@ -1149,7 +1149,11 @@ sfx_magic2:
         return soundEffect;
     }
 
+    // used to detect game mode changes and change the music
     MODE lastMode = (MODE)(-1);
+
+    // extra surface rotation feature maintained outside of the game engine
+    public U4_Decompiled.DIRECTION surface_party_direction = DIRECTION.NORTH;
 
     // Update is called once per frame
     void Update()
@@ -1157,6 +1161,46 @@ sfx_magic2:
         int buffer_index;
 
         timer += Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.PageDown))
+        {
+            if (surface_party_direction == DIRECTION.NORTH)
+            {
+                surface_party_direction = DIRECTION.EAST;
+            }
+            else if (surface_party_direction == DIRECTION.EAST)
+            {
+                surface_party_direction = DIRECTION.SOUTH;
+            }
+            else if (surface_party_direction == DIRECTION.SOUTH)
+            {
+                surface_party_direction = DIRECTION.WEST;
+            }
+            else if (surface_party_direction == DIRECTION.WEST)
+            {
+                surface_party_direction = DIRECTION.NORTH;
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.PageUp))
+        {
+            if (surface_party_direction == DIRECTION.NORTH)
+            {
+                surface_party_direction = DIRECTION.WEST;
+            }
+            else if (surface_party_direction == DIRECTION.WEST)
+            {
+                surface_party_direction = DIRECTION.SOUTH;
+            }
+            else if (surface_party_direction == DIRECTION.SOUTH)
+            {
+                surface_party_direction = DIRECTION.EAST;
+            }
+            else if (surface_party_direction == DIRECTION.EAST)
+            {
+                surface_party_direction = DIRECTION.NORTH;
+            }
+        }
+        else
 
         // send some keyboard codes down to the engine,
         // Unity keydown is only active for a single frame so it cannot be in the timer check if
@@ -1210,6 +1254,25 @@ sfx_magic2:
                     main_keyboardHit((char)KEYS.VK_RIGHT);
                 }
             }
+            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
+            {
+                if (surface_party_direction == DIRECTION.NORTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_DOWN);
+                }
+                else if (surface_party_direction == DIRECTION.EAST)
+                {
+                    main_keyboardHit((char)KEYS.VK_LEFT);
+                }
+                else if (surface_party_direction == DIRECTION.SOUTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_UP);
+                }
+                else if (surface_party_direction == DIRECTION.WEST)
+                {
+                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                }
+            }
             else
             {
                 main_keyboardHit((char)KEYS.VK_DOWN);
@@ -1217,7 +1280,7 @@ sfx_magic2:
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            if ((current_mode == MODE.COMBAT_ROOM)||
+            if ((current_mode == MODE.COMBAT_ROOM) ||
                     ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
                 if (Party._dir == DIRECTION.NORTH)
@@ -1233,6 +1296,25 @@ sfx_magic2:
                     main_keyboardHit((char)KEYS.VK_DOWN);
                 }
                 else if (Party._dir == DIRECTION.WEST)
+                {
+                    main_keyboardHit((char)KEYS.VK_LEFT);
+                }
+            }
+            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
+            {
+                if (surface_party_direction == DIRECTION.NORTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_UP);
+                }
+                else if (surface_party_direction == DIRECTION.EAST)
+                {
+                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                }
+                else if (surface_party_direction == DIRECTION.SOUTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_DOWN);
+                }
+                else if (surface_party_direction == DIRECTION.WEST)
                 {
                     main_keyboardHit((char)KEYS.VK_LEFT);
                 }
@@ -1264,6 +1346,25 @@ sfx_magic2:
                     main_keyboardHit((char)KEYS.VK_DOWN);
                 }
             }
+            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
+            {
+                if (surface_party_direction == DIRECTION.NORTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_LEFT);
+                }
+                else if (surface_party_direction == DIRECTION.EAST)
+                {
+                    main_keyboardHit((char)KEYS.VK_UP);
+                }
+                else if (surface_party_direction == DIRECTION.SOUTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                }
+                else if (surface_party_direction == DIRECTION.WEST)
+                {
+                    main_keyboardHit((char)KEYS.VK_DOWN);
+                }
+            }
             else
             {
                 main_keyboardHit((char)KEYS.VK_LEFT);
@@ -1271,7 +1372,7 @@ sfx_magic2:
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if ((current_mode == MODE.COMBAT_ROOM)||
+            if ((current_mode == MODE.COMBAT_ROOM) ||
                     ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
                 if (Party._dir == DIRECTION.NORTH)
@@ -1287,6 +1388,25 @@ sfx_magic2:
                     main_keyboardHit((char)KEYS.VK_LEFT);
                 }
                 else if (Party._dir == DIRECTION.WEST)
+                {
+                    main_keyboardHit((char)KEYS.VK_UP);
+                }
+            }
+            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
+            {
+                if (surface_party_direction == DIRECTION.NORTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                }
+                else if (surface_party_direction == DIRECTION.EAST)
+                {
+                    main_keyboardHit((char)KEYS.VK_DOWN);
+                }
+                else if (surface_party_direction == DIRECTION.SOUTH)
+                {
+                    main_keyboardHit((char)KEYS.VK_LEFT);
+                }
+                else if (surface_party_direction == DIRECTION.WEST)
                 {
                     main_keyboardHit((char)KEYS.VK_UP);
                 }
@@ -1512,6 +1632,7 @@ sfx_magic2:
                 Camera.main.GetComponent<AudioSource>().Play();
             }
 
+            // get if any sound effects are active
             main_Sound(buffer, buffer.Length);
             int soundCount = buffer[0];
             for (int i = 0; i < soundCount; i++)
@@ -1545,7 +1666,7 @@ sfx_magic2:
                 }
             }
 
-            // create an ASCII encoder if needed
+            // create an ASCII encoder if needed for text processing
             if (enc == null)
             {
                 enc = new System.Text.ASCIIEncoding();
@@ -1588,7 +1709,7 @@ sfx_magic2:
                 }
             }
 
-            // animate the spining whirlpool character by removing and adding to the end of the text the update whirlpool character
+            // animate the spining whirlpool character by removing and adding to the end of the text, the update whirlpool character
             if (gameText.Length > 0)
             {
                 gameText = gameText.Remove(gameText.Length - 1) + (char)(0x1c + (Time.time * 10) % 4);
@@ -1599,6 +1720,8 @@ sfx_magic2:
             }
 
             // read the circular npc text buffer from the game engine
+            // this is different than the text above as it has speaking information
+            // and inside the game engine it has been modified to remove first person references like "he says..."
             text_size = main_NPC_Text(buffer, buffer.Length);
 
             // check if we have any new npc text to add
@@ -1622,12 +1745,15 @@ sfx_magic2:
                 WindowsVoice.speak(npcText); 
             }
 
+            // attacker tile and tile under attacker (used to determine combat map to use when pirates attack)
             D_96F8 = main_D_96F8();
             D_946C = main_D_946C();
 
+            // 8x8? chunk tile location on main map
             D_95A5.x = (byte)main_D_95A5_x();
             D_95A5.y = (byte)main_D_95A5_y();
 
+            // read current moongate information
             moongate_tile = main_D_9141();
             moongate_x = main_D_9445();
             moongate_y = main_D_9448();
@@ -1652,7 +1778,8 @@ sfx_magic2:
             // get the current tile under the party
             current_tile = main_tile_cur();
 
-            // read in current hit info list, the tile draws occurr out of the main draw squence and for only a short time before the playfield is repainted
+            // read in current hit info list, the tile draws occurr out of the main draw sequence
+            // and for only a short time before the playfield is repainted
             // the DLL saves the list of hits and coords to display later
             main_Hit(buffer, buffer.Length);
 
@@ -1696,6 +1823,8 @@ sfx_magic2:
             current_mode = main_CurMode();
 
             // extract the map data depending on the game mode
+            // in the game engine this memory is overlaped with the dungeon map below
+            // but we can keep them separate here as we have pleanty of memory
             if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
             {
                 buffer_index = 0;
@@ -1869,13 +1998,14 @@ sfx_magic2:
                 }
             }
 
-            door_x = main_D_17FA();
-            door_y =  main_D_17FC();
-            door_timer = main_D_17FE();
+            // read the current open door information
+            open_door_x = main_D_17FA();
+            open_door_y =  main_D_17FC();
+            open_door_timer = main_D_17FE();
         }
     }
 
-    public int door_x;
-    public int door_y;
-    public int door_timer;
+    public int open_door_x;
+    public int open_door_y;
+    public int open_door_timer;
 }

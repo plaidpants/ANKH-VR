@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class World : MonoBehaviour
 {
+    // color pallettes and 2D tile textures
     public Color[] CGAColorPalette;
     public Color[] EGAColorPalette;
     public Texture2D[] originalTiles;
@@ -38,12 +39,14 @@ public class World : MonoBehaviour
     public string tileCGAFilepath = "/u4/SHAPES.CGA";
     public string worldMapFilepath = "/u4/WORLD.MAP";
 
+    // reference to game engine interface
     public U4_Decompiled u4;
 
+    // this can be adjusted to display more or less of the map at runtime
     U4_Decompiled.TILE[,] raycastSettlementMap = new U4_Decompiled.TILE[64, 64];
-    U4_Decompiled.TILE[,] raycastOutdoorMap = new U4_Decompiled.TILE[64, 64];
 
-    const int MAP_CHUNK = 1;
+    // this can be adjusted to display more or less of the map at runtime
+    U4_Decompiled.TILE[,] raycastOutdoorMap = new U4_Decompiled.TILE[4*64, 4*64];
 
     GameObject CreatePartialCube(bool leftside = true, bool rightside = true, bool back = true, bool front = true)
     {
@@ -3337,8 +3340,7 @@ public class World : MonoBehaviour
             0, 2, 1,
             5, 3, 4,
             1, 2, 4,
-            4, 3, 1,
-
+            4, 3, 1
         };
 
         meshFilter.mesh.uv = new Vector2[]
@@ -3365,7 +3367,6 @@ public class World : MonoBehaviour
     // original function.
 
     // TODO: this does not handle the INN or shop or camp case  (e.g. In the middle of the night, while out for a stroll...)
-    // TODO: ship to shore combat showed the ship to ship combat terrain while playing, need to check where this is wrong, enum or code
     public U4_Decompiled.COMBAT_TERRAIN Convert_Tile_to_Combat_Terrian(U4_Decompiled.TILE tile)
     {
         U4_Decompiled.COMBAT_TERRAIN combat_terrain;
@@ -4491,6 +4492,7 @@ public class World : MonoBehaviour
         DOOR_SECRECT = 0xE0, // Secret Door
         WALL = 0xF0 //  Wall
     }
+
     public enum DUNGEONS
     {
         DECEIT = 0,
@@ -4519,11 +4521,13 @@ public class World : MonoBehaviour
         public U4_Decompiled.TILE monster;
         public int x, y;
     }
+
     [SerializeField]
     public struct DUNGEON_PARTY_START_LOCATION
     {
         public int x, y;
     }
+
     [SerializeField]
     public struct DUNGEON_ROOM
     {
@@ -4535,6 +4539,7 @@ public class World : MonoBehaviour
         public DUNGEON_PARTY_START_LOCATION[] partyWestEntry; // 0-7 (west entry)
         public U4_Decompiled.TILE[,] dungeonRoomMap; // 11x11 map matrix for room
     }
+
     [SerializeField]
     public struct DUNGEON
     {
@@ -6371,7 +6376,7 @@ public class World : MonoBehaviour
         // this takes about 150ms for the 64x64 outside grid.
         Combine(terrainGameObject);
         Combine2(animatedTerrrainGameObject);
-        Combine(billboardTerrrainGameObject); // combine separately from terrain above as we may need a different shader for these
+        Combine(billboardTerrrainGameObject); // combine separately from terrain above as we need to point these towards the player
 
         // add our little water animator script
         // adding a script component in the editor is a significant performance hit, avoid adding if already present
@@ -6893,6 +6898,234 @@ public class World : MonoBehaviour
 
         return allMapTilesGameObjects[(int)tileIndex];
     }
+
+    public struct Labels
+    {
+        public List<Label> labels;// = new List<Words>();
+    }
+
+    public struct Label
+    {
+        public List<Letter> letters;// = new List<Letter>();
+    }
+
+    public struct Letter
+    {
+        public U4_Decompiled.TILE tileIndex;
+        public int x;
+        public int y;
+    }
+
+    public void CreateMapLabels(GameObject mapGameObject, ref U4_Decompiled.TILE[,] map)
+    {
+        Labels mapLabels = new Labels();
+        mapLabels.labels = new List<Label>();
+
+        GameObject mapLabelsGameObject;
+        GameObject mapLabelsReverseGameObject;
+
+        // create the labels child object if it does not exist
+        Transform mapLabelsTransform = mapGameObject.transform.Find("labels");
+        if (mapLabelsTransform == null)
+        {
+            mapLabelsGameObject = new GameObject("labels");
+            mapLabelsGameObject.transform.SetParent(mapGameObject.transform);
+            mapLabelsGameObject.transform.localPosition = Vector3.zero;
+            mapLabelsGameObject.transform.localRotation = Quaternion.identity;
+        }
+        else
+        {
+            mapLabelsGameObject = mapLabelsTransform.gameObject;
+        }
+
+        // create the reverse labels child object if it does not exist
+        Transform mapLabelsReverseTransform = mapGameObject.transform.Find("labels reverse");
+        if (mapLabelsReverseTransform == null)
+        {
+            mapLabelsReverseGameObject = new GameObject("labels reverse");
+            mapLabelsReverseGameObject.transform.SetParent(mapGameObject.transform);
+            mapLabelsReverseGameObject.transform.localPosition = Vector3.zero;
+            mapLabelsReverseGameObject.transform.localRotation = Quaternion.identity;
+        }
+        else
+        {
+            mapLabelsReverseGameObject = mapLabelsReverseTransform.gameObject;
+        }
+
+        // remove any children if present
+        foreach (Transform child in mapLabelsGameObject.transform)
+        {
+            Object.DestroyImmediate(child.gameObject);
+        }
+        foreach (Transform child in mapLabelsReverseGameObject.transform)
+        {
+            Object.DestroyImmediate(child.gameObject);
+        }
+
+        // go through the map tiles and find words
+        for (int y = 0; y < map.GetLength(1); y++)
+        {
+            for (int x = 0; x < map.GetLength(0); x++)
+            {
+                U4_Decompiled.TILE tileIndex;
+
+                tileIndex = map[x, y];
+
+                // check if a tile is a letter
+                if ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.Z) || (tileIndex == U4_Decompiled.TILE.SPACE))
+                {
+                    // create a new label
+                    Label label = new Label();
+                    label.letters = new List<Letter>();
+                    Letter letter;
+
+                    // find all the letters in this label
+                    for (; x < map.GetLength(0); x++)
+                    {
+                        tileIndex = map[x, y];
+
+                        // check if a tile is a letter
+                        if ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.Z) || (tileIndex == U4_Decompiled.TILE.SPACE))
+                        {
+                            letter.tileIndex = tileIndex;
+                            letter.x = x;
+                            letter.y = y;
+
+                            // add these letters to the label
+                            label.letters.Add(letter);
+                        }
+                        else
+                        {
+                            // we are done with this label, drop out
+                            break;
+                        }
+                    }
+
+                    // add this label to the label list and look for more
+                    mapLabels.labels.Add(label);
+                }
+            }
+        }
+
+        // go through labels we found above and create a game object label and reverse label for each
+        foreach (Label label in mapLabels.labels)
+        {
+            GameObject labelGameObject = new GameObject("");
+            GameObject reverseLabelGameObject = new GameObject("");
+
+            labelGameObject.transform.SetParent(mapLabelsGameObject.transform);
+            reverseLabelGameObject.transform.SetParent(mapLabelsReverseGameObject.transform);
+
+            for (int i = 0; i < label.letters.Count; i++)
+            {
+                Letter letter = label.letters[i];
+                U4_Decompiled.TILE reverseTileIndex = label.letters[label.letters.Count - 1 - i].tileIndex;
+
+                if (letter.tileIndex != U4_Decompiled.TILE.SPACE)
+                {
+                    labelGameObject.name += (char)(letter.tileIndex - U4_Decompiled.TILE.A + 'A');
+                }
+                else
+                {
+                    labelGameObject.name += ' ';
+                }
+                if (reverseTileIndex != U4_Decompiled.TILE.SPACE)
+                {
+                    //reverseLabelGameObject.name += (char)(reverseTileIndex - U4_Decompiled.TILE.A + 'A');
+                    reverseLabelGameObject.name += (char)(letter.tileIndex - U4_Decompiled.TILE.A + 'A');
+                }
+                else
+                {
+                    reverseLabelGameObject.name += ' ';
+                }
+
+                // create the gameObject tile
+                GameObject mapTile = CreatePartialCube();
+                mapTile.transform.SetParent(labelGameObject.transform);
+                mapTile.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
+                mapTile.transform.localPosition = new Vector3(letter.x, map.GetLength(1) - 1 - letter.y, 0.25f);
+                mapTile.transform.localEulerAngles = Vector3.zero;
+
+                // all terrain is static, used by combine below to merge meshes
+                mapTile.isStatic = true;
+
+                // set the shader
+                Renderer renderer = mapTile.GetComponent<MeshRenderer>();
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+
+                // set the tile and texture offset and scale
+                renderer.material = combinedExpandedMaterial;
+                renderer.material.mainTexture = combinedExpandedTexture;
+                renderer.material.mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)letter.tileIndex % 16) * expandedTileWidth)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)letter.tileIndex / 16) * expandedTileHeight)) / (float)renderer.material.mainTexture.height);
+                renderer.material.mainTextureScale = new Vector2((float)(originalTileWidth) / (float)renderer.material.mainTexture.width, (float)(originalTileHeight) / (float)renderer.material.mainTexture.height);
+
+                Mesh mesh = mapTile.GetComponent<MeshFilter>().mesh;
+                Vector2[] uv = new Vector2[mesh.uv.Length];
+                Vector2 textureAtlasOffset;
+
+                textureAtlasOffset = new Vector2((int)letter.tileIndex % textureExpandedAtlasPowerOf2 * expandedTileWidth, (int)letter.tileIndex / textureExpandedAtlasPowerOf2 * expandedTileHeight);
+                for (int u = 0; u < mesh.uv.Length; u++)
+                {
+                    Vector2 mainTextureOffset;
+                    Vector2 mainTextureScale;
+
+                    mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)letter.tileIndex % 16) * expandedTileWidth)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)letter.tileIndex / 16) * expandedTileHeight)) / (float)renderer.material.mainTexture.height);
+                    mainTextureScale = new Vector2((float)(originalTileWidth) / (float)renderer.material.mainTexture.width, (float)(originalTileHeight) / (float)renderer.material.mainTexture.height);
+
+                    uv[u] = Vector2.Scale(mesh.uv[u], mainTextureScale);
+                    uv[u] += (textureAtlasOffset + mainTextureOffset);
+                }
+                mesh.uv = uv;
+
+                renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
+                renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
+
+                // create another game object to match the first but we will reverse the letters
+                GameObject reverseMapTile = CreatePartialCube();
+                reverseMapTile.transform.SetParent(reverseLabelGameObject.transform);
+                reverseMapTile.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
+                reverseMapTile.transform.localPosition = new Vector3(letter.x, map.GetLength(1) - 1 - letter.y, 0.25f);
+                reverseMapTile.transform.localEulerAngles = new Vector3(0, 0, 180); // flip the letter around
+
+                // all terrain is static, used by combine below to merge meshes
+                reverseMapTile.isStatic = true;
+
+                // set the shader
+                renderer = reverseMapTile.GetComponent<MeshRenderer>();
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+
+                // set the tile and texture offset and scale
+                renderer.material = combinedExpandedMaterial;
+                renderer.material.mainTexture = combinedExpandedTexture;
+                renderer.material.mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)reverseTileIndex % 16) * expandedTileWidth)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)reverseTileIndex / 16) * expandedTileHeight)) / (float)renderer.material.mainTexture.height);
+                renderer.material.mainTextureScale = new Vector2((float)(originalTileWidth) / (float)renderer.material.mainTexture.width, (float)(originalTileHeight) / (float)renderer.material.mainTexture.height);
+
+                mesh = reverseMapTile.GetComponent<MeshFilter>().mesh;
+                uv = new Vector2[mesh.uv.Length];
+
+                textureAtlasOffset = new Vector2((int)reverseTileIndex % textureExpandedAtlasPowerOf2 * expandedTileWidth, (int)reverseTileIndex / textureExpandedAtlasPowerOf2 * expandedTileHeight);
+                for (int u = 0; u < mesh.uv.Length; u++)
+                {
+                    Vector2 mainTextureOffset;
+                    Vector2 mainTextureScale;
+
+                    mainTextureOffset = new Vector2((float)(TILE_BORDER_SIZE + (((int)reverseTileIndex % 16) * expandedTileWidth)) / (float)renderer.material.mainTexture.width, (float)(TILE_BORDER_SIZE + (((int)reverseTileIndex / 16) * expandedTileHeight)) / (float)renderer.material.mainTexture.height);
+                    mainTextureScale = new Vector2((float)(originalTileWidth) / (float)renderer.material.mainTexture.width, (float)(originalTileHeight) / (float)renderer.material.mainTexture.height);
+
+                    uv[u] = Vector2.Scale(mesh.uv[u], mainTextureScale);
+                    uv[u] += (textureAtlasOffset + mainTextureOffset);
+                }
+                mesh.uv = uv;
+
+                renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
+                renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
+            }
+
+            Combine(labelGameObject);
+            Combine(reverseLabelGameObject);
+        }
+    }
+
 
     public void CreateMapSubsetPass2(GameObject mapGameObject, ref U4_Decompiled.TILE[,] map, ref GameObject[,] mapGameObjects, bool allWalls = false)
     {
@@ -8821,6 +9054,7 @@ public class World : MonoBehaviour
             settlementGameObject.transform.SetParent(hiddenSettlementsMaps.transform);
             settlementsMapGameObjects[i] = new GameObject[32, 32];
             CreateMapSubsetPass2(settlementGameObject, ref settlementMap[i], ref settlementsMapGameObjects[i], true);
+            //CreateMapLabels(settlementGameObject, ref settlementMap[i]);
         }
 
         // Some test stuff, commented out for the moment
@@ -8890,6 +9124,116 @@ public class World : MonoBehaviour
             // reset the expired timer
             timer -= timerExpired;
             timerExpired = timerPeriod;
+
+            //animate flags
+            // TODO there is probably a better way to do this than mucking around
+            // with the 2d texture like the original game did but it will work for now.
+            const int flagSpeed = 5;
+            if (Random.Range(0, 100) <= flagSpeed)
+            {
+                const int swap_x1 = 6;
+                const int swap_x2 = 8;
+                const int swap_y1 = 2;
+                const int swap_y2 = 3;
+                U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.CASTLE_ENTRANCE;
+
+                int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
+                int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
+
+                Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
+                Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
+                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
+                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
+                color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
+                color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
+                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
+                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
+                combinedExpandedTexture.Apply();
+            }
+            if (Random.Range(0, 100) <= flagSpeed)
+            {
+                const int swap_x1 = 6;
+                const int swap_x2 = 8;
+                const int swap_y1 = 4;
+                const int swap_y2 = 5;
+                U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.TOWN;
+
+                int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
+                int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
+
+                Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
+                Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
+                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
+                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
+                color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
+                color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
+                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
+                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
+                combinedExpandedTexture.Apply();
+            }
+            if (Random.Range(0, 100) <= flagSpeed)
+            {
+                const int swap_x1 = 10;
+                const int swap_x2 = 12;
+                const int swap_y1 = 2;
+                const int swap_y2 = 3;
+                U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.CASTLE;
+
+                int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
+                int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
+
+                Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
+                Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
+                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
+                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
+                color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
+                color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
+                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
+                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
+                combinedExpandedTexture.Apply();
+            }
+            if (Random.Range(0, 100) <= flagSpeed)
+            {
+                const int swap_x1 = 8;
+                const int swap_x2 = 10;
+                const int swap_y1 = 3;
+                const int swap_y2 = 4;
+                U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_WEST;
+
+                int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
+                int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
+
+                Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
+                Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
+                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
+                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
+                color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
+                color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
+                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
+                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
+                combinedExpandedTexture.Apply();
+            }
+            if (Random.Range(0, 100) <= flagSpeed)
+            {
+                const int swap_x1 = 7;
+                const int swap_x2 = 9;
+                const int swap_y1 = 3;
+                const int swap_y2 = 4;
+                U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_EAST;
+
+                int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
+                int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
+
+                Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
+                Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
+                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
+                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
+                color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
+                color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
+                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
+                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
+                combinedExpandedTexture.Apply();
+            }
 
             if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
             {
@@ -9094,7 +9438,7 @@ public class World : MonoBehaviour
         // we've moved, regenerate the raycast, TODO NPCs can also affect the raycast when moving, need to check them also or redo raycast more often
         if ((u4.Party._x != lastRaycastPlayer_posx) || (u4.Party._y != lastRaycastPlayer_posy) || // player moved
             (u4.Party.f_1dc != lastRaycastPlayer_f_1dc) || // balloon flying or grounded
-            ((u4.door_timer > 0) != last_door_timer)) // door has opened or closed
+            ((u4.open_door_timer > 0) != last_door_timer)) // door has opened or closed
         {
             Vector3 location = Vector3.zero;
 
@@ -9102,7 +9446,7 @@ public class World : MonoBehaviour
             lastRaycastPlayer_posx = u4.Party._x;
             lastRaycastPlayer_posy = u4.Party._y;
             lastRaycastPlayer_f_1dc = u4.Party.f_1dc; // flying in the balloon or not
-            last_door_timer = (u4.door_timer > 0);
+            last_door_timer = (u4.open_door_timer > 0);
 
             if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
             {
@@ -9111,12 +9455,12 @@ public class World : MonoBehaviour
                     u4.Party._x, 
                     u4.Party._y,
                     ref raycastOutdoorMap, 
-                    ((u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK,
-                    ((u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK, 
+                    ((u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1) ) ,
+                    ((u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1) ) , 
                     U4_Decompiled.TILE.BLANK);
                 location = new Vector3(
-                    ((u4.Party._x - raycastOutdoorMap.GetLength(0) / 2) - 1) / MAP_CHUNK * MAP_CHUNK, 0, 
-                    entireMapTILEs.GetLength(1) - ((u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK - raycastOutdoorMap.GetLength(1));
+                    ((u4.Party._x - raycastOutdoorMap.GetLength(0) / 2) - 1) , 0, 
+                    entireMapTILEs.GetLength(1) - ((u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1) ) - raycastOutdoorMap.GetLength(1));
             }
             else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
             {
@@ -9125,12 +9469,12 @@ public class World : MonoBehaviour
                     u4.Party._x, 
                     u4.Party._y, 
                     ref raycastSettlementMap, 
-                    ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK, 
-                    ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK, 
+                    ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) ), 
+                    ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) ), 
                     U4_Decompiled.TILE.GRASS);
                 location = new Vector3(
-                    ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK, 0,
-                    entireMapTILEs.GetLength(1) - ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK - raycastSettlementMap.GetLength(1));
+                    ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) ) , 0,
+                    entireMapTILEs.GetLength(1) - ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) )  - raycastSettlementMap.GetLength(1));
             }
 
             // if last checksum does not match we need to regenerate the scene because the raycast is different
@@ -9179,6 +9523,8 @@ public class World : MonoBehaviour
                         TextureFormat.RGBA32,
                         false);
 
+                    //CreateMapLabels(mainTerrain, ref raycastSettlementMap);
+
                     //location = Vector3.zero;
                     //terrain.transform.eulerAngles = Vector3.zero; // reset back to zero, TODO: figure out who is modifiying this
 
@@ -9187,8 +9533,8 @@ public class World : MonoBehaviour
                     /*
                     CreateMap(mainTerrain, raycastSettlementMap);
                     location = new Vector3(
-                        ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK, 0,
-                        entireMapTILEs.GetLength(1) - ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) / MAP_CHUNK) * MAP_CHUNK - raycastSettlementMap.GetLength(1));
+                        ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) ) , 0,
+                        entireMapTILEs.GetLength(1) - ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) )  - raycastSettlementMap.GetLength(1));
                     */
                 }
 
@@ -9234,7 +9580,29 @@ public class World : MonoBehaviour
                 partyGameObject.transform.localPosition = new Vector3(u4.Party._x, 255 - u4.Party._y, 0);
                 if (Camera.main.transform.eulerAngles.y != 0)
                 {
-                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                    if (rotateTransform)
+                    {
+                        if (u4.surface_party_direction == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                        }
+                        else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                        }
+                        else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                        }
+                        else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                        }
+                    }
+                    else
+                    {
+                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                    }
                 }
                 if (Camera.main.clearFlags != CameraClearFlags.Skybox)
                 {
