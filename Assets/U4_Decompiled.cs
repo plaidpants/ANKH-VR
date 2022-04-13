@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using System.Threading;
 using UnityEngine.UI;
+using System.IO;
 
 public class U4_Decompiled : MonoBehaviour
 {
@@ -518,54 +519,56 @@ public class U4_Decompiled : MonoBehaviour
     };
 
     // interface to the game engine
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern void main();
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern MODE main_CurMode();
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern TILE main_D_96F8();
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern TILE main_D_946C();
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern int main_D_95A5_x();
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern int main_D_95A5_y();
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern void main_keyboardHit(char key);
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern void main_CurMap(byte[] buffer, int length);
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern void main_Combat(byte[] buffer, int length);
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern void main_Fighters(byte[] buffer, int length);
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern void main_D_96F9(byte[] buffer, int length);
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern void main_Party(byte[] buffer, int length);
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern void main_Hit(byte[] buffer, int length);
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern void main_ActiveChar(byte[] buffer, int length);
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern TILE main_tile_cur();
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern int main_Text(byte[] buffer, int length);
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern int main_D_9445(); // moongate x
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern int main_D_9448(); // moongate y
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern TILE  main_D_9141(); // moongate tile
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern int main_NPC_Text(byte[] buffer, int length);
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern int main_Sound(byte[] buffer, int length);
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
     public static extern int main_D_17FA(); 
-    [DllImport("UN_U4.dll")]
-    public static extern int main_D_17FC(); 
-    [DllImport("UN_U4.dll")]
+    [DllImport("UN_U4")]
+    public static extern int main_D_17FC();
+    [DllImport("UN_U4")]
     public static extern int main_D_17FE();
+    [DllImport("UN_U4")]
+    public static extern int main_SoundFlag();
 
     float timer = 0.0f;
     float timerExpired = 0.0f;
@@ -811,9 +814,17 @@ public class U4_Decompiled : MonoBehaviour
         main();
     }
 
+
     // Start is called before the first frame update
     void Start()
     {
+        // create a DLL file from the original DOS AVATAR.EXE file
+        var sourceFile = new FileInfo(@"L:\GOGLibrary\Ultima 4 - Quest of the Avatar\AVATAR.EXE");
+        var patchFile = new FileInfo(@"L:\GOGLibrary\Ultima 4 - Quest of the Avatar\AVATAR.bps");
+        var targetFile = new FileInfo(@"L:\GOGLibrary\Ultima 4 - Quest of the Avatar\AVATAR.DLL");
+
+        DecoderBSP.ApplyPatch(sourceFile, patchFile, targetFile);
+
         // allocate storage for Party globals
         Party.chara = new Character[8];
         for (int i = 0; i < 8; i++)
@@ -1584,52 +1595,100 @@ sfx_magic2:
             timer = timer - timerExpired;
             timerExpired = timerPeriod;
 
-            if (lastMode != current_mode)
+            AudioSource musicSource = Camera.main.GetComponent<AudioSource>();
+            if (musicSource != null)
             {
-                lastMode = current_mode;
-                // TODO add better cross fade between musics?
-                // TODO move this out of the game engine interface
-                Camera.main.GetComponent<AudioSource>().Stop();
-                if (current_mode == U4_Decompiled.MODE.OUTDOORS)
+                // is sound disabled in the game engine
+                if (SoundFlag == 0)
                 {
-                    Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.WANDERER - 1];
-                }
-                else if (current_mode == U4_Decompiled.MODE.BUILDING)
-                {
-                    if ((Party._loc == LOCATIONS.BRITANNIA) ||
-                        (Party._loc == LOCATIONS.THE_LYCAEUM) ||
-                        (Party._loc == LOCATIONS.EMPATH_ABBY) ||
-                        (Party._loc == LOCATIONS.SERPENT_HOLD))
+                    // are we playing music
+                    if (musicSource.isPlaying == true)
                     {
-                        Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.CASTLES - 1];
-                    }
-                    else
-                    {
-                        Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.TOWNS - 1];
+                        // stop playing music when sound is disabled in the game engine and we are currently playing music
+                        musicSource.Stop();
                     }
                 }
-                else if (current_mode == U4_Decompiled.MODE.DUNGEON)
-                {
-                    Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.DUNGEON - 1];
-                }
-                else if (current_mode == U4_Decompiled.MODE.COMBAT)
-                {
-                    Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.COMBAT - 1];
-                }
-                else if (current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
-                {
-                    Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.COMBAT - 1];
-                }
-                else if (current_mode == U4_Decompiled.MODE.COMBAT_ROOM)
-                {
-                    Camera.main.GetComponent<AudioSource>().clip = music[(int)MUSIC.COMBAT -1];
-                }
+                // is sound enabled in the game engine
                 else
                 {
-                    Camera.main.GetComponent<AudioSource>().clip = null;
+                    // are we not playing music
+                    if (musicSource.isPlaying == false)
+                    {
+                        // start playing music when sound is enabled in the game engine and we are currently not playing music
+                        musicSource.Play();
+                    }
                 }
 
-                Camera.main.GetComponent<AudioSource>().Play();
+                // check if the game engine game mode has changed and the game engine has sound enabled
+                if ((lastMode != current_mode) && (SoundFlag != 0))
+                {
+                    // update the last game mode to the current game mode
+                    lastMode = current_mode;
+
+                    // TODO add better cross fade between musics?
+                    // TODO move this out of the game engine interface
+
+                    // stop the currently playing music track
+                    musicSource.Stop();
+
+                    // check if we are outdoors
+                    if (current_mode == U4_Decompiled.MODE.OUTDOORS)
+                    {
+                        // select the outdoor music clip
+                        musicSource.clip = music[(int)MUSIC.WANDERER - 1];
+                    }
+                    // check if we are in a building
+                    else if (current_mode == U4_Decompiled.MODE.BUILDING)
+                    {
+                        // is the building a castle or town or village
+                        if ((Party._loc == LOCATIONS.BRITANNIA) ||
+                            (Party._loc == LOCATIONS.THE_LYCAEUM) ||
+                            (Party._loc == LOCATIONS.EMPATH_ABBY) ||
+                            (Party._loc == LOCATIONS.SERPENT_HOLD))
+                        {
+                            // select the castle music when in the castle
+                            musicSource.clip = music[(int)MUSIC.CASTLES - 1];
+                        }
+                        else
+                        {
+                            // select the town or village music when in a town or village
+                            musicSource.clip = music[(int)MUSIC.TOWNS - 1];
+                        }
+                    }
+                    // check if we are in a dungoen
+                    else if (current_mode == U4_Decompiled.MODE.DUNGEON)
+                    {
+                        // select the dungeon music
+                        musicSource.clip = music[(int)MUSIC.DUNGEON - 1];
+                    }
+                    // check if we are in combat
+                    else if (current_mode == U4_Decompiled.MODE.COMBAT)
+                    {
+                        // select the combat music
+                        musicSource.clip = music[(int)MUSIC.COMBAT - 1];
+                    }
+                    // check if we are in combat
+                    else if (current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
+                    {
+                        // select the combat music
+                        musicSource.clip = music[(int)MUSIC.COMBAT - 1];
+                    }
+                    // check if we are in combat
+                    else if (current_mode == U4_Decompiled.MODE.COMBAT_ROOM)
+                    {
+                        // select the combat music
+                        musicSource.clip = music[(int)MUSIC.COMBAT - 1];
+                    }
+                    // unknown game mode
+                    else
+                    {
+                        // select no music
+                        musicSource.clip = null;
+                    }
+
+                    // start the music selection
+                    musicSource.Play();
+                }
             }
 
             // get if any sound effects are active
@@ -1642,26 +1701,29 @@ sfx_magic2:
                 //Debug.Log("Sound " + (SOUND_EFFECT)sound + " Length " + length);
                 if (sound < soundEffects.Length)
                 {
-                    // TODO need to wait for sound to complete before playing the next one
-                    // TODO need to make game engine wait until sound has played before allowing it to continue
-                    // TODO move this out of the game engine interface
-                    // TODO programatically create all the sounds instead of relying on sampled sounds
-                    // TODO cache sounds already created
-                    // TODO pre-create basic sfx at startup
-                    // TODO get source information of sound to better position it for 3D sound, monster, moongate, player, etc. e.g. currently moongate plays at old moongate position not at new position
-                    if (sound == (int)SOUND_EFFECT.SPELL_CAST)
+                    if (SoundFlag == 1)
                     {
-                        AudioClip clip = CreateMagicSpecialEffectSound(length);
-                        AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
-                    }
-                    else if (sound == (int)SOUND_EFFECT.SPELL_EFFECT)
-                    {
-                        AudioClip clip = CreateMagicEffectsSpecialEffectSound(length);
-                        AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
-                    }
-                    else
-                    {
-                        AudioSource.PlayClipAtPoint(soundEffects[sound], Camera.main.transform.position);
+                        // TODO need to wait for sound to complete before playing the next one
+                        // TODO need to make game engine wait until sound has played before allowing it to continue
+                        // TODO move this out of the game engine interface
+                        // TODO programatically create all the sounds instead of relying on sampled sounds
+                        // TODO cache sounds already created
+                        // TODO pre-create basic sfx at startup
+                        // TODO get source information of sound to better position it for 3D sound, monster, moongate, player, etc. e.g. currently moongate plays at old moongate position not at new position
+                        if (sound == (int)SOUND_EFFECT.SPELL_CAST)
+                        {
+                            AudioClip clip = CreateMagicSpecialEffectSound(length);
+                            AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
+                        }
+                        else if (sound == (int)SOUND_EFFECT.SPELL_EFFECT)
+                        {
+                            AudioClip clip = CreateMagicEffectsSpecialEffectSound(length);
+                            AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
+                        }
+                        else
+                        {
+                            AudioSource.PlayClipAtPoint(soundEffects[sound], Camera.main.transform.position);
+                        }
                     }
                 }
             }
@@ -1742,7 +1804,7 @@ sfx_magic2:
 
                 // TODO move this out of the game engine monitor
                 // TODO need to collect enough text til the newline so we don't have broken speech patterns in the middle of constructed sentences e.g. "I am" ... "a guard."...
-                WindowsVoice.speak(npcText); 
+                //WindowsVoice.speak(npcText); 
             }
 
             // attacker tile and tile under attacker (used to determine combat map to use when pirates attack)
@@ -2002,10 +2064,14 @@ sfx_magic2:
             open_door_x = main_D_17FA();
             open_door_y =  main_D_17FC();
             open_door_timer = main_D_17FE();
+
+            // read the sound flag
+            SoundFlag = main_SoundFlag();
         }
     }
 
     public int open_door_x;
     public int open_door_y;
     public int open_door_timer;
+    public int SoundFlag;
 }

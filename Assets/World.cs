@@ -9104,10 +9104,284 @@ public class World : MonoBehaviour
     */
     }
 
+
+    void AnimateFlags()
+    {
+        //animate flags
+        // TODO there is probably a better way to do this than mucking around
+        // with the 2d texture pixels like the original game did but it will work for now.
+        const int flagSpeed = 25;
+
+        if (Random.Range(0, 100) <= flagSpeed)
+        {
+            const int swap_x1 = 6;
+            const int swap_x2 = 8;
+            const int swap_y1 = 2;
+            const int swap_y2 = 3;
+            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.CASTLE_ENTRANCE;
+
+            int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
+            int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
+
+            Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
+            Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
+            color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
+            color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
+            combinedExpandedTexture.Apply();
+        }
+        if (Random.Range(0, 100) <= flagSpeed)
+        {
+            const int swap_x1 = 6;
+            const int swap_x2 = 8;
+            const int swap_y1 = 4;
+            const int swap_y2 = 5;
+            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.TOWN;
+
+            int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
+            int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
+
+            Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
+            Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
+            color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
+            color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
+            combinedExpandedTexture.Apply();
+        }
+        if (Random.Range(0, 100) <= flagSpeed)
+        {
+            const int swap_x1 = 10;
+            const int swap_x2 = 12;
+            const int swap_y1 = 2;
+            const int swap_y2 = 3;
+            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.CASTLE;
+
+            int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
+            int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
+
+            Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
+            Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
+            color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
+            color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
+            combinedExpandedTexture.Apply();
+        }
+        if (Random.Range(0, 100) <= flagSpeed)
+        {
+            const int swap_x1 = 6;
+            const int swap_x2 = 8;
+            const int swap_y1 = 2;
+            const int swap_y2 = 3;
+            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_WEST;
+
+            int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
+            int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
+
+            Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
+            Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
+            color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
+            color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
+            combinedExpandedTexture.Apply();
+        }
+        if (Random.Range(0, 100) <= flagSpeed)
+        {
+            const int swap_x1 = 7;
+            const int swap_x2 = 9;
+            const int swap_y1 = 2;
+            const int swap_y2 = 3;
+            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_EAST;
+
+            int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
+            int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
+
+            Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
+            Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
+            color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
+            color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
+            combinedExpandedTexture.Apply();
+        }
+
+        if (Random.Range(0, 100) <= flagSpeed)
+        {
+            const int swap_x1 = 6;
+            const int swap_x2 = 8;
+            const int swap_y1 = 2;
+            const int swap_y2 = 3;
+            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_WEST;
+
+            int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
+            int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
+
+            Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
+            Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
+            color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
+            color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
+            combinedExpandedTexture.Apply();
+        }
+        if (Random.Range(0, 100) <= flagSpeed)
+        {
+            const int swap_x1 = 7;
+            const int swap_x2 = 9;
+            const int swap_y1 = 2;
+            const int swap_y2 = 3;
+            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_EAST;
+
+            int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
+            int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
+
+            Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
+            Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
+            color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
+            color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
+            combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
+            combinedExpandedTexture.Apply();
+        }
+
+        if (Random.Range(0, 100) <= flagSpeed)
+        {
+            const int swap_x1 = 6;
+            const int swap_x2 = 8;
+            const int swap_y1 = 2;
+            const int swap_y2 = 3;
+            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_WEST;
+            Texture2D tex = originalTiles[(int)tileIndex];
+            Color color1 = tex.GetPixel(swap_x1, originalTileHeight - 1 - swap_y2);
+            Color color2 = tex.GetPixel(swap_x1, originalTileHeight - 1 - swap_y1);
+            tex.SetPixel(swap_x1, originalTileHeight - 1 - swap_y1, color1);
+            tex.SetPixel(swap_x1, originalTileHeight - 1 - swap_y2, color2);
+            color1 = tex.GetPixel(swap_x2, originalTileHeight - 1 - swap_y2);
+            color2 = tex.GetPixel(swap_x2, originalTileHeight - 1 - swap_y1);
+            tex.SetPixel(swap_x2, originalTileHeight - 1 - swap_y1, color1);
+            tex.SetPixel(swap_x2, originalTileHeight - 1 - swap_y2, color2);
+            tex.Apply();
+        }
+        if (Random.Range(0, 100) <= flagSpeed)
+        {
+            const int swap_x1 = 7;
+            const int swap_x2 = 9;
+            const int swap_y1 = 2;
+            const int swap_y2 = 3;
+            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_EAST;
+            Texture2D tex = originalTiles[(int)tileIndex];
+            Color color1 = tex.GetPixel(swap_x1, originalTileHeight - 1 - swap_y2);
+            Color color2 = tex.GetPixel(swap_x1, originalTileHeight - 1 - swap_y1);
+            tex.SetPixel(swap_x1, originalTileHeight - 1 - swap_y1, color1);
+            tex.SetPixel(swap_x1, originalTileHeight - 1 - swap_y2, color2);
+            color1 = tex.GetPixel(swap_x2, originalTileHeight - 1 - swap_y2);
+            color2 = tex.GetPixel(swap_x2, originalTileHeight - 1 - swap_y1);
+            tex.SetPixel(swap_x2, originalTileHeight - 1 - swap_y1, color1);
+            tex.SetPixel(swap_x2, originalTileHeight - 1 - swap_y2, color2);
+            tex.Apply();
+        }
+
+        if (Random.Range(0, 100) <= flagSpeed)
+        {
+            const int swap_x1 = 6 + TILE_BORDER_SIZE;
+            const int swap_x2 = 8 + TILE_BORDER_SIZE;
+            const int swap_y1 = 2 + TILE_BORDER_SIZE;
+            const int swap_y2 = 3 + TILE_BORDER_SIZE;
+            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_WEST;
+            Texture2D tex = expandedTiles[(int)tileIndex];
+            Color color1 = tex.GetPixel(swap_x1, expandedTileHeight - 1 - swap_y2);
+            Color color2 = tex.GetPixel(swap_x1, expandedTileHeight - 1 - swap_y1);
+            tex.SetPixel(swap_x1, expandedTileHeight - 1 - swap_y1, color1);
+            tex.SetPixel(swap_x1, expandedTileHeight - 1 - swap_y2, color2);
+            color1 = tex.GetPixel(swap_x2, expandedTileHeight - 1 - swap_y2);
+            color2 = tex.GetPixel(swap_x2, expandedTileHeight - 1 - swap_y1);
+            tex.SetPixel(swap_x2, expandedTileHeight - 1 - swap_y1, color1);
+            tex.SetPixel(swap_x2, expandedTileHeight - 1 - swap_y2, color2);
+            tex.Apply();
+        }
+        if (Random.Range(0, 100) <= flagSpeed)
+        {
+            const int swap_x1 = 7 + TILE_BORDER_SIZE;
+            const int swap_x2 = 9 + TILE_BORDER_SIZE;
+            const int swap_y1 = 2 + TILE_BORDER_SIZE;
+            const int swap_y2 = 3 + TILE_BORDER_SIZE;
+            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_EAST;
+            Texture2D tex = expandedTiles[(int)tileIndex];
+            Color color1 = tex.GetPixel(swap_x1, expandedTileHeight - 1 - swap_y2);
+            Color color2 = tex.GetPixel(swap_x1, expandedTileHeight - 1 - swap_y1);
+            tex.SetPixel(swap_x1, expandedTileHeight - 1 - swap_y1, color1);
+            tex.SetPixel(swap_x1, expandedTileHeight - 1 - swap_y2, color2);
+            color1 = tex.GetPixel(swap_x2, expandedTileHeight - 1 - swap_y2);
+            color2 = tex.GetPixel(swap_x2, expandedTileHeight - 1 - swap_y1);
+            tex.SetPixel(swap_x2, expandedTileHeight - 1 - swap_y1, color1);
+            tex.SetPixel(swap_x2, expandedTileHeight - 1 - swap_y2, color2);
+            tex.Apply();
+        }
+
+        //if (Random.Range(0, 100) <= flagSpeed)
+        {
+            const int x1 = 3;
+            const int x2 = 9;
+            const int y1 = 9;
+            const int y2 = 16;
+            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.COOKING_FIRE;
+
+            int offset_x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth + TILE_BORDER_SIZE;
+            int offset_y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight + TILE_BORDER_SIZE;
+
+
+            Color alpha = new Color(0, 0, 0, 0);
+            //EGAColorPalette[(int)EGA_COLOR.BLACK];
+
+            for (int y = y1; y <= y2; y++)
+            {
+                for (int x = x1; x <= x2; x++)
+                {
+                    Color color = combinedExpandedTexture.GetPixel(offset_x + x, offset_y + expandedTileHeight - 1 - y);
+                    if ((color == EGAColorPalette[(int)EGA_COLOR.RED]) || (color == alpha))
+                    {
+                        if (Random.Range(0, 100) <= 50)
+                        {
+                            combinedExpandedTexture.SetPixel(offset_x + x, offset_y + expandedTileHeight - 1 - y, EGAColorPalette[(int)EGA_COLOR.RED]);
+                        }
+                        else
+                        {
+                            combinedExpandedTexture.SetPixel(offset_x + x, offset_y + expandedTileHeight - 1 - y, alpha);
+                        }
+                    }
+                }
+            }
+            combinedExpandedTexture.Apply();
+        }
+    }
+
     // Update is called once per frame
     float timer = 0.0f;
     float timerExpired = 0.0f;
     public float timerPeriod = 0.02f;
+
+    // used for a flag animation timer
+    float flagTimer = 0.0f;
+    float flagTimerExpired = 0.0f;
+    public float flagTimerPeriod = 0.10f;
+
     int lastChecksum = -1;
     int currentChecksum = 0;
     GameObject hiddenWorldMapGameObject; 
@@ -9115,6 +9389,18 @@ public class World : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // update the timer
+        flagTimer += Time.deltaTime;
+
+        // only update periodically
+        if (flagTimer > flagTimerExpired)
+        {
+            // reset the expired timer
+            flagTimer -= flagTimerExpired;
+            flagTimerExpired = flagTimerPeriod;
+            AnimateFlags();
+        }
+
         // update the timer
         timer += Time.deltaTime;
 
@@ -9124,116 +9410,6 @@ public class World : MonoBehaviour
             // reset the expired timer
             timer -= timerExpired;
             timerExpired = timerPeriod;
-
-            //animate flags
-            // TODO there is probably a better way to do this than mucking around
-            // with the 2d texture like the original game did but it will work for now.
-            const int flagSpeed = 5;
-            if (Random.Range(0, 100) <= flagSpeed)
-            {
-                const int swap_x1 = 6;
-                const int swap_x2 = 8;
-                const int swap_y1 = 2;
-                const int swap_y2 = 3;
-                U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.CASTLE_ENTRANCE;
-
-                int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
-                int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
-
-                Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
-                Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
-                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
-                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
-                color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
-                color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
-                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
-                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
-                combinedExpandedTexture.Apply();
-            }
-            if (Random.Range(0, 100) <= flagSpeed)
-            {
-                const int swap_x1 = 6;
-                const int swap_x2 = 8;
-                const int swap_y1 = 4;
-                const int swap_y2 = 5;
-                U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.TOWN;
-
-                int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
-                int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
-
-                Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
-                Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
-                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
-                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
-                color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
-                color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
-                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
-                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
-                combinedExpandedTexture.Apply();
-            }
-            if (Random.Range(0, 100) <= flagSpeed)
-            {
-                const int swap_x1 = 10;
-                const int swap_x2 = 12;
-                const int swap_y1 = 2;
-                const int swap_y2 = 3;
-                U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.CASTLE;
-
-                int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
-                int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
-
-                Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
-                Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
-                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
-                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
-                color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
-                color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
-                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
-                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
-                combinedExpandedTexture.Apply();
-            }
-            if (Random.Range(0, 100) <= flagSpeed)
-            {
-                const int swap_x1 = 8;
-                const int swap_x2 = 10;
-                const int swap_y1 = 3;
-                const int swap_y2 = 4;
-                U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_WEST;
-
-                int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
-                int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
-
-                Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
-                Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
-                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
-                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
-                color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
-                color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
-                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
-                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
-                combinedExpandedTexture.Apply();
-            }
-            if (Random.Range(0, 100) <= flagSpeed)
-            {
-                const int swap_x1 = 7;
-                const int swap_x2 = 9;
-                const int swap_y1 = 3;
-                const int swap_y2 = 4;
-                U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_EAST;
-
-                int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
-                int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
-
-                Color color1 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2));
-                Color color2 = combinedExpandedTexture.GetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1));
-                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y1), color1);
-                combinedExpandedTexture.SetPixel(x + swap_x1, expandedTileHeight - 1 - (y + swap_y2), color2);
-                color1 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2));
-                color2 = combinedExpandedTexture.GetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1));
-                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y1), color1);
-                combinedExpandedTexture.SetPixel(x + swap_x2, expandedTileHeight - 1 - (y + swap_y2), color2);
-                combinedExpandedTexture.Apply();
-            }
 
             if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
             {
@@ -9391,15 +9567,26 @@ public class World : MonoBehaviour
                 npcs.SetActive(false);
                 party.SetActive(true);
                 moongate.SetActive(false);
-                dungeonMonsters.SetActive(true);
+
                 // check if we have the dungeon already created, create it if not
                 DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled.LOCATIONS.DUNGEONS);
                 if (dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
                 {
+                    // not the right dungeon, create a new dungeon
                     Destroy(dungeon);
                     dungeon = CreateDungeonExpandedLevel(dun, u4.Party._z);
                 }
-                dungeon.SetActive(true);
+
+                if (u4.Party.f_1dc > 0) // torch active
+                {
+                    dungeon.SetActive(true);
+                    dungeonMonsters.SetActive(true);
+                }
+                else
+                {
+                    dungeon.SetActive(false);
+                    dungeonMonsters.SetActive(false);
+                }
 
                 for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
                 {
@@ -9437,7 +9624,7 @@ public class World : MonoBehaviour
 
         // we've moved, regenerate the raycast, TODO NPCs can also affect the raycast when moving, need to check them also or redo raycast more often
         if ((u4.Party._x != lastRaycastPlayer_posx) || (u4.Party._y != lastRaycastPlayer_posy) || // player moved
-            (u4.Party.f_1dc != lastRaycastPlayer_f_1dc) || // balloon flying or grounded
+            (u4.Party.f_1dc != lastRaycastPlayer_f_1dc) || // balloon flying or grounded or dungeon torch active
             ((u4.open_door_timer > 0) != last_door_timer)) // door has opened or closed
         {
             Vector3 location = Vector3.zero;
@@ -9445,7 +9632,7 @@ public class World : MonoBehaviour
             // update the last raycast position
             lastRaycastPlayer_posx = u4.Party._x;
             lastRaycastPlayer_posy = u4.Party._y;
-            lastRaycastPlayer_f_1dc = u4.Party.f_1dc; // flying in the balloon or not
+            lastRaycastPlayer_f_1dc = u4.Party.f_1dc; // flying in the balloon or not or dungeon torch active
             last_door_timer = (u4.open_door_timer > 0);
 
             if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
