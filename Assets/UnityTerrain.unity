@@ -1672,7 +1672,7 @@ MonoBehaviour:
   combinedExpandedTexture: {fileID: 0}
   combinedExpandedMaterial: {fileID: 0}
   textureExpandedAtlasPowerOf2: 0
-  timerPeriod: 0.02
+  timerPeriod: 0.5
   flagTimerPeriod: 0.1
   rotateTransform: {fileID: 582030273}
   convertMe: {fileID: 0}

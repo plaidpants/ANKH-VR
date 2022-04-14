@@ -844,7 +844,6 @@ public class U4_Decompiled : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        //trd.Abort();
         // CAUTION: this will cleanly exit the DLL in most cases, however is some areas such as combat this will not work and you will
         // need to kill the unity editor process to be able to restart. The abort function will cause the Unity editor to exit which
         // is not desired. Using the exit() function in the DLL will also exit the unity editor which is also not desired. This
@@ -853,6 +852,16 @@ public class U4_Decompiled : MonoBehaviour
         // this would be a better solution but Unity 3D unfortantly loads any project DLLs at editor launch and keeps them loaded until you
         // quit the editor.
         main_keyboardHit((char)KEYS.VK_ESCAPE);
+        /* this doesn't work well
+        try
+        {
+            trd.Abort();
+        }
+        catch
+        { 
+            Debug.Log("error");
+        }
+        */
     }
 
     public enum KEYS
