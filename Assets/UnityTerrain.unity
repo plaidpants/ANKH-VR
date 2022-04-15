@@ -1661,6 +1661,10 @@ MonoBehaviour:
   flagTimerPeriod: 0.1
   rotateTransform: {fileID: 582030273}
   convertMe: {fileID: 0}
+  fontAtlas: {fileID: 0}
+  myFont: {fileID: 0}
+  charsetEGAFilepath: /u4/CHARSET.EGA
+  charsetCGAFilepath: /u4/CHARSET.CGA
 --- !u!4 &1753957574
 Transform:
   m_ObjectHideFlags: 0
@@ -2029,6 +2033,11 @@ PrefabInstance:
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 1083198363}
+    - target: {fileID: 5424587088318531113, guid: 01025e69428beb6408b14a27154ad608,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5424587088847071559, guid: 01025e69428beb6408b14a27154ad608,
         type: 3}
       propertyPath: m_Material

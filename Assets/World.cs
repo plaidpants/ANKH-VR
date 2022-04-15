@@ -18,7 +18,7 @@ public class World : MonoBehaviour
 
     // these are fixed in space 
     public GameObject npcs;
-    public GameObject bubblePrefab;
+    //public GameObject bubblePrefab;
     public GameObject party;
     public GameObject fighters;
     public GameObject characters;
@@ -39,13 +39,13 @@ public class World : MonoBehaviour
     public string tileCGAFilepath = "/u4/SHAPES.CGA";
     public string worldMapFilepath = "/u4/WORLD.MAP";
 
-    // reference to game engine interface
+    // reference to game engine
     public U4_Decompiled u4;
 
-    // this can be adjusted to display more or less of the map at runtime
+    // this array size can be adjusted to display more or less of the map at runtime
     U4_Decompiled.TILE[,] raycastSettlementMap = new U4_Decompiled.TILE[64, 64];
 
-    // this can be adjusted to display more or less of the map at runtime
+    // this array size can be adjusted to display more or less of the map at runtime
     U4_Decompiled.TILE[,] raycastOutdoorMap = new U4_Decompiled.TILE[4*64, 4*64];
 
     GameObject CreatePartialCube(bool leftside = true, bool rightside = true, bool back = true, bool front = true)
@@ -9025,6 +9025,11 @@ public class World : MonoBehaviour
         CreateSquareTextureAtlas(ref originalTiles);
         CreateExpandedTextureAtlas(ref expandedTiles);
 
+        // get the font
+        LoadCharSetEGA();
+        //LoadCharSetCGA();
+        ImportFontFromTexture(fontAtlas);
+
         // load the entire world map
         LoadWorldMap();
 
@@ -9915,5 +9920,230 @@ public class World : MonoBehaviour
     }
 
     public Transform rotateTransform;
-    public GameObject convertMe;
+    //public GameObject convertMe;
+
+
+    public Texture2D fontAtlas;
+    public Font myFont;
+    public string charsetEGAFilepath = "/u4/CHARSET.EGA";
+    public string charsetCGAFilepath = "/u4/CHARSET.CGA";
+
+    void LoadCharSetEGA()
+    {
+        Color alpha = new Color(0, 0, 0, 0);
+
+        if (!System.IO.File.Exists(Application.persistentDataPath + charsetEGAFilepath))
+        {
+            Debug.Log("Could not find EGA charset file " + Application.persistentDataPath + charsetEGAFilepath);
+            return;
+        }
+
+        // read the file
+        byte[] fileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + charsetEGAFilepath);
+
+        if (fileData.Length != 8 * 1024)
+        {
+            Debug.Log("EGA charset file incorrect length " + fileData.Length);
+            return;
+        }
+
+        // create a texture for this tile
+        fontAtlas = new Texture2D(8 * 16, 8 * 8, TextureFormat.RGBA32, false);
+
+        // we want pixles not fuzzy images
+        fontAtlas.filterMode = FilterMode.Point;
+
+        // use and index to walk through the file
+        int fileIndex = 0;
+
+        // there are 128 characters in the file,
+        // we will lay them out on a 16x8 texture atlas
+        // so we can convert them into a font below
+        for (int character = 0; character < 128; character++)
+        {
+            // manually go through the data and set the (x,y) pixels to the character based on the input file using the EGA color palette
+            for (int height = 0; height < 8; height++)
+            {
+                for (int width = 0; width < 8; /* width incremented below because we need to do nibbles */ )
+                {
+                    // set the color of the first half of the nibble
+                    int colorIndex = fileData[fileIndex] >> 4;
+                    Color color = EGAColorPalette[colorIndex];
+
+                    // use black as alpha channel
+                    if (colorIndex == 0)
+                    {
+                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                    }
+                    else
+                    {
+                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
+                    }
+
+                    // set the color of the second half of the nibble
+                    colorIndex = fileData[fileIndex] & 0xf;
+                    color = EGAColorPalette[colorIndex];
+                    if (colorIndex == 0)
+                    {
+                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                    }
+                    else
+                    {
+                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
+                    }
+
+                    // go to the next byte in the file
+                    fileIndex++;
+                }
+            }
+        }
+
+        // Actually apply all previous SetPixel and SetPixels changes from above
+        fontAtlas.Apply();
+    }
+
+#if DISABLED
+// TODO use the CGA tileset loading code as a reference to load the CGA font
+    void LoadCharsetCGA()
+    {
+        if (!System.IO.File.Exists(Application.persistentDataPath + charsetCGAFilepath))
+        {
+            Debug.Log("Could not find CGA tiles file " + Application.persistentDataPath + charsetCGAFilepath);
+            return;
+        }
+
+        // read the file
+        byte[] fileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + charsetCGAFilepath);
+
+        if (fileData.Length != 16 * 1024)
+        {
+            Debug.Log("CGA Tiles file incorrect length " + fileData.Length);
+            return;
+        }
+
+        // allocate an array of textures
+        tiles = new Texture2D(16*8, 16, TextureFormat.RGBA32, false);
+
+        // we want pixles not fuzzy images
+        currentChacter.filterMode = FilterMode.Point;
+
+        // use and index to walk through the file
+        int index = 0;
+
+        // there are 256 tiles in the file
+        for (int tile = 0; tile < 256; tile++)
+        {
+
+            // assign this texture to the tile array index
+            tiles[tile] = currentTile;
+
+            // manually go through the data and set the (x,y) pixels to the tile based on the input file using the EGA color palette
+            for (int height = 0; height < currentTile.height; height += 2)
+            {
+                for (int width = 0; width < currentTile.width; /* width incremented below */ )
+                {
+                    int colorIndex = (fileData[index + 0x20] & 0xC0) >> 6;
+                    Color color = EGAColorPalette[colorIndex];
+                    currentTile.SetPixel(width, currentTile.height - height - 2, color);
+
+                    colorIndex = (fileData[index] & 0xC0) >> 6;
+                    color = EGAColorPalette[colorIndex];
+                    currentTile.SetPixel(width++, currentTile.height - height - 1, color);
+
+                    colorIndex = (fileData[index + 0x20] & 0x30) >> 4;
+                    color = EGAColorPalette[colorIndex];
+                    currentTile.SetPixel(width, currentTile.height - height - 2, color);
+
+                    colorIndex = (fileData[index] & 0x30) >> 4;
+                    color = EGAColorPalette[colorIndex];
+                    currentTile.SetPixel(width++, currentTile.height - height - 1, color);
+
+                    colorIndex = (fileData[index + 0x20] & 0x0C) >> 2;
+                    color = EGAColorPalette[colorIndex];
+                    currentTile.SetPixel(width, currentTile.height - height - 2, color);
+
+                    colorIndex = (fileData[index] & 0x0C) >> 2;
+                    color = EGAColorPalette[colorIndex];
+                    currentTile.SetPixel(width++, currentTile.height - height - 1, color);
+
+                    colorIndex = (fileData[index + 0x20] & 0x03) >> 0;
+                    color = EGAColorPalette[colorIndex];
+                    currentTile.SetPixel(width, currentTile.height - height - 2, color);
+
+                    colorIndex = (fileData[index] & 0x03) >> 0;
+                    color = EGAColorPalette[colorIndex];
+                    currentTile.SetPixel(width++, currentTile.height - height - 1, color);
+
+                    // go to the next byte in the file
+                    index++;
+                }
+            }
+
+            // skip ahead
+            index += 0x20;
+        }
+
+        // Actually apply all previous SetPixel and SetPixels changes from above
+        currentTile.Apply();
+    }
+#endif
+
+    public void ImportFontFromTexture(Texture2D texture)
+    {
+        float texW = texture.width;
+        float texH = texture.height;
+
+        CharacterInfo[] charInfos = new CharacterInfo[128];
+        Rect r;
+
+        for (int i = 0; i < charInfos.Length; i++)
+        {
+            CharacterInfo charInfo = new CharacterInfo();
+
+            charInfo.index = i;
+            charInfo.advance = 8;
+
+            r = new Rect();
+            r.x = (i % 16) * (8 / texW);
+            r.y = (i / 16) * (8 / texH);
+            r.width = 8 / texW;
+            r.height = 8 / texH;
+            r.y = 1f - r.y - r.height;
+            charInfo.uvBottomLeft = new Vector2(r.xMin, r.yMin);
+            charInfo.uvBottomRight = new Vector2(r.xMax, r.yMin);
+            charInfo.uvTopLeft = new Vector2(r.xMin, r.yMax);
+            charInfo.uvTopRight = new Vector2(r.xMax, r.yMax);
+
+            r = new Rect();
+            r.x = 0;
+            r.y = 0;
+            r.width = 8;
+            r.height = 8;
+            r.y = -r.y;
+            r.height = -r.height;
+            charInfo.minX = (int)r.xMin;
+            charInfo.maxX = (int)r.xMax;
+            charInfo.minY = (int)r.yMax;
+            charInfo.maxY = (int)r.yMin;
+
+            charInfos[i] = charInfo;
+        }
+
+        // Create material
+        Material material = new Material(Shader.Find("UI/Default"));
+        material.mainTexture = texture;
+
+        // Create font
+        myFont = new Font();
+        myFont.material = material;
+        myFont.name = "font";
+        myFont.characterInfo = charInfos;
+        GameText.GetComponent<UnityEngine.UI.Text>().font = myFont;
+
+        // adjust font info so it spacing is correct
+        UnityEditor.SerializedObject mFont = new UnityEditor.SerializedObject(myFont);
+        mFont.FindProperty("m_FontSize").floatValue = 10.0f;
+        mFont.FindProperty("m_LineSpacing").floatValue = 8.0f;
+        mFont.ApplyModifiedProperties();
+    }
 }
