@@ -548,6 +548,9 @@ public class U4_Decompiled : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log("Load songs");
+        LoadSongs();
+
         Debug.Log("Patch AVATAR.EXE to AVATAR.DLL");
         // create a DLL file from the original DOS AVATAR.EXE file by patching it
         var sourceFile = new FileInfo(@"L:\GOGLibrary\Ultima 4 - Quest of the Avatar\AVATAR.EXE");
@@ -899,9 +902,6 @@ public class U4_Decompiled : MonoBehaviour
         // it is not an issue there, only when using the Unity editor do we have trouble. If Unity would load and unload the DLL at runtime
         // this would be a better solution but Unity 3D unfortantly loads any project DLLs at editor launch and keeps them loaded until you
         // quit the editor.
-        //main_keyboardHit((char)KEYS.VK_ESCAPE);
-
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_ESCAPE);
 
         /* this doesn't work well
         try
@@ -914,16 +914,24 @@ public class U4_Decompiled : MonoBehaviour
         }
         */
 
-        if (nativeLibraryPtr == System.IntPtr.Zero)
+        // signal to the game engine thread to exit all forever loops and return
+        //main_keyboardHit((char)KEYS.VK_ESCAPE);
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_ESCAPE);
+
+        // wait for the game engine thread to complete/return
+        while (trd.IsAlive == true)
         {
-            return;
+            ;
         }
 
-        Debug.Log("Unload AVATAR.DLL");
-        Debug.Log(Native.FreeLibrary(nativeLibraryPtr)
-                      ? "Native library successfully unloaded."
-                      : "Native library could not be unloaded.");
-        
+        // It is now safe to unload the DLL
+        if (nativeLibraryPtr != System.IntPtr.Zero)
+        {
+            Debug.Log("Unload AVATAR.DLL");
+            Debug.Log(Native.FreeLibrary(nativeLibraryPtr)
+                          ? "Native library successfully unloaded."
+                          : "Native library could not be unloaded.");
+        }
     }
 
     public enum KEYS
@@ -975,25 +983,24 @@ public class U4_Decompiled : MonoBehaviour
 
     public System.Text.ASCIIEncoding enc;
 
-    public AudioClip[] music = new AudioClip[9];
+    AudioClip[] music = new AudioClip[(int)MUSIC.MAX];
 
     // order played in the original intro, from http://www.applevault.com/ultima/
     public enum MUSIC
     {
-        NONE = 0,
-        TOWNS = 1,
-        SHOPPING = 2,
-        DUNGEON = 3,
-        CASTLES = 4,
-        RULEBRIT = 5,
-        WANDERER = 6, // OUTSIDE
-        COMBAT = 7,
-        SHRINES = 8,
-        FANFARE = 9,
-        MAX = 10
+        TOWNS = 0,
+        SHOPPING = 1,
+        DUNGEON = 2,
+        CASTLES = 3,
+        RULEBRIT = 4,
+        WANDERER = 5, // OUTSIDE
+        COMBAT = 6,
+        SHRINES = 7,
+        FANFARE = 8,
+        MAX = 9
     }
 
-    public AudioClip[] soundEffects = new AudioClip[11];
+    public AudioClip[] soundEffects = new AudioClip[(int)SOUND_EFFECT.MAX];
 
     public enum SOUND_EFFECT
     {
@@ -1009,9 +1016,29 @@ public class U4_Decompiled : MonoBehaviour
         SPELL_EFFECT = 9, // length is the fequency of the magic high pitch tone
         SPELL_CAST = 10, // length is the number or short random tones
         WHIRL_POOL = 11,
-        TWISTER = 12
+        TWISTER = 12,
+        MAX = 13
     };
 
+    public void LoadSongs()
+    {
+        for( int i = 0; i < (int)MUSIC.MAX; i++)
+        {
+            StartCoroutine(LoadSongCoroutine("L:\\GOGLibrary\\Ultima 4 - Quest of the Avatar\\" + ((MUSIC)i).ToString() + ".MP3", (MUSIC)i));
+        }
+    }
+
+    IEnumerator LoadSongCoroutine(string path, MUSIC index)
+    {
+        string url = string.Format("file://{0}", path);
+        Debug.Log("Load #" + (int)index + " " + url);
+        WWW www = new WWW(url);
+        yield return www;
+
+        Debug.Log("Loaded #" + (int)index + " " + url);
+        music[(int)index] = www.GetAudioClip(false, false);
+        //music[0] = null;
+    }
 
     /* 
     sound sample information from DOS version for sound 9 & 10, measured manually
@@ -1790,7 +1817,7 @@ sfx_magic2:
                     if (current_mode == U4_Decompiled.MODE.OUTDOORS)
                     {
                         // select the outdoor music clip
-                        musicSource.clip = music[(int)MUSIC.WANDERER - 1];
+                        musicSource.clip = music[(int)MUSIC.WANDERER];
                     }
                     // check if we are in a building
                     else if (current_mode == U4_Decompiled.MODE.BUILDING)
@@ -1802,37 +1829,37 @@ sfx_magic2:
                             (Party._loc == LOCATIONS.SERPENT_HOLD))
                         {
                             // select the castle music when in the castle
-                            musicSource.clip = music[(int)MUSIC.CASTLES - 1];
+                            musicSource.clip = music[(int)MUSIC.CASTLES];
                         }
                         else
                         {
                             // select the town or village music when in a town or village
-                            musicSource.clip = music[(int)MUSIC.TOWNS - 1];
+                            musicSource.clip = music[(int)MUSIC.TOWNS];
                         }
                     }
                     // check if we are in a dungoen
                     else if (current_mode == U4_Decompiled.MODE.DUNGEON)
                     {
                         // select the dungeon music
-                        musicSource.clip = music[(int)MUSIC.DUNGEON - 1];
+                        musicSource.clip = music[(int)MUSIC.DUNGEON];
                     }
                     // check if we are in combat
                     else if (current_mode == U4_Decompiled.MODE.COMBAT)
                     {
                         // select the combat music
-                        musicSource.clip = music[(int)MUSIC.COMBAT - 1];
+                        musicSource.clip = music[(int)MUSIC.COMBAT];
                     }
                     // check if we are in combat
                     else if (current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
                     {
                         // select the combat music
-                        musicSource.clip = music[(int)MUSIC.COMBAT - 1];
+                        musicSource.clip = music[(int)MUSIC.COMBAT];
                     }
                     // check if we are in combat
                     else if (current_mode == U4_Decompiled.MODE.COMBAT_ROOM)
                     {
                         // select the combat music
-                        musicSource.clip = music[(int)MUSIC.COMBAT - 1];
+                        musicSource.clip = music[(int)MUSIC.COMBAT];
                     }
                     // unknown game mode
                     else

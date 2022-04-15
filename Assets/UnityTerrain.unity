@@ -556,6 +556,7 @@ GameObject:
   - component: {fileID: 582030273}
   - component: {fileID: 582030272}
   - component: {fileID: 582030274}
+  - component: {fileID: 582030275}
   m_Layer: 0
   m_Name: XRRig
   m_TagString: Untagged
@@ -614,6 +615,25 @@ MonoBehaviour:
   height: 2
   rotationDamping: 0
   heightDamping: 1
+--- !u!114 &582030275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582030271}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 117073d53e9d91048966895e5eb5001b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sensitivityX: 15
+  sensitivityY: 15
+  sensitivity: 0.1
+  minimumX: -360
+  maximumX: 360
+  minimumY: -60
+  maximumY: 60
 --- !u!1 &999847450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1117,16 +1137,6 @@ MonoBehaviour:
   hit_time_period: 0.25
   D_96F8: 0
   D_946C: 0
-  music:
-  - {fileID: 8300000, guid: a0b1de6948f91584b9f4fd852f20354f, type: 3}
-  - {fileID: 8300000, guid: f089309c9fe4d504cb207550092649d6, type: 3}
-  - {fileID: 8300000, guid: 9c9a053e3453b9e48b1813ee3ce6dca5, type: 3}
-  - {fileID: 8300000, guid: bf8a2d3f980d4c24d949ab2847b98ab7, type: 3}
-  - {fileID: 8300000, guid: 5c5a3b5d04f16a144949b8587476dc55, type: 3}
-  - {fileID: 8300000, guid: 78ceaba036d2a5a47af6fd1de920656f, type: 3}
-  - {fileID: 8300000, guid: f3937130631975a43be621be5396a6a1, type: 3}
-  - {fileID: 8300000, guid: 5286d5b0325283b4bbd6723f78421a4c, type: 3}
-  - {fileID: 8300000, guid: f67922712140e9c4d8119db6de16a3e9, type: 3}
   soundEffects:
   - {fileID: 8300000, guid: 43558c554e950e94998b35d05e7aa15b, type: 3}
   - {fileID: 8300000, guid: 45499e07390e8e14b8b776dd5413cb28, type: 3}
