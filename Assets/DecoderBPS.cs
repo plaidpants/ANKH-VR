@@ -157,8 +157,15 @@ public class DecoderBSP : MonoBehaviour
 			}
 		}
 
-		FileStream targetFileStream = targetFile.OpenWrite();
-		targetFileStream.Write(targetData, 0, targetData.Length);
-		targetFileStream.Close();
+		try
+		{
+			FileStream targetFileStream = targetFile.OpenWrite();
+			targetFileStream.Write(targetData, 0, targetData.Length);
+			targetFileStream.Close();
+		}
+		catch
+        {
+			Debug.Log("AVATAR.DLL already in use");
+        }
 	}
 }

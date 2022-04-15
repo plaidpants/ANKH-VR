@@ -9398,7 +9398,10 @@ public class World : MonoBehaviour
             // reset the expired timer
             flagTimer -= flagTimerExpired;
             flagTimerExpired = flagTimerPeriod;
-            AnimateFlags();
+            if (textureExpandedAtlasPowerOf2 != 0)
+            {
+                AnimateFlags();
+            }
         }
 
         // update the timer

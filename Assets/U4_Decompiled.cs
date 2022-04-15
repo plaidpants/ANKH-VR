@@ -518,57 +518,111 @@ public class U4_Decompiled : MonoBehaviour
         HUMILITY = 32
     };
 
+    static System.IntPtr nativeLibraryPtr;
+
+    delegate  void main();
+    delegate MODE main_CurMode();
+    delegate TILE main_D_96F8();
+    delegate  TILE main_D_946C();
+    delegate int main_D_95A5_x();
+    delegate int main_D_95A5_y();
+    delegate void main_keyboardHit(char key);
+    delegate void main_CurMap(byte[] buffer, int length);
+    delegate void main_Combat(byte[] buffer, int length);
+    delegate void main_Fighters(byte[] buffer, int length);
+    delegate void main_D_96F9(byte[] buffer, int length);
+    delegate void main_Party(byte[] buffer, int length);
+    delegate void main_Hit(byte[] buffer, int length);
+    delegate void main_ActiveChar(byte[] buffer, int length);
+    delegate TILE main_tile_cur();
+    delegate int main_Text(byte[] buffer, int length);
+    delegate int main_D_9445(); // moongate x
+    delegate int main_D_9448(); // moongate y
+    delegate TILE main_D_9141(); // moongate tile
+    delegate int main_NPC_Text(byte[] buffer, int length);
+    delegate int main_Sound(byte[] buffer, int length);
+    delegate int main_D_17FA();
+    delegate int main_D_17FC();
+    delegate int main_D_17FE();
+    delegate int main_SoundFlag();
+
+    void Awake()
+    {
+        Debug.Log("Patch AVATAR.EXE to AVATAR.DLL");
+        // create a DLL file from the original DOS AVATAR.EXE file by patching it
+        var sourceFile = new FileInfo(@"L:\GOGLibrary\Ultima 4 - Quest of the Avatar\AVATAR.EXE");
+        var patchFile = new FileInfo(@"L:\GOGLibrary\Ultima 4 - Quest of the Avatar\AVATAR.bps");
+        var targetFile = new FileInfo(@"L:\GOGLibrary\Ultima 4 - Quest of the Avatar\AVATAR.DLL");
+
+        DecoderBSP.ApplyPatch(sourceFile, patchFile, targetFile);
+
+        Debug.Log("Load AVATAR.DLL");
+        // now attempt to load this DLL
+        if (nativeLibraryPtr != System.IntPtr.Zero)
+        {
+            return;
+        }
+
+        nativeLibraryPtr = Native.LoadLibrary("L:\\GOGLibrary\\Ultima 4 - Quest of the Avatar\\AVATAR.DLL");
+        if (nativeLibraryPtr == System.IntPtr.Zero)
+        {
+            Debug.LogError("Failed to load native library");
+        }
+    }
+
+#if DISABLED
     // interface to the game engine
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern void main();
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern MODE main_CurMode();
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern TILE main_D_96F8();
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern TILE main_D_946C();
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern int main_D_95A5_x();
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern int main_D_95A5_y();
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern void main_keyboardHit(char key);
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern void main_CurMap(byte[] buffer, int length);
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern void main_Combat(byte[] buffer, int length);
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern void main_Fighters(byte[] buffer, int length);
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern void main_D_96F9(byte[] buffer, int length);
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern void main_Party(byte[] buffer, int length);
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern void main_Hit(byte[] buffer, int length);
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern void main_ActiveChar(byte[] buffer, int length);
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern TILE main_tile_cur();
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern int main_Text(byte[] buffer, int length);
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern int main_D_9445(); // moongate x
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern int main_D_9448(); // moongate y
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern TILE  main_D_9141(); // moongate tile
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern int main_NPC_Text(byte[] buffer, int length);
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern int main_Sound(byte[] buffer, int length);
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern int main_D_17FA(); 
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern int main_D_17FC();
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern int main_D_17FE();
-    [DllImport("UN_U4")]
+    [DllImport("AVATAR.DLL")]
     public static extern int main_SoundFlag();
+#endif
 
     float timer = 0.0f;
     float timerExpired = 0.0f;
@@ -811,20 +865,14 @@ public class U4_Decompiled : MonoBehaviour
     private void ThreadTask()
     {
         // start the DLL main thread
-        main();
+        //main();
+        Native.Invoke<main>(nativeLibraryPtr);
     }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        // create a DLL file from the original DOS AVATAR.EXE file
-        var sourceFile = new FileInfo(@"L:\GOGLibrary\Ultima 4 - Quest of the Avatar\AVATAR.EXE");
-        var patchFile = new FileInfo(@"L:\GOGLibrary\Ultima 4 - Quest of the Avatar\AVATAR.bps");
-        var targetFile = new FileInfo(@"L:\GOGLibrary\Ultima 4 - Quest of the Avatar\AVATAR.DLL");
-
-        DecoderBSP.ApplyPatch(sourceFile, patchFile, targetFile);
-
         // allocate storage for Party globals
         Party.chara = new Character[8];
         for (int i = 0; i < 8; i++)
@@ -851,7 +899,10 @@ public class U4_Decompiled : MonoBehaviour
         // it is not an issue there, only when using the Unity editor do we have trouble. If Unity would load and unload the DLL at runtime
         // this would be a better solution but Unity 3D unfortantly loads any project DLLs at editor launch and keeps them loaded until you
         // quit the editor.
-        main_keyboardHit((char)KEYS.VK_ESCAPE);
+        //main_keyboardHit((char)KEYS.VK_ESCAPE);
+
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_ESCAPE);
+
         /* this doesn't work well
         try
         {
@@ -862,6 +913,17 @@ public class U4_Decompiled : MonoBehaviour
             Debug.Log("error");
         }
         */
+
+        if (nativeLibraryPtr == System.IntPtr.Zero)
+        {
+            return;
+        }
+
+        Debug.Log("Unload AVATAR.DLL");
+        Debug.Log(Native.FreeLibrary(nativeLibraryPtr)
+                      ? "Native library successfully unloaded."
+                      : "Native library could not be unloaded.");
+        
     }
 
     public enum KEYS
@@ -1226,19 +1288,24 @@ sfx_magic2:
         // Unity keydown is only active for a single frame so it cannot be in the timer check if
         if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && Input.GetKeyDown(KeyCode.Z)) // need to check this first as it overrides the normal Z keypress
         {
-            main_keyboardHit((char)'9'); // currently the windows implementation of this engine does not support this
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'9');
+
+            //main_keyboardHit((char)'9'); // currently the windows implementation of this engine does not support this
         }
         else if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.S)) // need to check this first as it overrides the normal S keypress
         {
-            main_keyboardHit((char)'9'); // currently the windows implementation of this engine does not support this
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'9');
+            //main_keyboardHit((char)'9'); // currently the windows implementation of this engine does not support this
         }
         else if (Input.GetKeyDown(KeyCode.End))
         {
-            main_keyboardHit((char)KEYS.VK_END);
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_END);
+            //main_keyboardHit((char)KEYS.VK_END);
         }
         else if (Input.GetKeyDown(KeyCode.Home))
         {
-            main_keyboardHit((char)KEYS.VK_HOME);
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_HOME);
+            //main_keyboardHit((char)KEYS.VK_HOME);
         }
         //else if (Input.GetKeyDown(KeyCode.PageUp))
         //{
@@ -1250,7 +1317,8 @@ sfx_magic2:
         //}
         else if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            main_keyboardHit((char)KEYS.VK_RETURN);
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
+            //main_keyboardHit((char)KEYS.VK_RETURN);
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
@@ -1259,43 +1327,52 @@ sfx_magic2:
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_DOWN);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
+                    //main_keyboardHit((char)KEYS.VK_DOWN);
                 }
                 else if (Party._dir == DIRECTION.EAST)
                 {
-                    main_keyboardHit((char)KEYS.VK_LEFT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
+                    //main_keyboardHit((char)KEYS.VK_LEFT);
                 }
                 else if (Party._dir == DIRECTION.SOUTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_UP);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
+                    //main_keyboardHit((char)KEYS.VK_UP);
                 }
                 else if (Party._dir == DIRECTION.WEST)
                 {
-                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
+                    //main_keyboardHit((char)KEYS.VK_RIGHT);
                 }
             }
             else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_DOWN);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
+                    //main_keyboardHit((char)KEYS.VK_DOWN);
                 }
                 else if (surface_party_direction == DIRECTION.EAST)
                 {
-                    main_keyboardHit((char)KEYS.VK_LEFT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
+                    //main_keyboardHit((char)KEYS.VK_LEFT);
                 }
                 else if (surface_party_direction == DIRECTION.SOUTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_UP);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
+                    //main_keyboardHit((char)KEYS.VK_UP);
                 }
                 else if (surface_party_direction == DIRECTION.WEST)
                 {
-                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
+                    //main_keyboardHit((char)KEYS.VK_RIGHT);
                 }
             }
             else
             {
-                main_keyboardHit((char)KEYS.VK_DOWN);
+                Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
+                //main_keyboardHit((char)KEYS.VK_DOWN);
             }
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -1305,43 +1382,52 @@ sfx_magic2:
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_UP);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
+                    //main_keyboardHit((char)KEYS.VK_UP);
                 }
                 else if (Party._dir == DIRECTION.EAST)
                 {
-                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
+                    //main_keyboardHit((char)KEYS.VK_RIGHT);
                 }
                 else if (Party._dir == DIRECTION.SOUTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_DOWN);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
+                    //main_keyboardHit((char)KEYS.VK_DOWN);
                 }
                 else if (Party._dir == DIRECTION.WEST)
                 {
-                    main_keyboardHit((char)KEYS.VK_LEFT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
+                    //main_keyboardHit((char)KEYS.VK_LEFT);
                 }
             }
             else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_UP);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
+                    //main_keyboardHit((char)KEYS.VK_UP);
                 }
                 else if (surface_party_direction == DIRECTION.EAST)
                 {
-                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
+                    //main_keyboardHit((char)KEYS.VK_RIGHT);
                 }
                 else if (surface_party_direction == DIRECTION.SOUTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_DOWN);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
+                    //main_keyboardHit((char)KEYS.VK_DOWN);
                 }
                 else if (surface_party_direction == DIRECTION.WEST)
                 {
-                    main_keyboardHit((char)KEYS.VK_LEFT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
+                    //main_keyboardHit((char)KEYS.VK_LEFT);
                 }
             }
             else
             {
-                main_keyboardHit((char)KEYS.VK_UP);
+                Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
+                //main_keyboardHit((char)KEYS.VK_UP);
             }
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -1351,43 +1437,52 @@ sfx_magic2:
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_LEFT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
+                    //main_keyboardHit((char)KEYS.VK_LEFT);
                 }
                 else if (Party._dir == DIRECTION.EAST)
                 {
-                    main_keyboardHit((char)KEYS.VK_UP);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
+                    //main_keyboardHit((char)KEYS.VK_UP);
                 }
                 else if (Party._dir == DIRECTION.SOUTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
+                    //main_keyboardHit((char)KEYS.VK_RIGHT);
                 }
                 else if (Party._dir == DIRECTION.WEST)
                 {
-                    main_keyboardHit((char)KEYS.VK_DOWN);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
+                    //main_keyboardHit((char)KEYS.VK_DOWN);
                 }
             }
             else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_LEFT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
+                    //main_keyboardHit((char)KEYS.VK_LEFT);
                 }
                 else if (surface_party_direction == DIRECTION.EAST)
                 {
-                    main_keyboardHit((char)KEYS.VK_UP);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
+                    //main_keyboardHit((char)KEYS.VK_UP);
                 }
                 else if (surface_party_direction == DIRECTION.SOUTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
+                    //main_keyboardHit((char)KEYS.VK_RIGHT);
                 }
                 else if (surface_party_direction == DIRECTION.WEST)
                 {
-                    main_keyboardHit((char)KEYS.VK_DOWN);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
+                    //main_keyboardHit((char)KEYS.VK_DOWN);
                 }
             }
             else
             {
-                main_keyboardHit((char)KEYS.VK_LEFT);
+                Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
+                //main_keyboardHit((char)KEYS.VK_LEFT);
             }
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -1397,204 +1492,255 @@ sfx_magic2:
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
+                    //main_keyboardHit((char)KEYS.VK_RIGHT);
                 }
                 else if (Party._dir == DIRECTION.EAST)
                 {
-                    main_keyboardHit((char)KEYS.VK_DOWN);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
+                    //main_keyboardHit((char)KEYS.VK_DOWN);
                 }
                 else if (Party._dir == DIRECTION.SOUTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_LEFT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
+                    //main_keyboardHit((char)KEYS.VK_LEFT);
                 }
                 else if (Party._dir == DIRECTION.WEST)
                 {
-                    main_keyboardHit((char)KEYS.VK_UP);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
+                    //main_keyboardHit((char)KEYS.VK_UP);
                 }
             }
             else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_RIGHT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
+                    //main_keyboardHit((char)KEYS.VK_RIGHT);
                 }
                 else if (surface_party_direction == DIRECTION.EAST)
                 {
-                    main_keyboardHit((char)KEYS.VK_DOWN);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
+                    //main_keyboardHit((char)KEYS.VK_DOWN);
                 }
                 else if (surface_party_direction == DIRECTION.SOUTH)
                 {
-                    main_keyboardHit((char)KEYS.VK_LEFT);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
+                    //main_keyboardHit((char)KEYS.VK_LEFT);
                 }
                 else if (surface_party_direction == DIRECTION.WEST)
                 {
-                    main_keyboardHit((char)KEYS.VK_UP);
+                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
+                    //main_keyboardHit((char)KEYS.VK_UP);
                 }
             }
             else
             {
-                main_keyboardHit((char)KEYS.VK_RIGHT);
+                Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
+                //main_keyboardHit((char)KEYS.VK_RIGHT);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
-            main_keyboardHit((char)KEYS.VK_ESCAPE);
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_ESCAPE);
+            //main_keyboardHit((char)KEYS.VK_ESCAPE);
+            Application.Quit();
         }
         else if (Input.GetKeyDown(KeyCode.Return))
         {
-            main_keyboardHit((char)KEYS.VK_RETURN);
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
+            //main_keyboardHit((char)KEYS.VK_RETURN);
         }
         else if (Input.GetKeyDown(KeyCode.Backspace))
         {
-            main_keyboardHit((char)KEYS.VK_BACK);
+            // TODO make this work with the text onscreen
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_BACK);
+            //main_keyboardHit((char)KEYS.VK_BACK);
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-            main_keyboardHit((char)KEYS.VK_SPACE);
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_SPACE);
+            //main_keyboardHit((char)KEYS.VK_SPACE);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            main_keyboardHit((char)'A');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'A');
+            //main_keyboardHit((char)'A');
         }
         else if (Input.GetKeyDown(KeyCode.B))
         {
-            main_keyboardHit((char)'B');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'B');
+            //main_keyboardHit((char)'B');
         }
         else if (Input.GetKeyDown(KeyCode.C))
         {
-            main_keyboardHit((char)'C');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'C');
+            //main_keyboardHit((char)'C');
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            main_keyboardHit((char)'D');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'D');
+            //main_keyboardHit((char)'D');
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-            main_keyboardHit((char)'E');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'E');
+            //main_keyboardHit((char)'E');
         }
         else if (Input.GetKeyDown(KeyCode.F))
         {
-            main_keyboardHit((char)'F');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'F');
+            //main_keyboardHit((char)'F');
         }
         else if (Input.GetKeyDown(KeyCode.G))
         {
-            main_keyboardHit((char)'G');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'G');
+            //main_keyboardHit((char)'G');
         }
         else if (Input.GetKeyDown(KeyCode.H))
         {
-            main_keyboardHit((char)'H');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'H');
+            //main_keyboardHit((char)'H');
         }
         else if (Input.GetKeyDown(KeyCode.I))
         {
-            main_keyboardHit((char)'I');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'I');
+            //main_keyboardHit((char)'I');
         }
         else if (Input.GetKeyDown(KeyCode.J))
         {
-            main_keyboardHit((char)'J');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'J');
+            //main_keyboardHit((char)'J');
         }
         else if (Input.GetKeyDown(KeyCode.K))
         {
-            main_keyboardHit((char)'K');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'K');
+            //main_keyboardHit((char)'K');
         }
         else if (Input.GetKeyDown(KeyCode.L))
         {
-            main_keyboardHit((char)'L');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'L');
+            //main_keyboardHit((char)'L');
         }
         else if (Input.GetKeyDown(KeyCode.M))
         {
-            main_keyboardHit((char)'M');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'M');
+            //main_keyboardHit((char)'M');
         }
         else if (Input.GetKeyDown(KeyCode.N))
         {
-            main_keyboardHit((char)'N');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'N');
+            //main_keyboardHit((char)'N');
         }
         else if (Input.GetKeyDown(KeyCode.O))
         {
-            main_keyboardHit((char)'O');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'O');
+            //main_keyboardHit((char)'O');
         }
         else if (Input.GetKeyDown(KeyCode.P))
         {
-            main_keyboardHit((char)'P');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'P');
+            //main_keyboardHit((char)'P');
         }
         else if (Input.GetKeyDown(KeyCode.Q))
         {
-            main_keyboardHit((char)'Q');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Q');
+            //main_keyboardHit((char)'Q');
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
-            main_keyboardHit((char)'R');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'R');
+            //main_keyboardHit((char)'R');
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            main_keyboardHit((char)'S');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'S');
+            //main_keyboardHit((char)'S');
         }
         else if (Input.GetKeyDown(KeyCode.T))
         {
-            main_keyboardHit((char)'T');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'T');
+            //main_keyboardHit((char)'T');
         }
         else if (Input.GetKeyDown(KeyCode.U))
         {
-            main_keyboardHit((char)'U');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'U');
+            //main_keyboardHit((char)'U');
         }
         else if (Input.GetKeyDown(KeyCode.V))
         {
-            main_keyboardHit((char)'V');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'V');
+            //main_keyboardHit((char)'V');
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-            main_keyboardHit((char)'W');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'W');
+            //main_keyboardHit((char)'W');
         }
         else if (Input.GetKeyDown(KeyCode.X))
         {
-            main_keyboardHit((char)'X');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'X');
+            //main_keyboardHit((char)'X');
         }
         else if (Input.GetKeyDown(KeyCode.Y))
         {
-            main_keyboardHit((char)'Y');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Y');
+            //main_keyboardHit((char)'Y');
         }
         else if (Input.GetKeyDown(KeyCode.Z))
         {
-            main_keyboardHit((char)'Z');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Z');
+            //main_keyboardHit((char)'Z');
         }
         else if (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0))
         {
-            main_keyboardHit((char)'0');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'0');
+            //main_keyboardHit((char)'0');
         }
         else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
         {
-            main_keyboardHit((char)'1');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'1');
+            //main_keyboardHit((char)'1');
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
         {
-            main_keyboardHit((char)'2');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'2');
+            //main_keyboardHit((char)'2');
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
         {
-            main_keyboardHit((char)'3');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'3');
+            //main_keyboardHit((char)'3');
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
         {
-            main_keyboardHit((char)'4');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'4');
+            //main_keyboardHit((char)'4');
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
         {
-            main_keyboardHit((char)'5');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'5');
+            //main_keyboardHit((char)'5');
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
         {
-            main_keyboardHit((char)'6');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'6');
+            //main_keyboardHit((char)'6');
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
         {
-            main_keyboardHit((char)'7');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'7');
+            //main_keyboardHit((char)'7');
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8) || Input.GetKeyDown(KeyCode.Keypad8))
         {
-            main_keyboardHit((char)'8');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'8');
+            //main_keyboardHit((char)'8');
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9))
         {
-            main_keyboardHit((char)'9');
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'9');
+            //main_keyboardHit((char)'9');
         }
 
         // only get data from the game engine periodically
@@ -1701,7 +1847,8 @@ sfx_magic2:
             }
 
             // get if any sound effects are active
-            main_Sound(buffer, buffer.Length);
+            Native.Invoke<main_Sound>(nativeLibraryPtr, buffer, buffer.Length);
+            //main_Sound(buffer, buffer.Length);
             int soundCount = buffer[0];
             for (int i = 0; i < soundCount; i++)
             {
@@ -1744,7 +1891,8 @@ sfx_magic2:
             }
 
             // read the circular text buffer from the game engine
-            int text_size = main_Text(buffer, buffer.Length);
+            //int text_size = main_Text(buffer, buffer.Length);
+            int text_size = Native.Invoke<int, main_Text>(nativeLibraryPtr, buffer, buffer.Length);
 
             // check if we have any new text to add
             if (text_size != 0)
@@ -1793,7 +1941,8 @@ sfx_magic2:
             // read the circular npc text buffer from the game engine
             // this is different than the text above as it has speaking information
             // and inside the game engine it has been modified to remove first person references like "he says..."
-            text_size = main_NPC_Text(buffer, buffer.Length);
+            //text_size = main_NPC_Text(buffer, buffer.Length);
+            text_size = Native.Invoke<int, main_NPC_Text>(nativeLibraryPtr, buffer, buffer.Length);
 
             // check if we have any new npc text to add
             if (text_size != 0)
@@ -1817,20 +1966,28 @@ sfx_magic2:
             }
 
             // attacker tile and tile under attacker (used to determine combat map to use when pirates attack)
-            D_96F8 = main_D_96F8();
-            D_946C = main_D_946C();
+            D_96F8 = Native.Invoke<U4_Decompiled.TILE, main_D_96F8>(nativeLibraryPtr);
+            //D_96F8 = main_D_96F8();
+            D_96F8 = Native.Invoke<U4_Decompiled.TILE, main_D_946C>(nativeLibraryPtr);
+            //D_946C = main_D_946C();
 
             // 8x8? chunk tile location on main map
-            D_95A5.x = (byte)main_D_95A5_x();
-            D_95A5.y = (byte)main_D_95A5_y();
+            D_95A5.x = (byte)Native.Invoke<int, main_D_95A5_x>(nativeLibraryPtr);
+            //D_95A5.x = (byte)main_D_95A5_x();
+            D_95A5.y = (byte)Native.Invoke<int, main_D_95A5_y>(nativeLibraryPtr);
+            //D_95A5.y = (byte)main_D_95A5_y();
 
             // read current moongate information
-            moongate_tile = main_D_9141();
-            moongate_x = main_D_9445();
-            moongate_y = main_D_9448();
+            moongate_tile = Native.Invoke<U4_Decompiled.TILE, main_D_9141>(nativeLibraryPtr);
+            //moongate_tile = main_D_9141();
+            moongate_x = Native.Invoke<int, main_D_9445>(nativeLibraryPtr);
+            //moongate_x = main_D_9445();
+            moongate_y = Native.Invoke<int, main_D_9448>(nativeLibraryPtr);
+            //moongate_y = main_D_9448();
 
             // get any hilighted character, used during combat
-            main_ActiveChar(buffer, buffer.Length);
+            //main_ActiveChar(buffer, buffer.Length);
+            Native.Invoke<main_ActiveChar>(nativeLibraryPtr, buffer, buffer.Length);
 
             // check if active
             if (buffer[1] != 0xff)
@@ -1847,12 +2004,14 @@ sfx_magic2:
             }
 
             // get the current tile under the party
-            current_tile = main_tile_cur();
+            current_tile = Native.Invoke<U4_Decompiled.TILE, main_tile_cur>(nativeLibraryPtr);
+            //current_tile = main_tile_cur();
 
             // read in current hit info list, the tile draws occurr out of the main draw sequence
             // and for only a short time before the playfield is repainted
             // the DLL saves the list of hits and coords to display later
-            main_Hit(buffer, buffer.Length);
+            //main_Hit(buffer, buffer.Length);
+            Native.Invoke<main_Hit>(nativeLibraryPtr, buffer, buffer.Length);
 
             // get the hit list length from the buffer
             int hit_length = buffer[0];
@@ -1888,10 +2047,12 @@ sfx_magic2:
             }
 
             // get the current map and npc data
-            main_CurMap(buffer, buffer.Length);
+            //main_CurMap(buffer, buffer.Length);
+            Native.Invoke<main_CurMap>(nativeLibraryPtr, buffer, buffer.Length);
 
             // get the current game mode;
-            current_mode = main_CurMode();
+            //current_mode = main_CurMode();
+            current_mode = Native.Invoke<U4_Decompiled.MODE, main_CurMode>(nativeLibraryPtr);
 
             // extract the map data depending on the game mode
             // in the game engine this memory is overlaped with the dungeon map below
@@ -1938,7 +2099,8 @@ sfx_magic2:
             }
 
             // get the current party data
-            main_Party(buffer, buffer.Length);
+            //main_Party(buffer, buffer.Length);
+            Native.Invoke<main_Party>(nativeLibraryPtr, buffer, buffer.Length);
 
             Party.f_000 = System.BitConverter.ToUInt32(buffer, 0x000);
             Party._moves = System.BitConverter.ToUInt32(buffer, 0x004);
@@ -2017,7 +2179,8 @@ sfx_magic2:
             Party._loc = (LOCATIONS)(System.BitConverter.ToUInt16(buffer, 0x1f4));
 
             // read in the Combat global
-            main_Combat(buffer, buffer.Length);
+            //main_Combat(buffer, buffer.Length);
+            Native.Invoke<main_Combat>(nativeLibraryPtr, buffer, buffer.Length);
 
             // read the npc positions
             for (int i = 0; i < 16; i++)
@@ -2042,7 +2205,8 @@ sfx_magic2:
             }
 
             // read in the Fighters global
-            main_Fighters(buffer, buffer.Length);
+            //main_Fighters(buffer, buffer.Length);
+            Native.Invoke<main_Fighters>(nativeLibraryPtr, buffer, buffer.Length);
 
             // extract the fighter data
             for (int i = 0; i < 16; i++)
@@ -2057,7 +2221,8 @@ sfx_magic2:
             }
 
             // read in the main_D_96F9 global
-            main_D_96F9(buffer, buffer.Length);
+            //main_D_96F9(buffer, buffer.Length);
+            Native.Invoke<main_D_96F9>(nativeLibraryPtr, buffer, buffer.Length);
 
             // read the main display tile buffer
             buffer_index = 0;
@@ -2070,12 +2235,16 @@ sfx_magic2:
             }
 
             // read the current open door information
-            open_door_x = main_D_17FA();
-            open_door_y =  main_D_17FC();
-            open_door_timer = main_D_17FE();
+            open_door_x = Native.Invoke<int, main_D_17FA>(nativeLibraryPtr);
+            //open_door_x = main_D_17FA();
+            open_door_y = Native.Invoke<int, main_D_17FC>(nativeLibraryPtr);
+            //open_door_y =  main_D_17FC();
+            open_door_timer = Native.Invoke<int, main_D_17FE>(nativeLibraryPtr);
+            //open_door_timer = main_D_17FE();
 
             // read the sound flag
-            SoundFlag = main_SoundFlag();
+            //SoundFlag = main_SoundFlag();
+            SoundFlag = Native.Invoke<int, main_SoundFlag>(nativeLibraryPtr);
         }
     }
 
