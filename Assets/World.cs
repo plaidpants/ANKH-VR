@@ -10125,25 +10125,59 @@ public class World : MonoBehaviour
             charInfo.maxX = (int)r.xMax;
             charInfo.minY = (int)r.yMax;
             charInfo.maxY = (int)r.yMin;
-
+            //charInfo.size = 1000;
+            charInfo.glyphHeight = 8;
+            charInfo.glyphWidth = 8;
+            //charInfo.maxX = 8;
+            //charInfo.maxY = 8;
             charInfos[i] = charInfo;
         }
 
+#if CREATE_DUMMY_FONT
+        // WARNING: painful hack below
+        // Font creation can only be done in the Unity Editor because SerializedObject
+        // is not availible in the final release build so we don't have the ability
+        // to set any of the Font() class properties thus making the the Font class kind of
+        // useless for runtime font creation applications like this.
+        // Need to create a dummy empty/blank font that is setup correctly in the Editor and then
+        // replace the font texture atlas at runtime with the real one from the original game instead. 
+        // Arrgh!
+
         // Create material
         Material material = new Material(Shader.Find("UI/Default"));
-        material.mainTexture = texture;
 
-        // Create font
+        // create an empty/blank texture
+        material.mainTexture = new Texture2D(16*8, 16, TextureFormat.RGBA32, false);
+
+        // create a new font
         myFont = new Font();
         myFont.material = material;
         myFont.name = "font";
         myFont.characterInfo = charInfos;
-        GameText.GetComponent<UnityEngine.UI.Text>().font = myFont;
 
-        // adjust font info so it spacing is correct
+        // Set the magic properties we cannot be set in the release build
+        // by adjusting font info so it spacing is correct. Begin Magic stuff.
         UnityEditor.SerializedObject mFont = new UnityEditor.SerializedObject(myFont);
         mFont.FindProperty("m_FontSize").floatValue = 10.0f;
         mFont.FindProperty("m_LineSpacing").floatValue = 8.0f;
         mFont.ApplyModifiedProperties();
+        // End magic stuff
+
+        // save the font to the unity assets folder, 
+        // need to reference this asset in the public Font myFont variable
+        // in the Unity Editor so we can use it in the release build below
+        UnityEditor.AssetDatabase.CreateAsset (myFont, "Assets/font.fontsettings");
+#else
+        // Create material
+        Material material = new Material(Shader.Find("UI/Default"));
+        material.mainTexture = texture;
+
+        // just update font with original game texture,
+        // everything else should already be set from when we created the asset file above
+        myFont.material = material;
+
+        // Set the font in the game text UI
+        GameText.GetComponent<UnityEngine.UI.Text>().font = myFont;
+#endif
     }
 }
