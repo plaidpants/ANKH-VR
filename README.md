@@ -58,9 +58,9 @@ Windows PC
   
 Oculus Quest (not yet available)
                                                                   
-sdcard\Android\data\com.SwivelChairGames.ANHK-VR\files\u4
+sdcard\Android\data\com.SwivelChairGames.ANHKVR\files\u4
                                                                   
-  sdcard\Android\data\com.SwivelChairGames.ANHK-VR\files\u4\AVATAR.EXE <- you should have this file at this directory location along with all the other files
+  sdcard\Android\data\com.SwivelChairGames.ANHKVR\files\u4\AVATAR.EXE <- you should have this file at this directory location along with all the other files
                                                                  
 This project does not contain any copyrighted game assets or code or text or graphics or fonts or any other intellectual property related to Ultima 4 it relies completely on the files from the original game. This project is not licensed by Origin Systems or Electronic Arts.
 
