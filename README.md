@@ -1,6 +1,6 @@
 # ANHK-VR
 
-This is an early alpha attempt to run the original Ultima 4 in VR. Currently it will run on the Windows PC with an Oculus Rift but other systems may be supported in the future.
+This is an early alpha attempt to run the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift but other systems may be supported in the future.
 
 Instructions:
 
