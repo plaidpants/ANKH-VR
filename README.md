@@ -1,4 +1,4 @@
-# ANHK-VR
+# ANHK VR
 
 This is an early alpha attempt to run the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift but other systems may be supported in the future.
 
@@ -44,7 +44,7 @@ OUTMONST.SAV
   
 PARTY.SAV
 
-Download a the appropriate AVATAR.bps patch file for your system from the link below and copy it to the ultima 4 install directory
+Download the appropriate AVATAR.bps patch file for your system from the link below and copy it to the ultima 4 install directory
   
 https://github.com/plaidpants/u4-decompiled/releases
 
