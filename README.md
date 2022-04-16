@@ -14,7 +14,7 @@ e.g. [GOGLibrary]\Ultima 4 - Quest of the Avatar
 
 Run the game at least once to create a party and start the game and save the game using the "(I)nitiate New Game" and "(J)ourney onward" and "(Q)uit & save" function. This will create a game save file.
 
-Download, rename and place in the install folder the original mockingboard music or other suitable music in mp3 format.
+Download, rename and place in the ultima 4 install folder the original mockingboard music or other suitable music in mp3 format.
   
 http://www.applevault.com/ultima/
 
@@ -62,4 +62,4 @@ sdcard\Android\data\com.SwivelChairGames.ANHK-VR\files\u4
                                                                   
   sdcard\Android\data\com.SwivelChairGames.ANHK-VR\files\u4\AVATAR.EXE <- you should have this file at this directory location along with all the other files
                                                                  
-This project does not contain any copyrighted game assets or code or text or graphics or fonts or any other intellectual property related to Ultima 4 it relies completely on the files from the original game. This project is not licensed by Orign Systems or Electronic Arts.
+This project does not contain any copyrighted game assets or code or text or graphics or fonts or any other intellectual property related to Ultima 4 it relies completely on the files from the original game. This project is not licensed by Origin Systems or Electronic Arts.
