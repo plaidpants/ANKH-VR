@@ -9062,6 +9062,8 @@ public class World : MonoBehaviour
             //CreateMapLabels(settlementGameObject, ref settlementMap[i]);
         }
 
+        u4.StartThread();
+
         // Some test stuff, commented out for the moment
 
         //GameObject dungeonsRoomsGameObject = new GameObject("Dungeon Rooms");

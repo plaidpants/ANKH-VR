@@ -520,10 +520,10 @@ public class U4_Decompiled : MonoBehaviour
 
     static System.IntPtr nativeLibraryPtr;
 
-    delegate  void main();
+    delegate void main();
     delegate MODE main_CurMode();
     delegate TILE main_D_96F8();
-    delegate  TILE main_D_946C();
+    delegate TILE main_D_946C();
     delegate int main_D_95A5_x();
     delegate int main_D_95A5_y();
     delegate void main_keyboardHit(char key);
@@ -545,32 +545,43 @@ public class U4_Decompiled : MonoBehaviour
     delegate int main_D_17FC();
     delegate int main_D_17FE();
     delegate int main_SoundFlag();
+    delegate void main_SetDataPath(byte[] buffer, int length);
 
     void Awake()
     {
-        Debug.Log("Load songs");
+        //Debug.Log("Load songs");
         LoadSongs();
 
-        Debug.Log("Patch AVATAR.EXE to AVATAR.DLL");
+        //Debug.Log("Patch AVATAR.EXE to AVATAR.DLL");
         // create a DLL file from the original DOS AVATAR.EXE file by patching it
-        var sourceFile = new FileInfo(@"L:\GOGLibrary\Ultima 4 - Quest of the Avatar\AVATAR.EXE");
-        var patchFile = new FileInfo(@"L:\GOGLibrary\Ultima 4 - Quest of the Avatar\AVATAR.bps");
-        var targetFile = new FileInfo(@"L:\GOGLibrary\Ultima 4 - Quest of the Avatar\AVATAR.DLL");
+        var sourceFile = new FileInfo(Application.persistentDataPath + "/u4/AVATAR.EXE");
+        var patchFile = new FileInfo(Application.persistentDataPath + "/u4/AVATAR.bps");
+        var targetFile = new FileInfo(Application.persistentDataPath + "/u4/AVATAR.DLL");
 
         DecoderBSP.ApplyPatch(sourceFile, patchFile, targetFile);
 
-        Debug.Log("Load AVATAR.DLL");
+        //Debug.Log("Load AVATAR.DLL");
         // now attempt to load this DLL
         if (nativeLibraryPtr != System.IntPtr.Zero)
         {
             return;
         }
 
-        nativeLibraryPtr = Native.LoadLibrary("L:\\GOGLibrary\\Ultima 4 - Quest of the Avatar\\AVATAR.DLL");
+        nativeLibraryPtr = Native.LoadLibrary(Application.persistentDataPath + "/u4/AVATAR.DLL");
         if (nativeLibraryPtr == System.IntPtr.Zero)
         {
             Debug.LogError("Failed to load native library");
         }
+
+        // Set the data path for the DLL before we start the thread,
+        // cstring are hard so we will just send the string buffer and a length.
+        string path = Application.persistentDataPath + "/u4/";
+        for (int i = 0; i < path.Length; i++)
+        {
+            buffer[i] = (byte)path[i];
+        }
+        buffer[path.Length] = 0;
+        Native.Invoke<main_SetDataPath>(nativeLibraryPtr, buffer, path.Length); 
     }
 
 #if DISABLED
@@ -886,7 +897,10 @@ public class U4_Decompiled : MonoBehaviour
         Party._weapons = new ushort[16];
         Party._reagents = new ushort[8];
         Party._mixtures = new ushort[26];
+    }
 
+   public void StartThread()
+    {
         // start a thread with the DLL main task
         trd = new Thread(new ThreadStart(this.ThreadTask));
         trd.IsBackground = true;
@@ -927,7 +941,7 @@ public class U4_Decompiled : MonoBehaviour
         // It is now safe to unload the DLL
         if (nativeLibraryPtr != System.IntPtr.Zero)
         {
-            Debug.Log("Unload AVATAR.DLL");
+            //Debug.Log("Unload AVATAR.DLL");
             Debug.Log(Native.FreeLibrary(nativeLibraryPtr)
                           ? "Native library successfully unloaded."
                           : "Native library could not be unloaded.");
@@ -1024,18 +1038,18 @@ public class U4_Decompiled : MonoBehaviour
     {
         for( int i = 0; i < (int)MUSIC.MAX; i++)
         {
-            StartCoroutine(LoadSongCoroutine("L:\\GOGLibrary\\Ultima 4 - Quest of the Avatar\\" + ((MUSIC)i).ToString() + ".MP3", (MUSIC)i));
+            StartCoroutine(LoadSongCoroutine(Application.persistentDataPath + "/u4/" + ((MUSIC)i).ToString() + ".MP3", (MUSIC)i));
         }
     }
 
     IEnumerator LoadSongCoroutine(string path, MUSIC index)
     {
         string url = string.Format("file://{0}", path);
-        Debug.Log("Load #" + (int)index + " " + url);
+        //Debug.Log("Load #" + (int)index + " " + url);
         WWW www = new WWW(url);
         yield return www;
 
-        Debug.Log("Loaded #" + (int)index + " " + url);
+        //Debug.Log("Loaded #" + (int)index + " " + url);
         music[(int)index] = www.GetAudioClip(false, false);
         //music[0] = null;
     }
@@ -1995,7 +2009,7 @@ sfx_magic2:
             // attacker tile and tile under attacker (used to determine combat map to use when pirates attack)
             D_96F8 = Native.Invoke<U4_Decompiled.TILE, main_D_96F8>(nativeLibraryPtr);
             //D_96F8 = main_D_96F8();
-            D_96F8 = Native.Invoke<U4_Decompiled.TILE, main_D_946C>(nativeLibraryPtr);
+            D_946C = Native.Invoke<U4_Decompiled.TILE, main_D_946C>(nativeLibraryPtr);
             //D_946C = main_D_946C();
 
             // 8x8? chunk tile location on main map
