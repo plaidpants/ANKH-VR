@@ -52,9 +52,9 @@ Copy the contents of the entire ultima 4 install folder to the following locatio
 
 Windows PC
   
-%APPDATA%\..\LocalLow\SwivelChairGames\ANHK-VR\u4
+%APPDATA%\\..\LocalLow\SwivelChairGames\ANHK-VR\u4
 
-  %APPDATA%\..\LocalLow\SwivelChairGames\ANHK-VR\u4\AVATAR.EXE <- you should have this file at this directory location along with all the other files
+  %APPDATA%\\..\LocalLow\SwivelChairGames\ANHK-VR\u4\AVATAR.EXE <- you should have this file at this directory location along with all the other files
   
 Oculus Quest (not yet available)
                                                                   
