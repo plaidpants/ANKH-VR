@@ -1379,6 +1379,8 @@ MonoBehaviour:
   worldMapFilepath: /u4/WORLD.MAP
   u4: {fileID: 0}
   Apple2ColorPalette: []
+  PNGAtlas: {fileID: 0}
+  PNGFilepath: /u4/shapes.png
   convertDungeonTileToCombat: 10000000110000001200000013000000140000001000000010000000100000001000000010000000100000001000000015000000100000001000000010000000
   GameText: {fileID: 2101250206}
   combinedTexture: {fileID: 0}

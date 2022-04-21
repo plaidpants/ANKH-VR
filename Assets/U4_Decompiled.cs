@@ -577,7 +577,7 @@ public class U4_Decompiled : MonoBehaviour
         }
 
 #if PLATFORM_ANDROID && !UNITY_EDITOR
-        nativeLibraryPtr = Native.LoadLibrary(Application.persistentDataPath + "/u4/AVATAR.so");
+        nativeLibraryPtr = Native.dlopen(Application.persistentDataPath + "/u4/AVATAR", (int)Native.PosixDlopenFlags.Now);
 #else
         nativeLibraryPtr = Native.LoadLibrary(Application.persistentDataPath + "/u4/AVATAR.DLL");
 #endif
@@ -605,57 +605,57 @@ public class U4_Decompiled : MonoBehaviour
 #if USE_UNITY_DLL_FUNCTION
 #if PLATFORM_ANDROID && !UNITY_EDITOR
     // interface to the game engine
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern void main();
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern MODE main_CurMode();
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern TILE main_D_96F8();
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern TILE main_D_946C();
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern int main_D_95A5_x();
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern int main_D_95A5_y();
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern void main_keyboardHit(char key);
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern void main_CurMap(byte[] buffer, int length);
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern void main_Combat(byte[] buffer, int length);
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern void main_Fighters(byte[] buffer, int length);
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern void main_D_96F9(byte[] buffer, int length);
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern void main_Party(byte[] buffer, int length);
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern void main_Hit(byte[] buffer, int length);
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern void main_ActiveChar(byte[] buffer, int length);
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern TILE main_tile_cur();
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern int main_Text(byte[] buffer, int length);
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern int main_D_9445(); // moongate x
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern int main_D_9448(); // moongate y
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern TILE main_D_9141(); // moongate tile
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern int main_NPC_Text(byte[] buffer, int length);
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern int main_Sound(byte[] buffer, int length);
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern int main_D_17FA();
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern int main_D_17FC();
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern int main_D_17FE();
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern int main_SoundFlag();
-    [DllImport("AVATAR.so")]
+    [DllImport("AVATAR")]
     public static extern void main_SetDataPath(byte[] buffer, int length);
 #else
     // interface to the game engine
@@ -1024,9 +1024,15 @@ catch
         if (nativeLibraryPtr != System.IntPtr.Zero)
         {
             //Debug.Log("Unload AVATAR.DLL");
+#if PLATFORM_ANDROID && !UNITY_EDITOR
+            Debug.Log(Native.dlclose(nativeLibraryPtr) == 0
+                          ? "Native library successfully unloaded."
+                          : "Native library could not be unloaded.");
+#else
             Debug.Log(Native.FreeLibrary(nativeLibraryPtr)
                           ? "Native library successfully unloaded."
                           : "Native library could not be unloaded.");
+#endif
         }
     }
 
@@ -2119,6 +2125,13 @@ sfx_magic2:
             timer = timer - timerExpired;
             timerExpired = timerPeriod;
 
+            // read the sound flag
+#if USE_UNITY_DLL_FUNCTION
+            SoundFlag = main_SoundFlag();
+#else
+            SoundFlag = Native.Invoke<int, main_SoundFlag>(nativeLibraryPtr);
+#endif
+
             AudioSource musicSource = Camera.main.GetComponent<AudioSource>();
             if (musicSource != null)
             {
@@ -2207,7 +2220,7 @@ sfx_magic2:
                     else
                     {
                         // select no music
-                        musicSource.clip = null;
+                        musicSource.clip = music[(int)MUSIC.FANFARE];
                     }
 
                     // start the music selection
@@ -2679,13 +2692,6 @@ sfx_magic2:
             open_door_timer = main_D_17FE();
 #else
             open_door_timer = Native.Invoke<int, main_D_17FE>(nativeLibraryPtr);
-#endif
-
-            // read the sound flag
-#if USE_UNITY_DLL_FUNCTION
-            SoundFlag = main_SoundFlag();
-#else
-            SoundFlag = Native.Invoke<int, main_SoundFlag>(nativeLibraryPtr);
 #endif
         }
     }

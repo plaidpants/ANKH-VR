@@ -46,7 +46,8 @@ public class World : MonoBehaviour
     U4_Decompiled.TILE[,] raycastSettlementMap = new U4_Decompiled.TILE[64, 64];
 
     // this array size can be adjusted to display more or less of the map at runtime
-    U4_Decompiled.TILE[,] raycastOutdoorMap = new U4_Decompiled.TILE[4*64, 4*64];
+    U4_Decompiled.TILE[,] raycastOutdoorMap = new U4_Decompiled.TILE[128, 128];
+ //   U4_Decompiled.TILE[,] raycastOutdoorMap = new U4_Decompiled.TILE[256, 256];
 
     GameObject CreatePartialCube(bool leftside = true, bool rightside = true, bool back = true, bool front = true)
     {
@@ -3714,6 +3715,52 @@ public class World : MonoBehaviour
         }
 
         return color;
+    }
+
+    public Texture2D PNGAtlas;
+    public string PNGFilepath;
+
+    void LoadTilesPNG()
+    {
+        if (!System.IO.File.Exists(Application.persistentDataPath + PNGFilepath))
+        {
+            Debug.Log("Could not find PNG tiles atlas file " + Application.persistentDataPath + PNGFilepath);
+            return;
+        }
+
+        // read the file
+        byte[] fileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + PNGFilepath);
+
+        // allocate something to start with so the loadImage can resize it to file the actual file
+        PNGAtlas = new Texture2D(32, 32*256, TextureFormat.RGBA32, false);
+
+        if (!PNGAtlas.LoadImage(fileData))
+        {
+            Debug.Log("Could not load PNG tiles atlas file " + Application.persistentDataPath + PNGFilepath);
+            return;
+        }
+
+        originalTileWidth = PNGAtlas.width;
+        originalTileHeight = PNGAtlas.height / 256;
+        originalTiles = new Texture2D[256];
+
+        // there are 256 tiles in the file
+        for (int tile = 0; tile < 256; tile++)
+        {
+            // create a texture for this tile
+            Texture2D currentTile = new Texture2D(originalTileWidth, originalTileHeight, TextureFormat.RGBA32, false);
+
+            // we want pixles not fuzzy images
+            currentTile.filterMode = FilterMode.Point;
+
+            // assign this texture to the tile array index
+            originalTiles[tile] = currentTile;
+
+            int y = (255-tile) * originalTileHeight;
+
+            currentTile.SetPixels(0, 0, originalTileWidth, originalTileHeight, PNGAtlas.GetPixels(0, y, originalTileWidth, originalTileHeight));
+            currentTile.Apply();
+        }
     }
 
     void LoadTilesApple2()
@@ -9008,11 +9055,12 @@ public class World : MonoBehaviour
 
         // initialize the palette and load the tiles
         InitializeEGAPalette();
-        LoadTilesEGA();
-        //InitializeCGAPalette();
+        InitializeCGAPalette();
+        InitializeApple2Palette();
+        //LoadTilesEGA();
         //LoadTilesCGA();
-        //InitializeApple2Palette();
         //LoadTilesApple2();
+        LoadTilesPNG();
 
         // fix a tile
         FixMageTile3();
@@ -9063,6 +9111,8 @@ public class World : MonoBehaviour
         }
 
         u4.StartThread();
+
+        //GameObject dungeonExpandedLevelGameObject = CreateDungeonExpandedLevel(DUNGEONS.HYTHLOTH, 4);
 
         // Some test stuff, commented out for the moment
 
@@ -9407,7 +9457,7 @@ public class World : MonoBehaviour
             flagTimerExpired = flagTimerPeriod;
             if (textureExpandedAtlasPowerOf2 != 0)
             {
-                AnimateFlags();
+                //AnimateFlags();
             }
         }
 
