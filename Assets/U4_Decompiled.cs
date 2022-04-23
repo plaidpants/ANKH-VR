@@ -1366,6 +1366,9 @@ sfx_magic2:
     // extra surface rotation feature maintained outside of the game engine
     public U4_Decompiled.DIRECTION surface_party_direction = DIRECTION.NORTH;
 
+    public bool resetJoystick1 = false;
+    public bool resetJoystick2 = false;
+
     // Update is called once per frame
     void Update()
     {
@@ -1373,8 +1376,19 @@ sfx_magic2:
 
         timer += Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.PageDown))
+        if ((Input.GetAxis("Horizontal 1") < 0.05f) && (Input.GetAxis("Horizontal 1") > -0.05f) && (Input.GetAxis("Vertical 1") < 0.05f) && (Input.GetAxis("Vertical 1") > -0.05f))
         {
+            resetJoystick1 = true;
+        }
+        
+        if ((Input.GetAxis("Horizontal 2") < 0.05f) && (Input.GetAxis("Horizontal 2") > -0.05f) && (Input.GetAxis("Vertical 2") < 0.05f) && (Input.GetAxis("Vertical 2") > -0.05f))
+        {
+            resetJoystick2 = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.PageDown) || (Input.GetAxis("Horizontal 1") > 0.99f && resetJoystick1))
+        {
+            resetJoystick1 = false;
             if (surface_party_direction == DIRECTION.NORTH)
             {
                 surface_party_direction = DIRECTION.EAST;
@@ -1392,8 +1406,9 @@ sfx_magic2:
                 surface_party_direction = DIRECTION.NORTH;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.PageUp))
+        else if (Input.GetKeyDown(KeyCode.PageUp) || Input.GetAxis("Horizontal 1") < -0.99f && resetJoystick1)
         {
+            resetJoystick1 = false;
             if (surface_party_direction == DIRECTION.NORTH)
             {
                 surface_party_direction = DIRECTION.WEST;
@@ -1465,8 +1480,9 @@ sfx_magic2:
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
 #endif
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetAxis("Vertical 2") > 0.99f && resetJoystick2)
         {
+            resetJoystick2 = false;
             if ((current_mode == MODE.COMBAT_ROOM) ||
                     ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
@@ -1548,8 +1564,9 @@ sfx_magic2:
 #endif
             }
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetAxis("Vertical 2") < -0.99f && resetJoystick2)
         {
+            resetJoystick2 = false;
             if ((current_mode == MODE.COMBAT_ROOM) ||
                     ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
@@ -1631,8 +1648,9 @@ sfx_magic2:
 #endif
             }
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetAxis("Horizontal 2") < -0.99f && resetJoystick2)
         {
+            resetJoystick2 = false;
             if ((current_mode == MODE.COMBAT_ROOM) ||
                     ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
@@ -1713,8 +1731,9 @@ sfx_magic2:
 #endif
             }
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetAxis("Horizontal 2") > 0.99f && resetJoystick2)
         {
+            resetJoystick2 = false;
             if ((current_mode == MODE.COMBAT_ROOM) ||
                     ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
