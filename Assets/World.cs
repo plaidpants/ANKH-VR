@@ -1,3 +1,5 @@
+//#define CREATE_DUMMY_FONT
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -3033,7 +3035,7 @@ public class World : MonoBehaviour
         return pyramid;
     }
 
-    bool once = true;
+    //bool once = true;
 
     Vector3[] QuadMeshVerticies = null;
     int[] QuadMeshTriangles = null;
@@ -9057,10 +9059,10 @@ public class World : MonoBehaviour
         InitializeEGAPalette();
         InitializeCGAPalette();
         InitializeApple2Palette();
-        //LoadTilesEGA();
+        LoadTilesEGA();
         //LoadTilesCGA();
         //LoadTilesApple2();
-        LoadTilesPNG();
+        //LoadTilesPNG();
 
         // fix a tile
         FixMageTile3();
@@ -9441,7 +9443,9 @@ public class World : MonoBehaviour
 
     int lastChecksum = -1;
     int currentChecksum = 0;
-    GameObject hiddenWorldMapGameObject; 
+    GameObject hiddenWorldMapGameObject;
+
+    bool justChangedModes = true;
 
     // Update is called once per frame
     void Update()
@@ -9457,7 +9461,7 @@ public class World : MonoBehaviour
             flagTimerExpired = flagTimerPeriod;
             if (textureExpandedAtlasPowerOf2 != 0)
             {
-                //AnimateFlags();
+                AnimateFlags();
             }
         }
 
@@ -9493,6 +9497,18 @@ public class World : MonoBehaviour
                 {
                     CombatTerrains[i].gameObject.SetActive(false);
                 }
+
+                // automatically enter things when you are on an enterable tile unless just leaving
+                if ((justChangedModes == false) && ((u4.current_tile == U4_Decompiled.TILE.CASTLE_ENTRANCE) ||
+                        (u4.current_tile == U4_Decompiled.TILE.CASTLE) ||
+                        (u4.current_tile == U4_Decompiled.TILE.TOWN) ||
+                        (u4.current_tile == U4_Decompiled.TILE.VILLAGE) ||
+                        (u4.current_tile == U4_Decompiled.TILE.DUNGEON) ||
+                        (u4.current_tile == U4_Decompiled.TILE.SHRINE)))
+                {
+                    u4.CommandEnter();
+                    justChangedModes = true;
+                }
             }
             else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
             {
@@ -9517,7 +9533,7 @@ public class World : MonoBehaviour
                     CombatTerrains[i].gameObject.SetActive(false);
                 }
             }
-            else if ((u4.current_mode == U4_Decompiled.MODE.COMBAT)  || (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP /* TODO: this could be the inn or shop or camp need to figure out which */ ))
+            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT)
             {
                 if ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
                 {
@@ -9653,6 +9669,72 @@ public class World : MonoBehaviour
                     CombatTerrains[i].gameObject.SetActive(false);
                 }
             }
+            else if (u4.current_mode == U4_Decompiled.MODE.SHRINE)
+            {
+                AddFighters(u4.Fighters, u4.Combat1);
+                AddCharacters(u4.Combat2, u4.Party, u4.Fighters);
+                AddHits(u4.currentHits);
+                AddActiveCharacter(u4.currentActiveCharacter);
+                
+                terrain.SetActive(false);
+                animatedTerrrain.SetActive(false);
+                billboardTerrrain.SetActive(false);
+                fighters.SetActive(false);
+                characters.SetActive(false);
+                npcs.SetActive(false);
+                party.SetActive(false);
+                moongate.SetActive(false);
+                dungeon.SetActive(false);
+                dungeonMonsters.SetActive(false);
+
+                int currentCombatTerrain = (int)Convert_Tile_to_Combat_Terrian(u4.current_tile);
+
+                for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                {
+                    if (i == (int)U4_Decompiled.COMBAT_TERRAIN.SHRINE)
+                    {
+                        CombatTerrains[i].gameObject.SetActive(true); 
+                        followWorld(CombatTerrains[i].gameObject);
+                    }
+                    else
+                    {
+                        CombatTerrains[i].gameObject.SetActive(false);
+                    }
+                }
+            } 
+            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP /* TODO: this could be the inn or shop or camp need to figure out which */ )
+            {
+                AddFighters(u4.Fighters, u4.Combat1);
+                AddCharacters(u4.Combat2, u4.Party, u4.Fighters);
+                AddHits(u4.currentHits);
+                AddActiveCharacter(u4.currentActiveCharacter);
+
+                terrain.SetActive(false);
+                animatedTerrrain.SetActive(false);
+                billboardTerrrain.SetActive(false);
+                fighters.SetActive(false);
+                characters.SetActive(true);
+                npcs.SetActive(false);
+                party.SetActive(false);
+                moongate.SetActive(false);
+                dungeon.SetActive(false);
+                dungeonMonsters.SetActive(false);
+
+                int currentCombatTerrain = (int)Convert_Tile_to_Combat_Terrian(u4.current_tile);
+
+                for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                {
+                    if (i == (int)U4_Decompiled.COMBAT_TERRAIN.CAMP)
+                    {
+                        CombatTerrains[i].gameObject.SetActive(true);
+                        followWorld(CombatTerrains[i].gameObject);
+                    }
+                    else
+                    {
+                        CombatTerrains[i].gameObject.SetActive(false);
+                    }
+                }
+            }
 
             if ((party != null) && (originalTiles != null))
             {
@@ -9682,12 +9764,16 @@ public class World : MonoBehaviour
         Vector3 rot = partyGameObject.transform.eulerAngles;
         partyGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
 
+        U4_Decompiled.MODE currentMode = u4.current_mode;
+
         // we've moved, regenerate the raycast, TODO NPCs can also affect the raycast when moving, need to check them also or redo raycast more often
         if ((u4.Party._x != lastRaycastPlayer_posx) || (u4.Party._y != lastRaycastPlayer_posy) || // player moved
             (u4.Party.f_1dc != lastRaycastPlayer_f_1dc) || // balloon flying or grounded or dungeon torch active
             ((u4.open_door_timer > 0) != last_door_timer)) // door has opened or closed
         {
             Vector3 location = Vector3.zero;
+
+            justChangedModes = false;
 
             // update the last raycast position
             lastRaycastPlayer_posx = u4.Party._x;
@@ -9968,9 +10054,16 @@ public class World : MonoBehaviour
             {
                 GameText.GetComponent<UnityEngine.UI.Text>().text = u4.gameText;
             }
+
+            if (currentMode != lastMode)
+            {
+                justChangedModes = true;
+                lastMode = currentMode;
+            }
         }
     }
 
+    public U4_Decompiled.MODE lastMode = (U4_Decompiled.MODE )(-1);
     public Transform rotateTransform;
     //public GameObject convertMe;
 
@@ -10219,6 +10312,7 @@ public class World : MonoBehaviour
         // need to reference this asset in the public Font myFont variable
         // in the Unity Editor so we can use it in the release build below
         UnityEditor.AssetDatabase.CreateAsset (myFont, "Assets/font.fontsettings");
+        System.IO.File.WriteAllBytes("Assets/u4font.png", texture.EncodeToPNG());
 #else
         // Create material
         Material material = new Material(Shader.Find("UI/Default"));

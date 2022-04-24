@@ -986,6 +986,24 @@ public class U4_Decompiled : MonoBehaviour
         trd.Start();
     }
 
+    public void CommandEnter()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit((char)KEYS.E);
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'E');
+#endif
+    }
+
+    public void CommandTalk()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit((char)KEYS.T);
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'T');
+#endif
+    }
+
     void OnApplicationQuit()
     {
         // CAUTION: this will cleanly exit the DLL in most cases, however is some areas such as combat this will not work and you will
@@ -1136,10 +1154,9 @@ catch
         //Debug.Log("Load #" + (int)index + " " + url);
         WWW www = new WWW(url);
         yield return www;
-
+        // note the updated interface does not seem to work with local files so don't bother updating until Unity fixes this
         //Debug.Log("Loaded #" + (int)index + " " + url);
         music[(int)index] = www.GetAudioClip(false, false);
-        //music[0] = null;
     }
 
     /* 
