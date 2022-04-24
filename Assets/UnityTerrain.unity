@@ -520,6 +520,7 @@ GameObject:
   - component: {fileID: 608211743}
   - component: {fileID: 608211746}
   - component: {fileID: 608211747}
+  - component: {fileID: 608211748}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -780,6 +781,21 @@ MonoBehaviour:
   effectType: 2
   styleStrength: 0
   mat: {fileID: 0}
+--- !u!114 &608211748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 608211741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3ab96a88c661ea49bcd93a60c4e7f39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeMagnitude: 0.2
+  shakeFrequency: 20
+  debug: 0
 --- !u!1 &633097131
 GameObject:
   m_ObjectHideFlags: 0
@@ -1971,11 +1987,13 @@ MonoBehaviour:
   surface_party_direction: 1
   resetJoystick1: 0
   resetJoystick2: 0
+  joystickResetTime: 0.25
   open_door_x: 0
   open_door_y: 0
   open_door_timer: 0
   SoundFlag: 0
   screen_xor_state: 0
+  camera_shake: 0
 --- !u!4 &999847452
 Transform:
   m_ObjectHideFlags: 0

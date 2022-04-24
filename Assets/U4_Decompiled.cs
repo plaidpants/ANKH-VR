@@ -557,6 +557,7 @@ public class U4_Decompiled : MonoBehaviour
     delegate int main_sound_effect_length();
     delegate void main_sound_effect_done();
     delegate int main_screen_xor_state();
+    delegate int main_camera_shake_accumulator();
 #endif
 
     void Awake()
@@ -677,6 +678,9 @@ public class U4_Decompiled : MonoBehaviour
     public static extern void main_sound_effect_done();
     [DllImport("AVATAR")]   
     public static extern int main_screen_xor_state();  
+    [DllImport("AVATAR")]   
+    public static extern int main_camera_shake_accumulator();  
+    
 #else
     // interface to the game engine
     [DllImport("AVATAR.DLL")]
@@ -743,6 +747,8 @@ public class U4_Decompiled : MonoBehaviour
     public static extern void main_sound_effect_done();
     [DllImport("AVATAR.DLL")]   
     public static extern int main_screen_xor_state();
+    [DllImport("AVATAR.DLL")]   
+    public static extern int main_camera_shake_accumulator();  
 #endif
 #endif
 
@@ -2837,6 +2843,17 @@ sfx_magic2:
             {
                 Camera.main.GetComponent<Effects>().DisableFx();
             }
+
+#if USE_UNITY_DLL_FUNCTION
+            camera_shake = main_camera_shake_accumulator();
+#else
+            camera_shake = Native.Invoke<int, main_camera_shake_accumulator>(nativeLibraryPtr);
+#endif   
+
+            if (camera_shake > 0)
+            {
+                Camera.main.GetComponent<ScreenShakeVR>().Shake((float)camera_shake / 8f, (float)camera_shake/8f);
+            }
         }
     }
 
@@ -2845,4 +2862,5 @@ sfx_magic2:
     public int open_door_timer;
     public int SoundFlag;
     public int screen_xor_state;
+    public int camera_shake;
 }
