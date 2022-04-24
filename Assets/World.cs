@@ -9498,8 +9498,8 @@ public class World : MonoBehaviour
                     CombatTerrains[i].gameObject.SetActive(false);
                 }
 
-                // automatically enter things when you are on an enterable tile unless just leaving
-                if ((justChangedModes == false) && ((u4.current_tile == U4_Decompiled.TILE.CASTLE_ENTRANCE) ||
+                // automatically enter things when you are on an enterable tile unless just leaving or flying in the balloon
+                if ((justChangedModes == false) && (u4.Party.f_1dc == 0) &&  ((u4.current_tile == U4_Decompiled.TILE.CASTLE_ENTRANCE) ||
                         (u4.current_tile == U4_Decompiled.TILE.CASTLE) ||
                         (u4.current_tile == U4_Decompiled.TILE.TOWN) ||
                         (u4.current_tile == U4_Decompiled.TILE.VILLAGE) ||
@@ -10055,23 +10055,32 @@ public class World : MonoBehaviour
                 GameText.GetComponent<UnityEngine.UI.Text>().text = u4.gameText;
             }
 
-            windDirection.GetComponent<UnityEngine.UI.Text>().text = (char)(0x10) + "WIND" + (char)(0x12) + (char)(0x12) + u4.WindDir + (char)(0x11);
+            if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
+            {
+                windDirection.GetComponent<UnityEngine.UI.Text>().text = (char)(0x10) + "Level" + (char)(0x12) + (char)(u4.Party._z + '1') + (char)(0x11);
+            }
+            else
+            {
+                windDirection.GetComponent<UnityEngine.UI.Text>().text = (char)(0x10) + "Wind" + (char)(0x12);
+
+                switch (u4.WindDir)
+                {
+                    case U4_Decompiled.DIRECTION.NORTH:
+                        windDirection.GetComponent<UnityEngine.UI.Text>().text += "North" + (char)(0x11);
+                        break;
+                    case U4_Decompiled.DIRECTION.SOUTH:
+                        windDirection.GetComponent<UnityEngine.UI.Text>().text += "South" + (char)(0x11);
+                        break;
+                    case U4_Decompiled.DIRECTION.EAST:
+                        windDirection.GetComponent<UnityEngine.UI.Text>().text += (char)(0x12) + "East" + (char)(0x11);
+                        break;
+                    case U4_Decompiled.DIRECTION.WEST:
+                        windDirection.GetComponent<UnityEngine.UI.Text>().text += (char)(0x12) + "West" + (char)(0x11);
+                        break;
+                }
+            }
             moons.GetComponent<UnityEngine.UI.Text>().text = ""+ (char)(0x10)+ (char)(((u4.Party._trammel - 1) & 7) + 0x14) + (char)(0x12) + (char)(((u4.Party._felucca - 1) & 7) + 0x14) + (char)(0x11);
-            //Gra_putchar((((D_1665 >> 5) - 1) & 7) + 0x14);
-            /*
-             * 	switch(bp06) {
-		            case DIR_N: u4_puts(" North"); break;
-		            case DIR_S: u4_puts(" South"); break;
-		            case DIR_E: u4_puts("  East"); break;
-		            case DIR_W: u4_puts("  West"); break;
-	            }
-	            if(CurMode == MOD_DUNGEON) {
-		            txt_Y = 0;
-		            txt_X = 11;
-		            u4_putc('L');
-		            u4_putc(Party._z + '1');
-	            }
-            */
+
             statsMagicStatus.GetComponent<UnityEngine.UI.Text>().text = "" + (char)(u4.spell_sta);
             statsFood.GetComponent<UnityEngine.UI.Text>().text = "F:" + (int)(u4.Party._food / 100);
             if ((u4.Party._tile == U4_Decompiled.TILE.SHIP_EAST)  || 
