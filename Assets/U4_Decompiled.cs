@@ -12,8 +12,10 @@ public class U4_Decompiled : MonoBehaviour
 {
     private Thread trd;
 
+    public AudioSource specialEffectAudioSource;
     public string gameText;
     public string npcText;
+    public bool started_playing_sound_effect = false;
 
     // tiles
     public enum TILE
@@ -538,17 +540,22 @@ public class U4_Decompiled : MonoBehaviour
     delegate void main_Hit(byte[] buffer, int length);
     delegate void main_ActiveChar(byte[] buffer, int length);
     delegate TILE main_tile_cur();
+    delegate DIRECTION main_WindDir();
+    delegate int main_spell_sta();
     delegate int main_Text(byte[] buffer, int length);
     delegate int main_D_9445(); // moongate x
     delegate int main_D_9448(); // moongate y
     delegate TILE main_D_9141(); // moongate tile
     delegate int main_NPC_Text(byte[] buffer, int length);
-    delegate int main_Sound(byte[] buffer, int length);
     delegate int main_D_17FA();
     delegate int main_D_17FC();
     delegate int main_D_17FE();
     delegate int main_SoundFlag();
     delegate void main_SetDataPath(byte[] buffer, int length);
+    delegate void main_char_highlight(byte[] buffer, int length);
+    delegate int main_sound_effect();
+    delegate int main_sound_effect_length();
+    delegate void main_sound_effect_done();
 #endif
 
     void Awake()
@@ -636,6 +643,10 @@ public class U4_Decompiled : MonoBehaviour
     [DllImport("AVATAR")]
     public static extern TILE main_tile_cur();
     [DllImport("AVATAR")]
+    public static extern TILE main_WindDir();
+    [DllImport("AVATAR")]
+    public static extern TILE main_spell_sta();
+    [DllImport("AVATAR")]
     public static extern int main_Text(byte[] buffer, int length);
     [DllImport("AVATAR")]
     public static extern int main_D_9445(); // moongate x
@@ -646,8 +657,6 @@ public class U4_Decompiled : MonoBehaviour
     [DllImport("AVATAR")]
     public static extern int main_NPC_Text(byte[] buffer, int length);
     [DllImport("AVATAR")]
-    public static extern int main_Sound(byte[] buffer, int length);
-    [DllImport("AVATAR")]
     public static extern int main_D_17FA();
     [DllImport("AVATAR")]
     public static extern int main_D_17FC();
@@ -657,6 +666,14 @@ public class U4_Decompiled : MonoBehaviour
     public static extern int main_SoundFlag();
     [DllImport("AVATAR")]
     public static extern void main_SetDataPath(byte[] buffer, int length);
+    [DllImport("AVATAR")]
+    public static extern void main_char_highlight(byte[] buffer, int length);
+    [DllImport("AVATAR")]   
+    public static extern int main_sound_effect();
+    [DllImport("AVATAR")]   
+    public static extern int main_sound_effect_length();
+    [DllImport("AVATAR")]   
+    public static extern void main_sound_effect_done();
 #else
     // interface to the game engine
     [DllImport("AVATAR.DLL")]
@@ -690,6 +707,10 @@ public class U4_Decompiled : MonoBehaviour
     [DllImport("AVATAR.DLL")]
     public static extern TILE main_tile_cur();
     [DllImport("AVATAR.DLL")]
+    public static extern TILE main_WindDir();
+    [DllImport("AVATAR.DLL")]
+    public static extern TILE main_spell_sta();
+    [DllImport("AVATAR.DLL")]
     public static extern int main_Text(byte[] buffer, int length);
     [DllImport("AVATAR.DLL")]
     public static extern int main_D_9445(); // moongate x
@@ -700,8 +721,6 @@ public class U4_Decompiled : MonoBehaviour
     [DllImport("AVATAR.DLL")]
     public static extern int main_NPC_Text(byte[] buffer, int length);
     [DllImport("AVATAR.DLL")]
-    public static extern int main_Sound(byte[] buffer, int length);
-    [DllImport("AVATAR.DLL")]
     public static extern int main_D_17FA(); 
     [DllImport("AVATAR.DLL")]
     public static extern int main_D_17FC();
@@ -711,6 +730,14 @@ public class U4_Decompiled : MonoBehaviour
     public static extern int main_SoundFlag();
     [DllImport("AVATAR.DLL")]
     public static extern void main_SetDataPath(byte[] buffer, int length);
+    [DllImport("AVATAR.DLL")]
+    public static extern void main_char_highlight(byte[] buffer, int length);[DllImport("AVATAR")]   
+    [DllImport("AVATAR.DLL")]
+    public static extern int main_sound_effect();
+    [DllImport("AVATAR.DLL")]   
+    public static extern int main_sound_effect_length();
+    [DllImport("AVATAR.DLL")]   
+    public static extern void main_sound_effect_done();
 #endif
 #endif
 
@@ -812,6 +839,7 @@ public class U4_Decompiled : MonoBehaviour
         public SEX sex;
         public CLASS Class;
         public STATE state;
+        public bool highlight;
     };
 
     [System.Serializable]
@@ -1100,6 +1128,9 @@ catch
     }
 
     public mapPosition D_95A5;
+
+    public DIRECTION WindDir;
+    public int spell_sta;
 
     public System.Text.ASCIIEncoding enc;
 
@@ -1397,7 +1428,7 @@ sfx_magic2:
         {
             resetJoystick1 = true;
         }
-        
+
         if ((Input.GetAxis("Horizontal 2") < 0.05f) && (Input.GetAxis("Horizontal 2") > -0.05f) && (Input.GetAxis("Vertical 2") < 0.05f) && (Input.GetAxis("Vertical 2") > -0.05f))
         {
             resetJoystick2 = true;
@@ -2154,6 +2185,64 @@ sfx_magic2:
 #endif
         }
 
+        // check if we just finished playing a sound effect
+        if (started_playing_sound_effect == true && specialEffectAudioSource.isPlaying == false)
+        {
+            // we just finished playing a sound effect
+            started_playing_sound_effect = false;
+
+            // let the game engine we finished playing the sound effect
+#if USE_UNITY_DLL_FUNCTION
+                main_sound_effect_done();
+#else
+            Native.Invoke<main_sound_effect_done>(nativeLibraryPtr);
+#endif
+        }
+
+        // TODO move this out of the game engine interface
+        // TODO programatically create all the sounds instead of relying on sampled sounds
+        // TODO cache sounds already created
+        // TODO pre-create basic sfx at startup
+        // TODO get source information of sound to better position it for 3D sound, monster, moongate, player, etc. e.g. currently moongate plays at old moongate position not at new position
+
+        // is sound enabled in the game engine
+        if (SoundFlag == 1)
+        {
+            // are we currently already playing a sound effect
+            if (started_playing_sound_effect == false)
+            {
+                // get if any sound effects are active from the game engine
+#if USE_UNITY_DLL_FUNCTION
+                    int sound = main_sound_effect();
+                    int length = main_sound_effect_length();
+#else
+                int sound = Native.Invoke<int, main_sound_effect>(nativeLibraryPtr);
+                int length = Native.Invoke<int, main_sound_effect_length>(nativeLibraryPtr);
+#endif
+                // see if the sound effect from the game engine is valid
+                if (sound != -1)
+                {
+                    // create if nessesary the audio clip and play the sound effect
+                    if (sound == (int)SOUND_EFFECT.SPELL_CAST)
+                    {
+                        AudioClip clip = CreateMagicSpecialEffectSound(length);
+                        specialEffectAudioSource.PlayOneShot(clip);
+                    }
+                    else if (sound == (int)SOUND_EFFECT.SPELL_EFFECT)
+                    {
+                        AudioClip clip = CreateMagicEffectsSpecialEffectSound(length);
+                        specialEffectAudioSource.PlayOneShot(clip);
+                    }
+                    else
+                    {
+                        specialEffectAudioSource.PlayOneShot(soundEffects[sound]);
+                    }
+
+                    started_playing_sound_effect = true;
+                }
+            }
+        }
+
         // only get data from the game engine periodically
         if (timer > timerExpired)
         {
@@ -2264,47 +2353,6 @@ sfx_magic2:
                 }
             }
 
-            // get if any sound effects are active
-#if USE_UNITY_DLL_FUNCTION
-            main_Sound(buffer, buffer.Length);
-#else
-            Native.Invoke<main_Sound>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
-            int soundCount = buffer[0];
-            for (int i = 0; i < soundCount; i++)
-            {
-                int sound = buffer[i * 2 + 1];
-                int length = buffer[i * 2 + 2];
-                //Debug.Log("Sound " + (SOUND_EFFECT)sound + " Length " + length);
-                if (sound < soundEffects.Length)
-                {
-                    if (SoundFlag == 1)
-                    {
-                        // TODO need to wait for sound to complete before playing the next one
-                        // TODO need to make game engine wait until sound has played before allowing it to continue
-                        // TODO move this out of the game engine interface
-                        // TODO programatically create all the sounds instead of relying on sampled sounds
-                        // TODO cache sounds already created
-                        // TODO pre-create basic sfx at startup
-                        // TODO get source information of sound to better position it for 3D sound, monster, moongate, player, etc. e.g. currently moongate plays at old moongate position not at new position
-                        if (sound == (int)SOUND_EFFECT.SPELL_CAST)
-                        {
-                            AudioClip clip = CreateMagicSpecialEffectSound(length);
-                            AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
-                        }
-                        else if (sound == (int)SOUND_EFFECT.SPELL_EFFECT)
-                        {
-                            AudioClip clip = CreateMagicEffectsSpecialEffectSound(length);
-                            AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
-                        }
-                        else
-                        {
-                            AudioSource.PlayClipAtPoint(soundEffects[sound], Camera.main.transform.position);
-                        }
-                    }
-                }
-            }
-
             // create an ASCII encoder if needed for text processing
             if (enc == null)
             {
@@ -2328,7 +2376,7 @@ sfx_magic2:
                 }
 
                 // add the ACSII encoded text to the display text plus read the whirlpool character
-                gameText = gameText + enc.GetString(buffer, 0, text_size) + (char)(0x1c + (int)(Time.time / 2 ) % 4);
+                gameText = gameText + enc.GetString(buffer, 0, text_size) + (char)(0x1c + (int)(Time.time / 2) % 4);
 
                 // remove all but the last 20 lines of text from the text buffer
                 int newline_count = 0;
@@ -2579,7 +2627,7 @@ sfx_magic2:
             {
                 buffer_index = 0x008 + i * 0x27;
                 Party.chara[i].hitPoint = System.BitConverter.ToUInt16(buffer, buffer_index + 0x00);
-                Party.chara[i].hitPointsMaximum = System.BitConverter.ToUInt16(buffer, buffer_index+ 0x02);
+                Party.chara[i].hitPointsMaximum = System.BitConverter.ToUInt16(buffer, buffer_index + 0x02);
                 Party.chara[i].experiencePoints = System.BitConverter.ToUInt16(buffer, buffer_index + 0x04);
                 Party.chara[i].strength = System.BitConverter.ToUInt16(buffer, buffer_index + 0x06);
                 Party.chara[i].dexterity = System.BitConverter.ToUInt16(buffer, buffer_index + 0x08);
@@ -2603,7 +2651,7 @@ sfx_magic2:
                         break;
                     }
                 }
-                
+
                 Party.chara[i].sex = (SEX)buffer[buffer_index + 0x24];
                 Party.chara[i].Class = (CLASS)buffer[buffer_index + 0x25];
                 Party.chara[i].state = (STATE)buffer[buffer_index + 0x26];
@@ -2687,7 +2735,7 @@ sfx_magic2:
             {
                 for (int j = 0; j < 11; j++)
                 {
-                    Combat_map[i,j] = buffer[buffer_index++];
+                    Combat_map[i, j] = buffer[buffer_index++];
                 }
             }
 
@@ -2743,6 +2791,29 @@ sfx_magic2:
 #else
             open_door_timer = Native.Invoke<int, main_D_17FE>(nativeLibraryPtr);
 #endif
+
+#if USE_UNITY_DLL_FUNCTION
+            WindDir = main_WindDir();
+#else
+            WindDir = Native.Invoke<DIRECTION, main_WindDir>(nativeLibraryPtr);
+#endif
+
+#if USE_UNITY_DLL_FUNCTION
+            spell_sta = main_spell_sta();
+#else
+            spell_sta = Native.Invoke<int, main_spell_sta>(nativeLibraryPtr);
+#endif        
+
+#if USE_UNITY_DLL_FUNCTION
+            main_char_highlight(buffer, buffer.length);
+#else
+            Native.Invoke<main_char_highlight>(nativeLibraryPtr, buffer, buffer.Length);
+#endif        
+
+            for (int i = 0; i < 8; i++)
+            {
+                Party.chara[i].highlight = (buffer[i] == 1);
+            }
         }
     }
 

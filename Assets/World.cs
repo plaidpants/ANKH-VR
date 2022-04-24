@@ -10055,7 +10055,24 @@ public class World : MonoBehaviour
                 GameText.GetComponent<UnityEngine.UI.Text>().text = u4.gameText;
             }
 
-            
+            windDirection.GetComponent<UnityEngine.UI.Text>().text = (char)(0x10) + "WIND" + (char)(0x12) + (char)(0x12) + u4.WindDir + (char)(0x11);
+            moons.GetComponent<UnityEngine.UI.Text>().text = ""+ (char)(0x10)+ (char)(((u4.Party._trammel - 1) & 7) + 0x14) + (char)(0x12) + (char)(((u4.Party._felucca - 1) & 7) + 0x14) + (char)(0x11);
+            //Gra_putchar((((D_1665 >> 5) - 1) & 7) + 0x14);
+            /*
+             * 	switch(bp06) {
+		            case DIR_N: u4_puts(" North"); break;
+		            case DIR_S: u4_puts(" South"); break;
+		            case DIR_E: u4_puts("  East"); break;
+		            case DIR_W: u4_puts("  West"); break;
+	            }
+	            if(CurMode == MOD_DUNGEON) {
+		            txt_Y = 0;
+		            txt_X = 11;
+		            u4_putc('L');
+		            u4_putc(Party._z + '1');
+	            }
+            */
+            statsMagicStatus.GetComponent<UnityEngine.UI.Text>().text = "" + (char)(u4.spell_sta);
             statsFood.GetComponent<UnityEngine.UI.Text>().text = "F:" + (int)(u4.Party._food / 100);
             if ((u4.Party._tile == U4_Decompiled.TILE.SHIP_EAST)  || 
                 (u4.Party._tile == U4_Decompiled.TILE.SHIP_WEST) ||
@@ -10072,10 +10089,18 @@ public class World : MonoBehaviour
             statsNames.GetComponent<UnityEngine.UI.Text>().text = "";
             for (int i = 0; i < u4.Party.f_1d8; i++)
             {
-                statsHP.GetComponent<UnityEngine.UI.Text>().text += u4.Party.chara[i].hitPoint;
-                statsHP.GetComponent<UnityEngine.UI.Text>().text += (char)(u4.Party.chara[i].state);
-                statsHP.GetComponent<UnityEngine.UI.Text>().text += "\n";
-                statsNames.GetComponent<UnityEngine.UI.Text>().text += (i+1) + "-" + u4.Party.chara[i].name + "\n";
+                if (u4.Party.chara[i].highlight)
+                {
+                    statsHP.GetComponent<UnityEngine.UI.Text>().text += highlight("        " + u4.Party.chara[i].hitPoint + (char)(u4.Party.chara[i].state) + "\n");
+                    statsNames.GetComponent<UnityEngine.UI.Text>().text += highlight((i + 1) + "-" + u4.Party.chara[i].name + "        \n");
+                }
+                else
+                {
+                    statsHP.GetComponent<UnityEngine.UI.Text>().text += u4.Party.chara[i].hitPoint;
+                    statsHP.GetComponent<UnityEngine.UI.Text>().text += (char)(u4.Party.chara[i].state);
+                    statsHP.GetComponent<UnityEngine.UI.Text>().text += "\n";
+                    statsNames.GetComponent<UnityEngine.UI.Text>().text += (i + 1) + "-" + u4.Party.chara[i].name + "\n";
+                }
             }
 
             if (currentMode != lastMode)
@@ -10086,11 +10111,37 @@ public class World : MonoBehaviour
         }
     }
 
+    public string highlight(string s)
+    {
+        string temp = "";
+        for (int j = 0; j < s.Length; j++)
+        {
+            char c = s[j];
+
+            if (c == '\n')
+            {
+                temp += '\n';
+            }
+            else if (c == ' ')
+            {
+                temp += (char)(0x12 + 0x80);
+            }
+            else
+            {
+                temp += (char)(s[j] + 0x80);
+            }
+        }
+
+        return temp;
+    }
+
     public GameObject statsNames;
     public GameObject statsHP;
     public GameObject statsGold;
     public GameObject statsFood;
     public GameObject statsMagicStatus;
+    public GameObject windDirection;
+    public GameObject moons;
 
     public U4_Decompiled.MODE lastMode = (U4_Decompiled.MODE )(-1);
     public Transform rotateTransform;
@@ -10122,7 +10173,7 @@ public class World : MonoBehaviour
         }
 
         // create a texture for this tile
-        fontAtlas = new Texture2D(8 * 16, 8 * 8, TextureFormat.RGBA32, false);
+        fontAtlas = new Texture2D(8 * 16, 8 * 8 * 2, TextureFormat.RGBA32, false);
 
         // we want pixles not fuzzy images
         fontAtlas.filterMode = FilterMode.Point;
@@ -10145,23 +10196,68 @@ public class World : MonoBehaviour
                     Color color = EGAColorPalette[colorIndex];
 
                     // use black as alpha channel
-                    if (colorIndex == 0)
+                    //if (colorIndex == 0)
+                    //{
+                    //    fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height + 64, alpha);
+                    //}
+                    //else
                     {
-                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height + 64, color);
                     }
-                    else
+
+                    // set the color of the second half of the nibble
+                    colorIndex = fileData[fileIndex] & 0xf;
+                    color = EGAColorPalette[colorIndex];
+                    //if (colorIndex == 0)
+                    //{
+                    //    fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height+ 64, alpha);
+                    //}
+                    //else
+                    {
+                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height + 64, color);
+                    }
+
+                    // go to the next byte in the file
+                    fileIndex++;
+                }
+            }
+        }
+
+        // need inverse characters also for highlighting
+        // so we will add those to the end
+
+        // reset the file index to generate inverse chars
+        fileIndex = 0;
+
+        for (int character = 0; character < 128; character++)
+        {
+            // manually go through the data and set the (x,y) pixels to the character based on the input file using the EGA color palette
+            for (int height = 0; height < 8; height++)
+            {
+                for (int width = 0; width < 8; /* width incremented below because we need to do nibbles */ )
+                {
+                    // set the color of the first half of the nibble
+                    int colorIndex = fileData[fileIndex] >> 4;
+                    Color color = EGAColorPalette[15 - colorIndex]; // flip the colors
+
+                    // use black as alpha channel
+                    //if (colorIndex == 0)
+                    //{
+                    //    fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                    //}
+                    //else
                     {
                         fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
                     }
 
                     // set the color of the second half of the nibble
                     colorIndex = fileData[fileIndex] & 0xf;
-                    color = EGAColorPalette[colorIndex];
-                    if (colorIndex == 0)
-                    {
-                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
-                    }
-                    else
+                    color = EGAColorPalette[15 - colorIndex];
+                    //if (colorIndex == 0)
+                    //{
+                    //    fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                    //}
+                    //else
                     {
                         fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
                     }
@@ -10267,7 +10363,7 @@ public class World : MonoBehaviour
         float texW = texture.width;
         float texH = texture.height;
 
-        CharacterInfo[] charInfos = new CharacterInfo[128];
+        CharacterInfo[] charInfos = new CharacterInfo[256];
         Rect r;
 
         for (int i = 0; i < charInfos.Length; i++)
@@ -10353,6 +10449,14 @@ public class World : MonoBehaviour
 
         // Set the font in the game text UI
         GameText.GetComponent<UnityEngine.UI.Text>().font = myFont;
+        statsNames.GetComponent<UnityEngine.UI.Text>().font = myFont;
+        statsHP.GetComponent<UnityEngine.UI.Text>().font = myFont;
+        statsGold.GetComponent<UnityEngine.UI.Text>().font = myFont;
+        statsFood.GetComponent<UnityEngine.UI.Text>().font = myFont;
+        statsMagicStatus.GetComponent<UnityEngine.UI.Text>().font = myFont;
+        windDirection.GetComponent<UnityEngine.UI.Text>().font = myFont;
+        moons.GetComponent<UnityEngine.UI.Text>().font = myFont;
+        statsNames.GetComponent<UnityEngine.UI.Text>().font = myFont;
 #endif
     }
 }
