@@ -556,6 +556,7 @@ public class U4_Decompiled : MonoBehaviour
     delegate int main_sound_effect();
     delegate int main_sound_effect_length();
     delegate void main_sound_effect_done();
+    delegate int main_screen_xor_state();
 #endif
 
     void Awake()
@@ -674,6 +675,8 @@ public class U4_Decompiled : MonoBehaviour
     public static extern int main_sound_effect_length();
     [DllImport("AVATAR")]   
     public static extern void main_sound_effect_done();
+    [DllImport("AVATAR")]   
+    public static extern int main_screen_xor_state();  
 #else
     // interface to the game engine
     [DllImport("AVATAR.DLL")]
@@ -738,6 +741,8 @@ public class U4_Decompiled : MonoBehaviour
     public static extern int main_sound_effect_length();
     [DllImport("AVATAR.DLL")]   
     public static extern void main_sound_effect_done();
+    [DllImport("AVATAR.DLL")]   
+    public static extern int main_screen_xor_state();
 #endif
 #endif
 
@@ -2814,6 +2819,12 @@ sfx_magic2:
             {
                 Party.chara[i].highlight = (buffer[i] == 1);
             }
+
+#if USE_UNITY_DLL_FUNCTION
+            screen_xor_state = main_screen_xor_state();
+#else
+            screen_xor_state = Native.Invoke<int, main_screen_xor_state>(nativeLibraryPtr);
+#endif   
         }
     }
 
@@ -2821,4 +2832,5 @@ sfx_magic2:
     public int open_door_y;
     public int open_door_timer;
     public int SoundFlag;
+    public int screen_xor_state;
 }

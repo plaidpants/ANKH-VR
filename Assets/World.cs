@@ -9975,6 +9975,7 @@ public class World : MonoBehaviour
                     if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
                     {
                         Camera.main.clearFlags = CameraClearFlags.SolidColor;
+                        Camera.main.backgroundColor = Color.black;
                     }
                 }
                 else
@@ -10020,6 +10021,7 @@ public class World : MonoBehaviour
                 if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
                 {
                     Camera.main.clearFlags = CameraClearFlags.SolidColor;
+                    Camera.main.backgroundColor = Color.black;
                 }
             }
             else if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
@@ -10027,6 +10029,7 @@ public class World : MonoBehaviour
                 if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
                 {
                     Camera.main.clearFlags = CameraClearFlags.SolidColor;
+                    Camera.main.backgroundColor = Color.black;
                 }
                 partyGameObject.transform.localPosition = new Vector3(u4.Party._x * 11 + 5, (7 - u4.Party._y) * 11 + 5, 0);
                 if (rotateTransform)
