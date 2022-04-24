@@ -519,6 +519,7 @@ GameObject:
   - component: {fileID: 608211744}
   - component: {fileID: 608211743}
   - component: {fileID: 608211746}
+  - component: {fileID: 608211747}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -654,7 +655,7 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingPath: -1
+  m_RenderingPath: 1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
@@ -761,6 +762,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &608211747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 608211741}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 134fae17805a1bc42b69e538e74e7bb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  on: 1
+  contrast: 0
+  brightness: 0
+  effectType: 2
+  styleStrength: 0
+  mat: {fileID: 0}
 --- !u!1 &633097131
 GameObject:
   m_ObjectHideFlags: 0
@@ -1956,6 +1975,7 @@ MonoBehaviour:
   open_door_y: 0
   open_door_timer: 0
   SoundFlag: 0
+  screen_xor_state: 0
 --- !u!4 &999847452
 Transform:
   m_ObjectHideFlags: 0

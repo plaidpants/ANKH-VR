@@ -1419,8 +1419,9 @@ sfx_magic2:
     // extra surface rotation feature maintained outside of the game engine
     public U4_Decompiled.DIRECTION surface_party_direction = DIRECTION.NORTH;
 
-    public bool resetJoystick1 = false;
-    public bool resetJoystick2 = false;
+    public float resetJoystick1 = 0f;
+    public float resetJoystick2 = 0f;
+    public float joystickResetTime = 0.1f;
 
     // Update is called once per frame
     void Update()
@@ -1431,17 +1432,17 @@ sfx_magic2:
 
         if ((Input.GetAxis("Horizontal 1") < 0.05f) && (Input.GetAxis("Horizontal 1") > -0.05f) && (Input.GetAxis("Vertical 1") < 0.05f) && (Input.GetAxis("Vertical 1") > -0.05f))
         {
-            resetJoystick1 = true;
+            resetJoystick1 = Time.time;
         }
 
         if ((Input.GetAxis("Horizontal 2") < 0.05f) && (Input.GetAxis("Horizontal 2") > -0.05f) && (Input.GetAxis("Vertical 2") < 0.05f) && (Input.GetAxis("Vertical 2") > -0.05f))
         {
-            resetJoystick2 = true;
+            resetJoystick2 = Time.time;
         }
 
-        if (Input.GetKeyDown(KeyCode.PageDown) || (Input.GetAxis("Horizontal 1") > 0.99f && resetJoystick1))
+        if (Input.GetKeyDown(KeyCode.PageDown) || (Input.GetAxis("Horizontal 1") > 0.99f && (resetJoystick1 < Time.time)))
         {
-            resetJoystick1 = false;
+            resetJoystick1 = Time.time + joystickResetTime;
             if (surface_party_direction == DIRECTION.NORTH)
             {
                 surface_party_direction = DIRECTION.EAST;
@@ -1459,9 +1460,9 @@ sfx_magic2:
                 surface_party_direction = DIRECTION.NORTH;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.PageUp) || Input.GetAxis("Horizontal 1") < -0.99f && resetJoystick1)
+        else if (Input.GetKeyDown(KeyCode.PageUp) || Input.GetAxis("Horizontal 1") < -0.99f && (resetJoystick1 < Time.time))
         {
-            resetJoystick1 = false;
+            resetJoystick1 = Time.time + joystickResetTime;
             if (surface_party_direction == DIRECTION.NORTH)
             {
                 surface_party_direction = DIRECTION.WEST;
@@ -1533,9 +1534,10 @@ sfx_magic2:
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
 #endif
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetAxis("Vertical 2") > 0.99f && resetJoystick2)
+        else if (Input.GetKeyDown(KeyCode.DownArrow) || (Input.GetAxis("Vertical 2") > 0.99f && (resetJoystick2 < Time.time)) || Input.GetAxis("Vertical 1") > 0.99f && (resetJoystick1 < Time.time))
         {
-            resetJoystick2 = false;
+            resetJoystick1 = Time.time + joystickResetTime;
+            resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
                     ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
@@ -1617,9 +1619,10 @@ sfx_magic2:
 #endif
             }
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetAxis("Vertical 2") < -0.99f && resetJoystick2)
+        else if (Input.GetKeyDown(KeyCode.UpArrow) || (Input.GetAxis("Vertical 2") < -0.99f && (resetJoystick2 < Time.time)) || (Input.GetAxis("Vertical 1") < -0.99f && (resetJoystick1 < Time.time)))
         {
-            resetJoystick2 = false;
+            resetJoystick1 = Time.time + joystickResetTime;
+            resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
                     ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
@@ -1701,9 +1704,9 @@ sfx_magic2:
 #endif
             }
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetAxis("Horizontal 2") < -0.99f && resetJoystick2)
+        else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetAxis("Horizontal 2") < -0.99f && (resetJoystick2 < Time.time))
         {
-            resetJoystick2 = false;
+            resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
                     ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
@@ -1784,9 +1787,9 @@ sfx_magic2:
 #endif
             }
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetAxis("Horizontal 2") > 0.99f && resetJoystick2)
+        else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetAxis("Horizontal 2") > 0.99f && (resetJoystick2 < Time.time))
         {
-            resetJoystick2 = false;
+            resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
                     ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
@@ -2375,13 +2378,13 @@ sfx_magic2:
             {
 
                 // remove the animated whirlpool from the text last character if we have some new text
-                if (gameText.Length > 2)
+                if (gameText.Length > 0)
                 {
                     gameText = gameText.Remove(gameText.Length - 1);
                 }
 
                 // add the ACSII encoded text to the display text plus read the whirlpool character
-                gameText = gameText + enc.GetString(buffer, 0, text_size) + (char)(0x1c + (int)(Time.time / 2) % 4);
+                gameText = gameText + enc.GetString(buffer, 0, text_size) + (char)(0x1f - ((int)(Time.time * 3) % 4));
 
                 // remove all but the last 20 lines of text from the text buffer
                 int newline_count = 0;
@@ -2407,11 +2410,11 @@ sfx_magic2:
             // animate the spining whirlpool character by removing and adding to the end of the text, the update whirlpool character
             if (gameText.Length > 0)
             {
-                gameText = gameText.Remove(gameText.Length - 1) + (char)(0x1c + (Time.time * 10) % 4);
+                gameText = gameText.Remove(gameText.Length - 1) + (char)(0x1f - ((int)(Time.time * 3) % 4));
             }
             else
             {
-                gameText = "" + (char)(0x1c + (Time.time * 10) % 4);
+                gameText = "" + (char)(0x1f  - ((int)(Time.time * 3) % 4));
             }
 
             // read the circular npc text buffer from the game engine
@@ -2825,6 +2828,15 @@ sfx_magic2:
 #else
             screen_xor_state = Native.Invoke<int, main_screen_xor_state>(nativeLibraryPtr);
 #endif   
+
+            if (screen_xor_state == 1)
+            {
+                Camera.main.GetComponent<Effects>().EnableFx();
+            }
+            else
+            {
+                Camera.main.GetComponent<Effects>().DisableFx();
+            }
         }
     }
 
