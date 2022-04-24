@@ -10055,6 +10055,29 @@ public class World : MonoBehaviour
                 GameText.GetComponent<UnityEngine.UI.Text>().text = u4.gameText;
             }
 
+            
+            statsFood.GetComponent<UnityEngine.UI.Text>().text = "F:" + (int)(u4.Party._food / 100);
+            if ((u4.Party._tile == U4_Decompiled.TILE.SHIP_EAST)  || 
+                (u4.Party._tile == U4_Decompiled.TILE.SHIP_WEST) ||
+                (u4.Party._tile == U4_Decompiled.TILE.SHIP_NORTH) ||
+                (u4.Party._tile == U4_Decompiled.TILE.SHIP_SOUTH))
+            {
+                statsGold.GetComponent<UnityEngine.UI.Text>().text = "SHIP:" + u4.Party._ship;
+            }
+            else
+            {
+                statsGold.GetComponent<UnityEngine.UI.Text>().text = "G:" + u4.Party._gold;
+            }
+            statsHP.GetComponent<UnityEngine.UI.Text>().text = "";
+            statsNames.GetComponent<UnityEngine.UI.Text>().text = "";
+            for (int i = 0; i < u4.Party.f_1d8; i++)
+            {
+                statsHP.GetComponent<UnityEngine.UI.Text>().text += u4.Party.chara[i].hitPoint;
+                statsHP.GetComponent<UnityEngine.UI.Text>().text += (char)(u4.Party.chara[i].state);
+                statsHP.GetComponent<UnityEngine.UI.Text>().text += "\n";
+                statsNames.GetComponent<UnityEngine.UI.Text>().text += (i+1) + "-" + u4.Party.chara[i].name + "\n";
+            }
+
             if (currentMode != lastMode)
             {
                 justChangedModes = true;
@@ -10062,6 +10085,12 @@ public class World : MonoBehaviour
             }
         }
     }
+
+    public GameObject statsNames;
+    public GameObject statsHP;
+    public GameObject statsGold;
+    public GameObject statsFood;
+    public GameObject statsMagicStatus;
 
     public U4_Decompiled.MODE lastMode = (U4_Decompiled.MODE )(-1);
     public Transform rotateTransform;

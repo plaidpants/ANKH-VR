@@ -2571,28 +2571,42 @@ sfx_magic2:
 #else
             Native.Invoke<main_Party>(nativeLibraryPtr, buffer, buffer.Length);
 #endif
+            //System.IO.File.WriteAllBytes("Asset/partybuffer.bin", buffer);
 
             Party.f_000 = System.BitConverter.ToUInt32(buffer, 0x000);
             Party._moves = System.BitConverter.ToUInt32(buffer, 0x004);
-            buffer_index = 0x008;
             for (int i = 0; i < 8; i++)
             {
-                Party.chara[i].hitPoint = buffer[buffer_index++];
-                Party.chara[i].hitPointsMaximum = buffer[buffer_index++];
-                Party.chara[i].experiencePoints = buffer[buffer_index++];
-                Party.chara[i].strength = buffer[buffer_index++];
-                Party.chara[i].intelligence = buffer[buffer_index++];
-                Party.chara[i].magicPoints = buffer[buffer_index++];
+                buffer_index = 0x008 + i * 0x27;
+                Party.chara[i].hitPoint = System.BitConverter.ToUInt16(buffer, buffer_index + 0x00);
+                Party.chara[i].hitPointsMaximum = System.BitConverter.ToUInt16(buffer, buffer_index+ 0x02);
+                Party.chara[i].experiencePoints = System.BitConverter.ToUInt16(buffer, buffer_index + 0x04);
+                Party.chara[i].strength = System.BitConverter.ToUInt16(buffer, buffer_index + 0x06);
+                Party.chara[i].dexterity = System.BitConverter.ToUInt16(buffer, buffer_index + 0x08);
+                Party.chara[i].intelligence = System.BitConverter.ToUInt16(buffer, buffer_index + 0x0a);
+                Party.chara[i].magicPoints = System.BitConverter.ToUInt16(buffer, buffer_index + 0x0c);
+                Party.chara[i].__0e[0] = buffer[buffer_index + 0xe];
+                Party.chara[i].__0e[1] = buffer[buffer_index + 0xf];
 
-                Party.chara[i].__0e[0] = buffer[buffer_index++];
-                Party.chara[i].__0e[1] = buffer[buffer_index++];
-                Party.chara[i].currentWeapon = (WEAPON)buffer[buffer_index++];
-                Party.chara[i].currentArmor = (ARMOR)buffer[buffer_index++];
-                Party.chara[i].name = "" + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++]
-                    + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++] + (char)buffer[buffer_index++];
-                Party.chara[i].sex = (SEX)buffer[buffer_index++];
-                Party.chara[i].Class = (CLASS)buffer[buffer_index++];
-                Party.chara[i].state = (STATE)buffer[buffer_index++];
+                Party.chara[i].currentWeapon = (WEAPON)System.BitConverter.ToUInt16(buffer, buffer_index + 0x10);
+                Party.chara[i].currentArmor = (ARMOR)System.BitConverter.ToUInt16(buffer, buffer_index + 0x12);
+                Party.chara[i].name = "";
+                for (int j = 0; j < 16; j++)
+                {
+                    char c = (char)buffer[buffer_index + 0x14 + j];
+                    if (c != 0)
+                    {
+                        Party.chara[i].name += c;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                
+                Party.chara[i].sex = (SEX)buffer[buffer_index + 0x24];
+                Party.chara[i].Class = (CLASS)buffer[buffer_index + 0x25];
+                Party.chara[i].state = (STATE)buffer[buffer_index + 0x26];
             }
             Party._food = System.BitConverter.ToUInt32(buffer, 0x140);
             Party._gold = System.BitConverter.ToUInt16(buffer, 0x144);

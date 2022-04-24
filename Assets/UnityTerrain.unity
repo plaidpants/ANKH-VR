@@ -183,6 +183,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 6973424533195522318}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &153347426 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 681245573669049173, guid: 9c334c90a47aeeb4d88fb1b1f4adfdb3,
+    type: 3}
+  m_PrefabInstance: {fileID: 6973424533195522318}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &428231330 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 120498151778208069, guid: 9c334c90a47aeeb4d88fb1b1f4adfdb3,
+    type: 3}
+  m_PrefabInstance: {fileID: 6973424533195522318}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &519247693
 GameObject:
   m_ObjectHideFlags: 0
@@ -1203,6 +1215,12 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.1, y: 0.1, z: 0.1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &638402932 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 171240206, guid: 9c334c90a47aeeb4d88fb1b1f4adfdb3,
+    type: 3}
+  m_PrefabInstance: {fileID: 6973424533195522318}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &731300877 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5424587087699679322, guid: 01025e69428beb6408b14a27154ad608,
@@ -2157,6 +2175,11 @@ MonoBehaviour:
   textureExpandedAtlasPowerOf2: 0
   timerPeriod: 0.5
   flagTimerPeriod: 0.1
+  statsNames: {fileID: 2024357955}
+  statsHP: {fileID: 638402932}
+  statsGold: {fileID: 428231330}
+  statsFood: {fileID: 153347426}
+  statsMagicStatus: {fileID: 1999933133}
   lastMode: -1
   rotateTransform: {fileID: 572009426}
   fontAtlas: {fileID: 0}
@@ -2711,6 +2734,12 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.1, y: 0.1, z: 0.1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1999933133 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2740376442134920672, guid: 9c334c90a47aeeb4d88fb1b1f4adfdb3,
+    type: 3}
+  m_PrefabInstance: {fileID: 6973424533195522318}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2006084671
 GameObject:
   m_ObjectHideFlags: 0
@@ -2804,6 +2833,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &2024357955 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3138610495205984305, guid: 9c334c90a47aeeb4d88fb1b1f4adfdb3,
+    type: 3}
+  m_PrefabInstance: {fileID: 6973424533195522318}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2101250206 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5424587088318531095, guid: 01025e69428beb6408b14a27154ad608,
