@@ -8660,7 +8660,7 @@ public class World : MonoBehaviour
                     }
 
                     // set the name of the game object to match the npc
-                    if ((currentNpcs[npcIndex]._tlkidx == 0) && (currentNpcs[npcIndex]._tlkidx <= 16 /* sometimes this is 127 */))
+                    if ((currentNpcs[npcIndex]._tlkidx == 0) || (currentNpcs[npcIndex]._tlkidx > 16 /* sometimes this is 127 */))
                     {
                         childofnpcs.name = npcTile.ToString();
                     }

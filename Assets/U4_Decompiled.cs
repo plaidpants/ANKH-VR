@@ -1446,6 +1446,16 @@ sfx_magic2:
             resetJoystick2 = Time.time;
         }
 
+        // ignore joystick input if we are using the grip to do VR interactions
+        if (Input.GetAxis("Grip 1") > 0.5)
+        {
+            resetJoystick1 = Time.time + joystickResetTime;
+        }
+        if (Input.GetAxis("Grip 2") > 0.5)
+        {
+            resetJoystick2 = Time.time + joystickResetTime;
+        }
+
         if (Input.GetKeyDown(KeyCode.PageDown) || (Input.GetAxis("Horizontal 1") > 0.99f && (resetJoystick1 < Time.time)))
         {
             resetJoystick1 = Time.time + joystickResetTime;
