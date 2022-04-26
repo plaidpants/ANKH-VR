@@ -10084,6 +10084,15 @@ public class World : MonoBehaviour
             }
             moons.GetComponent<UnityEngine.UI.Text>().text = ""+ (char)(0x10)+ (char)(((u4.Party._trammel - 1) & 7) + 0x14) + (char)(0x12) + (char)(((u4.Party._felucca - 1) & 7) + 0x14) + (char)(0x11);
 
+            //trammelLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.Party._trammel * (360f / 8f), 0f);
+            //feluccaLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.Party._felucca * (360f / 8f), 0f);
+            //trammelLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.D_1665 * (360f / 256f), 0f);
+            //feluccaLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.D_1666 * (360f / 256f), 0f);
+
+            trammelLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, Mathf.LerpAngle(trammelLight.GetComponent<Light>().transform.eulerAngles.y, 180f - (float)u4.D_1665 * (360f / 256f), Time.deltaTime), 0f);
+            feluccaLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, Mathf.LerpAngle(feluccaLight.GetComponent<Light>().transform.eulerAngles.y, 180f - (float)u4.D_1666 * (360f / 256f), Time.deltaTime), 0f);
+            //sunLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, Mathf.LerpAngle(sunLight.GetComponent<Light>().transform.eulerAngles.y, 180f - (float)u4.D_1666 * (360f / 256f), Time.deltaTime), 0f);
+
             statsMagicStatus.GetComponent<UnityEngine.UI.Text>().text = "" + (char)(u4.spell_sta);
             statsFood.GetComponent<UnityEngine.UI.Text>().text = "F:" + (int)(u4.Party._food / 100);
             if ((u4.Party._tile == U4_Decompiled.TILE.SHIP_EAST)  || 
@@ -10154,6 +10163,11 @@ public class World : MonoBehaviour
     public GameObject statsMagicStatus;
     public GameObject windDirection;
     public GameObject moons;
+    public GameObject trammelLight;
+    public GameObject feluccaLight;
+    public GameObject sunLight;
+
+
 
     public U4_Decompiled.MODE lastMode = (U4_Decompiled.MODE )(-1);
     public Transform rotateTransform;
@@ -10471,4 +10485,5 @@ public class World : MonoBehaviour
         statsNames.GetComponent<UnityEngine.UI.Text>().font = myFont;
 #endif
     }
+    public float factor;
 }

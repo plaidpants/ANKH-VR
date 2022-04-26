@@ -558,6 +558,8 @@ public class U4_Decompiled : MonoBehaviour
     delegate void main_sound_effect_done();
     delegate int main_screen_xor_state();
     delegate int main_camera_shake_accumulator();
+    delegate int main_D_1665();
+    delegate int main_D_1666();
 #endif
 
     void Awake()
@@ -680,7 +682,10 @@ public class U4_Decompiled : MonoBehaviour
     public static extern int main_screen_xor_state();  
     [DllImport("AVATAR")]   
     public static extern int main_camera_shake_accumulator();  
-    
+    [DllImport("AVATAR")]   
+    public static extern int main_D_1665();  
+    [DllImport("AVATAR")]   
+    public static extern int main_D_1666();  
 #else
     // interface to the game engine
     [DllImport("AVATAR.DLL")]
@@ -749,6 +754,10 @@ public class U4_Decompiled : MonoBehaviour
     public static extern int main_screen_xor_state();
     [DllImport("AVATAR.DLL")]   
     public static extern int main_camera_shake_accumulator();  
+    [DllImport("AVATAR.DLL")]   
+    public static extern int main_D_1665();  
+    [DllImport("AVATAR.DLL")]   
+    public static extern int main_D_1666();  
 #endif
 #endif
 
@@ -1436,11 +1445,11 @@ sfx_magic2:
 
         timer += Time.deltaTime;
 
+        // reset the joysticks if they are idle
         if ((Input.GetAxis("Horizontal 1") < 0.05f) && (Input.GetAxis("Horizontal 1") > -0.05f) && (Input.GetAxis("Vertical 1") < 0.05f) && (Input.GetAxis("Vertical 1") > -0.05f))
         {
             resetJoystick1 = Time.time;
         }
-
         if ((Input.GetAxis("Horizontal 2") < 0.05f) && (Input.GetAxis("Horizontal 2") > -0.05f) && (Input.GetAxis("Vertical 2") < 0.05f) && (Input.GetAxis("Vertical 2") > -0.05f))
         {
             resetJoystick2 = Time.time;
@@ -1456,6 +1465,7 @@ sfx_magic2:
             resetJoystick2 = Time.time + joystickResetTime;
         }
 
+        // check input
         if (Input.GetKeyDown(KeyCode.PageDown) || (Input.GetAxis("Horizontal 1") > 0.99f && (resetJoystick1 < Time.time)))
         {
             resetJoystick1 = Time.time + joystickResetTime;
@@ -2864,6 +2874,18 @@ sfx_magic2:
             {
                 Camera.main.GetComponent<ScreenShakeVR>().Shake((float)camera_shake / 8f, (float)camera_shake/8f);
             }
+
+
+#if USE_UNITY_DLL_FUNCTION
+            D_1665 = main_D_1665();
+#else
+            D_1665 = Native.Invoke<int, main_D_1665>(nativeLibraryPtr);
+#endif   
+#if USE_UNITY_DLL_FUNCTION
+            D_1666 = main_D_1666();
+#else
+            D_1666 = Native.Invoke<int, main_D_1666>(nativeLibraryPtr);
+#endif 
         }
     }
 
@@ -2872,5 +2894,7 @@ sfx_magic2:
     public int open_door_timer;
     public int SoundFlag;
     public int screen_xor_state;
-    public int camera_shake;
+    public int camera_shake; 
+    public int D_1665;
+    public int D_1666;
 }
