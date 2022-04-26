@@ -80,7 +80,11 @@ public class DayNightController : MonoBehaviour
         }
         tintColor.a = fade;
         rend.material.SetColor("_TintColor", tintColor);
+
+        RenderSettings.skybox.SetFloat("_AtmosphereThickness", AtmosphereAdjustment * (1f - fade));
     }
+
+    public float AtmosphereAdjustment = 0.5f;
 
     private float HMS_to_Time(float hour, float minute, float second)
     {
