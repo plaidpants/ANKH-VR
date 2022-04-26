@@ -38,7 +38,8 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2006084672}
-  m_IndirectSpecularColor: {r: 0.030493796, g: 0.06184578, b: 0.12612419, a: 1}
+  m_IndirectSpecularColor: {r: 0.00009216195, g: 0.00009216195, b: 0.00009216195,
+    a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7138,7 +7139,7 @@ GameObject:
   - component: {fileID: 1321407150}
   - component: {fileID: 1321407149}
   m_Layer: 0
-  m_Name: NightDayController
+  m_Name: Night Day Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7173,7 +7174,7 @@ MonoBehaviour:
   starsFadeInTime: 7200
   starsFadeOutTime: 7200
   AtmosphereAdjustment: 0.75
-  FogAdjustment: 0.007
+  FogAdjustment: 0.002
 --- !u!4 &1321407150
 Transform:
   m_ObjectHideFlags: 0
@@ -7722,7 +7723,7 @@ GameObject:
   - component: {fileID: 1753957574}
   - component: {fileID: 1753957573}
   m_Layer: 0
-  m_Name: World
+  m_Name: Britannia
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
