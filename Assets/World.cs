@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class World : MonoBehaviour
 {
@@ -35,11 +36,16 @@ public class World : MonoBehaviour
     //public GameObject[] Settlements;
     public GameObject[] CombatTerrains;
 
+    public List<string> talkWordList = new List<string>();
+
     public string tileApple2Filepath1 = "/u4/SHP0.B"; 
     public string tileApple2Filepath2 = "/u4/SHP1.B";
     public string tileEGAFilepath = "/u4/SHAPES.EGA";
     public string tileCGAFilepath = "/u4/SHAPES.CGA";
     public string worldMapFilepath = "/u4/WORLD.MAP";
+
+    public Text keyword1ButtonText;
+    public Text keyword2ButtonText;
 
     // reference to game engine
     public U4_Decompiled u4;
@@ -9474,6 +9480,89 @@ public class World : MonoBehaviour
             // reset the expired timer
             timer -= timerExpired;
             timerExpired = timerPeriod;
+
+            if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
+            {
+                if (u4.npcTalkIndex != 0)
+                {
+                    bool keyword1found = false;
+                    bool keyword2found = false;
+
+                    talkWordList.Clear();
+
+                    SETTLEMENT settlement;
+                    if ((u4.Party._loc == U4_Decompiled.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == U4_Decompiled.TILE.LADDER_UP))
+                    {
+                        settlement = SETTLEMENT.LCB_1;
+                    }
+                    else
+                    {
+                        settlement = (SETTLEMENT)u4.Party._loc;
+                    }
+                    // add these default conversation interest words
+                    talkWordList.Add("Name");
+                    talkWordList.Add("Look");
+                    talkWordList.Add("Job");
+                    talkWordList.Add("Join");
+                    talkWordList.Add("Give");
+                    talkWordList.Add("Health");
+                    talkWordList.Add("Bye");
+                    //talkWordList.Add("Y");
+                    //talkWordList.Add("N");
+
+                    foreach (string word in u4.wordList)
+                    {
+                        // only add the special keywords if we already know them
+                        // TODO these are shortened, need to deal with that
+                        // TODO don't need to do this so often, only when we get new text
+                        // TODO need to clear npcTalkIndex when switching levels or settlements as the index might not be valid for the other location
+                        if (word.Length >= 4)
+                        {
+                            string lower = word.ToLower();
+                            //Debug.Log(lower);
+                            string sub = lower.Substring(0, 4);
+                            //Debug.Log(sub);
+                            if (sub ==
+                                settlementNPCs[(int)settlement][u4.npcTalkIndex].strings[(int)NPC_STRING_INDEX.KEYWORD1].ToLower().Substring(0, 4))
+                            {
+                                if (talkWordList.Contains(lower) == false)
+                                {
+                                    talkWordList.Add(lower);
+                                    u4.keyword1 = lower;
+                                    lower = char.ToUpper(lower[0]) + lower.Substring(1, lower.Length - 1);
+                                    keyword1ButtonText.text = lower;
+                                    keyword1found = true;
+                                }
+                            }
+                            if (sub ==
+                                settlementNPCs[(int)settlement][u4.npcTalkIndex].strings[(int)NPC_STRING_INDEX.KEYWORD2].ToLower().Substring(0, 4))
+                            {
+                                if (talkWordList.Contains(lower) == false)
+                                {
+                                    talkWordList.Add(lower);
+                                    u4.keyword2 = lower;
+                                    lower = char.ToUpper(lower[0]) + lower.Substring(1, lower.Length - 1); 
+                                    keyword2ButtonText.text = lower;
+                                    keyword2found = true;
+                                }
+                            }
+                        }
+
+                        if (keyword1found == false)
+                        {
+                            u4.keyword1 = "";
+                            keyword1ButtonText.text = "";
+                        }
+
+                        if (keyword2found == false)
+                        {
+                            u4.keyword2 = "";
+                            keyword2ButtonText.text = "";
+                        }
+                    }
+                }
+            }
+
 
             if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
             {

@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Threading;
 using UnityEngine.UI;
 using System.IO;
+using System.Text.RegularExpressions;
 
 public class U4_Decompiled : MonoBehaviour
 {
@@ -15,7 +16,10 @@ public class U4_Decompiled : MonoBehaviour
     public AudioSource specialEffectAudioSource;
     public string gameText;
     public string npcText;
+    public int npcTalkIndex;
     public bool started_playing_sound_effect = false;
+    [SerializeField]
+    public List<string> wordList = new List<string>();
 
     // tiles
     public enum TILE
@@ -1042,6 +1046,31 @@ public class U4_Decompiled : MonoBehaviour
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'E');
 #endif
     }
+    public void CommandAttack()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit((char)KEYS.E);
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'A');
+#endif
+    }
+    public void CommandBoard()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit((char)KEYS.E);
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'B');
+#endif
+    }
+
+    public void CommandXit()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit((char)KEYS.E);
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'X');
+#endif
+    }
 
     public void CommandTalk()
     {
@@ -1049,6 +1078,98 @@ public class U4_Decompiled : MonoBehaviour
         main_keyboardHit((char)KEYS.T);
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'T');
+#endif
+    }
+
+    IEnumerator SayWordCoroutine(string word)
+    {
+        string upper = word.ToUpper();
+
+        for (int i = 0; i < upper.Length; i++)
+        {
+#if USE_UNITY_DLL_FUNCTION
+            main_keyboardHit((char)upper[i]);
+#else
+            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)upper[i]);
+#endif
+            //yield on a new YieldInstruction that waits for 5 seconds.
+            yield return new WaitForSeconds(0.05f);
+        }
+
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit((char)KEYS.VK_RETURN);
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
+#endif
+    }
+
+    public void CommandSayName()
+    {
+        string word = "Name\n";
+
+        StartCoroutine(SayWordCoroutine(word));
+    }
+
+    public void CommandSayJob()
+    {
+        string word = "Job\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+
+    public void CommandSayHealth()
+    {
+        string word = "Health\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+
+    public void CommandSayJoin()
+    {
+        string word = "Join\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+
+    public void CommandSayGive()
+    {
+        string word = "Give\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+    public void CommandSayLook()
+    {
+        string word = "Look\n";
+    StartCoroutine(SayWordCoroutine(word));
+    }
+    public void CommandSayBye()
+    {
+        string word = "Bye\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+
+    public string keyword1;
+    public string keyword2;
+
+    public void CommandSayKeyword1()
+    {
+        StartCoroutine(SayWordCoroutine(keyword1));
+    }
+    public void CommandSayKeyword2()
+    {
+        StartCoroutine(SayWordCoroutine(keyword2));
+    }
+
+    public void CommandSayY()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit((char)KEYS.T);
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Y');
+#endif
+    }
+    public void CommandSayN()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit((char)KEYS.T);
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'N');
 #endif
     }
 
@@ -2409,8 +2530,24 @@ sfx_magic2:
                     gameText = gameText.Remove(gameText.Length - 1);
                 }
 
+                string engineText = enc.GetString(buffer, 0, text_size);
+
                 // add the ACSII encoded text to the display text plus read the whirlpool character
-                gameText = gameText + enc.GetString(buffer, 0, text_size) + (char)(0x1f - ((int)(Time.time * 3) % 4));
+                gameText = gameText + engineText + (char)(0x1f - ((int)(Time.time * 3) % 4));
+
+                // use regex to separate words from the game engine
+                var matches = Regex.Matches(engineText, @"\w+[^\s]*\w+|\w");
+
+                // add any new word to the word list
+                foreach (Match match in matches)
+                {
+                    var word = match.Value;
+
+                    if (wordList.Contains(word) == false)
+                    {
+                        wordList.Add(word);
+                    }
+                }
 
                 // remove all but the last 20 lines of text from the text buffer
                 int newline_count = 0;
@@ -2456,6 +2593,7 @@ sfx_magic2:
             if (text_size != 0)
             {
                 npcText = "";
+                npcTalkIndex = buffer[0];
 
                 for (int i = 0; i < text_size; i++)
                 {
@@ -2888,6 +3026,7 @@ sfx_magic2:
 #endif 
         }
     }
+
 
     public int open_door_x;
     public int open_door_y;
