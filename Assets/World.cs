@@ -46,6 +46,9 @@ public class World : MonoBehaviour
 
     public Text keyword1ButtonText;
     public Text keyword2ButtonText;
+    public GameObject keyword1Button;
+    public GameObject keyword2Button;
+    public GameObject Talk;
 
     // reference to game engine
     public U4_Decompiled u4;
@@ -9483,8 +9486,37 @@ public class World : MonoBehaviour
 
             if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
             {
-                if (u4.npcTalkIndex != 0)
+                if      (u4.npcTalkIndex == U4_Decompiled.TALK_INDEX.LORD_BRITISH)
                 {
+                }
+                else if (u4.npcTalkIndex == U4_Decompiled.TALK_INDEX.HAWKKWIND)
+                {
+                }
+                else if (u4.npcTalkIndex == U4_Decompiled.TALK_INDEX.VENDOR_REAGENT)
+                {
+                }
+                else if (u4.npcTalkIndex == U4_Decompiled.TALK_INDEX.VENDOR_FOOD)
+                {
+                }
+                else if (u4.npcTalkIndex == U4_Decompiled.TALK_INDEX.VENDOR_ARMOR)
+                {
+                }
+                else if (u4.npcTalkIndex == U4_Decompiled.TALK_INDEX.VENDOR_GUILD)
+                {
+                }
+                else if (u4.npcTalkIndex == U4_Decompiled.TALK_INDEX.VENDOR_HEALER)
+                {
+                }
+                else if (u4.npcTalkIndex == U4_Decompiled.TALK_INDEX.VENDOR_HORSE)
+                {
+                }
+                else if (u4.npcTalkIndex == U4_Decompiled.TALK_INDEX.VENDOR_INN)
+                {
+                }
+                else if (u4.npcTalkIndex != U4_Decompiled.TALK_INDEX.INVALID)
+                {
+                    Talk.SetActive(true);
+
                     bool keyword1found = false;
                     bool keyword2found = false;
 
@@ -9523,7 +9555,7 @@ public class World : MonoBehaviour
                             string sub = lower.Substring(0, 4);
                             //Debug.Log(sub);
                             if (sub ==
-                                settlementNPCs[(int)settlement][u4.npcTalkIndex].strings[(int)NPC_STRING_INDEX.KEYWORD1].ToLower().Substring(0, 4))
+                                settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)NPC_STRING_INDEX.KEYWORD1].ToLower().Substring(0, 4))
                             {
                                 if (talkWordList.Contains(lower) == false)
                                 {
@@ -9532,10 +9564,11 @@ public class World : MonoBehaviour
                                     lower = char.ToUpper(lower[0]) + lower.Substring(1, lower.Length - 1);
                                     keyword1ButtonText.text = lower;
                                     keyword1found = true;
+                                    keyword1Button.SetActive(true);
                                 }
                             }
                             if (sub ==
-                                settlementNPCs[(int)settlement][u4.npcTalkIndex].strings[(int)NPC_STRING_INDEX.KEYWORD2].ToLower().Substring(0, 4))
+                                settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)NPC_STRING_INDEX.KEYWORD2].ToLower().Substring(0, 4))
                             {
                                 if (talkWordList.Contains(lower) == false)
                                 {
@@ -9544,6 +9577,7 @@ public class World : MonoBehaviour
                                     lower = char.ToUpper(lower[0]) + lower.Substring(1, lower.Length - 1); 
                                     keyword2ButtonText.text = lower;
                                     keyword2found = true;
+                                    keyword2Button.SetActive(true);
                                 }
                             }
                         }
@@ -9552,14 +9586,26 @@ public class World : MonoBehaviour
                         {
                             u4.keyword1 = "";
                             keyword1ButtonText.text = "";
+                            keyword1Button.SetActive(false);
                         }
 
                         if (keyword2found == false)
                         {
                             u4.keyword2 = "";
                             keyword2ButtonText.text = "";
+                            keyword2Button.SetActive(false);
                         }
                     }
+                }
+                else
+                {
+                    keyword1ButtonText.text = "";
+                    keyword2ButtonText.text = "";
+                    u4.keyword1 = "";
+                    u4.keyword2 = "";
+                    keyword1Button.SetActive(false);
+                    keyword2Button.SetActive(false);
+                    Talk.SetActive(false);
                 }
             }
 

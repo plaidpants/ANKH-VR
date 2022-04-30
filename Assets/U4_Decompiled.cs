@@ -16,12 +16,92 @@ public class U4_Decompiled : MonoBehaviour
     public AudioSource specialEffectAudioSource;
     public string gameText;
     public string npcText;
-    public int npcTalkIndex;
+    public TALK_INDEX npcTalkIndex = TALK_INDEX.INVALID;
     public bool started_playing_sound_effect = false;
     [SerializeField]
     public List<string> wordList = new List<string>();
 
-    // tiles
+    public enum TALK_INDEX
+    {
+        LORD_BRITISH = 0xff,
+        HAWKKWIND = 0xfe,
+        VENDOR_PUB = 0xfd,
+        VENDOR_REAGENT = 0xfc,
+        VENDOR_ARMOR = 0xfb,
+        VENDOR_WEAPON = 0xfa,
+        VENDOR_FOOD = 0xf9,
+        VENDOR_HORSE = 0xf8,
+        VENDOR_HEALER = 0xf7,
+        VENDOR_INN = 0xf6,
+        VENDOR_GUILD= 0xf5,
+        INVALID = 0x7f,
+        CITIZEN_31 = 31,
+        CITIZEN_30 = 30,
+        CITIZEN_29 = 29,
+        CITIZEN_28 = 28,
+        CITIZEN_27 = 27,
+        CITIZEN_26 = 26,
+        CITIZEN_25 = 25,
+        CITIZEN_24 = 24,
+        CITIZEN_23 = 23,
+        CITIZEN_22 = 22,
+        CITIZEN_21 = 21,
+        CITIZEN_20 = 20,
+        CITIZEN_19 = 19,
+        CITIZEN_18 = 18,
+        CITIZEN_17 = 17,
+        CITIZEN_16 = 16,
+        CITIZEN_15 = 15,
+        CITIZEN_14 = 14,
+        CITIZEN_13 = 13,
+        CITIZEN_12 = 12,
+        CITIZEN_11 = 11,
+        CITIZEN_10 = 10,
+        CITIZEN_9 = 9,
+        CITIZEN_8 = 8,
+        CITIZEN_7 = 7,
+        CITIZEN_6 = 6,
+        CITIZEN_5 = 5,
+        CITIZEN_4 = 4,
+        CITIZEN_3 = 3,
+        CITIZEN_2 = 2,
+        CITIZEN_1 = 1,
+        CITIZEN_0 = 0,
+    }
+
+    public enum INPUT_MODES
+    {
+        CITIZEN_WORD,
+        CITIZEN_SPECIAL_QUESTION_YES_NO,
+        CITIZEN_SPECIAL_QUESTION_CONTINUE,
+        LOAD_BRITISH_WORD,
+        LOAD_BRITISH_CONTINUE,
+        HAWKWIND_WORD,
+        HAWKWIND_CONTINUE,
+        SHRINE_CONTINUE,
+        GENERAL_CONTINUE,
+        GENERAL_YES_NO,
+        GENERAL_DIRECTION,
+        GENERAL_ASK_LETTER,
+        ZSTATS_PARTY_CHARACTER_NUMBER,
+        NUMBER_INPUT_1_DIGIT,
+        NUMBER_INPUT_2_DIGITS,
+        NUMBER_INPUT_3_DIGITS,
+        DUNGEON_INPUT,
+        MAIN_INPUT,
+        END_CONTINUE,
+        DISK_DRIVE,
+        PEER_GEM_OUTDOORS_CONTINUE,
+        PEER_GEM_SETTLEMENT_CONTINUE,
+        PEER_GEM_DUNGEON_CONTINUE,
+        PUB_FOOD_OR_ALE,
+        WEAPON_BUY_OR_SELL,
+        ARMOR_BUY_OR_SELL,
+        ENERGY_TYPE_POISON_FIRE_LIGHTNING_SLEEP,
+    }
+
+
+        // tiles
     public enum TILE
     {
         /*deep water*/
@@ -583,7 +663,11 @@ public class U4_Decompiled : MonoBehaviour
 
         DecoderBSP.ApplyPatch(sourceFile, patchFile, targetFile);
 
-#if !USE_UNITY_DLL_FUNCTION
+
+#if USE_UNITY_DLL_FUNCTION
+        //SetDllDirectory(Application.persistentDataPath + "/u4/");
+        //LoadLibrary(Application.persistentDataPath + "/u4/AVATAR.DLL");
+#else
         //Debug.Log("Load AVATAR.DLL");
         // now attempt to load this DLL
         if (nativeLibraryPtr != System.IntPtr.Zero)
@@ -651,9 +735,9 @@ public class U4_Decompiled : MonoBehaviour
     [DllImport("AVATAR")]
     public static extern TILE main_tile_cur();
     [DllImport("AVATAR")]
-    public static extern TILE main_WindDir();
+    public static extern DIRECTION main_WindDir();
     [DllImport("AVATAR")]
-    public static extern TILE main_spell_sta();
+    public static extern int main_spell_sta();
     [DllImport("AVATAR")]
     public static extern int main_Text(byte[] buffer, int length);
     [DllImport("AVATAR")]
@@ -691,6 +775,10 @@ public class U4_Decompiled : MonoBehaviour
     [DllImport("AVATAR")]   
     public static extern int main_D_1666();  
 #else
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    static extern bool SetDllDirectory(string lpPathName);
+    [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
+    public static extern System.IntPtr LoadLibrary(string lpFileName);
     // interface to the game engine
     [DllImport("AVATAR.DLL")]
     public static extern void main();
@@ -723,9 +811,9 @@ public class U4_Decompiled : MonoBehaviour
     [DllImport("AVATAR.DLL")]
     public static extern TILE main_tile_cur();
     [DllImport("AVATAR.DLL")]
-    public static extern TILE main_WindDir();
+    public static extern DIRECTION main_WindDir();
     [DllImport("AVATAR.DLL")]
-    public static extern TILE main_spell_sta();
+    public static extern int main_spell_sta();
     [DllImport("AVATAR.DLL")]
     public static extern int main_Text(byte[] buffer, int length);
     [DllImport("AVATAR.DLL")]
@@ -747,7 +835,7 @@ public class U4_Decompiled : MonoBehaviour
     [DllImport("AVATAR.DLL")]
     public static extern void main_SetDataPath(byte[] buffer, int length);
     [DllImport("AVATAR.DLL")]
-    public static extern void main_char_highlight(byte[] buffer, int length);[DllImport("AVATAR")]   
+    public static extern void main_char_highlight(byte[] buffer, int length);   
     [DllImport("AVATAR.DLL")]
     public static extern int main_sound_effect();
     [DllImport("AVATAR.DLL")]   
@@ -1038,46 +1126,261 @@ public class U4_Decompiled : MonoBehaviour
         trd.Start();
     }
 
-    public void CommandEnter()
-    {
-#if USE_UNITY_DLL_FUNCTION
-        main_keyboardHit((char)KEYS.E);
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'E');
-#endif
-    }
+
     public void CommandAttack()
     {
 #if USE_UNITY_DLL_FUNCTION
-        main_keyboardHit((char)KEYS.E);
+        main_keyboardHit('A');
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'A');
 #endif
     }
+
+    public void CommandCharacter1()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('1');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'1');
+#endif
+    }
+
+    public void CommandCharacter2()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('2');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'2');
+#endif
+    }
+    public void CommandCharacter3()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('3');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'3');
+#endif
+    }
+    public void CommandCharacter4()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('4');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'4');
+#endif
+    }
+    public void CommandCharacter5()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('5');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'5');
+#endif
+    }
+    public void CommandCharacter6()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('6');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'6');
+#endif
+    }
+    public void CommandCharacter7()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('7');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'7');
+#endif
+    }
+    public void CommandCharacter8()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('8');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'8');
+#endif
+    }
+
     public void CommandBoard()
     {
 #if USE_UNITY_DLL_FUNCTION
-        main_keyboardHit((char)KEYS.E);
+        main_keyboardHit('B');
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'B');
 #endif
     }
 
+    public void CommandCast()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('C');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'C');
+#endif
+    }
+
+    public void CommandDecsend()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('D');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'D');
+#endif
+    }
+    public void CommandEnter()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('E');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'E');
+#endif
+    }
+
+    public void CommandFire()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('F');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'F');
+#endif
+    }
+    public void CommandGet()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('G');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'G');
+#endif
+    }
+    public void CommandHoleUp()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('H');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'H');
+#endif
+    }
+    public void CommandIgnight()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('I');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'I');
+#endif
+    }
+    public void CommandJimmy()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('J');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'J');
+#endif
+    }
+
+    public void CommandKlimb()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('K');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'K');
+#endif
+    }
+
+    public void CommandLocate()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('L');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'L');
+#endif
+    }
+
+    public void CommandMix()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('M');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'M');
+#endif
+    }
+
+    public void CommandNewOrder()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('N');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'N');
+#endif
+    }
+    public void CommandOpen()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('O');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'O');
+#endif
+    }
+
+    public void CommandReady()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('R');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'R');
+#endif
+    }
+    public void CommandSearch()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('S');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'S');
+#endif
+    }
+    public void CommandTalk()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('T');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'T');
+#endif
+    }
+
+    public void CommandUse()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('U');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'U');
+#endif
+    }
+
+    public void CommandVolume()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('V');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'V');
+#endif
+    }
+
+
+
     public void CommandXit()
     {
 #if USE_UNITY_DLL_FUNCTION
-        main_keyboardHit((char)KEYS.E);
+        main_keyboardHit('X');
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'X');
 #endif
     }
-
-    public void CommandTalk()
+    public void CommandZStas()
     {
 #if USE_UNITY_DLL_FUNCTION
-        main_keyboardHit((char)KEYS.T);
+        main_keyboardHit('Z');
 #else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'T');
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Z');
 #endif
     }
 
@@ -1133,6 +1436,27 @@ public class U4_Decompiled : MonoBehaviour
         string word = "Give\n";
         StartCoroutine(SayWordCoroutine(word));
     }
+
+    public void CommandSayYes()
+    {
+        string word = "Yes\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+    public void CommandSayNo()
+    {
+        string word = "No\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+
+    public void CommandSayContinue()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit((char)KEYS.VK_RETURN);
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
+#endif
+    }
+
     public void CommandSayLook()
     {
         string word = "Look\n";
@@ -1159,7 +1483,7 @@ public class U4_Decompiled : MonoBehaviour
     public void CommandSayY()
     {
 #if USE_UNITY_DLL_FUNCTION
-        main_keyboardHit((char)KEYS.T);
+        main_keyboardHit('Y');
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Y');
 #endif
@@ -1167,7 +1491,7 @@ public class U4_Decompiled : MonoBehaviour
     public void CommandSayN()
     {
 #if USE_UNITY_DLL_FUNCTION
-        main_keyboardHit((char)KEYS.T);
+        main_keyboardHit('N');
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'N');
 #endif
@@ -1551,6 +1875,8 @@ sfx_magic2:
 
     // used to detect game mode changes and change the music
     MODE lastMode = (MODE)(-1);
+    // used to detect when we should play the lord british music
+    TALK_INDEX lastNPCTalkIndex = (TALK_INDEX)(-1);
 
     // extra surface rotation feature maintained outside of the game engine
     public U4_Decompiled.DIRECTION surface_party_direction = DIRECTION.NORTH;
@@ -2348,7 +2674,7 @@ sfx_magic2:
 
             // let the game engine we finished playing the sound effect
 #if USE_UNITY_DLL_FUNCTION
-                main_sound_effect_done();
+            main_sound_effect_done();
 #else
             Native.Invoke<main_sound_effect_done>(nativeLibraryPtr);
 #endif
@@ -2397,6 +2723,27 @@ sfx_magic2:
                 }
             }
         }
+        // we still need to respond to sound calls even if sound is off otherwise the game engine will pend
+        else
+        {
+#if USE_UNITY_DLL_FUNCTION
+            int sound = main_sound_effect();
+            int length = main_sound_effect_length();
+#else
+            int sound = Native.Invoke<int, main_sound_effect>(nativeLibraryPtr);
+            int length = Native.Invoke<int, main_sound_effect_length>(nativeLibraryPtr);
+#endif
+            // immediately respond to the game engine as if the sound has been played for now
+            // TODO need to take the same amount of time as the original sound before responding
+            if (sound != -1)
+            {
+#if USE_UNITY_DLL_FUNCTION
+                main_sound_effect_done();
+#else
+                Native.Invoke<main_sound_effect_done>(nativeLibraryPtr);
+#endif
+            }
+        }
 
         // only get data from the game engine periodically
         if (timer > timerExpired)
@@ -2436,75 +2783,136 @@ sfx_magic2:
                     }
                 }
 
-                // check if the game engine game mode has changed and the game engine has sound enabled
-                if ((lastMode != current_mode) && (SoundFlag != 0))
+                // check if sound is enabled
+                if (SoundFlag != 0)
                 {
-                    // update the last game mode to the current game mode
-                    lastMode = current_mode;
-
-                    // TODO add better cross fade between musics?
-                    // TODO move this out of the game engine interface
-
-                    // stop the currently playing music track
-                    musicSource.Stop();
-
-                    // check if we are outdoors
-                    if (current_mode == U4_Decompiled.MODE.OUTDOORS)
+                    // check if we started talking to someone new
+                    if (lastNPCTalkIndex != npcTalkIndex)
                     {
-                        // select the outdoor music clip
-                        musicSource.clip = music[(int)MUSIC.WANDERER];
-                    }
-                    // check if we are in a building
-                    else if (current_mode == U4_Decompiled.MODE.BUILDING)
-                    {
-                        // is the building a castle or town or village
-                        if ((Party._loc == LOCATIONS.BRITANNIA) ||
-                            (Party._loc == LOCATIONS.THE_LYCAEUM) ||
-                            (Party._loc == LOCATIONS.EMPATH_ABBY) ||
-                            (Party._loc == LOCATIONS.SERPENT_HOLD))
+                        // check we just started talking to lord british
+                        if (npcTalkIndex == TALK_INDEX.LORD_BRITISH)
                         {
-                            // select the castle music when in the castle
-                            musicSource.clip = music[(int)MUSIC.CASTLES];
+                            // select the lord british music when in the castle
+                            musicSource.clip = music[(int)MUSIC.RULEBRIT];
                         }
+                        // check if we are talking to a vendor
+                        else if ((npcTalkIndex == TALK_INDEX.VENDOR_ARMOR) ||
+                            (npcTalkIndex == TALK_INDEX.VENDOR_FOOD) ||
+                            (npcTalkIndex == TALK_INDEX.VENDOR_GUILD) ||
+                            (npcTalkIndex == TALK_INDEX.VENDOR_HEALER) ||
+                            (npcTalkIndex == TALK_INDEX.VENDOR_HORSE) ||
+                            (npcTalkIndex == TALK_INDEX.VENDOR_INN) ||
+                            (npcTalkIndex == TALK_INDEX.VENDOR_PUB) ||
+                            (npcTalkIndex == TALK_INDEX.VENDOR_REAGENT) ||
+                            (npcTalkIndex == TALK_INDEX.VENDOR_WEAPON) ||
+                            (npcTalkIndex == TALK_INDEX.HAWKKWIND))
+                        {
+                            musicSource.clip = music[(int)MUSIC.SHOPPING];
+                        }
+
+                        // check if we just finished talking to lord british or a vendor
+                        if ((lastNPCTalkIndex == TALK_INDEX.VENDOR_ARMOR) ||
+                            (lastNPCTalkIndex == TALK_INDEX.VENDOR_FOOD) ||
+                            (lastNPCTalkIndex == TALK_INDEX.VENDOR_GUILD) ||
+                            (lastNPCTalkIndex == TALK_INDEX.VENDOR_HEALER) ||
+                            (lastNPCTalkIndex == TALK_INDEX.VENDOR_HORSE) ||
+                            (lastNPCTalkIndex == TALK_INDEX.VENDOR_INN) ||
+                            (lastNPCTalkIndex == TALK_INDEX.VENDOR_PUB) ||
+                            (lastNPCTalkIndex == TALK_INDEX.VENDOR_REAGENT) ||
+                            (lastNPCTalkIndex == TALK_INDEX.VENDOR_WEAPON) ||
+                            (lastNPCTalkIndex == TALK_INDEX.LORD_BRITISH) ||
+                            (lastNPCTalkIndex == TALK_INDEX.HAWKKWIND))
+                        {
+                            // go back to the original town or castle music based on location
+                            if ((Party._loc == LOCATIONS.BRITANNIA) ||
+                                 (Party._loc == LOCATIONS.THE_LYCAEUM) ||
+                                 (Party._loc == LOCATIONS.EMPATH_ABBY) ||
+                                 (Party._loc == LOCATIONS.SERPENT_HOLD))
+                            {
+                                // select the castle music when in the castle
+                                musicSource.clip = music[(int)MUSIC.CASTLES];
+                            }
+                            else
+                            {
+                                // select the town or village music when in a town or village
+                                musicSource.clip = music[(int)MUSIC.TOWNS];
+                            }
+                        }
+
+                        // update the last talk index
+                        lastNPCTalkIndex = npcTalkIndex;
+                    }
+
+                    // check if the game engine game mode has changed and the game engine has sound enabled
+                    if (lastMode != current_mode)
+                    {
+                        // update the last game mode to the current game mode
+                        lastMode = current_mode;
+
+                        // TODO add better cross fade between musics?
+                        // TODO move this out of the game engine interface
+
+                        // stop the currently playing music track
+                        musicSource.Stop();
+
+                        // check if we are outdoors
+                        if (current_mode == U4_Decompiled.MODE.OUTDOORS)
+                        {
+                            // select the outdoor music clip
+                            musicSource.clip = music[(int)MUSIC.WANDERER];
+                        }
+                        // check if we are in a building
+                        else if (current_mode == U4_Decompiled.MODE.BUILDING)
+                        {
+                            // is the building a castle or town or village
+                            if ((Party._loc == LOCATIONS.BRITANNIA) ||
+                                (Party._loc == LOCATIONS.THE_LYCAEUM) ||
+                                (Party._loc == LOCATIONS.EMPATH_ABBY) ||
+                                (Party._loc == LOCATIONS.SERPENT_HOLD))
+                            {
+                                // select the castle music when in the castle
+                                musicSource.clip = music[(int)MUSIC.CASTLES];
+                            }
+                            else
+                            {
+                                // select the town or village music when in a town or village
+                                musicSource.clip = music[(int)MUSIC.TOWNS];
+                            }
+                        }
+                        // check if we are in a dungoen
+                        else if (current_mode == U4_Decompiled.MODE.DUNGEON)
+                        {
+                            // select the dungeon music
+                            musicSource.clip = music[(int)MUSIC.DUNGEON];
+                        }
+                        // check if we are in combat
+                        else if (current_mode == U4_Decompiled.MODE.COMBAT)
+                        {
+                            // select the combat music
+                            musicSource.clip = music[(int)MUSIC.COMBAT];
+                        }
+                        // check if we are in combat
+                        else if (current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
+                        {
+                            // select the combat music
+                            musicSource.clip = music[(int)MUSIC.COMBAT];
+                        }
+                        // check if we are in combat
+                        else if (current_mode == U4_Decompiled.MODE.COMBAT_ROOM)
+                        {
+                            // select the combat music
+                            musicSource.clip = music[(int)MUSIC.COMBAT];
+                        }
+                        // unknown game mode
                         else
                         {
-                            // select the town or village music when in a town or village
-                            musicSource.clip = music[(int)MUSIC.TOWNS];
+                            // select no music
+                            musicSource.clip = music[(int)MUSIC.FANFARE];
                         }
-                    }
-                    // check if we are in a dungoen
-                    else if (current_mode == U4_Decompiled.MODE.DUNGEON)
-                    {
-                        // select the dungeon music
-                        musicSource.clip = music[(int)MUSIC.DUNGEON];
-                    }
-                    // check if we are in combat
-                    else if (current_mode == U4_Decompiled.MODE.COMBAT)
-                    {
-                        // select the combat music
-                        musicSource.clip = music[(int)MUSIC.COMBAT];
-                    }
-                    // check if we are in combat
-                    else if (current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
-                    {
-                        // select the combat music
-                        musicSource.clip = music[(int)MUSIC.COMBAT];
-                    }
-                    // check if we are in combat
-                    else if (current_mode == U4_Decompiled.MODE.COMBAT_ROOM)
-                    {
-                        // select the combat music
-                        musicSource.clip = music[(int)MUSIC.COMBAT];
-                    }
-                    // unknown game mode
-                    else
-                    {
-                        // select no music
-                        musicSource.clip = music[(int)MUSIC.FANFARE];
-                    }
 
-                    // start the music selection
-                    musicSource.Play();
+                        // start the music selection
+                        musicSource.Play();
+                    }
                 }
             }
 
@@ -2523,7 +2931,6 @@ sfx_magic2:
             // check if we have any new text to add
             if (text_size != 0)
             {
-
                 // remove the animated whirlpool from the text last character if we have some new text
                 if (gameText.Length > 0)
                 {
@@ -2593,10 +3000,11 @@ sfx_magic2:
             if (text_size != 0)
             {
                 npcText = "";
-                npcTalkIndex = buffer[0];
 
                 for (int i = 0; i < text_size; i++)
                 {
+                    npcTalkIndex = (TALK_INDEX)(buffer[i * 500]);
+
                     //int npcIndex = buffer[i * 500];
                     //partyText.text = partyText.text + npcIndex + " : " + /* Settlements[(int)Party._loc].GetComponent<Settlement>().npcStrings[_npc[npcIndex]._tlkidx - 1][0] + " says : " + */
                     string npcTalk = enc.GetString(buffer, i * 500 + 1, 500);
@@ -2977,7 +3385,7 @@ sfx_magic2:
 #endif        
 
 #if USE_UNITY_DLL_FUNCTION
-            main_char_highlight(buffer, buffer.length);
+            main_char_highlight(buffer, buffer.Length);
 #else
             Native.Invoke<main_char_highlight>(nativeLibraryPtr, buffer, buffer.Length);
 #endif        
