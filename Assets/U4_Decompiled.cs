@@ -69,39 +69,60 @@ public class U4_Decompiled : MonoBehaviour
         CITIZEN_0 = 0,
     }
 
-    public enum INPUT_MODES
+    public INPUT_MODE inputMode;
+
+    public enum INPUT_MODE
     {
-        CITIZEN_WORD,
-        CITIZEN_SPECIAL_QUESTION_YES_NO,
-        CITIZEN_SPECIAL_QUESTION_CONTINUE,
-        LOAD_BRITISH_WORD,
-        LOAD_BRITISH_CONTINUE,
-        HAWKWIND_WORD,
-        HAWKWIND_CONTINUE,
-        SHRINE_CONTINUE,
-        GENERAL_CONTINUE,
-        GENERAL_YES_NO,
-        GENERAL_DIRECTION,
-        GENERAL_ASK_LETTER,
-        ZSTATS_PARTY_CHARACTER_NUMBER,
-        NUMBER_INPUT_1_DIGIT,
-        NUMBER_INPUT_2_DIGITS,
-        NUMBER_INPUT_3_DIGITS,
-        DUNGEON_INPUT,
-        MAIN_INPUT,
-        END_CONTINUE,
-        DISK_DRIVE,
-        PEER_GEM_OUTDOORS_CONTINUE,
-        PEER_GEM_SETTLEMENT_CONTINUE,
-        PEER_GEM_DUNGEON_CONTINUE,
-        PUB_FOOD_OR_ALE,
-        WEAPON_BUY_OR_SELL,
-        ARMOR_BUY_OR_SELL,
-        ENERGY_TYPE_POISON_FIRE_LIGHTNING_SLEEP,
+        UNKONWN = 0,
+        CITIZEN_WORD = 1,
+        CITIZEN_SPECIAL_QUESTION_YES_NO = 2,
+        CITIZEN_SPECIAL_QUESTION_CONTINUE = 3,
+        LOAD_BRITISH_WORD = 4,
+        LOAD_BRITISH_CONTINUE = 5,
+        HAWKWIND_WORD = 6,
+        HAWKWIND_CONTINUE = 7,
+        SHRINE_CONTINUE = 8,
+        GENERAL_CONTINUE = 9,
+        GENERAL_YES_NO = 10,
+        GENERAL_DIRECTION = 11,
+        GENERAL_ASK_LETTER = 12,
+        ZSTATS_PARTY_CHARACTER_NUMBER = 13,
+        NUMBER_INPUT_1_DIGIT = 14,
+        NUMBER_INPUT_2_DIGITS = 15,
+        NUMBER_INPUT_3_DIGITS = 16,
+        DUNGEON_INPUT = 17,
+        MAIN_INPUT = 18,
+        END_CONTINUE = 19,
+        DISK_DRIVE = 20,
+        PEER_GEM_OUTDOORS_CONTINUE = 21,
+        PEER_GEM_SETTLEMENT_CONTINUE = 22,
+        PEER_GEM_DUNGEON_CONTINUE = 23,
+        PUB_FOOD_OR_ALE = 24,
+        WEAPON_BUY_OR_SELL = 25,
+        ARMOR_BUY_OR_SELL = 26,
+        ENERGY_TYPE_POISON_FIRE_LIGHTNING_SLEEP = 27,
+        GENERAL_ASK_LETTER_REAGENT = 28,
+        GENERAL_BUY_SELL = 29,
+        GENERAL_ASK_LETTER_ARMOR = 30,
+        GENERAL_ASK_LETTER_GUILD = 31,
+        GENERAL_ASK_NUMBER_OF_BEDS = 32,
+        GENERAL_ASK_LETTER_HEALER = 33,
+        GENERAL_ASK_LETTER_WEAPON = 34,
+        GENERAL_ASK_CHARACTER_NUMBER = 35,
+        USE_WORD = 36,
+        USE_STONE_COLOR_WORD = 37,
+        VIRTUE_WORD = 38,
+        GENERAL_YES_NO_WORD = 39,
+        MANTRA_WORD = 40,
+        PUB_WORD = 41,
+        END_INFINITY_WORD = 42,
+        END_VERAMOCOR_WORD = 43,
+        COMBAT = 44,
+        DRIVE_LETTER = 45
     }
 
 
-        // tiles
+    // tiles
     public enum TILE
     {
         /*deep water*/
@@ -644,6 +665,7 @@ public class U4_Decompiled : MonoBehaviour
     delegate int main_camera_shake_accumulator();
     delegate int main_D_1665();
     delegate int main_D_1666();
+    delegate int main_input_mode();
 #endif
 
     void Awake()
@@ -1460,11 +1482,57 @@ public class U4_Decompiled : MonoBehaviour
     public void CommandSayLook()
     {
         string word = "Look\n";
-    StartCoroutine(SayWordCoroutine(word));
+        StartCoroutine(SayWordCoroutine(word));
     }
     public void CommandSayBye()
     {
         string word = "Bye\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+
+    public void CommandSayHonesty()
+    {
+        string word = "Honesty\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+    public void CommandSayCompassion()
+    {
+        string word = "Compassion\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+    public void CommandSayValor()
+    {
+        string word = "Valor\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+    public void CommandSayJustice()
+    {
+        string word = "Justice\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+    public void CommandSaySacrifice()
+    {
+        string word = "Sacrifice\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+    public void CommandSayHonor()
+    {
+        string word = "Honor\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+    public void CommandSaySpirituality()
+    {
+        string word = "Spirituality\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+    public void CommandSayHumility()
+    {
+        string word = "Humility\n";
+        StartCoroutine(SayWordCoroutine(word));
+    }
+    public void CommandSayNone()
+    {
+        string word = "None\n";
         StartCoroutine(SayWordCoroutine(word));
     }
 
@@ -1486,6 +1554,66 @@ public class U4_Decompiled : MonoBehaviour
         main_keyboardHit('Y');
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Y');
+#endif
+    }
+    public void CommandSayFood()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('F');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'F');
+#endif
+    }
+
+    public void CommandSayAle()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('A');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'A');
+#endif
+    }
+    public void CommandSayBuy()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('B');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'B');
+#endif
+    }
+
+    public void CommandSaySell()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('S');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'S');
+#endif
+    }
+
+    public void CommandSayCuring()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('A');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'A');
+#endif
+    }
+
+    public void CommandSayHealing()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('B');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'B');
+#endif
+    }
+    public void CommandSayResurection()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('C');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'C');
 #endif
     }
     public void CommandSayN()
@@ -1640,7 +1768,7 @@ catch
     {
         for( int i = 0; i < (int)MUSIC.MAX; i++)
         {
-            StartCoroutine(LoadSongCoroutine(Application.persistentDataPath + "/u4/" + ((MUSIC)i).ToString() + ".MP3", (MUSIC)i));
+            StartCoroutine(LoadSongCoroutine(Application.persistentDataPath + "/u4/" + ((MUSIC)i).ToString() + ".OGG", (MUSIC)i));
         }
     }
 
@@ -2752,6 +2880,13 @@ sfx_magic2:
             timer = timer - timerExpired;
             timerExpired = timerPeriod;
 
+            // read the input mode
+#if USE_UNITY_DLL_FUNCTION
+            inputMode = main_input_mode();
+#else
+            inputMode = Native.Invoke<INPUT_MODE, main_input_mode>(nativeLibraryPtr);
+#endif
+
             // read the sound flag
 #if USE_UNITY_DLL_FUNCTION
             SoundFlag = main_SoundFlag();
@@ -2891,17 +3026,25 @@ sfx_magic2:
                             // select the combat music
                             musicSource.clip = music[(int)MUSIC.COMBAT];
                         }
-                        // check if we are in combat
+                        // check if we are in camp
+                        // TODO: the campe music seems a little off for the sleeping party unless
+                        // there is an unexpected combat while sleeping
                         else if (current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
                         {
                             // select the combat music
                             musicSource.clip = music[(int)MUSIC.COMBAT];
                         }
-                        // check if we are in combat
+                        // check if we are in combat in a dungeon room
                         else if (current_mode == U4_Decompiled.MODE.COMBAT_ROOM)
                         {
                             // select the combat music
                             musicSource.clip = music[(int)MUSIC.COMBAT];
+                        }
+                        // check if we are in a shrine
+                        else if (current_mode == U4_Decompiled.MODE.SHRINE)
+                        {
+                            // select the shrine music
+                            musicSource.clip = music[(int)MUSIC.SHRINES];
                         }
                         // unknown game mode
                         else
