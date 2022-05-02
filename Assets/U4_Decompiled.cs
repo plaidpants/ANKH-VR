@@ -73,52 +73,49 @@ public class U4_Decompiled : MonoBehaviour
 
     public enum INPUT_MODE
     {
-        UNKONWN = 0,
+        // talk with people word input
         CITIZEN_WORD = 1,
-        CITIZEN_SPECIAL_QUESTION_YES_NO = 2,
-        CITIZEN_SPECIAL_QUESTION_CONTINUE = 3,
         LOAD_BRITISH_WORD = 4,
-        LOAD_BRITISH_CONTINUE = 5,
         HAWKWIND_WORD = 6,
-        HAWKWIND_CONTINUE = 7,
-        SHRINE_CONTINUE = 8,
-        GENERAL_CONTINUE = 9,
-        GENERAL_YES_NO = 10,
-        GENERAL_DIRECTION = 11,
-        GENERAL_ASK_LETTER = 12,
-        ZSTATS_PARTY_CHARACTER_NUMBER = 13,
-        NUMBER_INPUT_1_DIGIT = 14,
-        NUMBER_INPUT_2_DIGITS = 15,
-        NUMBER_INPUT_3_DIGITS = 16,
-        DUNGEON_INPUT = 17,
-        MAIN_INPUT = 18,
-        END_CONTINUE = 19,
-        DISK_DRIVE = 20,
-        PEER_GEM_OUTDOORS_CONTINUE = 21,
-        PEER_GEM_SETTLEMENT_CONTINUE = 22,
-        PEER_GEM_DUNGEON_CONTINUE = 23,
-        PUB_FOOD_OR_ALE = 24,
-        WEAPON_BUY_OR_SELL = 25,
-        ARMOR_BUY_OR_SELL = 26,
-        ENERGY_TYPE_POISON_FIRE_LIGHTNING_SLEEP = 27,
-        GENERAL_ASK_LETTER_REAGENT = 28,
-        GENERAL_BUY_SELL = 29,
-        GENERAL_ASK_LETTER_ARMOR = 30,
-        GENERAL_ASK_LETTER_GUILD = 31,
-        GENERAL_ASK_NUMBER_OF_BEDS = 32,
-        GENERAL_ASK_LETTER_HEALER = 33,
-        GENERAL_ASK_LETTER_WEAPON = 34,
-        GENERAL_ASK_CHARACTER_NUMBER = 35,
+        PUB_WORD = 41,
+        // other word input, end game, shrine, dungeon etc.
+        VIRTUE_WORD = 38,
+        MANTRA_WORD = 40,
         USE_WORD = 36,
         USE_STONE_COLOR_WORD = 37,
-        VIRTUE_WORD = 38,
+        END_GAME_INFINITY_WORD = 42,
+        END_GAME_VERAMOCOR_WORD = 43,
+        // general input
         GENERAL_YES_NO_WORD = 39,
-        MANTRA_WORD = 40,
-        PUB_WORD = 41,
-        END_INFINITY_WORD = 42,
-        END_VERAMOCOR_WORD = 43,
-        COMBAT = 44,
-        DRIVE_LETTER = 45
+        GENERAL_YES_NO = 10,
+        GENERAL_NUMBER_INPUT_0_1_2_3 = 32,
+        GENERAL_NUMBER_INPUT_1_DIGITS = 48,
+        GENERAL_NUMBER_INPUT_2_DIGITS = 15,
+        GENERAL_NUMBER_INPUT_3_DIGITS = 16,
+        GENERAL_CONTINUE = 9,
+        GENERAL_BUY_SELL = 29,
+        GENERAL_DIRECTION = 11,
+        GENERAL_ASK_CHARACTER_NUMBER = 35,
+        // magic letter input
+        ENERGY_TYPE_POISON_FIRE_LIGHTNING_SLEEP = 27,
+        // vendor main input purchase menus using single letter inputs
+        ASK_LETTER_FOOD_OR_ALE = 24,
+        ASK_LETTER_REAGENT = 28,
+        ASK_LETTER_ARMOR = 30,
+        ASK_LETTER_WEAPON = 34,
+        ASK_LETTER_GUILD = 31,
+        ASK_LETTER_HEALER = 33,
+        ASK_LETTER_SPELL = 47,
+        ASK_LETTER_PHASE = 49,
+        ASK_LETTER_TELESCOPE = 50,
+        // main game engine input loops
+        MAIN_LOOP = 18,
+        DUNGEON_LOOP = 17,
+        COMBAT_LOOP = 44,
+        // delay is active, no input
+        DELAY = 46,
+        // drive letter for PCs, not really useful here
+        DRIVE_LETTER = 45,
     }
 
 
@@ -1343,7 +1340,32 @@ public class U4_Decompiled : MonoBehaviour
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'O');
 #endif
     }
+    public void CommandPeer()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('P');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'P');
+#endif
+    }
 
+    public void CommandPass()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit(' ');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, ' ');
+#endif
+    }
+
+    public void CommandQuit()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('Q');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Q');
+#endif
+    }
     public void CommandReady()
     {
 #if USE_UNITY_DLL_FUNCTION
@@ -1387,7 +1409,14 @@ public class U4_Decompiled : MonoBehaviour
 #endif
     }
 
-
+    public void CommandWear()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('W');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'W');
+#endif
+    }
 
     public void CommandXit()
     {
@@ -1397,6 +1426,16 @@ public class U4_Decompiled : MonoBehaviour
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'X');
 #endif
     }
+
+    public void CommandYell()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('Y');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Y');
+#endif
+    }
+
     public void CommandZStas()
     {
 #if USE_UNITY_DLL_FUNCTION
@@ -1433,6 +1472,25 @@ public class U4_Decompiled : MonoBehaviour
         string word = "Name\n";
 
         StartCoroutine(SayWordCoroutine(word));
+    }
+
+    public static string clickedButtonName = "";
+
+    public void CommandSayButtonName()
+    {
+        StartCoroutine(SayWordCoroutine(clickedButtonName));
+    }
+    public void CommandSayWord(string word)
+    {
+        StartCoroutine(SayWordCoroutine(word));
+    }
+    public void CommandSayCharacter(char character)
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit(character);
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, character);
+#endif
     }
 
     public void CommandSayJob()
