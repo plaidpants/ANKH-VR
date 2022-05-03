@@ -69,6 +69,23 @@ public class World : MonoBehaviour
     public GameObject Talk3DigitInput;
     public GameObject TalkLordBritish;
 
+    public GameObject TalkMantras;
+    public GameObject Talk1DigitInput;
+    public GameObject TalkColors;
+    public GameObject TalkUseItem;
+    public GameObject TalkSpells;
+    public GameObject TalkEnergy;
+    public GameObject TalkReagents;
+    public GameObject TalkTelescope;
+    public GameObject TalkPhase;
+
+    public GameObject TalkPubWord;
+    public GameObject TalkDigit0123;
+    public GameObject TalkInfinity;
+    public GameObject TalkVeramocor;
+    public GameObject TalkVirtue;
+
+
     // reference to game engine
     public U4_Decompiled u4;
 
@@ -3418,7 +3435,7 @@ public class World : MonoBehaviour
                 combat_terrain = U4_Decompiled.COMBAT_TERRAIN.SHIPSHOR;
             }
         }
-        else if (u4.Party._tile == U4_Decompiled.TILE.BRICK_FLOOR)
+        else if (u4.current_tile == U4_Decompiled.TILE.BRICK_FLOOR)
         {
             combat_terrain = U4_Decompiled.COMBAT_TERRAIN.INN;
         }
@@ -4700,7 +4717,8 @@ public class World : MonoBehaviour
         QUESTION_YES_RESPONSE = 8,
         QUESTION_NO_RESPONSE = 9,
         KEYWORD1 = 10,
-        KEYWORD2 = 11
+        KEYWORD2 = 11,
+        MAX = 12
     };
 
     // these need to line up with U4_Decompiled.LOCATIONS so we can convert from Party._loc to this enum and the LOCATIONS enum, LBC_1 is a special case
@@ -4862,35 +4880,26 @@ public class World : MonoBehaviour
                 npcProbabilityOfTurningAway[settlement][talkIndex] = talkFileData[talkIndex * 288 + 2];
 
                 string s;
-                int stringIndex = 3;
+                int stringBufferIndex = 3;
 
                 // search for strings in the .TLK file
-                do
+                for (int stringIndex = 0; stringIndex < (int)NPC_STRING_INDEX.MAX; stringIndex++)
                 {
                     // reset string
                     s = "";
 
                     // manually construct the string because C# doesn't work with null terminated C strings well
-                    for (int i = 0; (i < 100) && (talkFileData[talkIndex * 288 + stringIndex] != 0); i++)
+                    for (int i = 0; (i < 100) && (talkFileData[talkIndex * 288 + stringBufferIndex] != 0); i++)
                     {
-                        s += (char)talkFileData[talkIndex * 288 + stringIndex++];
+                        s += (char)talkFileData[talkIndex * 288 + stringBufferIndex++];
                     }
 
-                    // if the string is of any size add it to the list
-                    if (s.Length != 0)
-                    {
-                        npcStrings[settlement][talkIndex].Add(s);
-                        if (s == "Mentorian")
-                        {
-                            Debug.Log("found Mentorian");
-                        }
-                    }
+                    // add it to the list even if it is empty
+                    npcStrings[settlement][talkIndex].Add(s);
 
                     // skip over null terminator to go to the next string
-                    stringIndex++;
-
-                    // continue to search for strings until we are past the end of the record or the last string is zero length 
-                } while ((s.Length != 0) && (stringIndex < 285));
+                    stringBufferIndex++;
+                }
             }
 
             // load settlement map data
@@ -9512,29 +9521,49 @@ public class World : MonoBehaviour
             timer -= timerExpired;
             timerExpired = timerPeriod;
 
+            /*
+            Action.SetActive(false);
+            ActionMainLoop.SetActive(false);
+            ActionDungeonLoop.SetActive(false);
+            ActionCombatLoop.SetActive(false);
+
+            Talk.SetActive(false);
+            TalkCitizen.SetActive(false);
+            TalkHealer.SetActive(false);
+            TalkContinue.SetActive(false);
+            TalkYN.SetActive(false);
+            TalkYesNo.SetActive(false);
+            TalkBuySell.SetActive(true);
+            TalkHawWind.SetActive(false);
+            TalkFoodAle.SetActive(false);
+            TalkPartyCharacter.SetActive(false);
+            TalkArmor.SetActive(false);
+            TalkWeapon.SetActive(false);
+            TalkGuild.SetActive(false);
+            Talk2DigitInput.SetActive(false);
+            Talk3DigitInput.SetActive(false);
+            TalkLordBritish.SetActive(false);
+            TalkMantras.SetActive(false);
+            Talk1DigitInput.SetActive(false);
+            TalkColors.SetActive(false);
+            TalkUseItem.SetActive(false);
+            TalkSpells.SetActive(false);
+            TalkEnergy.SetActive(false);
+            TalkReagents.SetActive(false);
+            TalkTelescope.SetActive(false);
+            TalkPhase.SetActive(false);
+            TalkPubWord.SetActive(false);
+            TalkDigit0123.SetActive(false);
+            TalkInfinity.SetActive(false);
+            TalkVeramocor.SetActive(false);
+            TalkVirtue.SetActive(false);
+            */
+
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.CITIZEN_WORD)
             {
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
                 Talk.SetActive(true);
+                Action.SetActive(false);
                 TalkCitizen.SetActive(true);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
 
                 bool keyword1found = false;
                 bool keyword2found = false;
@@ -9596,238 +9625,135 @@ public class World : MonoBehaviour
                     }
                 }
             }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_YES_NO)
+            else
             {
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(true);
                 TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_YES_NO)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
                 TalkYN.SetActive(true);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
             }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_YES_NO_WORD)
+            else
             {
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(true);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
                 TalkYN.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_YES_NO_WORD)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
                 TalkYesNo.SetActive(true);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
             }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_HEALER)
+            else
             {
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
+                TalkYesNo.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_HEALER)
+            {
                 Talk.SetActive(true);
-                TalkCitizen.SetActive(false);
+                Action.SetActive(false);
                 TalkHealer.SetActive(true);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
             }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_CONTINUE)
+            else
             {
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
+                TalkHealer.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_CONTINUE)
+            {
                 Talk.SetActive(true);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
+                Action.SetActive(false);
                 TalkContinue.SetActive(true);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
             }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.MAIN_LOOP)
+            else
+            {
+                TalkContinue.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.MAIN_LOOP)
             {
                 Action.SetActive(true);
+                Talk.SetActive(false);
                 ActionMainLoop.SetActive(true);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(false);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
             }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.DUNGEON_LOOP)
+            else
+            {
+                ActionMainLoop.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.DUNGEON_LOOP)
             {
                 Action.SetActive(true);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(true);
-                ActionCombatLoop.SetActive(false);
                 Talk.SetActive(false);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
+                ActionDungeonLoop.SetActive(true);
             }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.HAWKWIND_WORD)
+            else
+            {
+                ActionDungeonLoop.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.HAWKWIND_WORD)
             {
                 // TODO: need to filter buttons like citizen talk with word list
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
                 Talk.SetActive(true);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
+                Action.SetActive(false);
                 TalkHawWind.SetActive(true);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
             }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_FOOD_OR_ALE)
+            else
             {
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(true);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
                 TalkHawWind.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_FOOD_OR_ALE)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
                 TalkFoodAle.SetActive(true);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
             }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_BUY_SELL)
+            else
             {
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
+                TalkFoodAle.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_BUY_SELL)
+            {
                 Talk.SetActive(true);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(true);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
-            }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_ASK_CHARACTER_NUMBER)
-            {
                 Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(false);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
                 TalkBuySell.SetActive(true);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(true);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
             }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.PUB_WORD)
+            else
+            {
+                TalkBuySell.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_ASK_CHARACTER_NUMBER)
+            {
+                Talk.SetActive(false);
+                Action.SetActive(false);
+                TalkPartyCharacter.SetActive(true);
+            }
+            else
+            {
+                TalkPartyCharacter.SetActive(true);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_DIRECTION)
+            {
+                Talk.SetActive(false);
+                Action.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.DELAY)
+            {
+                Talk.SetActive(false);
+                Action.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.PUB_WORD)
             {
                 /* TODO search for these words
                 "black stone",
@@ -9838,192 +9764,129 @@ public class World : MonoBehaviour
 	            "nightshade",
 	            "mandrake root"
                 "nothing"
-                    */
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(false);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(true);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
-            }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.MANTRA_WORD)
-            {
-
-                /*
-                 * mantras
-                "ahm", Honesty
-                  "mu", Compassion
-                  "ra", Valor
-                  "beh", Justice
-                  "cah", Sacrifice
-                  "summ", Honor
-                  "om", Spirituality
-                  "lum" Humility
-                    */
-
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(false);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(true);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
-            }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.LOAD_BRITISH_WORD)
-            {
-                /*
-char* D_6FF0[28] = {
-	"bye",
-	"help",
-	"health",
-	"name",
-	"look",
-	"job",
-	"truth",
-	"love",
-	"courage",
-	"honesty",
-	"compassion",
-	"valor",
-	"justice",
-	"sacrifice",
-	"honor",
-	"spirituality",
-	"humility",
-	"pride",
-	"avatar",
-	"quest",
-	"britannia",
-	"ankh",
-	"abyss",
-	"mondain",
-	"minax",
-	"exodus",
-	"virtue",
-	""
-};
-*/
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
+                */
                 Talk.SetActive(true);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(true);
-            }
-
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.VIRTUE_WORD)
-            {
-                /*
-                 * mantras
-                "ahm", Honesty
-                  "mu", Compassion
-                  "ra", Valor
-                  "beh", Justice
-                  "cah", Sacrifice
-                  "summ", Honor
-                  "om", Spirituality
-                  "lum" Humility
-                    */
-
                 Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(false);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(true);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(true);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
+                TalkPubWord.SetActive(true);
             }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.USE_WORD)
+            else
+            {
+                TalkPubWord.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.MANTRA_WORD)
             {
                 /*
-    "stone"
-    "stones"
-    "bell"
-    "book"
-    "candle",
-    "key"
-   "keys"
-    "horn"
-    "wheel"
-    "skull"
+                "ahm", Honesty
+                "mu", Compassion
+                "ra", Valor
+                "beh", Justice
+                "cah", Sacrifice
+                "summ", Honor
+                "om", Spirituality
+                "lum" Humility
                 */
 
+                Talk.SetActive(true);
                 Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(false);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(true);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
+                TalkMantras.SetActive(true);
+            }
+            else
+            {
+                TalkMantras.SetActive(false);
+            }
+            
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.LOAD_BRITISH_WORD)
+            {
+                /*
+                char* D_6FF0[28] = {
+                "bye",
+                "help",
+                "health",
+                "name",
+                "look",
+                "job",
+                "truth",
+                "love",
+                "courage",
+                "honesty",
+                "compassion",
+                "valor",
+                "justice",
+                "sacrifice",
+                "honor",
+                "spirituality",
+                "humility",
+                "pride",
+                "avatar",
+                "quest",
+                "britannia",
+                "ankh",
+                "abyss",
+                "mondain",
+                "minax",
+                "exodus",
+                "virtue",
+                ""
+                };
+                */
+
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkLordBritish.SetActive(true);
+            }
+            else
+            {
                 TalkLordBritish.SetActive(false);
             }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.USE_STONE_COLOR_WORD)
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.VIRTUE_WORD)
+            {
+                /*
+                Honesty
+                Compassion
+                Valor
+                Justice
+                Sacrifice
+                Honor
+                Spirituality
+                Humility
+                */
+
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkVirtue.SetActive(true);
+            }
+            else
+            {
+                TalkVirtue.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.USE_ITEM_WORD)
+            {
+                /*
+                "stone"
+                "stones"
+                "bell"
+                "book"
+                "candle",
+                "key"
+                "keys"
+                "horn"
+                "wheel"
+                "skull"
+                */
+
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkUseItem.SetActive(true);
+            }
+            else
+            {
+                TalkUseItem.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.USE_STONE_COLOR_WORD)
             {
                 /*
                 "Blue",
@@ -10036,212 +9899,178 @@ char* D_6FF0[28] = {
                 "Black"
                 */
 
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(false);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(true);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
-            }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_2_DIGITS)
-            {
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
                 Talk.SetActive(true);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(true);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
-            }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_3_DIGITS)
-            {
                 Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(true);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(true);
-                TalkLordBritish.SetActive(false);
+                TalkColors.SetActive(true);
             }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.COMBAT_LOOP)
-            {
-                Action.SetActive(true);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(true);
-                Talk.SetActive(false);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
-            }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_WEAPON)
-            {
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(true);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(true);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
-            }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_ARMOR)
-            {
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(true);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(true);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
-            }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_GUILD)
-            {
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(true);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(true);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
-            }
-            else if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_REAGENT)
-            {
-                Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(true);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
-                Talk2DigitInput.SetActive(false);
-                Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
-            }
-            // unknown input or unimplemented panel input,
-            // turn off all input panels and let me type it in instead
             else
             {
+                TalkColors.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_2_DIGITS)
+            {
+                Talk.SetActive(true);
                 Action.SetActive(false);
-                ActionMainLoop.SetActive(false);
-                ActionDungeonLoop.SetActive(false);
-                ActionCombatLoop.SetActive(false);
-                Talk.SetActive(false);
-                TalkCitizen.SetActive(false);
-                TalkHealer.SetActive(false);
-                TalkContinue.SetActive(false);
-                TalkYN.SetActive(false);
-                TalkYesNo.SetActive(false);
-                TalkBuySell.SetActive(false);
-                TalkHawWind.SetActive(false);
-                TalkFoodAle.SetActive(false);
-                TalkPartyCharacter.SetActive(false);
-                TalkArmor.SetActive(false);
-                TalkWeapon.SetActive(false);
-                TalkGuild.SetActive(false);
+                Talk2DigitInput.SetActive(true);
+            }
+            else
+            {
                 Talk2DigitInput.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_3_DIGITS)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                Talk3DigitInput.SetActive(true);
+            }
+            else
+            {
                 Talk3DigitInput.SetActive(false);
-                TalkLordBritish.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.COMBAT_LOOP)
+            {
+                Action.SetActive(true);
+                Talk.SetActive(false);
+                ActionCombatLoop.SetActive(true);
+            }
+            else
+            {
+                ActionCombatLoop.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_WEAPON)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkWeapon.SetActive(true);
+            }
+            else
+            {
+                TalkWeapon.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_ARMOR)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkArmor.SetActive(true);
+            }
+            else
+            {
+                TalkArmor.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_GUILD)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkGuild.SetActive(true);
+            }
+            else
+            {
+                TalkGuild.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_REAGENT)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkReagents.SetActive(true);
+            }
+            else
+            {
+                TalkReagents.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_SPELL)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkSpells.SetActive(true);
+            }
+            else
+            {
+                TalkSpells.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_1_DIGITS)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                Talk1DigitInput.SetActive(true);
+            }
+            else
+            {
+                Talk1DigitInput.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ENERGY_TYPE_POISON_FIRE_LIGHTNING_SLEEP)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkEnergy.SetActive(true);
+            }
+            else
+            {
+                TalkEnergy.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_TELESCOPE)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkTelescope.SetActive(true);
+            }
+            else
+            {
+                TalkTelescope.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_PHASE)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkPhase.SetActive(true);
+            }
+            else
+            {
+                TalkPhase.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_0_1_2_3)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkDigit0123.SetActive(true);
+            }
+            else
+            {
+                TalkDigit0123.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.END_GAME_INFINITY_WORD)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkInfinity.SetActive(true);
+            }
+            else
+            {
+                TalkInfinity.SetActive(false);
+            }
+
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.END_GAME_VERAMOCOR_WORD)
+            {
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkVeramocor.SetActive(true);
+            }
+            else
+            {
+                TalkVeramocor.SetActive(false);
             }
 
             if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
@@ -10273,6 +10102,7 @@ char* D_6FF0[28] = {
                         (u4.current_tile == U4_Decompiled.TILE.TOWN) ||
                         (u4.current_tile == U4_Decompiled.TILE.VILLAGE) ||
                         (u4.current_tile == U4_Decompiled.TILE.DUNGEON) ||
+                        (u4.current_tile == U4_Decompiled.TILE.RUINS) ||
                         (u4.current_tile == U4_Decompiled.TILE.SHRINE)))
                 {
                     u4.CommandEnter();
@@ -10481,7 +10311,7 @@ char* D_6FF0[28] = {
                 terrain.SetActive(false);
                 animatedTerrrain.SetActive(false);
                 billboardTerrrain.SetActive(false);
-                fighters.SetActive(false);
+                fighters.SetActive(true);
                 characters.SetActive(true);
                 npcs.SetActive(false);
                 party.SetActive(false);

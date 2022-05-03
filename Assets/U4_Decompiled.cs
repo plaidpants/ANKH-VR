@@ -81,7 +81,7 @@ public class U4_Decompiled : MonoBehaviour
         // other word input, end game, shrine, dungeon etc.
         VIRTUE_WORD = 38,
         MANTRA_WORD = 40,
-        USE_WORD = 36,
+        USE_ITEM_WORD = 36,
         USE_STONE_COLOR_WORD = 37,
         END_GAME_INFINITY_WORD = 42,
         END_GAME_VERAMOCOR_WORD = 43,
