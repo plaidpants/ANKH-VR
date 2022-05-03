@@ -48,6 +48,7 @@ public class World : MonoBehaviour
     public Text keyword2ButtonText;
     public GameObject keyword1Button;
     public GameObject keyword2Button;
+    public GameObject InputPanel;
     public GameObject Talk;
     public GameObject Action;
     public GameObject ActionMainLoop;
@@ -9581,7 +9582,6 @@ public class World : MonoBehaviour
                 foreach (string word in u4.wordList)
                 {
                     // only add the special keywords if we already know them
-                    // TODO these are shortened, need to deal with that
                     // TODO don't need to do this so often, only when we get new text
                     // TODO need to clear npcTalkIndex when switching levels or settlements as the index might not be valid for the other location
                     if (word.Length >= 4)
@@ -9738,7 +9738,7 @@ public class World : MonoBehaviour
             }
             else
             {
-                TalkPartyCharacter.SetActive(true);
+                TalkPartyCharacter.SetActive(false);
             }
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_DIRECTION)
@@ -9760,7 +9760,7 @@ public class World : MonoBehaviour
 	            "sextant",
 	            "white stone",
 	            "mandrake",
-	            skull",
+	            "skull",
 	            "nightshade",
 	            "mandrake root"
                 "nothing"
