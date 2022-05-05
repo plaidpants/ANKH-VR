@@ -9524,6 +9524,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.CITIZEN_WORD)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkCitizen.SetActive(true);
@@ -9594,6 +9595,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_YES_NO)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkYN.SetActive(true);
@@ -9605,6 +9607,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_YES_NO_WORD)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkYesNo.SetActive(true);
@@ -9616,6 +9619,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_HEALER)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkHealer.SetActive(true);
@@ -9627,6 +9631,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_CONTINUE)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkContinue.SetActive(true);
@@ -9638,6 +9643,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.MAIN_LOOP)
             {
+                InputPanel.SetActive(true);
                 Action.SetActive(true);
                 Talk.SetActive(false);
                 ActionMainLoop.SetActive(true);
@@ -9649,6 +9655,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.DUNGEON_LOOP)
             {
+                InputPanel.SetActive(true);
                 Action.SetActive(true);
                 Talk.SetActive(false);
                 ActionDungeonLoop.SetActive(true);
@@ -9660,6 +9667,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.HAWKWIND_WORD)
             {
+                InputPanel.SetActive(true);
                 // TODO: need to filter buttons like citizen talk with word list
                 Talk.SetActive(true);
                 Action.SetActive(false);
@@ -9672,6 +9680,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_FOOD_OR_ALE)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkFoodAle.SetActive(true);
@@ -9683,6 +9692,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_BUY_SELL)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkBuySell.SetActive(true);
@@ -9694,6 +9704,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_ASK_CHARACTER_NUMBER)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(false);
                 Action.SetActive(false);
                 TalkPartyCharacter.SetActive(true);
@@ -9703,14 +9714,9 @@ public class World : MonoBehaviour
                 TalkPartyCharacter.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_DIRECTION)
-            {
-                Talk.SetActive(false);
-                Action.SetActive(false);
-            }
-
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.DELAY)
             {
+                InputPanel.SetActive(false);
                 Talk.SetActive(false);
                 Action.SetActive(false);
             }
@@ -9727,6 +9733,7 @@ public class World : MonoBehaviour
 	            "mandrake root"
                 "nothing"
                 */
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkPubWord.SetActive(true);
@@ -9749,6 +9756,7 @@ public class World : MonoBehaviour
                 "lum" Humility
                 */
 
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkMantras.SetActive(true);
@@ -9793,6 +9801,7 @@ public class World : MonoBehaviour
                 };
                 */
 
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkLordBritish.SetActive(true);
@@ -9815,6 +9824,7 @@ public class World : MonoBehaviour
                 Humility
                 */
 
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkVirtue.SetActive(true);
@@ -9839,6 +9849,7 @@ public class World : MonoBehaviour
                 "skull"
                 */
 
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkUseItem.SetActive(true);
@@ -9861,6 +9872,7 @@ public class World : MonoBehaviour
                 "Black"
                 */
 
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkColors.SetActive(true);
@@ -9872,6 +9884,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_2_DIGITS)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 Talk2DigitInput.SetActive(true);
@@ -9883,6 +9896,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_3_DIGITS)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 Talk3DigitInput.SetActive(true);
@@ -9894,6 +9908,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.COMBAT_LOOP)
             {
+                InputPanel.SetActive(true);
                 Action.SetActive(true);
                 Talk.SetActive(false);
                 ActionCombatLoop.SetActive(true);
@@ -9905,6 +9920,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_WEAPON)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkWeapon.SetActive(true);
@@ -9916,6 +9932,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_ARMOR)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkArmor.SetActive(true);
@@ -9927,6 +9944,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_GUILD)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkGuild.SetActive(true);
@@ -9938,6 +9956,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_REAGENT)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkReagents.SetActive(true);
@@ -9949,6 +9968,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_SPELL)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkSpells.SetActive(true);
@@ -9960,6 +9980,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_1_DIGITS)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 Talk1DigitInput.SetActive(true);
@@ -9971,6 +9992,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.ENERGY_TYPE_POISON_FIRE_LIGHTNING_SLEEP)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkEnergy.SetActive(true);
@@ -9982,6 +10004,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_TELESCOPE)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkTelescope.SetActive(true);
@@ -9993,6 +10016,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_PHASE)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkPhase.SetActive(true);
@@ -10004,6 +10028,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_0_1_2_3)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkDigit0123.SetActive(true);
@@ -10015,6 +10040,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.END_GAME_INFINITY_WORD)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkInfinity.SetActive(true);
@@ -10026,6 +10052,7 @@ public class World : MonoBehaviour
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.END_GAME_VERAMOCOR_WORD)
             {
+                InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkVeramocor.SetActive(true);
@@ -10040,6 +10067,7 @@ public class World : MonoBehaviour
             // rotation and direction like the controller do
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_DIRECTION)
             {
+                InputPanel.SetActive(false);
                 Talk.SetActive(false);
                 Action.SetActive(false);
                 TalkDirection.SetActive(false);
