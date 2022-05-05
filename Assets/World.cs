@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class World : MonoBehaviour
 {
+    // used for automatic klimb and decsend ladders
+    public U4_Decompiled.TILE lastCurrentTile;
+
     // color pallettes and 2D tile textures
     public Color[] CGAColorPalette;
     public Color[] EGAColorPalette;
@@ -85,6 +88,7 @@ public class World : MonoBehaviour
     public GameObject TalkInfinity;
     public GameObject TalkVeramocor;
     public GameObject TalkVirtue;
+    public GameObject TalkDirection;
 
 
     // reference to game engine
@@ -3435,10 +3439,6 @@ public class World : MonoBehaviour
             {
                 combat_terrain = U4_Decompiled.COMBAT_TERRAIN.SHIPSHOR;
             }
-        }
-        else if (u4.current_tile == U4_Decompiled.TILE.BRICK_FLOOR)
-        {
-            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.INN;
         }
         else
         {
@@ -9522,44 +9522,6 @@ public class World : MonoBehaviour
             timer -= timerExpired;
             timerExpired = timerPeriod;
 
-            /*
-            Action.SetActive(false);
-            ActionMainLoop.SetActive(false);
-            ActionDungeonLoop.SetActive(false);
-            ActionCombatLoop.SetActive(false);
-
-            Talk.SetActive(false);
-            TalkCitizen.SetActive(false);
-            TalkHealer.SetActive(false);
-            TalkContinue.SetActive(false);
-            TalkYN.SetActive(false);
-            TalkYesNo.SetActive(false);
-            TalkBuySell.SetActive(true);
-            TalkHawWind.SetActive(false);
-            TalkFoodAle.SetActive(false);
-            TalkPartyCharacter.SetActive(false);
-            TalkArmor.SetActive(false);
-            TalkWeapon.SetActive(false);
-            TalkGuild.SetActive(false);
-            Talk2DigitInput.SetActive(false);
-            Talk3DigitInput.SetActive(false);
-            TalkLordBritish.SetActive(false);
-            TalkMantras.SetActive(false);
-            Talk1DigitInput.SetActive(false);
-            TalkColors.SetActive(false);
-            TalkUseItem.SetActive(false);
-            TalkSpells.SetActive(false);
-            TalkEnergy.SetActive(false);
-            TalkReagents.SetActive(false);
-            TalkTelescope.SetActive(false);
-            TalkPhase.SetActive(false);
-            TalkPubWord.SetActive(false);
-            TalkDigit0123.SetActive(false);
-            TalkInfinity.SetActive(false);
-            TalkVeramocor.SetActive(false);
-            TalkVirtue.SetActive(false);
-            */
-
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.CITIZEN_WORD)
             {
                 Talk.SetActive(true);
@@ -10073,6 +10035,20 @@ public class World : MonoBehaviour
                 TalkVeramocor.SetActive(false);
             }
 
+            // disable this for now
+            // TODO if this is going to be an actual input panel it needs to support
+            // rotation and direction like the controller do
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_DIRECTION)
+            {
+                Talk.SetActive(false);
+                Action.SetActive(false);
+                TalkDirection.SetActive(false);
+            }
+            else
+            {
+                TalkDirection.SetActive(false);
+            }
+
             if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
             {
                 AddNPCs(u4._npc);
@@ -10108,6 +10084,18 @@ public class World : MonoBehaviour
                     u4.CommandEnter();
                     justChangedModes = true;
                 }
+
+                // automatically board horse, ship and balloon
+                if ((u4.current_tile == U4_Decompiled.TILE.HORSE_EAST) ||
+                    (u4.current_tile == U4_Decompiled.TILE.HORSE_EAST) ||
+                    (u4.current_tile == U4_Decompiled.TILE.SHIP_EAST) ||
+                    (u4.current_tile == U4_Decompiled.TILE.SHIP_NORTH) ||
+                    (u4.current_tile == U4_Decompiled.TILE.SHIP_WEST) ||
+                    (u4.current_tile == U4_Decompiled.TILE.SHIP_SOUTH) ||
+                    (u4.current_tile == U4_Decompiled.TILE.BALOON))
+                {
+                    u4.CommandBoard();
+                }
             }
             else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
             {
@@ -10131,6 +10119,25 @@ public class World : MonoBehaviour
                 {
                     CombatTerrains[i].gameObject.SetActive(false);
                 }
+
+                // automatic Klimb and Descend ladders
+                if ((u4.current_tile == U4_Decompiled.TILE.LADDER_UP) &&
+                    (lastCurrentTile != U4_Decompiled.TILE.LADDER_UP) &&
+                    (lastCurrentTile != U4_Decompiled.TILE.LADDER_DOWN))
+                {
+                    u4.CommandKlimb();
+                }
+
+                // automatic Klimb and Descend ladders
+                if ((u4.current_tile == U4_Decompiled.TILE.LADDER_DOWN) &&
+                    (lastCurrentTile != U4_Decompiled.TILE.LADDER_UP) &&
+                    (lastCurrentTile != U4_Decompiled.TILE.LADDER_DOWN))
+                {
+                    u4.CommandDecsend();
+                }
+
+                // update last tile so we don't get stuck in a loop
+                lastCurrentTile = u4.current_tile;
             }
             else if (u4.current_mode == U4_Decompiled.MODE.COMBAT)
             {
@@ -10286,8 +10293,6 @@ public class World : MonoBehaviour
                 dungeon.SetActive(false);
                 dungeonMonsters.SetActive(false);
 
-                int currentCombatTerrain = (int)Convert_Tile_to_Combat_Terrian(u4.current_tile);
-
                 for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
                 {
                     if (i == (int)U4_Decompiled.COMBAT_TERRAIN.SHRINE)
@@ -10319,11 +10324,21 @@ public class World : MonoBehaviour
                 dungeon.SetActive(false);
                 dungeonMonsters.SetActive(false);
 
-                int currentCombatTerrain = (int)Convert_Tile_to_Combat_Terrian(u4.current_tile);
+                int currentCombatTerrain;
+
+                // need to special case the combat when in the inn and in combat camp mode outside or in dungeon
+                if (u4.current_tile == U4_Decompiled.TILE.BRICK_FLOOR)
+                {
+                    currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.INN;
+                }
+                else
+                {
+                    currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.CAMP;
+                }
 
                 for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
                 {
-                    if (i == (int)U4_Decompiled.COMBAT_TERRAIN.CAMP)
+                    if (i == currentCombatTerrain)
                     {
                         CombatTerrains[i].gameObject.SetActive(true);
                         followWorld(CombatTerrains[i].gameObject);
@@ -10731,6 +10746,9 @@ public class World : MonoBehaviour
         }
     }
 
+    // The font is setup so if the high bit is set it will use the inverse highlighted text
+    // this function will set the high bit on all the characters in a string so when displayed with the font
+    // it will be highlighted
     public string highlight(string s)
     {
         string temp = "";
@@ -10765,8 +10783,6 @@ public class World : MonoBehaviour
     public GameObject trammelLight;
     public GameObject feluccaLight;
     public GameObject sunLight;
-
-
 
     public U4_Decompiled.MODE lastMode = (U4_Decompiled.MODE )(-1);
     public Transform rotateTransform;
@@ -11084,5 +11100,4 @@ public class World : MonoBehaviour
         statsNames.GetComponent<UnityEngine.UI.Text>().font = myFont;
 #endif
     }
-    public float factor;
 }
