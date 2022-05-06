@@ -22202,7 +22202,7 @@ MonoBehaviour:
   fontAtlas: {fileID: 0}
   fontTransparentAtlas: {fileID: 0}
   myFont: {fileID: 12800000, guid: 6a1639c5fcbb6ab42953975a5166d0e4, type: 2}
-  myTransparentFont: {fileID: 12800000, guid: b4c31613c4e00bd4191440aec064a745, type: 2}
+  myTransparentFont: {fileID: 12800000, guid: b8e211fb837b63846a3ffdd669460e95, type: 2}
   charsetEGAFilepath: /u4/CHARSET.EGA
   charsetCGAFilepath: /u4/CHARSET.CGA
 --- !u!4 &1753957574

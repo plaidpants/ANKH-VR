@@ -11261,9 +11261,12 @@ public class World : MonoBehaviour
         Talk.GetComponent<UnityEngine.UI.Text>().font = myFont;
         Action.GetComponent<UnityEngine.UI.Text>().font = myFont;
 
-        foreach (Button b in InputPanel.GetComponentsInChildren<Button>())
+        Button[] buttons = InputPanel.GetComponentsInChildren<Button>(true);
+
+        foreach (Button b in buttons)
         {
-            foreach(Text t in b.GetComponentsInChildren<Text>())
+            Text[] texts = b.GetComponentsInChildren<Text>(true);
+            foreach (Text t in texts)
             {
                 t.font = myTransparentFont;
             }
