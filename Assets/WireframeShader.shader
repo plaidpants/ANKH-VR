@@ -13,7 +13,6 @@ Shader "Custom/Geometry/Wireframe"
 		_WireframeVal("Wireframe width", Range(0., 0.5)) = 0.05
 		_FrontColor("Front color", color) = (1., 1., 1., 1.)
 		_BackColor("Back color", color) = (1., 1., 1., 1.)
-		[Toggle] _RemoveDiag("Remove diagonals?", Float) = 1.
 	}
 		SubShader
 		{
@@ -26,9 +25,6 @@ Shader "Custom/Geometry/Wireframe"
 				#pragma vertex vert
 				#pragma fragment frag
 				#pragma geometry geom
-
-			// Change "shader_feature" with "pragma_compile" if you want set this keyword from c# code
-			#pragma shader_feature __ _REMOVEDIAG_ON
 
 			#include "UnityCG.cginc"
 
@@ -51,7 +47,6 @@ Shader "Custom/Geometry/Wireframe"
 			void geom(triangle v2g IN[3], inout TriangleStream<g2f> triStream) {
 				float3 param = float3(0., 0., 0.);
 
-				#if _REMOVEDIAG_ON
 				float EdgeA = length(IN[0].worldPos - IN[1].worldPos);
 				float EdgeB = length(IN[1].worldPos - IN[2].worldPos);
 				float EdgeC = length(IN[2].worldPos - IN[0].worldPos);
@@ -62,7 +57,6 @@ Shader "Custom/Geometry/Wireframe"
 					param.x = 1.;
 				else
 					param.z = 1.;
-				#endif
 
 				g2f o;
 				o.pos = mul(UNITY_MATRIX_VP, IN[0].worldPos);
@@ -97,9 +91,6 @@ Shader "Custom/Geometry/Wireframe"
 			#pragma fragment frag
 			#pragma geometry geom
 
-				// Change "shader_feature" with "pragma_compile" if you want set this keyword from c# code
-				#pragma shader_feature __ _REMOVEDIAG_ON
-
 				#include "UnityCG.cginc"
 
 				struct v2g {
@@ -121,7 +112,6 @@ Shader "Custom/Geometry/Wireframe"
 				void geom(triangle v2g IN[3], inout TriangleStream<g2f> triStream) {
 					float3 param = float3(0., 0., 0.);
 
-					#if _REMOVEDIAG_ON
 					float EdgeA = length(IN[0].worldPos - IN[1].worldPos);
 					float EdgeB = length(IN[1].worldPos - IN[2].worldPos);
 					float EdgeC = length(IN[2].worldPos - IN[0].worldPos);
@@ -132,7 +122,6 @@ Shader "Custom/Geometry/Wireframe"
 						param.x = 1.;
 					else
 						param.z = 1.;
-					#endif
 
 					g2f o;
 					o.pos = mul(UNITY_MATRIX_VP, IN[0].worldPos);

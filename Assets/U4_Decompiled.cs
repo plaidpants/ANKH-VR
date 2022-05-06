@@ -20,6 +20,7 @@ public class U4_Decompiled : MonoBehaviour
     public bool started_playing_sound_effect = false;
     [SerializeField]
     public List<string> wordList = new List<string>();
+    public char lastKeyboardHit;
 
     public enum TALK_INDEX
     {
@@ -1153,6 +1154,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'A');
 #endif
+        lastKeyboardHit = 'A';
     }
 
     public void CommandCharacter1()
@@ -1162,6 +1164,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'1');
 #endif
+        lastKeyboardHit = '1';
     }
 
     public void CommandCharacter2()
@@ -1171,6 +1174,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'2');
 #endif
+        lastKeyboardHit = '2';
     }
     public void CommandCharacter3()
     {
@@ -1179,6 +1183,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'3');
 #endif
+        lastKeyboardHit = '3';
     }
     public void CommandCharacter4()
     {
@@ -1187,6 +1192,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'4');
 #endif
+        lastKeyboardHit = '4';
     }
     public void CommandCharacter5()
     {
@@ -1195,6 +1201,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'5');
 #endif
+        lastKeyboardHit = '5';
     }
     public void CommandCharacter6()
     {
@@ -1203,6 +1210,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'6');
 #endif
+        lastKeyboardHit = '6';
     }
     public void CommandCharacter7()
     {
@@ -1211,6 +1219,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'7');
 #endif
+        lastKeyboardHit = '7';
     }
     public void CommandCharacter8()
     {
@@ -1219,6 +1228,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'8');
 #endif
+        lastKeyboardHit = '8';
     }
 
     public void CommandBoard()
@@ -1228,6 +1238,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'B');
 #endif
+        lastKeyboardHit = 'B';
     }
 
     public void CommandCast()
@@ -1237,6 +1248,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'C');
 #endif
+        lastKeyboardHit = 'C';
     }
 
     public void CommandDecsend()
@@ -1246,6 +1258,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'D');
 #endif
+        lastKeyboardHit = 'D';
     }
     public void CommandEnter()
     {
@@ -1254,6 +1267,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'E');
 #endif
+        lastKeyboardHit = 'E';
     }
 
     public void CommandFire()
@@ -1263,6 +1277,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'F');
 #endif
+        lastKeyboardHit = 'F';
     }
     public void CommandGet()
     {
@@ -1271,6 +1286,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'G');
 #endif
+        lastKeyboardHit = 'G';
     }
     public void CommandHoleUp()
     {
@@ -1279,6 +1295,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'H');
 #endif
+        lastKeyboardHit = 'H';
     }
     public void CommandIgnight()
     {
@@ -1287,6 +1304,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'I');
 #endif
+        lastKeyboardHit = 'I';
     }
     public void CommandJimmy()
     {
@@ -1295,6 +1313,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'J');
 #endif
+        lastKeyboardHit = 'J';
     }
 
     public void CommandKlimb()
@@ -1304,6 +1323,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'K');
 #endif
+        lastKeyboardHit = 'K';
     }
 
     public void CommandLocate()
@@ -1313,6 +1333,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'L');
 #endif
+        lastKeyboardHit = 'L';
     }
 
     public void CommandMix()
@@ -1322,6 +1343,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'M');
 #endif
+        lastKeyboardHit = 'M';
     }
 
     public void CommandNewOrder()
@@ -1331,6 +1353,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'N');
 #endif
+        lastKeyboardHit = 'N';
     }
     public void CommandOpen()
     {
@@ -1339,6 +1362,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'O');
 #endif
+        lastKeyboardHit = 'O';
     }
     public void CommandPeer()
     {
@@ -1347,6 +1371,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'P');
 #endif
+        lastKeyboardHit = 'P';
     }
 
     public void CommandPass()
@@ -1356,6 +1381,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, ' ');
 #endif
+        lastKeyboardHit = ' ';
     }
 
     public void CommandQuit()
@@ -1365,6 +1391,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Q');
 #endif
+        lastKeyboardHit = 'Q';
     }
     public void CommandReady()
     {
@@ -1373,6 +1400,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'R');
 #endif
+        lastKeyboardHit = 'R';
     }
     public void CommandSearch()
     {
@@ -1381,6 +1409,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'S');
 #endif
+        lastKeyboardHit = 'S';
     }
     public void CommandTalk()
     {
@@ -1389,6 +1418,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'T');
 #endif
+        lastKeyboardHit = 'T';
     }
 
     public void CommandUse()
@@ -1398,6 +1428,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'U');
 #endif
+        lastKeyboardHit = 'U';
     }
 
     public void CommandVolume()
@@ -1407,6 +1438,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'V');
 #endif
+        lastKeyboardHit = 'V';
     }
 
     public void CommandWear()
@@ -1416,6 +1448,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'W');
 #endif
+        lastKeyboardHit = 'W';
     }
 
     public void CommandXit()
@@ -1425,6 +1458,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'X');
 #endif
+        lastKeyboardHit = 'X';
     }
 
     public void CommandYell()
@@ -1434,6 +1468,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Y');
 #endif
+        lastKeyboardHit = 'Y';
     }
 
     public void CommandZStas()
@@ -1443,6 +1478,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Z');
 #endif
+        lastKeyboardHit = 'Z';
     }
 
     IEnumerator SayWordCoroutine(string word)
@@ -1456,6 +1492,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)upper[i]);
 #endif
+            lastKeyboardHit = upper[i];
             //yield on a new YieldInstruction that waits for 5 seconds.
             yield return new WaitForSeconds(0.05f);
         }
@@ -1465,6 +1502,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
 #endif
+        lastKeyboardHit = (char)KEYS.VK_RETURN;
     }
 
     public void CommandSayName()
@@ -1491,6 +1529,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, character);
 #endif
+        lastKeyboardHit = character;
     }
 
     public void CommandSayJob()
@@ -1535,6 +1574,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
 #endif
+        lastKeyboardHit = (char)KEYS.VK_RETURN;
     }
 
     public void CommandSayLook()
@@ -1613,6 +1653,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Y');
 #endif
+        lastKeyboardHit = 'Y';
     }
     public void CommandSayFood()
     {
@@ -1621,6 +1662,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'F');
 #endif
+        lastKeyboardHit = 'F';
     }
 
     public void CommandSayAle()
@@ -1630,6 +1672,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'A');
 #endif
+        lastKeyboardHit = 'A';
     }
     public void CommandSayBuy()
     {
@@ -1638,6 +1681,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'B');
 #endif
+        lastKeyboardHit = 'B';
     }
 
     public void CommandSaySell()
@@ -1647,6 +1691,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'S');
 #endif
+        lastKeyboardHit = 'S';
     }
 
     public void CommandSayCuring()
@@ -1656,6 +1701,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'A');
 #endif
+        lastKeyboardHit = 'A';
     }
 
     public void CommandSayHealing()
@@ -1665,6 +1711,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'B');
 #endif
+        lastKeyboardHit = 'B';
     }
     public void CommandSayResurection()
     {
@@ -1673,6 +1720,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'C');
 #endif
+        lastKeyboardHit = 'C';
     }
     public void CommandSayN()
     {
@@ -1681,6 +1729,7 @@ public class U4_Decompiled : MonoBehaviour
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'N');
 #endif
+        lastKeyboardHit = 'N';
     }
 
     void OnApplicationQuit()
@@ -1710,6 +1759,8 @@ catch
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_ESCAPE);
 #endif
+
+        lastKeyboardHit = (char)KEYS.VK_ESCAPE;
 
         // wait for the game engine thread to complete/return
         while (trd.IsAlive == true)
@@ -1758,14 +1809,15 @@ catch
     [SerializeField]
     public activeCharacter currentActiveCharacter;
 
-    public float hit_time_period = 0.25f;
+    public float hit_time_period = 0.01f;
+    public float last_hit_expire_time = 0.0f;
 
     public struct hit
     {
         public TILE tile;
         public byte x;
         public byte y;
-        public float time;
+        public float hit_expire_time;
     }
 
     public List<hit> currentHits = new List<hit>() { };
@@ -2060,7 +2112,9 @@ sfx_magic2:
     }
 
     // used to detect game mode changes and change the music
-    MODE lastMode = (MODE)(-1);
+    MODE lastModeForMusic = (MODE)(-1);
+    // checked just after getting the mode from the game engine
+    public MODE lastMode = (MODE)(-1);
     // used to detect when we should play the lord british music
     TALK_INDEX lastNPCTalkIndex = (TALK_INDEX)(-1);
 
@@ -2150,7 +2204,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'9');
 #endif
-
+            lastKeyboardHit = '9';
         }
         else if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.S)) // need to check this first as it overrides the normal S keypress
         {
@@ -2160,6 +2214,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'9');
 #endif
+            lastKeyboardHit = '9';
         }
         else if (Input.GetKeyDown(KeyCode.End))
         {
@@ -2168,6 +2223,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_END);
 #endif
+            lastKeyboardHit = (char)KEYS.VK_END;
         }
         else if (Input.GetKeyDown(KeyCode.Home))
         {
@@ -2176,6 +2232,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_HOME);
 #endif
+            lastKeyboardHit = (char)KEYS.VK_HOME;
         }
         //else if (Input.GetKeyDown(KeyCode.PageUp))
         //{
@@ -2192,6 +2249,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
 #endif
+            lastKeyboardHit = (char)KEYS.VK_RETURN;
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow) || (Input.GetAxis("Vertical 2") > 0.99f && (resetJoystick2 < Time.time)) || Input.GetAxis("Vertical 1") > 0.99f && (resetJoystick1 < Time.time))
         {
@@ -2208,6 +2266,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
                 else if (Party._dir == DIRECTION.EAST)
                 {
@@ -2216,6 +2275,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
                 else if (Party._dir == DIRECTION.SOUTH)
                 {
@@ -2224,6 +2284,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_UP;
                 }
                 else if (Party._dir == DIRECTION.WEST)
                 {
@@ -2232,6 +2293,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
             }
             else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
@@ -2243,6 +2305,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
                 else if (surface_party_direction == DIRECTION.EAST)
                 {
@@ -2251,6 +2314,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
                 else if (surface_party_direction == DIRECTION.SOUTH)
                 {
@@ -2259,6 +2323,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_UP;
                 }
                 else if (surface_party_direction == DIRECTION.WEST)
                 {
@@ -2267,6 +2332,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
             }
             else
@@ -2276,6 +2342,7 @@ sfx_magic2:
 #else
                 Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
 #endif
+                lastKeyboardHit = (char)KEYS.VK_DOWN;
             }
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow) || (Input.GetAxis("Vertical 2") < -0.99f && (resetJoystick2 < Time.time)) || (Input.GetAxis("Vertical 1") < -0.99f && (resetJoystick1 < Time.time)))
@@ -2292,6 +2359,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_UP;
                 }
                 else if (Party._dir == DIRECTION.EAST)
                 {
@@ -2300,6 +2368,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
                 else if (Party._dir == DIRECTION.SOUTH)
                 {
@@ -2308,6 +2377,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
                 else if (Party._dir == DIRECTION.WEST)
                 {
@@ -2316,6 +2386,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
             }
             else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
@@ -2327,6 +2398,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_UP;
                 }
                 else if (surface_party_direction == DIRECTION.EAST)
                 {
@@ -2335,6 +2407,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
                 else if (surface_party_direction == DIRECTION.SOUTH)
                 {
@@ -2343,7 +2416,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
 #endif
-
+                    lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
                 else if (surface_party_direction == DIRECTION.WEST)
                 {
@@ -2352,15 +2425,17 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
             }
             else
             {
 #if USE_UNITY_DLL_FUNCTION
-                //main_keyboardHit((char)KEYS.VK_UP);
+                main_keyboardHit((char)KEYS.VK_UP);
 #else
                 Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
 #endif
+                lastKeyboardHit = (char)KEYS.VK_UP;
             }
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetAxis("Horizontal 2") < -0.99f && (resetJoystick2 < Time.time))
@@ -2376,6 +2451,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
                 else if (Party._dir == DIRECTION.EAST)
                 {
@@ -2384,6 +2460,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_UP;
                 }
                 else if (Party._dir == DIRECTION.SOUTH)
                 {
@@ -2392,6 +2469,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
                 else if (Party._dir == DIRECTION.WEST)
                 {
@@ -2400,6 +2478,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
             }
             else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
@@ -2411,6 +2490,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
                 else if (surface_party_direction == DIRECTION.EAST)
                 {
@@ -2419,6 +2499,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_UP;
                 }
                 else if (surface_party_direction == DIRECTION.SOUTH)
                 {
@@ -2427,6 +2508,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
                 else if (surface_party_direction == DIRECTION.WEST)
                 {
@@ -2435,6 +2517,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
             }
             else
@@ -2444,6 +2527,7 @@ sfx_magic2:
 #else
                 Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
 #endif
+                lastKeyboardHit = (char)KEYS.VK_LEFT;
             }
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetAxis("Horizontal 2") > 0.99f && (resetJoystick2 < Time.time))
@@ -2459,6 +2543,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
                 else if (Party._dir == DIRECTION.EAST)
                 {
@@ -2467,6 +2552,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
                 else if (Party._dir == DIRECTION.SOUTH)
                 {
@@ -2475,6 +2561,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
                 else if (Party._dir == DIRECTION.WEST)
                 {
@@ -2483,6 +2570,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_UP;
                 }
             }
             else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
@@ -2494,6 +2582,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
                 else if (surface_party_direction == DIRECTION.EAST)
                 {
@@ -2502,6 +2591,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
                 else if (surface_party_direction == DIRECTION.SOUTH)
                 {
@@ -2510,6 +2600,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
                 else if (surface_party_direction == DIRECTION.WEST)
                 {
@@ -2518,6 +2609,7 @@ sfx_magic2:
 #else
                     Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
 #endif
+                    lastKeyboardHit = (char)KEYS.VK_UP;
                 }
             }
             else
@@ -2527,6 +2619,7 @@ sfx_magic2:
 #else
                 Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
 #endif
+                lastKeyboardHit = (char)KEYS.VK_RIGHT;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
@@ -2536,6 +2629,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_ESCAPE);
 #endif
+            lastKeyboardHit = (char)KEYS.VK_ESCAPE;
             Application.Quit();
         }
         else if (Input.GetKeyDown(KeyCode.Return))
@@ -2545,6 +2639,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
 #endif
+            lastKeyboardHit = (char)KEYS.VK_RETURN;
         }
         else if (Input.GetKeyDown(KeyCode.Backspace))
         {
@@ -2554,6 +2649,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_BACK);
 #endif
+            lastKeyboardHit = (char)KEYS.VK_BACK;
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -2562,6 +2658,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_SPACE);
 #endif
+            lastKeyboardHit = (char)KEYS.VK_SPACE;
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
@@ -2570,6 +2667,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'A');
 #endif
+            lastKeyboardHit = 'A';
         }
         else if (Input.GetKeyDown(KeyCode.B))
         {
@@ -2578,6 +2676,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'B');
 #endif
+            lastKeyboardHit = 'B';
         }
         else if (Input.GetKeyDown(KeyCode.C))
         {
@@ -2586,6 +2685,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'C');
 #endif
+            lastKeyboardHit = 'C';
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
@@ -2594,6 +2694,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'D');
 #endif
+            lastKeyboardHit = 'D';
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
@@ -2602,6 +2703,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'E');
 #endif
+            lastKeyboardHit = 'E';
         }
         else if (Input.GetKeyDown(KeyCode.F))
         {
@@ -2610,6 +2712,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'F');
 #endif
+            lastKeyboardHit = 'F';
         }
         else if (Input.GetKeyDown(KeyCode.G))
         {
@@ -2618,6 +2721,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'G');
 #endif
+            lastKeyboardHit = 'G';
         }
         else if (Input.GetKeyDown(KeyCode.H))
         {
@@ -2626,6 +2730,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'H');
 #endif
+            lastKeyboardHit = 'H';
         }
         else if (Input.GetKeyDown(KeyCode.I))
         {
@@ -2634,6 +2739,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'I');
 #endif
+            lastKeyboardHit = 'I';
         }
         else if (Input.GetKeyDown(KeyCode.J))
         {
@@ -2642,6 +2748,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'J');
 #endif
+            lastKeyboardHit = 'J';
         }
         else if (Input.GetKeyDown(KeyCode.K))
         {
@@ -2650,6 +2757,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'K');
 #endif
+            lastKeyboardHit = 'K';
         }
         else if (Input.GetKeyDown(KeyCode.L))
         {
@@ -2658,6 +2766,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'L');
 #endif
+            lastKeyboardHit = 'L';
         }
         else if (Input.GetKeyDown(KeyCode.M))
         {
@@ -2666,6 +2775,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'M');
 #endif
+            lastKeyboardHit = 'M';
         }
         else if (Input.GetKeyDown(KeyCode.N))
         {
@@ -2674,6 +2784,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'N');
 #endif
+            lastKeyboardHit = 'N';
         }
         else if (Input.GetKeyDown(KeyCode.O))
         {
@@ -2682,6 +2793,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'O');
 #endif
+            lastKeyboardHit = 'O';
         }
         else if (Input.GetKeyDown(KeyCode.P))
         {
@@ -2690,6 +2802,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'P');
 #endif
+            lastKeyboardHit = 'P';
         }
         else if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -2698,6 +2811,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Q');
 #endif
+            lastKeyboardHit = 'Q';
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
@@ -2706,6 +2820,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'R');
 #endif
+            lastKeyboardHit = 'R';
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
@@ -2714,6 +2829,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'S');
 #endif
+            lastKeyboardHit = 'S';
         }
         else if (Input.GetKeyDown(KeyCode.T))
         {
@@ -2722,6 +2838,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'T');
 #endif
+            lastKeyboardHit = 'T';
         }
         else if (Input.GetKeyDown(KeyCode.U))
         {
@@ -2730,6 +2847,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'U');
 #endif
+            lastKeyboardHit = 'U';
         }
         else if (Input.GetKeyDown(KeyCode.V))
         {
@@ -2738,6 +2856,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'V');
 #endif
+            lastKeyboardHit = 'V';
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
@@ -2746,6 +2865,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'W');
 #endif
+            lastKeyboardHit = 'W';
         }
         else if (Input.GetKeyDown(KeyCode.X))
         {
@@ -2754,6 +2874,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'X');
 #endif
+            lastKeyboardHit = 'X';
         }
         else if (Input.GetKeyDown(KeyCode.Y))
         {
@@ -2762,6 +2883,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Y');
 #endif
+            lastKeyboardHit = 'Y';
         }
         else if (Input.GetKeyDown(KeyCode.Z))
         {
@@ -2770,6 +2892,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Z');
 #endif
+            lastKeyboardHit = 'Z';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0))
         {
@@ -2778,6 +2901,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'0');
 #endif
+            lastKeyboardHit = '0';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
         {
@@ -2786,6 +2910,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'1');
 #endif
+            lastKeyboardHit = '1';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
         {
@@ -2794,6 +2919,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'2');
 #endif
+            lastKeyboardHit = '2';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
         {
@@ -2802,6 +2928,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'3');
 #endif
+            lastKeyboardHit = '3';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
         {
@@ -2810,6 +2937,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'4');
 #endif
+            lastKeyboardHit = '4';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
         {
@@ -2818,6 +2946,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'5');
 #endif
+            lastKeyboardHit = '5';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
         {
@@ -2826,6 +2955,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'6');
 #endif
+            lastKeyboardHit = '6';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
         {
@@ -2834,6 +2964,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'7');
 #endif
+            lastKeyboardHit = '7';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8) || Input.GetKeyDown(KeyCode.Keypad8))
         {
@@ -2842,6 +2973,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'8');
 #endif
+            lastKeyboardHit = '8';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9))
         {
@@ -2850,6 +2982,7 @@ sfx_magic2:
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'9');
 #endif
+            lastKeyboardHit = '9';
         }
 
         // check if we just finished playing a sound effect
@@ -3037,10 +3170,10 @@ sfx_magic2:
                     }
 
                     // check if the game engine game mode has changed and the game engine has sound enabled
-                    if (lastMode != current_mode)
+                    if (lastModeForMusic != current_mode)
                     {
                         // update the last game mode to the current game mode
-                        lastMode = current_mode;
+                        lastModeForMusic = current_mode;
 
                         // TODO add better cross fade between musics?
                         // TODO move this out of the game engine interface
@@ -3315,9 +3448,26 @@ sfx_magic2:
 
                 if (addHit.tile != 0)
                 {
-                    addHit.x = buffer[2 + i * 3];
-                    addHit.y = buffer[3 + i * 3];
-                    addHit.time = Time.time;
+                    if (current_mode == MODE.OUTDOORS)
+                    {
+                        addHit.x = (byte)(buffer[2 + i * 3] + Party._x - 5);
+                        addHit.y = (byte)(buffer[3 + i * 3] + Party._y - 5);
+                    }
+                    else
+                    {
+                        addHit.x = (byte)(buffer[2 + i * 3]);
+                        addHit.y = (byte)(buffer[3 + i * 3]);
+                    }
+                    addHit.hit_expire_time = Time.time + hit_time_period + hit_time_period;
+                    
+                    // make sure this expiration time is greater than the last one by at least the hit time period
+                    if (addHit.hit_expire_time < last_hit_expire_time + hit_time_period)
+                    {
+                        addHit.hit_expire_time = last_hit_expire_time + hit_time_period;
+                    }
+
+                    // remember the last hit expiration time
+                    last_hit_expire_time = addHit.hit_expire_time;
 
                     currentHits.Add(addHit);
                 }
@@ -3330,7 +3480,7 @@ sfx_magic2:
                 hit checkHit = currentHits[i];
 
                 // we will leave this hit up until we get another or the timer expires
-                if (checkHit.time + hit_time_period < Time.time)
+                if (checkHit.hit_expire_time < Time.time)
                 {
                     currentHits.Remove(checkHit);
                 }
@@ -3350,6 +3500,10 @@ sfx_magic2:
             current_mode = Native.Invoke<U4_Decompiled.MODE, main_CurMode>(nativeLibraryPtr);
 #endif
 
+            if (current_mode != lastMode)
+            {
+                lastMode = current_mode;
+            }
             // extract the map data depending on the game mode
             // in the game engine this memory is overlaped with the dungeon map below
             // but we can keep them separate here as we have pleanty of memory

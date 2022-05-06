@@ -7941,9 +7941,10 @@ MonoBehaviour:
   npcTalkIndex: 127
   started_playing_sound_effect: 0
   wordList: []
+  lastKeyboardHit: 0
   inputMode: 0
   current_tile: 0
-  timerPeriod: 0.05
+  timerPeriod: 0.02
   current_mode: 0
   moongate_tile: 0
   moongate_x: 0
@@ -8413,7 +8414,8 @@ MonoBehaviour:
     _chtile: 0
   keyword1: 
   keyword2: 
-  hit_time_period: 0.25
+  hit_time_period: 0.04
+  last_hit_expire_time: 0
   D_96F8: 0
   D_946C: 0
   WindDir: 0
@@ -8433,6 +8435,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a7ab2bbeae8a96a4bbbb220c47adc41a, type: 3}
   - {fileID: 8300000, guid: a7ab2bbeae8a96a4bbbb220c47adc41a, type: 3}
   adjustSound: 94
+  lastMode: -1
   surface_party_direction: 1
   resetJoystick1: 0
   resetJoystick2: 0
@@ -22180,7 +22183,7 @@ MonoBehaviour:
   combinedExpandedTexture: {fileID: 0}
   combinedExpandedMaterial: {fileID: 0}
   textureExpandedAtlasPowerOf2: 0
-  timerPeriod: 0.5
+  timerPeriod: 0.02
   flagTimerPeriod: 0.1
   statsNames: {fileID: 5424587088212117823}
   statsHP: {fileID: 6973424533095705088}
@@ -22193,9 +22196,13 @@ MonoBehaviour:
   feluccaLight: {fileID: 1522235106}
   sunLight: {fileID: 2006084671}
   lastMode: -1
+  wasJustInside: 0
+  readyToAutomaticallyEnter: 1
   rotateTransform: {fileID: 572009426}
   fontAtlas: {fileID: 0}
+  fontTransparentAtlas: {fileID: 0}
   myFont: {fileID: 12800000, guid: 6a1639c5fcbb6ab42953975a5166d0e4, type: 2}
+  myTransparentFont: {fileID: 12800000, guid: b4c31613c4e00bd4191440aec064a745, type: 2}
   charsetEGAFilepath: /u4/CHARSET.EGA
   charsetCGAFilepath: /u4/CHARSET.CGA
 --- !u!4 &1753957574

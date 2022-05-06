@@ -6305,6 +6305,7 @@ public class World : MonoBehaviour
                     (tileIndex == U4_Decompiled.TILE.LADDER_UP) ||
                     (tileIndex == U4_Decompiled.TILE.LADDER_DOWN) ||
                     (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
+                    (tileIndex == U4_Decompiled.TILE.PARTY) || // the shrine map uses a fixed party tile instead of putting the party characters into the map
                     (tileIndex == U4_Decompiled.TILE.CASTLE))
                 {
                     // create a billboard gameobject
@@ -8856,7 +8857,6 @@ public class World : MonoBehaviour
             renderer.material.shader = Shader.Find("Custom/Geometry/Wireframe");
             //Shader.Find("Custom/Geometry/Wireframe").EnableKeyword("_REMOVEDIAG_ON")
             renderer.material.SetFloat("_WireframeVal", 0.03f);
-            renderer.material.SetFloat("_RemoveDiag", 1);
             renderer.material.SetColor("_FrontColor", Color.yellow);
             renderer.material.SetColor("_BackColor", Color.yellow);
             renderer.material.SetColor("_BackColor", Color.yellow);
@@ -9125,7 +9125,7 @@ public class World : MonoBehaviour
         // get the font
         LoadCharSetEGA();
         //LoadCharSetCGA();
-        ImportFontFromTexture(fontAtlas);
+        ImportFontFromTexture(fontAtlas, fontTransparentAtlas);
 
         // load the entire world map
         LoadWorldMap();
@@ -9491,8 +9491,6 @@ public class World : MonoBehaviour
     int lastChecksum = -1;
     int currentChecksum = 0;
     GameObject hiddenWorldMapGameObject;
-
-    bool justChangedModes = true;
 
     // Update is called once per frame
     void Update()
@@ -10077,6 +10075,20 @@ public class World : MonoBehaviour
                 TalkDirection.SetActive(false);
             }
 
+            // did we just change modes
+            if (lastMode != u4.current_mode)
+            {
+                // did we just come out of somewhere to the outdoors
+                if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
+                {
+                    // flag that we were just inside
+                    wasJustInside = true;
+                }
+
+                // update last mode
+                lastMode = u4.current_mode;
+            }
+
             if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
             {
                 AddNPCs(u4._npc);
@@ -10100,30 +10112,56 @@ public class World : MonoBehaviour
                     CombatTerrains[i].gameObject.SetActive(false);
                 }
 
-                // automatically enter things when you are on an enterable tile unless just leaving or flying in the balloon
-                if ((justChangedModes == false) && (u4.Party.f_1dc == 0) &&  ((u4.current_tile == U4_Decompiled.TILE.CASTLE_ENTRANCE) ||
-                        (u4.current_tile == U4_Decompiled.TILE.CASTLE) ||
-                        (u4.current_tile == U4_Decompiled.TILE.TOWN) ||
-                        (u4.current_tile == U4_Decompiled.TILE.VILLAGE) ||
-                        (u4.current_tile == U4_Decompiled.TILE.DUNGEON) ||
-                        (u4.current_tile == U4_Decompiled.TILE.RUINS) ||
-                        (u4.current_tile == U4_Decompiled.TILE.SHRINE)))
+                // automatically enter things when you are on an enterable tile unless just left somewhere or you are flying in the balloon
+                if ((readyToAutomaticallyEnter == true) && (u4.Party.f_1dc == 0) &&
+                    ((u4.current_tile == U4_Decompiled.TILE.CASTLE_ENTRANCE) ||
+                    (u4.current_tile == U4_Decompiled.TILE.CASTLE) ||
+                    (u4.current_tile == U4_Decompiled.TILE.TOWN) ||
+                    (u4.current_tile == U4_Decompiled.TILE.VILLAGE) ||
+                    (u4.current_tile == U4_Decompiled.TILE.DUNGEON) ||
+                    (u4.current_tile == U4_Decompiled.TILE.RUINS) ||
+                    (u4.current_tile == U4_Decompiled.TILE.SHRINE)))
                 {
                     u4.CommandEnter();
-                    justChangedModes = true;
+                    readyToAutomaticallyEnter = false;
+                }
+
+                // wait until we move off of an entrance tile after leaving somewhere
+                if ((wasJustInside == true) &&
+                    (u4.current_tile != U4_Decompiled.TILE.CASTLE_ENTRANCE) &&
+                    (u4.current_tile != U4_Decompiled.TILE.CASTLE) &&
+                    (u4.current_tile != U4_Decompiled.TILE.TOWN) &&
+                    (u4.current_tile != U4_Decompiled.TILE.VILLAGE) &&
+                    (u4.current_tile != U4_Decompiled.TILE.DUNGEON) &&
+                    (u4.current_tile != U4_Decompiled.TILE.RUINS) &&
+                    (u4.current_tile!= U4_Decompiled.TILE.SHRINE))
+                {
+                    readyToAutomaticallyEnter = true;
+                    wasJustInside = false;
                 }
 
                 // automatically board horse, ship and balloon
-                if ((u4.current_tile == U4_Decompiled.TILE.HORSE_EAST) ||
+                if (((u4.current_tile == U4_Decompiled.TILE.HORSE_EAST) ||
                     (u4.current_tile == U4_Decompiled.TILE.HORSE_EAST) ||
                     (u4.current_tile == U4_Decompiled.TILE.SHIP_EAST) ||
                     (u4.current_tile == U4_Decompiled.TILE.SHIP_NORTH) ||
                     (u4.current_tile == U4_Decompiled.TILE.SHIP_WEST) ||
                     (u4.current_tile == U4_Decompiled.TILE.SHIP_SOUTH) ||
-                    (u4.current_tile == U4_Decompiled.TILE.BALOON))
+                    (u4.current_tile == U4_Decompiled.TILE.BALOON)) && 
+                    (lastCurrentTile != U4_Decompiled.TILE.HORSE_EAST) &&
+                    (lastCurrentTile != U4_Decompiled.TILE.HORSE_EAST) &&
+                    (lastCurrentTile != U4_Decompiled.TILE.SHIP_EAST) &&
+                    (lastCurrentTile != U4_Decompiled.TILE.SHIP_NORTH) &&
+                    (lastCurrentTile != U4_Decompiled.TILE.SHIP_WEST) &&
+                    (lastCurrentTile != U4_Decompiled.TILE.SHIP_SOUTH) &&
+                    (lastCurrentTile != U4_Decompiled.TILE.BALOON)  && 
+                    (u4.lastKeyboardHit != 'X'))
                 {
                     u4.CommandBoard();
-                }
+                }                
+                
+                // update last tile so we don't get stuck in a loop
+                lastCurrentTile = u4.current_tile;
             }
             else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
             {
@@ -10351,6 +10389,7 @@ public class World : MonoBehaviour
                 moongate.SetActive(false);
                 dungeon.SetActive(false);
                 dungeonMonsters.SetActive(false);
+                followWorld(activeCharacter);
 
                 int currentCombatTerrain;
 
@@ -10414,8 +10453,6 @@ public class World : MonoBehaviour
             ((u4.open_door_timer > 0) != last_door_timer)) // door has opened or closed
         {
             Vector3 location = Vector3.zero;
-
-            justChangedModes = false;
 
             // update the last raycast position
             lastRaycastPlayer_posx = u4.Party._x;
@@ -10765,12 +10802,6 @@ public class World : MonoBehaviour
                     statsNames.GetComponent<UnityEngine.UI.Text>().text += (i + 1) + "-" + u4.Party.chara[i].name + "\n";
                 }
             }
-
-            if (currentMode != lastMode)
-            {
-                justChangedModes = true;
-                lastMode = currentMode;
-            }
         }
     }
 
@@ -10813,12 +10844,17 @@ public class World : MonoBehaviour
     public GameObject sunLight;
 
     public U4_Decompiled.MODE lastMode = (U4_Decompiled.MODE )(-1);
+    public bool wasJustInside = false;
+    public bool readyToAutomaticallyEnter = true;
+
     public Transform rotateTransform;
     //public GameObject convertMe;
 
 
     public Texture2D fontAtlas;
+    public Texture2D fontTransparentAtlas;
     public Font myFont;
+    public Font myTransparentFont;
     public string charsetEGAFilepath = "/u4/CHARSET.EGA";
     public string charsetCGAFilepath = "/u4/CHARSET.CGA";
 
@@ -10841,13 +10877,15 @@ public class World : MonoBehaviour
             return;
         }
 
-        // create a texture for this tile
+        // create a texture for this font
         fontAtlas = new Texture2D(8 * 16, 8 * 8 * 2, TextureFormat.RGBA32, false);
+        fontTransparentAtlas = new Texture2D(8 * 16, 8 * 8, TextureFormat.RGBA32, false);
 
         // we want pixles not fuzzy images
         fontAtlas.filterMode = FilterMode.Point;
+        fontTransparentAtlas.filterMode = FilterMode.Point;
 
-        // use and index to walk through the file
+        // use an index to walk through the file
         int fileIndex = 0;
 
         // there are 128 characters in the file,
@@ -10893,7 +10931,9 @@ public class World : MonoBehaviour
         }
 
         // need inverse characters also for highlighting
-        // so we will add those to the end
+        // so we will add those to the end and use them
+        // dynamically by setting the high bit in the characters
+        // in the strings we display
 
         // reset the file index to generate inverse chars
         fileIndex = 0;
@@ -10939,6 +10979,56 @@ public class World : MonoBehaviour
 
         // Actually apply all previous SetPixel and SetPixels changes from above
         fontAtlas.Apply();
+
+        // need another set of characters for buttons that are transparent where black
+        // so button highlighting works correctly.
+        // We will add these to a new texture that we will use in a different font
+        // since these will not be used dynamically like the inverse characters above.
+
+        // reset the file index to generate transparent chars
+        fileIndex = 0;
+
+        for (int character = 0; character < 128; character++)
+        {
+            // manually go through the data and set the (x,y) pixels to the character based on the input file using the EGA color palette
+            for (int height = 0; height < 8; height++)
+            {
+                for (int width = 0; width < 8; /* width incremented below because we need to do nibbles */ )
+                {
+                    // set the color of the first half of the nibble
+                    int colorIndex = fileData[fileIndex] >> 4;
+                    Color color = EGAColorPalette[colorIndex];
+
+                    // use black as alpha channel
+                    if (colorIndex == 0)
+                    {
+                        fontTransparentAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                    }
+                    else
+                    {
+                        fontTransparentAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
+                    }
+
+                    // set the color of the second half of the nibble
+                    colorIndex = fileData[fileIndex] & 0xf;
+                    color = EGAColorPalette[colorIndex];
+                    if (colorIndex == 0)
+                    {
+                        fontTransparentAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                    }
+                    else
+                    {
+                        fontTransparentAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
+                    }
+
+                    // go to the next byte in the file
+                    fileIndex++;
+                }
+            }
+        }
+
+        // Actually apply all previous SetPixel and SetPixels changes from above
+        fontTransparentAtlas.Apply();
     }
 
 #if DISABLED
@@ -11027,7 +11117,7 @@ public class World : MonoBehaviour
     }
 #endif
 
-    public void ImportFontFromTexture(Texture2D texture)
+    public void ImportFontFromTexture(Texture2D texture, Texture2D transparentTexture)
     {
         float texW = texture.width;
         float texH = texture.height;
@@ -11072,6 +11162,45 @@ public class World : MonoBehaviour
             charInfos[i] = charInfo;
         }
 
+        CharacterInfo[] charInfosTransparent = new CharacterInfo[256];
+
+        for (int i = 0; i < charInfos.Length; i++)
+        {
+            CharacterInfo charInfo = new CharacterInfo();
+
+            charInfo.index = i;
+            charInfo.advance = 8;
+
+            r = new Rect();
+            r.x = (i % 16) * (8 / texW);
+            r.y = (i / 16) * (8 / texH);
+            r.width = 8 / texW;
+            r.height = 8 / texH;
+            r.y = 1f - r.y - r.height;
+            charInfo.uvBottomLeft = new Vector2(r.xMin, r.yMin);
+            charInfo.uvBottomRight = new Vector2(r.xMax, r.yMin);
+            charInfo.uvTopLeft = new Vector2(r.xMin, r.yMax);
+            charInfo.uvTopRight = new Vector2(r.xMax, r.yMax);
+
+            r = new Rect();
+            r.x = 0;
+            r.y = 0;
+            r.width = 8;
+            r.height = 8;
+            r.y = -r.y;
+            r.height = -r.height;
+            charInfo.minX = (int)r.xMin;
+            charInfo.maxX = (int)r.xMax;
+            charInfo.minY = (int)r.yMax;
+            charInfo.maxY = (int)r.yMin;
+            //charInfo.size = 1000;
+            charInfo.glyphHeight = 8;
+            charInfo.glyphWidth = 8;
+            //charInfo.maxX = 8;
+            //charInfo.maxY = 8;
+            charInfosTransparent[i] = charInfo;
+        }
+
 #if CREATE_DUMMY_FONT
         // WARNING: painful hack below
         // Font creation can only be done in the Unity Editor because SerializedObject
@@ -11110,11 +11239,14 @@ public class World : MonoBehaviour
 #else
         // Create material
         Material material = new Material(Shader.Find("UI/Default"));
-        material.mainTexture = texture;
+        material.mainTexture = texture; 
+        Material materialTransparent = new Material(Shader.Find("UI/Default"));
+        materialTransparent.mainTexture = transparentTexture;
 
         // just update font with original game texture,
         // everything else should already be set from when we created the asset file above
         myFont.material = material;
+        myTransparentFont.material = materialTransparent;
 
         // Set the font in the game text UI
         GameText.GetComponent<UnityEngine.UI.Text>().font = myFont;
@@ -11126,6 +11258,16 @@ public class World : MonoBehaviour
         windDirection.GetComponent<UnityEngine.UI.Text>().font = myFont;
         moons.GetComponent<UnityEngine.UI.Text>().font = myFont;
         statsNames.GetComponent<UnityEngine.UI.Text>().font = myFont;
+        Talk.GetComponent<UnityEngine.UI.Text>().font = myFont;
+        Action.GetComponent<UnityEngine.UI.Text>().font = myFont;
+
+        foreach (Button b in InputPanel.GetComponentsInChildren<Button>())
+        {
+            foreach(Text t in b.GetComponentsInChildren<Text>())
+            {
+                t.font = myTransparentFont;
+            }
+        }
 #endif
     }
 }
