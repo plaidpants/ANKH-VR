@@ -666,6 +666,52 @@ public class U4_Decompiled : MonoBehaviour
         HUMILITY = 32
     };
 
+    [System.Flags]
+    public enum STONES:byte
+    {
+        //NONE = 0x00,
+        Blu = 0x01,
+        Yel = 0x02,
+        Red = 0x04,
+        Gre = 0x08,
+        Ora = 0x10,
+        Pur = 0x20,
+        Whi = 0x40,
+        Bla = 0x80
+    }
+
+    [System.Flags]
+    public enum RUNES:byte
+    {
+        //NONE = 0x00,
+	    Hone = 0x01,
+        Com = 0x02,
+        Val = 0x04,
+        Jus = 0x08,
+        Sac = 0x10,
+        Hono = 0x20,
+        Spi = 0x40,
+        Hum = 0x80
+    }
+    [System.Flags]
+    public enum ITEMS:ushort
+    {
+        NONE = 0x0000,
+        SKULL = 0x0001,
+        SKULL_ABYSS = 0x0002,
+        CANDLE = 0x0004,
+        BOOK = 0x0008,
+        BELL = 0x0010,
+        COMPASSION_KEY = 0x0020,
+        LOVE_KEY = 0x0040,
+        TRUTH_KEY = 0x0080,
+        HORN = 0x0100,
+        WHEEL = 0x0200,
+        LIT_CANDLE = 0x0400,
+        READ_BOOK = 0x0800,
+        RUNG_BELL = 0x1000
+    }
+
     static System.IntPtr nativeLibraryPtr;
 
 #if !USE_UNITY_DLL_FUNCTION
@@ -1017,6 +1063,7 @@ public class U4_Decompiled : MonoBehaviour
         public bool highlight;
     };
 
+
     [System.Serializable]
     public struct tParty /*size:0x1f6*/
     {
@@ -1066,13 +1113,13 @@ public class U4_Decompiled : MonoBehaviour
         /*+19e*/
         public ushort[] _mixtures; //26
         /*+1d2*/
-        public ushort mItems;
+        public ITEMS mItems;
         /*+1d4,+1d5*/
         public byte _x, _y;
         /*+1d6*/
-        public byte mStones;
+        public STONES mStones;
         /*+1d7*/
-        public byte mRunes;
+        public RUNES mRunes;
         /*+1d8*/
         public ushort f_1d8;/*characters #*/
         /*+1da*/
@@ -3675,11 +3722,11 @@ sfx_magic2:
                 Party._mixtures[i] = System.BitConverter.ToUInt16(buffer, 0x19e + i * 2);
             }
 
-            Party.mItems = System.BitConverter.ToUInt16(buffer, 0x1d2);
+            Party.mItems = (ITEMS)System.BitConverter.ToUInt16(buffer, 0x1d2);
             Party._x = buffer[0x1d4];
             Party._y = buffer[0x1d5];
-            Party.mStones = buffer[0x1d6];
-            Party.mRunes = buffer[0x1d7];
+            Party.mStones = (STONES)buffer[0x1d6];
+            Party.mRunes = (RUNES)buffer[0x1d7];
             Party.f_1d8 = System.BitConverter.ToUInt16(buffer, 0x1d8); // number in party
             Party._tile = (TILE)System.BitConverter.ToUInt16(buffer, 0x1da);
             Party.f_1dc = System.BitConverter.ToUInt16(buffer, 0x1dc);

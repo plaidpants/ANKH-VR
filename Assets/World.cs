@@ -10767,36 +10767,45 @@ public class World : MonoBehaviour
             feluccaLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, Mathf.LerpAngle(feluccaLight.GetComponent<Light>().transform.eulerAngles.y, 180f - (float)u4.D_1666 * (360f / 256f), Time.deltaTime), 0f);
             //sunLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, Mathf.LerpAngle(sunLight.GetComponent<Light>().transform.eulerAngles.y, 180f - (float)u4.D_1666 * (360f / 256f), Time.deltaTime), 0f);
 
-            statsMagicStatus.GetComponent<UnityEngine.UI.Text>().text = "" + (char)(u4.spell_sta);
-            statsFood.GetComponent<UnityEngine.UI.Text>().text = "F:" + (int)(u4.Party._food / 100);
+
+            System.Globalization.TextInfo myTI = new System.Globalization.CultureInfo("en-US", false).TextInfo;
+
+            statsOverview.GetComponent<UnityEngine.UI.Text>().text = "" + '\n';
+
+            for (int i = 0; i < 8; i++)
+            {
+                if (i < u4.Party.f_1d8)
+                {
+                    if (u4.Party.chara[i].highlight)
+                    {
+                        statsOverview.GetComponent<UnityEngine.UI.Text>().text += highlight((i + 1) + "-" + u4.Party.chara[i].name.PadRight(18, ' ') + u4.Party.chara[i].hitPoint.ToString().PadLeft(4, ' ') + (char)(u4.Party.chara[i].state) + '\n');
+                    }
+                    else
+                    {
+                        statsOverview.GetComponent<UnityEngine.UI.Text>().text += (i + 1) + "-" + u4.Party.chara[i].name.PadRight(18, ' ') + u4.Party.chara[i].hitPoint.ToString().PadLeft(4, ' ') + (char)(u4.Party.chara[i].state) + '\n';
+                    }
+                }
+                else
+                {
+                    statsOverview.GetComponent<UnityEngine.UI.Text>().text += '\n';
+                }
+            }
+
+            string bottomStatus = "" + '\n' + ("Food:" + (int)(u4.Party._food / 100)).ToString().PadRight(12, ' ') + (char)(u4.spell_sta);
+
             if ((u4.Party._tile == U4_Decompiled.TILE.SHIP_EAST) ||
                 (u4.Party._tile == U4_Decompiled.TILE.SHIP_WEST) ||
                 (u4.Party._tile == U4_Decompiled.TILE.SHIP_NORTH) ||
                 (u4.Party._tile == U4_Decompiled.TILE.SHIP_SOUTH))
             {
-                statsGold.GetComponent<UnityEngine.UI.Text>().text = "SHIP:" + u4.Party._ship;
+                bottomStatus += ("Ship:" + u4.Party._ship).PadLeft(12, ' ');
             }
             else
             {
-                statsGold.GetComponent<UnityEngine.UI.Text>().text = "G:" + u4.Party._gold;
+                bottomStatus += ("Gold:" + u4.Party._gold).PadLeft(12, ' '); ;
             }
-            statsHP.GetComponent<UnityEngine.UI.Text>().text = "";
-            statsNames.GetComponent<UnityEngine.UI.Text>().text = "";
-            for (int i = 0; i < u4.Party.f_1d8; i++)
-            {
-                if (u4.Party.chara[i].highlight)
-                {
-                    statsHP.GetComponent<UnityEngine.UI.Text>().text += highlight("        " + u4.Party.chara[i].hitPoint + (char)(u4.Party.chara[i].state) + "\n");
-                    statsNames.GetComponent<UnityEngine.UI.Text>().text += highlight((i + 1) + "-" + u4.Party.chara[i].name + "        \n");
-                }
-                else
-                {
-                    statsHP.GetComponent<UnityEngine.UI.Text>().text += u4.Party.chara[i].hitPoint;
-                    statsHP.GetComponent<UnityEngine.UI.Text>().text += (char)(u4.Party.chara[i].state);
-                    statsHP.GetComponent<UnityEngine.UI.Text>().text += "\n";
-                    statsNames.GetComponent<UnityEngine.UI.Text>().text += (i + 1) + "-" + u4.Party.chara[i].name + "\n";
-                }
-            }
+
+            statsOverview.GetComponent<UnityEngine.UI.Text>().text += bottomStatus;
 
             for (int i = 0; i < characterStatus.Length; i++)
             {
@@ -10806,18 +10815,19 @@ public class World : MonoBehaviour
 
                     characterStatus[i].GetComponent<UnityEngine.UI.Text>().text = "" +
                         (char)(0x10) + u4.Party.chara[i].name + (char)(0x11) + '\n' +
-                        (char)(u4.Party.chara[i].sex) + u4.Party.chara[i].Class.ToString().PadLeft(12 + classLength / 2, ' ').PadRight(23, ' ') + (char)u4.Party.chara[i].state + '\n' +
+                        (char)(u4.Party.chara[i].sex) + myTI.ToTitleCase(u4.Party.chara[i].Class.ToString().ToLower()).PadLeft(12 + classLength / 2, ' ').PadRight(23, ' ') + (char)u4.Party.chara[i].state + '\n' +
                         '\n' +
                         " MP:" + u4.Party.chara[i].magicPoints.ToString().PadLeft(2, '0').PadRight(14, ' ') + "LV:" + ((int)(u4.Party.chara[i].hitPointsMaximum / 100)).ToString().PadRight(4, ' ') + '\n' +
                         "STR:" + u4.Party.chara[i].strength.ToString().PadLeft(2, '0').PadRight(14, ' ') + "HP:" + u4.Party.chara[i].hitPoint.ToString().PadLeft(4, '0') + '\n' +
                         "DEX:" + u4.Party.chara[i].dexterity.ToString().PadLeft(2, '0').PadRight(14, ' ') + "HM:" + u4.Party.chara[i].hitPointsMaximum.ToString().PadLeft(4, '0') + '\n' +
                         "INT:" + u4.Party.chara[i].intelligence.ToString().PadLeft(2, '0').PadRight(14, ' ') + "EX:" + u4.Party.chara[i].experiencePoints.ToString().PadLeft(4, '0') + '\n' +
-                        "W:" + u4.Party.chara[i].currentWeapon.ToString().Replace('_', ' ').PadRight(23, ' ') + '\n' +
-                        "A:" + u4.Party.chara[i].currentArmor.ToString().Replace('_', ' ').PadRight(23, ' ');
+                        "W:" + myTI.ToTitleCase(u4.Party.chara[i].currentWeapon.ToString().Replace('_', ' ').ToLower()).PadRight(23, ' ') + '\n' +
+                        "A:" + myTI.ToTitleCase(u4.Party.chara[i].currentArmor.ToString().Replace('_', ' ').ToLower()).PadRight(23, ' ') + '\n' +
+                        bottomStatus;
                 }
                 else
                 {
-                    characterStatus[i].GetComponent<UnityEngine.UI.Text>().text = "";
+                    characterStatus[i].GetComponent<UnityEngine.UI.Text>().text = "\n\n\n\n\n\n\n\n" + bottomStatus;
                 }
             }
 
@@ -10830,7 +10840,8 @@ public class World : MonoBehaviour
                 'E' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MACE].ToString().PadLeft(2, '0') + "-Mace  Magic Sword-M" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_SWORD].ToString().PadLeft(2, '0') + '\n' +
                 'F' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.AXE].ToString().PadLeft(2, '0') + "-Axe     Magic Bow-N" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_BOW].ToString().PadLeft(2, '0') + '\n' +
                 'G' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.SWORD].ToString().PadLeft(2, '0') + "-Sword  Magic Wand-O" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_WAND].ToString().PadLeft(2, '0') + '\n' +
-                'H' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.BOW].ToString().PadLeft(2, '0') + "-Bow  Mystic Sword-P" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MYSTIC_SWORD].ToString().PadLeft(2, '0');
+                'H' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.BOW].ToString().PadLeft(2, '0') + "-Bow  Mystic Sword-P" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MYSTIC_SWORD].ToString().PadLeft(2, '0') + '\n' +
+                bottomStatus;
 
             armourStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
                 (char)(0x10) + "Armour" + (char)(0x11) + '\n' +
@@ -10841,7 +10852,8 @@ public class World : MonoBehaviour
                 'E' + u4.Party._armors[(int)U4_Decompiled.ARMOR.PLATE_MAIL].ToString().PadLeft(2, '0') + "-Plate Mail".PadRight(22, ' ') + '\n' +
                 'F' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MAGIC_CHAIN].ToString().PadLeft(2, '0') + "-Magic Chain Mail".PadRight(22, ' ') + '\n' +
                 'G' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MAGIC_PLATE].ToString().PadLeft(2, '0') + "-Magic Plate Mail".PadRight(22, ' ') + '\n' +
-                'H' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MYSTIC_ROBE].ToString().PadLeft(2, '0') + "-Mystic Robe".PadRight(22, ' ');
+                'H' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MYSTIC_ROBE].ToString().PadLeft(2, '0') + "-Mystic Robe".PadRight(22, ' ') + '\n' +
+                bottomStatus;
 
             reagentsStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
                 (char)(0x10) + "Reagents" + (char)(0x11) + '\n' +
@@ -10852,7 +10864,8 @@ public class World : MonoBehaviour
                 'E' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.BLOOD_MOSS].ToString().PadLeft(2, '0') + "-Blood Moss".PadRight(22, ' ') + '\n' +
                 'F' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.BLACK_PEARL].ToString().PadLeft(2, '0') + "-Black Pearl".PadRight(22, ' ') + '\n' +
                 'G' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.NIGHTSHADE].ToString().PadLeft(2, '0') + "-Nightshade".PadRight(22, ' ') + '\n' +
-                'H' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.MANDRAKE].ToString().PadLeft(2, '0') + "-Mandrake Root".PadRight(22, ' ');
+                'H' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.MANDRAKE].ToString().PadLeft(2, '0') + "-Mandrake Root".PadRight(22, ' ') + '\n' +
+                bottomStatus;
 
             mixturesStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
                 (char)(0x10) + "Mixtures" + (char)(0x11) + '\n' +
@@ -10863,24 +10876,24 @@ public class World : MonoBehaviour
                 "Eneg-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.ENERGY].ToString().PadLeft(2, '0') + " Missl-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.MAGIC_MISSLE].ToString().PadLeft(2, '0') + " Undea-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.UNDEAD].ToString().PadLeft(2, '0') + '\n' +
                 "Fire-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.FIREBALL].ToString().PadLeft(2, '0') + " Negat-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.NEGATE].ToString().PadLeft(2, '0') + "  View-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.VIEW].ToString().PadLeft(2, '0') + '\n' +
                 "Gate-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.GATE].ToString().PadLeft(2, '0') + "  Open-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.OPEN].ToString().PadLeft(2, '0') + " Winds-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.WINDS].ToString().PadLeft(2, '0') + '\n' +
-                "Heal-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.HEAL].ToString().PadLeft(2, '0') + " Prote-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.PROTECT].ToString().PadLeft(2, '0') + "  X-It-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.X_IT].ToString().PadLeft(2, '0') + '\n';
+                "Heal-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.HEAL].ToString().PadLeft(2, '0') + " Prote-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.PROTECT].ToString().PadLeft(2, '0') + "  X-It-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.X_IT].ToString().PadLeft(2, '0') + '\n' +
+                bottomStatus;
 
             equipmentStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
                 (char)(0x10) + "Equipment" + (char)(0x11) + '\n' +
                 'A' + u4.Party._torches.ToString().PadLeft(2, '0') + "-Torches".PadRight(22, ' ') + '\n' +
                 'B' + u4.Party._gems.ToString().PadLeft(2, '0') + "-Gems".PadRight(22, ' ') + '\n' +
                 'C' + u4.Party._keys.ToString().PadLeft(2, '0') + "-Keys".PadRight(22, ' ') + '\n' +
-                'D' + u4.Party._sextants.ToString().PadLeft(2, '0') + "-Sextants".PadRight(22, ' ') + '\n';
+                'D' + u4.Party._sextants.ToString().PadLeft(2, '0') + "-Sextants".PadRight(22, ' ') + "\n\n\n\n\n" +
+                bottomStatus;
 
-            itemsStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
-                (char)(0x10) + "Items" + (char)(0x11) + '\n' +
-                "Stones:" + "BYRGOPWB" + "          " + '\n' +
-                "Runes:" + "HCVJSHSH" + "           " + '\n' +
-                "Bell" + ' ' + "Book" + ' ' + "Candle" + "         " + '\n' +
-                "3 Part Key:" + "TLC" + "           " + '\n' +
-                "Horn".PadRight(25, ' ') + '\n' +
-                "Wheel".PadRight(25, ' ') + '\n' +
-                "Skull".PadRight(25, ' ');
+            itemsStatus.GetComponent<UnityEngine.UI.Text>().text = "" + '\n' + 
+                "Stones: " + myTI.ToTitleCase(u4.Party.mStones.ToString().Replace('_', ' ').ToLower()) + '\n' +
+                "Runes: " + myTI.ToTitleCase(u4.Party.mRunes.ToString().Replace('_', ' ').ToLower()) + '\n' + 
+                "Items: " + myTI.ToTitleCase(u4.Party.mItems.ToString().Replace('_', ' ').ToLower()) + '\n' +
+                bottomStatus;
+
+
 
 #if DISABLED
 u4_puts(/*D_25B9*/"\nThe Altar Room of ");
@@ -11018,11 +11031,11 @@ C_4A3D()
 
             if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.CHARACTER_OVERVIEW)
             {
-                charactersOverview.SetActive(true);
+                statsOverview.SetActive(true);
             }
             else
             {
-                charactersOverview.SetActive(false);
+                statsOverview.SetActive(false);
             }
             if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.CHARACTER_DETAIL)
             {
@@ -11129,18 +11142,13 @@ C_4A3D()
         return temp;
     }
 
-    public GameObject statsNames;
-    public GameObject statsHP;
-    public GameObject statsGold;
-    public GameObject statsFood;
-    public GameObject statsMagicStatus;
+    public GameObject statsOverview;
     public GameObject windDirection;
     public GameObject moons;
     public GameObject trammelLight;
     public GameObject feluccaLight;
     public GameObject sunLight;
 
-    public GameObject charactersOverview;
     public GameObject[] characterStatus = new GameObject[8];
     public GameObject weaponsStatus;
     public GameObject armourStatus;
@@ -11556,14 +11564,10 @@ C_4A3D()
 
         // Set the font in the game text UI
         GameText.GetComponent<UnityEngine.UI.Text>().font = myFont;
-        statsNames.GetComponent<UnityEngine.UI.Text>().font = myFont;
-        statsHP.GetComponent<UnityEngine.UI.Text>().font = myFont;
-        statsGold.GetComponent<UnityEngine.UI.Text>().font = myFont;
-        statsFood.GetComponent<UnityEngine.UI.Text>().font = myFont;
-        statsMagicStatus.GetComponent<UnityEngine.UI.Text>().font = myFont;
+        statsOverview.GetComponent<UnityEngine.UI.Text>().font = myFont;
         windDirection.GetComponent<UnityEngine.UI.Text>().font = myFont;
         moons.GetComponent<UnityEngine.UI.Text>().font = myFont;
-        statsNames.GetComponent<UnityEngine.UI.Text>().font = myFont;
+
         Talk.GetComponent<UnityEngine.UI.Text>().font = myFont;
         Action.GetComponent<UnityEngine.UI.Text>().font = myFont;
 
