@@ -35,6 +35,7 @@ public class World : MonoBehaviour
 
     public GameObject dungeonMonsters;
     public GameObject partyGameObject;
+    public GameObject skyGameObject;
 
     //public GameObject[] Settlements;
     public GameObject[] CombatTerrains;
@@ -10576,6 +10577,19 @@ public class World : MonoBehaviour
                     }
                 }
                 */
+            }
+        }
+
+        // keep the sky game object in sync with the game
+        if (skyGameObject)
+        {
+            if ((u4.current_mode == U4_Decompiled.MODE.OUTDOORS)  || (u4.current_mode == U4_Decompiled.MODE.BUILDING))
+            {
+                skyGameObject.transform.localPosition = new Vector3(u4.Party._x, 0, 255 - u4.Party._y);
+            }
+            else if(u4.current_mode == U4_Decompiled.MODE.COMBAT)
+            {
+                skyGameObject.transform.localPosition = new Vector3(u4.currentActiveCharacter.x, 0, 255 - u4.currentActiveCharacter.y);
             }
         }
 
