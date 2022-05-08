@@ -1968,7 +1968,7 @@ catch
     {
         for( int i = 0; i < (int)MUSIC.MAX; i++)
         {
-            StartCoroutine(LoadSongCoroutine(Application.persistentDataPath + "/u4/" + ((MUSIC)i).ToString() + ".OGG", (MUSIC)i));
+            StartCoroutine(LoadSongCoroutine(Application.persistentDataPath + "/u4/" + ((MUSIC)i).ToString() + ".MP3", (MUSIC)i));
         }
     }
 
