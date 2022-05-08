@@ -14,7 +14,7 @@ e.g. [GOGLibrary]\Ultima 4 - Quest of the Avatar
 
 Run the game at least once to create a party and start the game and save the game using the "(I)nitiate New Game" and "(J)ourney onward" and "(Q)uit & save" function. This will create a game save file.
 
-Download, rename and place in the ultima 4 install folder the original mockingboard music or other suitable music in mp3 format.
+Download, rename and place in the ultima 4 install folder the original mockingboard music or other suitable music in mp3 or ogg format.
   
 http://www.applevault.com/ultima/
 
@@ -35,6 +35,10 @@ shrines.mp3
 towns.mp3
   
 wanderer.mp3
+
+or 
+
+https://bitbucket.org/mcmagi/ultima-exodus/downloads/u4-voyd-music-12.zip
 
 Move the gog.com save files created above after running the game at least once from the install folder cloud_saves directory to the root of the ultima 4 install directory or other game save files you would like to use.
   
