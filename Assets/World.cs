@@ -3417,9 +3417,8 @@ public class World : MonoBehaviour
     // unfortuantly the game engine never saves this information after loading the combat terrain in function C_7C65()
     // the code is not re-entrant so I cannot just expose and call the function directly so I need to re-implement the 
     // logic here so I can on the fly determine the combat terrain to display by exposing the interal variables used in the
-    // original function.
+    // original function. The INN or shop or camp case is handled elsewhere (e.g. In the middle of the night, while out for a stroll...)
 
-    // TODO: this does not handle the INN or shop or camp case  (e.g. In the middle of the night, while out for a stroll...)
     public U4_Decompiled.COMBAT_TERRAIN Convert_Tile_to_Combat_Terrian(U4_Decompiled.TILE tile)
     {
         U4_Decompiled.COMBAT_TERRAIN combat_terrain;
@@ -4933,7 +4932,7 @@ public class World : MonoBehaviour
                     // zero indicates unused
                     if (conversationIndex != 0)
                     {
-                        // this can be 128 for one vendor in Vincent, not sure why? TODO
+                        // this can be 128 for one vendor in Vincent, not sure why? TODO need to check this after I fix the npx talk loader
                         if ((conversationIndex - 1) < npcStrings.Length)
                         {
                             settlementNPCs[settlement][npcIndex].strings = npcStrings[settlement][conversationIndex - 1];
@@ -5151,7 +5150,7 @@ public class World : MonoBehaviour
         // need to create npc game objects if none are present
         if (dungeonMonsters.transform.childCount != 16)
         {
-            for (int i = 0; i < 16; i++) // TODO figure out how many can be in the dungeon level
+            for (int i = 0; i < 16; i++) // TODO figure out how many can be in the dungeon level, for now assume 16 max
             {
                 // a child object for each dungeon monster entry in the table
                 GameObject dungeonMonsterGameObject = CreateQuad();
@@ -10372,7 +10371,7 @@ public class World : MonoBehaviour
                     }
                 }
             } 
-            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP /* TODO: this could be the inn or shop or camp need to figure out which */ )
+            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
             {
                 AddFighters(u4.Fighters, u4.Combat1);
                 AddCharacters(u4.Combat2, u4.Party, u4.Fighters);
@@ -10510,7 +10509,6 @@ public class World : MonoBehaviour
                         true);
                     
                     location = Vector3.zero;
-                    //terrain.transform.eulerAngles = Vector3.zero; // reset back to zero, TODO: figure out who is modifiying this
                 }
                 else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
                 {
@@ -10536,9 +10534,6 @@ public class World : MonoBehaviour
                         false);
 
                     //CreateMapLabels(mainTerrain, ref raycastSettlementMap);
-
-                    //location = Vector3.zero;
-                    //terrain.transform.eulerAngles = Vector3.zero; // reset back to zero, TODO: figure out who is modifiying this
 
                     location = new Vector3(0, 0, 224);
                     
@@ -10761,7 +10756,7 @@ public class World : MonoBehaviour
                         break;
                 }
             }
-            moons.GetComponent<UnityEngine.UI.Text>().text = ""+ (char)(0x10)+ (char)(((u4.Party._trammel - 1) & 7) + 0x14) + (char)(0x12) + (char)(((u4.Party._felucca - 1) & 7) + 0x14) + (char)(0x11);
+            moons.GetComponent<UnityEngine.UI.Text>().text = "" + (char)(0x10) + (char)(((u4.Party._trammel - 1) & 7) + 0x14) + (char)(0x12) + (char)(((u4.Party._felucca - 1) & 7) + 0x14) + (char)(0x11);
 
             //trammelLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.Party._trammel * (360f / 8f), 0f);
             //feluccaLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.Party._felucca * (360f / 8f), 0f);
@@ -10774,7 +10769,7 @@ public class World : MonoBehaviour
 
             statsMagicStatus.GetComponent<UnityEngine.UI.Text>().text = "" + (char)(u4.spell_sta);
             statsFood.GetComponent<UnityEngine.UI.Text>().text = "F:" + (int)(u4.Party._food / 100);
-            if ((u4.Party._tile == U4_Decompiled.TILE.SHIP_EAST)  || 
+            if ((u4.Party._tile == U4_Decompiled.TILE.SHIP_EAST) ||
                 (u4.Party._tile == U4_Decompiled.TILE.SHIP_WEST) ||
                 (u4.Party._tile == U4_Decompiled.TILE.SHIP_NORTH) ||
                 (u4.Party._tile == U4_Decompiled.TILE.SHIP_SOUTH))
@@ -10801,6 +10796,308 @@ public class World : MonoBehaviour
                     statsHP.GetComponent<UnityEngine.UI.Text>().text += "\n";
                     statsNames.GetComponent<UnityEngine.UI.Text>().text += (i + 1) + "-" + u4.Party.chara[i].name + "\n";
                 }
+            }
+
+            for (int i = 0; i < characterStatus.Length; i++)
+            {
+                if (i < u4.Party.f_1d8)
+                {
+                    int classLength = u4.Party.chara[i].Class.ToString().Length;
+
+                    characterStatus[i].GetComponent<UnityEngine.UI.Text>().text = "" +
+                        (char)(0x10) + u4.Party.chara[i].name + (char)(0x11) + '\n' +
+                        (char)(u4.Party.chara[i].sex) + u4.Party.chara[i].Class.ToString().PadLeft(12 + classLength / 2, ' ').PadRight(23, ' ') + (char)u4.Party.chara[i].state + '\n' +
+                        '\n' +
+                        " MP:" + u4.Party.chara[i].magicPoints.ToString().PadLeft(2, '0').PadRight(14, ' ') + "LV:" + ((int)(u4.Party.chara[i].hitPointsMaximum / 100)).ToString().PadRight(4, ' ') + '\n' +
+                        "STR:" + u4.Party.chara[i].strength.ToString().PadLeft(2, '0').PadRight(14, ' ') + "HP:" + u4.Party.chara[i].hitPoint.ToString().PadLeft(4, '0') + '\n' +
+                        "DEX:" + u4.Party.chara[i].dexterity.ToString().PadLeft(2, '0').PadRight(14, ' ') + "HM:" + u4.Party.chara[i].hitPointsMaximum.ToString().PadLeft(4, '0') + '\n' +
+                        "INT:" + u4.Party.chara[i].intelligence.ToString().PadLeft(2, '0').PadRight(14, ' ') + "EX:" + u4.Party.chara[i].experiencePoints.ToString().PadLeft(4, '0') + '\n' +
+                        "W:" + u4.Party.chara[i].currentWeapon.ToString().Replace('_', ' ').PadRight(23, ' ') + '\n' +
+                        "A:" + u4.Party.chara[i].currentArmor.ToString().Replace('_', ' ').PadRight(23, ' ');
+                }
+                else
+                {
+                    characterStatus[i].GetComponent<UnityEngine.UI.Text>().text = "";
+                }
+            }
+
+            weaponsStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
+                (char)(0x10) + "Weapons" + (char)(0x11) + '\n' +
+                "A  -Hands   Cross Bow-I" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.CROSSBOW] + '\n' +
+                'B' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.STAFF].ToString().PadLeft(2, '0') + "-Staff Flaming Oil-J" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.FLAMING_OIL].ToString().PadLeft(2, '0') + '\n' +
+                'C' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.DAGGER].ToString().PadLeft(2, '0') + "-Dagger    Halbert-K" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.HALBERD].ToString().PadLeft(2, '0') + '\n' +
+                'D' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.SLING].ToString().PadLeft(2, '0') + "-Sling   Magic Axe-L" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_AXE].ToString().PadLeft(2, '0') + '\n' +
+                'E' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MACE].ToString().PadLeft(2, '0') + "-Mace  Magic Sword-M" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_SWORD].ToString().PadLeft(2, '0') + '\n' +
+                'F' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.AXE].ToString().PadLeft(2, '0') + "-Axe     Magic Bow-N" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_BOW].ToString().PadLeft(2, '0') + '\n' +
+                'G' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.SWORD].ToString().PadLeft(2, '0') + "-Sword  Magic Wand-O" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_WAND].ToString().PadLeft(2, '0') + '\n' +
+                'H' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.BOW].ToString().PadLeft(2, '0') + "-Bow  Mystic Sword-P" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MYSTIC_SWORD].ToString().PadLeft(2, '0');
+
+            armourStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
+                (char)(0x10) + "Armour" + (char)(0x11) + '\n' +
+                "A  " + "-No Armour".PadRight(22, ' ') + '\n' +
+                'B' + u4.Party._armors[(int)U4_Decompiled.ARMOR.CLOTH].ToString().PadLeft(2, '0') + "-Clothing".PadRight(22, ' ') + '\n' +
+                'C' + u4.Party._armors[(int)U4_Decompiled.ARMOR.LEATHER].ToString().PadLeft(2, '0') + "-Leather".PadRight(22, ' ') + '\n' +
+                'D' + u4.Party._armors[(int)U4_Decompiled.ARMOR.CHAIN_MAIL].ToString().PadLeft(2, '0') + "-Chain Mail".PadRight(22, ' ') + '\n' +
+                'E' + u4.Party._armors[(int)U4_Decompiled.ARMOR.PLATE_MAIL].ToString().PadLeft(2, '0') + "-Plate Mail".PadRight(22, ' ') + '\n' +
+                'F' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MAGIC_CHAIN].ToString().PadLeft(2, '0') + "-Magic Chain Mail".PadRight(22, ' ') + '\n' +
+                'G' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MAGIC_PLATE].ToString().PadLeft(2, '0') + "-Magic Plate Mail".PadRight(22, ' ') + '\n' +
+                'H' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MYSTIC_ROBE].ToString().PadLeft(2, '0') + "-Mystic Robe".PadRight(22, ' ');
+
+            reagentsStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
+                (char)(0x10) + "Reagents" + (char)(0x11) + '\n' +
+                'A' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.SULFER_ASH].ToString().PadLeft(2, '0') + "-Sulfer Ash".PadRight(22, ' ') + '\n' +
+                'B' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.GINSENG].ToString().PadLeft(2, '0') + "-Ginseng".PadRight(22, ' ') + '\n' +
+                'C' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.GARLIC].ToString().PadLeft(2, '0') + "-Galic".PadRight(22, ' ') + '\n' +
+                'D' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.SPIDER_SILK].ToString().PadLeft(2, '0') + "-Spider Silk".PadRight(22, ' ') + '\n' +
+                'E' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.BLOOD_MOSS].ToString().PadLeft(2, '0') + "-Blood Moss".PadRight(22, ' ') + '\n' +
+                'F' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.BLACK_PEARL].ToString().PadLeft(2, '0') + "-Black Pearl".PadRight(22, ' ') + '\n' +
+                'G' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.NIGHTSHADE].ToString().PadLeft(2, '0') + "-Nightshade".PadRight(22, ' ') + '\n' +
+                'H' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.MANDRAKE].ToString().PadLeft(2, '0') + "-Mandrake Root".PadRight(22, ' ');
+
+            mixturesStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
+                (char)(0x10) + "Mixtures" + (char)(0x11) + '\n' +
+                "Awak-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.AWAKEN].ToString().PadLeft(2, '0') + " IceBa-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.ICEBALLS].ToString().PadLeft(2, '0') + " Quick-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.QUICKNESS].ToString().PadLeft(2, '0') + '\n' +
+                "Blin-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.BLINK].ToString().PadLeft(2, '0') + "  Jinx-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.JINX].ToString().PadLeft(2, '0') + "  Resu-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.RESURECTION].ToString().PadLeft(2, '0') + '\n' +
+                "Cure-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.CURE].ToString().PadLeft(2, '0') + "  Kill-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.KILL].ToString().PadLeft(2, '0') + " Sleep-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.SLEEP].ToString().PadLeft(2, '0') + '\n' +
+                "Disp-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.DISPELL].ToString().PadLeft(2, '0') + " Light-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.LIGHT].ToString().PadLeft(2, '0') + " Tremo-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.TREMOR].ToString().PadLeft(2, '0') + '\n' +
+                "Eneg-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.ENERGY].ToString().PadLeft(2, '0') + " Missl-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.MAGIC_MISSLE].ToString().PadLeft(2, '0') + " Undea-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.UNDEAD].ToString().PadLeft(2, '0') + '\n' +
+                "Fire-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.FIREBALL].ToString().PadLeft(2, '0') + " Negat-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.NEGATE].ToString().PadLeft(2, '0') + "  View-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.VIEW].ToString().PadLeft(2, '0') + '\n' +
+                "Gate-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.GATE].ToString().PadLeft(2, '0') + "  Open-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.OPEN].ToString().PadLeft(2, '0') + " Winds-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.WINDS].ToString().PadLeft(2, '0') + '\n' +
+                "Heal-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.HEAL].ToString().PadLeft(2, '0') + " Prote-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.PROTECT].ToString().PadLeft(2, '0') + "  X-It-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.X_IT].ToString().PadLeft(2, '0') + '\n';
+
+            equipmentStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
+                (char)(0x10) + "Equipment" + (char)(0x11) + '\n' +
+                'A' + u4.Party._torches.ToString().PadLeft(2, '0') + "-Torches".PadRight(22, ' ') + '\n' +
+                'B' + u4.Party._gems.ToString().PadLeft(2, '0') + "-Gems".PadRight(22, ' ') + '\n' +
+                'C' + u4.Party._keys.ToString().PadLeft(2, '0') + "-Keys".PadRight(22, ' ') + '\n' +
+                'D' + u4.Party._sextants.ToString().PadLeft(2, '0') + "-Sextants".PadRight(22, ' ') + '\n';
+
+            itemsStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
+                (char)(0x10) + "Items" + (char)(0x11) + '\n' +
+                "Stones:" + "BYRGOPWB" + "          " + '\n' +
+                "Runes:" + "HCVJSHSH" + "           " + '\n' +
+                "Bell" + ' ' + "Book" + ' ' + "Candle" + "         " + '\n' +
+                "3 Part Key:" + "TLC" + "           " + '\n' +
+                "Horn".PadRight(25, ' ') + '\n' +
+                "Wheel".PadRight(25, ' ') + '\n' +
+                "Skull".PadRight(25, ' ');
+
+#if DISABLED
+u4_puts(/*D_25B9*/"\nThe Altar Room of ");
+		if(Party._x == 3) {
+			u4_puts(/*D_25CD*/"Love\n");
+			D_943E = 1;
+		} else if(Party._x <= 2) {
+			u4_puts(/*D_25D3*/"Truth\n");
+			D_943E = 0;
+		} else {
+			u4_puts(/*D_25DA*/"Courage\n");
+			D_943E = 2;
+		}
+
+
+/*151 - virtues D_1FC6*/
+	/*D_1E48*/"Honesty",
+	/*D_1E50*/"Compassion",
+	/*D_1E5B*/"Valor",
+	/*D_1E61*/"Justice",
+	/*D_1E69*/"Sacrifice",
+	/*D_1E73*/"Honor",
+	/*D_1E79*/"Spirituality",
+	/*D_1E86*/"Humility",
+
+	u4_puts(/*D_28F3*/"The rune of ");
+	u4_puts(D_1E98[151 + si]);
+
+
+
+	loc_A = Party._loc - 0x19;/*shrine "number"*/
+	if(!TST_MSK(Party.mRunes, loc_A)) {
+		u4_puts(/*D_8372*/"\nThou dost not bear the rune of entry!  A strange force keeps you out!\n");
+
+        "A Silver Horn!\n");
+        
+	u4_puts(/*D_27E1*/"The Bell of Courage!\n");
+    
+	u4_puts(/*D_2807*/"The Wheel from the H.M.S. Cape!\n");
+    
+	u4_puts(/*D_2828*/"The Skull of Mondain the Wizard!\n");
+    
+	u4_puts(/*D_286E*/"The Book of Truth!\n");
+    
+	u4_puts(/*D_2882*/"The Candle of Love!\n");
+
+        char *D_0884[] = {
+	/*D_076D*/"Blue",
+	/*D_0772*/"Yellow",
+	/*D_0779*/"Red",
+	/*D_077D*/"Green",
+	/*D_0783*/"Orange",
+	/*D_078A*/"Purple",
+	/*D_0791*/"White",
+	/*D_0797*/"Black"
+};
+
+        	SET_MSK(Party.mStones, Party._loc - 0x11);
+	u4_puts(/*D_2F3A*/"\nYou find the ");
+	u4_puts(D_0884[Party._loc - 0x11]);
+	u4_puts(/*D_2F49*/" stone!\n");
+
+
+char D_199A[] = "BYRGOPWB";
+char D_19A4[] = "HCVJSHSH";
+
+C_4A3D()
+{
+	register int si;
+
+	set_zstats_mode(ZSTATS_MODE_ITEMS);
+	txt_Y = 0;
+	C_45D6(/*D_1955*/"Items", 0);
+	txt_Y = 1;
+	if(Party.mStones) {
+		txt_X = 24;
+		u4_puts(/*D_195B*/"Stones:");
+		si = 0;
+		do {
+			if(TST_MSK(Party.mStones, si))
+				u4_putc(D_199A[si]);
+		} while(++si < 8);
+		txt_Y ++;
+	}
+	if(Party.mRunes) {
+		txt_X = 24;
+		u4_puts(/*D_1963*/"Runes:");
+		si = 0;
+		do {
+			if(TST_MSK(Party.mRunes, si))
+				u4_putc(D_19A4[si]);
+		} while(++si < 8);
+		txt_Y ++;
+	}
+	if(TST_MSK(Party.mItems, 4) || TST_MSK(Party.mItems, 3) || TST_MSK(Party.mItems, 2)) {
+		txt_X = 24;
+		if(TST_MSK(Party.mItems, 4))
+			u4_puts(/*D_196A*/"Bell ");
+		if(TST_MSK(Party.mItems, 3))
+			u4_puts(/*D_1970*/"Book ");
+		if(TST_MSK(Party.mItems, 2)) {
+			u4_puts(/*D_1976*/"Candl");
+			if(!TST_MSK(Party.mItems, 3) || !TST_MSK(Party.mItems, 4))
+				u4_putc('e');
+		}
+		txt_Y ++;
+	}
+	if(TST_MSK(Party.mItems, 5) || TST_MSK(Party.mItems, 6) || TST_MSK(Party.mItems, 7)) {
+		txt_X = 24;
+		u4_puts(/*D_197C*/"3 Part Key:");
+		if(TST_MSK(Party.mItems, 7))
+			u4_putc('T');
+		if(TST_MSK(Party.mItems, 6))
+			u4_putc('L');
+		if(TST_MSK(Party.mItems, 5))
+			u4_putc('C');
+		txt_Y ++;
+	}
+	if(TST_MSK(Party.mItems, 8)) {
+		txt_X = 24;
+		u4_puts(/*D_1988*/"Horn");
+		txt_Y ++;
+	}
+	if(TST_MSK(Party.mItems, 9)) {
+		txt_X = 24;
+		u4_puts(/*D_198D*/"Wheel");
+		txt_Y ++;
+	}
+	if(TST_MSK(Party.mItems, 0)) {
+		txt_X = 24;
+		u4_puts(/*D_1993*/"Skull");
+	}
+}
+#endif
+
+            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.CHARACTER_OVERVIEW)
+            {
+                charactersOverview.SetActive(true);
+            }
+            else
+            {
+                charactersOverview.SetActive(false);
+            }
+            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.CHARACTER_DETAIL)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    if (u4.zstats_character == i)
+                    {
+                        characterStatus[i].SetActive(true);
+                    }
+                    else
+                    {
+                        characterStatus[i].SetActive(false);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    characterStatus[i].SetActive(false);
+                }
+
+            }
+
+            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.WEAPONS)
+            {
+                weaponsStatus.SetActive(true);
+            }
+            else
+            {
+                weaponsStatus.SetActive(false);
+            }
+            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.ARMOUR)
+            {
+                armourStatus.SetActive(true);
+            }
+            else
+            {
+                armourStatus.SetActive(false);
+            }
+
+            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.EQUIPMENT)
+            {
+                equipmentStatus.SetActive(true);
+            }
+            else
+            {
+                equipmentStatus.SetActive(false);
+            }
+
+            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.ITEMS)
+            {
+                itemsStatus.SetActive(true);
+            }
+            else
+            {
+                itemsStatus.SetActive(false);
+            }
+
+            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.MIXTURES)
+            {
+                mixturesStatus.SetActive(true);
+            }
+            else
+            {
+                mixturesStatus.SetActive(false);
+            }
+
+            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.REAGENTS)
+            {
+                reagentsStatus.SetActive(true);
+            }
+            else
+            {
+                reagentsStatus.SetActive(false);
             }
         }
     }
@@ -10842,6 +11139,15 @@ public class World : MonoBehaviour
     public GameObject trammelLight;
     public GameObject feluccaLight;
     public GameObject sunLight;
+
+    public GameObject charactersOverview;
+    public GameObject[] characterStatus = new GameObject[8];
+    public GameObject weaponsStatus;
+    public GameObject armourStatus;
+    public GameObject equipmentStatus;
+    public GameObject itemsStatus;
+    public GameObject reagentsStatus;
+    public GameObject mixturesStatus;
 
     public U4_Decompiled.MODE lastMode = (U4_Decompiled.MODE )(-1);
     public bool wasJustInside = false;

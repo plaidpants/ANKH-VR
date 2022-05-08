@@ -287,12 +287,6 @@ public class ChatBubble : MonoBehaviour
 		myFont.name = "font";
 		myFont.characterInfo = charInfos;
 		text.font = myFont;
-
-        // TODO figure out how to compile this
-		//UnityEditor.SerializedObject mFont = new UnityEditor.SerializedObject(myFont);
-		//mFont.FindProperty("m_FontSize").floatValue = 10.0f;
-		//mFont.FindProperty("m_LineSpacing").floatValue = 8.0f;
-		//mFont.ApplyModifiedProperties();
 	}
 
 	// Update is called once per frame

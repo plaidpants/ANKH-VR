@@ -119,6 +119,20 @@ public class U4_Decompiled : MonoBehaviour
         DRIVE_LETTER = 45,
     }
 
+    public ZSTATS_MODE zstats_mode;
+    public int zstats_character;
+    
+    public enum ZSTATS_MODE
+    {
+        CHARACTER_OVERVIEW = 0,
+        CHARACTER_DETAIL = 1,
+        WEAPONS = 2,
+        ARMOUR = 3,
+        EQUIPMENT = 4,
+        ITEMS = 5,
+        REAGENTS = 6,
+        MIXTURES = 7
+    }
 
     // tiles
     public enum TILE
@@ -575,6 +589,33 @@ public class U4_Decompiled : MonoBehaviour
         NIGHTSHADE = 6,
         MANDRAKE = 7,
     };
+    public enum MIXTURES
+    {
+        AWAKEN,
+        BLINK,
+        CURE,
+        DISPELL,
+        ENERGY,
+        FIREBALL,
+        GATE,
+        HEAL,
+        ICEBALLS,
+        JINX,
+        KILL,
+        LIGHT,
+        MAGIC_MISSLE,
+        NEGATE,
+        OPEN,
+        PROTECT,
+        QUICKNESS,
+        RESURECTION,
+        SLEEP,
+        TREMOR,
+        UNDEAD,
+        VIEW,
+        WINDS,
+        X_IT,
+    };
 
     public enum LOCATIONS
     {
@@ -663,7 +704,9 @@ public class U4_Decompiled : MonoBehaviour
     delegate int main_camera_shake_accumulator();
     delegate int main_D_1665();
     delegate int main_D_1666();
-    delegate int main_input_mode();
+    delegate INPUT_MODE main_input_mode();
+    delegate ZSTATS_MODE main_zstats_mode();
+    delegate ZSTATS_MODE main_zstats_character();
 #endif
 
     void Awake()
@@ -2643,7 +2686,6 @@ sfx_magic2:
         }
         else if (Input.GetKeyDown(KeyCode.Backspace))
         {
-            // TODO make this work with the text onscreen
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_BACK);
 #else
@@ -3053,7 +3095,6 @@ sfx_magic2:
             int length = Native.Invoke<int, main_sound_effect_length>(nativeLibraryPtr);
 #endif
             // immediately respond to the game engine as if the sound has been played for now
-            // TODO need to take the same amount of time as the original sound before responding
             if (sound != -1)
             {
 #if USE_UNITY_DLL_FUNCTION
@@ -3077,6 +3118,18 @@ sfx_magic2:
 #else
             inputMode = Native.Invoke<INPUT_MODE, main_input_mode>(nativeLibraryPtr);
 #endif
+#if USE_UNITY_DLL_FUNCTION
+            zstats_mode = main_zstats_mode();
+#else
+            zstats_mode = Native.Invoke<ZSTATS_MODE, main_zstats_mode>(nativeLibraryPtr);
+#endif
+
+#if USE_UNITY_DLL_FUNCTION
+            zstats_character = main_zstats_character();
+#else
+            zstats_character = Native.Invoke<int, main_zstats_character>(nativeLibraryPtr);
+#endif
+
 
             // read the sound flag
 #if USE_UNITY_DLL_FUNCTION
@@ -3218,7 +3271,7 @@ sfx_magic2:
                             musicSource.clip = music[(int)MUSIC.COMBAT];
                         }
                         // check if we are in camp
-                        // TODO: the campe music seems a little off for the sleeping party unless
+                        // TODO: the camp music seems a little off for the sleeping party unless
                         // there is an unexpected combat while sleeping
                         else if (current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
                         {
@@ -3474,7 +3527,6 @@ sfx_magic2:
             }
 
             // remove any hits with expired timers
-            // TODO: make sure every hit is displayed at least a little while when overlapping hits occur
             for (int i = 0; i < currentHits.Count; i++)
             {
                 hit checkHit = currentHits[i];
