@@ -670,46 +670,46 @@ public class U4_Decompiled : MonoBehaviour
     public enum STONES:byte
     {
         //NONE = 0x00,
-        Blu = 0x01,
-        Yel = 0x02,
-        Red = 0x04,
-        Gre = 0x08,
-        Ora = 0x10,
-        Pur = 0x20,
-        Whi = 0x40,
-        Bla = 0x80
+        BLUE = 0x01,
+        YELLOW = 0x02,
+        RED = 0x04,
+        GREEN = 0x08,
+        ORANGE = 0x10,
+        PURPLE = 0x20,
+        WHITE = 0x40,
+        BLACK = 0x80
     }
 
     [System.Flags]
     public enum RUNES:byte
     {
         //NONE = 0x00,
-	    Hone = 0x01,
-        Com = 0x02,
-        Val = 0x04,
-        Jus = 0x08,
-        Sac = 0x10,
-        Hono = 0x20,
-        Spi = 0x40,
-        Hum = 0x80
+        HONESTY = 0x01,
+        COMPASSION = 0x02,
+        VALOR = 0x04,
+        JUSTICE = 0x08,
+        SACRIFICE = 0x10,
+        HONOR = 0x20,
+        SPIRITUALITY = 0x40,
+        HUMILITY = 0x80,
     }
     [System.Flags]
     public enum ITEMS:ushort
     {
-        NONE = 0x0000,
-        SKULL = 0x0001,
-        SKULL_ABYSS = 0x0002,
-        CANDLE = 0x0004,
-        BOOK = 0x0008,
-        BELL = 0x0010,
+        //NONE = 0x0000,
+        SKULL = 0x0001, // The Skull of Mondain the Wizard!
+        SKULL_ABYSS = 0x0002, // You cast the Skull of Mondain into the Abyss!
+        CANDLE = 0x0004, // The Candle of Love!
+        BOOK = 0x0008, // The Book of Truth!
+        BELL = 0x0010, // The Bell of Courage!
         COMPASSION_KEY = 0x0020,
         LOVE_KEY = 0x0040,
         TRUTH_KEY = 0x0080,
-        HORN = 0x0100,
-        WHEEL = 0x0200,
-        LIT_CANDLE = 0x0400,
-        READ_BOOK = 0x0800,
-        RUNG_BELL = 0x1000
+        HORN = 0x0100, // A Silver Horn!
+        WHEEL = 0x0200, // The Wheel from the H.M.S. Cape!
+        LIT_CANDLE = 0x0400, // As you light the Candle the Earth Trembles!
+        READ_BOOK = 0x0800, // The words resonate with the ringing!
+        RUNG_BELL = 0x1000 // The Bell rings on and on!
     }
 
     static System.IntPtr nativeLibraryPtr;
@@ -1968,7 +1968,14 @@ catch
     {
         for( int i = 0; i < (int)MUSIC.MAX; i++)
         {
-            StartCoroutine(LoadSongCoroutine(Application.persistentDataPath + "/u4/" + ((MUSIC)i).ToString() + ".MP3", (MUSIC)i));
+            if (System.IO.File.Exists(Application.persistentDataPath + "/u4/" + ((MUSIC)i).ToString() + ".MP3"))
+            {
+                StartCoroutine(LoadSongCoroutine(Application.persistentDataPath + "/u4/" + ((MUSIC)i).ToString() + ".MP3", (MUSIC)i));
+            }
+            else if (System.IO.File.Exists(Application.persistentDataPath + "/u4/" + ((MUSIC)i).ToString() + ".OGG"))
+            {
+                StartCoroutine(LoadSongCoroutine(Application.persistentDataPath + "/u4/" + ((MUSIC)i).ToString() + ".OGG", (MUSIC)i));
+            }
         }
     }
 

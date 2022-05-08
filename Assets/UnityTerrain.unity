@@ -11994,6 +11994,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1589552191}
   m_CullTransparentMesh: 1
+--- !u!1 &1594365262 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 233288675, guid: a0b6d7f16c50987468b2815c88b9cda5,
+    type: 3}
+  m_PrefabInstance: {fileID: 8708751031312621669}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1611383152 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 720628943907804770, guid: 264ae02e2b95e0345960362312f0ab15,
@@ -12604,6 +12610,7 @@ MonoBehaviour:
   armourStatus: {fileID: 78334713}
   equipmentStatus: {fileID: 1765964789}
   itemsStatus: {fileID: 1126019826}
+  itemsStatusHeading: {fileID: 1594365262}
   reagentsStatus: {fileID: 1333643935}
   mixturesStatus: {fileID: 105059952}
   lastMode: -1
@@ -14632,6 +14639,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 572009426}
     m_Modifications:
+    - target: {fileID: 233288677, guid: a0b6d7f16c50987468b2815c88b9cda5, type: 3}
+      propertyPath: m_Text
+      value: "\x10Items\x11\n\n\n\n\n\n\n\n\n\nFood:9696   \a   Gold:9737"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1126019826, guid: a0b6d7f16c50987468b2815c88b9cda5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1126019828, guid: a0b6d7f16c50987468b2815c88b9cda5, type: 3}
+      propertyPath: m_Text
+      value: "\nStones: <color=blue>Bl</color><color=yellow>Ye</color><color=red>Re</color><color=green>Gr</color><color=orange>Or</color><color=purple>Pu</color><color=white>Wh</color><color=grey>Bl</color>\nRunes:
+        Honor Compassion Valor Justice Humility Honesty Spirituality Sacrifice\nItems:
+        Bell Book Wheel Horn  Skull \nKey:Love Truth Compassion"
+      objectReference: {fileID: 0}
     - target: {fileID: 1737587115662354295, guid: a0b6d7f16c50987468b2815c88b9cda5,
         type: 3}
       propertyPath: m_InteractionManager

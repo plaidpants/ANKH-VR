@@ -10887,147 +10887,125 @@ public class World : MonoBehaviour
                 'D' + u4.Party._sextants.ToString().PadLeft(2, '0') + "-Sextants".PadRight(22, ' ') + "\n\n\n\n\n" +
                 bottomStatus;
 
-            itemsStatus.GetComponent<UnityEngine.UI.Text>().text = "" + '\n' + 
-                "Stones: " + myTI.ToTitleCase(u4.Party.mStones.ToString().Replace('_', ' ').ToLower()) + '\n' +
-                "Runes: " + myTI.ToTitleCase(u4.Party.mRunes.ToString().Replace('_', ' ').ToLower()) + '\n' + 
-                "Items: " + myTI.ToTitleCase(u4.Party.mItems.ToString().Replace('_', ' ').ToLower()) + '\n' +
+            itemsStatus.GetComponent<UnityEngine.UI.Text>().text = "" + '\n' +
+                "Stones: ";
+
+            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.BLUE))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=blue>Bl</color>";
+            }
+            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.YELLOW))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=yellow>Ye</color>";
+            }
+            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.RED))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=red>Re</color>";
+            }
+            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.GREEN))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=green>Gr</color>";
+            }
+            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.ORANGE))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=orange>Or</color>";
+            }
+            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.PURPLE))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=purple>Pu</color>";
+            }
+            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.WHITE))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=white>Wh</color>";
+            }
+            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.BLACK))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=grey>Bl</color>";
+            }
+
+            itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
+                "Runes: ";
+
+            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.HONOR))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Honor ";
+            }
+            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.COMPASSION))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Compassion ";
+            }
+            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.VALOR))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Valor ";
+            }
+            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.JUSTICE))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Justice ";
+            }
+            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.HUMILITY))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Humility ";
+            }
+            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.HONESTY))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Honesty ";
+            }
+            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.SPIRITUALITY))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Spirituality ";
+            }
+            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.SACRIFICE))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Sacrifice";
+            }
+
+            itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
+               "Items: ";
+
+            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.BELL))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Bell ";
+            }
+            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.BOOK))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Book ";
+            }
+            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.WHEEL))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Wheel ";
+            }
+            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.HORN))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Horn ";
+            }
+            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.CANDLE))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Candle ";
+            }
+            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.SKULL))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Skull ";
+            }
+
+            itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
+               "Key:";
+
+            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.LOVE_KEY))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Love ";
+            }
+            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.TRUTH_KEY))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Truth ";
+            }
+            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.COMPASSION_KEY))
+            {
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Compassion";
+            }
+
+            itemsStatusHeading.GetComponent<UnityEngine.UI.Text>().text = "" +
+                (char)(0x10) + "Items" + (char)(0x11) + "\n\n\n\n\n\n\n\n\n" +
                 bottomStatus;
-
-
-
-#if DISABLED
-u4_puts(/*D_25B9*/"\nThe Altar Room of ");
-		if(Party._x == 3) {
-			u4_puts(/*D_25CD*/"Love\n");
-			D_943E = 1;
-		} else if(Party._x <= 2) {
-			u4_puts(/*D_25D3*/"Truth\n");
-			D_943E = 0;
-		} else {
-			u4_puts(/*D_25DA*/"Courage\n");
-			D_943E = 2;
-		}
-
-
-/*151 - virtues D_1FC6*/
-	/*D_1E48*/"Honesty",
-	/*D_1E50*/"Compassion",
-	/*D_1E5B*/"Valor",
-	/*D_1E61*/"Justice",
-	/*D_1E69*/"Sacrifice",
-	/*D_1E73*/"Honor",
-	/*D_1E79*/"Spirituality",
-	/*D_1E86*/"Humility",
-
-	u4_puts(/*D_28F3*/"The rune of ");
-	u4_puts(D_1E98[151 + si]);
-
-
-
-	loc_A = Party._loc - 0x19;/*shrine "number"*/
-	if(!TST_MSK(Party.mRunes, loc_A)) {
-		u4_puts(/*D_8372*/"\nThou dost not bear the rune of entry!  A strange force keeps you out!\n");
-
-        "A Silver Horn!\n");
-        
-	u4_puts(/*D_27E1*/"The Bell of Courage!\n");
-    
-	u4_puts(/*D_2807*/"The Wheel from the H.M.S. Cape!\n");
-    
-	u4_puts(/*D_2828*/"The Skull of Mondain the Wizard!\n");
-    
-	u4_puts(/*D_286E*/"The Book of Truth!\n");
-    
-	u4_puts(/*D_2882*/"The Candle of Love!\n");
-
-        char *D_0884[] = {
-	/*D_076D*/"Blue",
-	/*D_0772*/"Yellow",
-	/*D_0779*/"Red",
-	/*D_077D*/"Green",
-	/*D_0783*/"Orange",
-	/*D_078A*/"Purple",
-	/*D_0791*/"White",
-	/*D_0797*/"Black"
-};
-
-        	SET_MSK(Party.mStones, Party._loc - 0x11);
-	u4_puts(/*D_2F3A*/"\nYou find the ");
-	u4_puts(D_0884[Party._loc - 0x11]);
-	u4_puts(/*D_2F49*/" stone!\n");
-
-
-char D_199A[] = "BYRGOPWB";
-char D_19A4[] = "HCVJSHSH";
-
-C_4A3D()
-{
-	register int si;
-
-	set_zstats_mode(ZSTATS_MODE_ITEMS);
-	txt_Y = 0;
-	C_45D6(/*D_1955*/"Items", 0);
-	txt_Y = 1;
-	if(Party.mStones) {
-		txt_X = 24;
-		u4_puts(/*D_195B*/"Stones:");
-		si = 0;
-		do {
-			if(TST_MSK(Party.mStones, si))
-				u4_putc(D_199A[si]);
-		} while(++si < 8);
-		txt_Y ++;
-	}
-	if(Party.mRunes) {
-		txt_X = 24;
-		u4_puts(/*D_1963*/"Runes:");
-		si = 0;
-		do {
-			if(TST_MSK(Party.mRunes, si))
-				u4_putc(D_19A4[si]);
-		} while(++si < 8);
-		txt_Y ++;
-	}
-	if(TST_MSK(Party.mItems, 4) || TST_MSK(Party.mItems, 3) || TST_MSK(Party.mItems, 2)) {
-		txt_X = 24;
-		if(TST_MSK(Party.mItems, 4))
-			u4_puts(/*D_196A*/"Bell ");
-		if(TST_MSK(Party.mItems, 3))
-			u4_puts(/*D_1970*/"Book ");
-		if(TST_MSK(Party.mItems, 2)) {
-			u4_puts(/*D_1976*/"Candl");
-			if(!TST_MSK(Party.mItems, 3) || !TST_MSK(Party.mItems, 4))
-				u4_putc('e');
-		}
-		txt_Y ++;
-	}
-	if(TST_MSK(Party.mItems, 5) || TST_MSK(Party.mItems, 6) || TST_MSK(Party.mItems, 7)) {
-		txt_X = 24;
-		u4_puts(/*D_197C*/"3 Part Key:");
-		if(TST_MSK(Party.mItems, 7))
-			u4_putc('T');
-		if(TST_MSK(Party.mItems, 6))
-			u4_putc('L');
-		if(TST_MSK(Party.mItems, 5))
-			u4_putc('C');
-		txt_Y ++;
-	}
-	if(TST_MSK(Party.mItems, 8)) {
-		txt_X = 24;
-		u4_puts(/*D_1988*/"Horn");
-		txt_Y ++;
-	}
-	if(TST_MSK(Party.mItems, 9)) {
-		txt_X = 24;
-		u4_puts(/*D_198D*/"Wheel");
-		txt_Y ++;
-	}
-	if(TST_MSK(Party.mItems, 0)) {
-		txt_X = 24;
-		u4_puts(/*D_1993*/"Skull");
-	}
-}
-#endif
 
             if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.CHARACTER_OVERVIEW)
             {
@@ -11154,6 +11132,7 @@ C_4A3D()
     public GameObject armourStatus;
     public GameObject equipmentStatus;
     public GameObject itemsStatus;
+    public GameObject itemsStatusHeading;
     public GameObject reagentsStatus;
     public GameObject mixturesStatus;
 
