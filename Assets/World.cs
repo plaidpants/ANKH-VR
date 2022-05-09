@@ -4458,11 +4458,22 @@ public class World : MonoBehaviour
             combatMonsterStartPositions[i] = new CombatMonsterStartPositions[16];
             combatPartyStartPositions[i] = new CombatPartyStartPositions[8];
 
-            // load the combat map from the original files
-            LoadCombatMap("/u4/" + ((U4_Decompiled.COMBAT_TERRAIN) i).ToString() + ".CON",
-                ref combatMaps[i],
-                ref combatMonsterStartPositions[i],
-                ref combatPartyStartPositions[i]);
+            if (i == (int)U4_Decompiled.COMBAT_TERRAIN.CAMP_DNG)
+            {
+                // this one has a different name format
+                LoadCombatMap("/u4/CAMP.DNG",
+                    ref combatMaps[i],
+                    ref combatMonsterStartPositions[i],
+                    ref combatPartyStartPositions[i]);
+            }
+            else
+            {
+                // load the combat map from the original files
+                LoadCombatMap("/u4/" + ((U4_Decompiled.COMBAT_TERRAIN)i).ToString() + ".CON",
+                    ref combatMaps[i],
+                    ref combatMonsterStartPositions[i],
+                    ref combatPartyStartPositions[i]);
+            }
 
             // create a game object to hold it and set it as a child of the combat terrains game object
             GameObject gameObject = new GameObject();
@@ -9159,6 +9170,7 @@ public class World : MonoBehaviour
             //CreateMapLabels(settlementGameObject, ref settlementMap[i]);
         }
 
+        // everything I need it now loaded, start the game engine thread
         u4.StartThread();
 
         //GameObject dungeonExpandedLevelGameObject = CreateDungeonExpandedLevel(DUNGEONS.HYTHLOTH, 4);
@@ -10106,6 +10118,7 @@ public class World : MonoBehaviour
                 moongate.SetActive(true);
                 dungeon.SetActive(false);
                 dungeonMonsters.SetActive(false);
+                skyGameObject.SetActive(true);
 
                 for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
                 {
@@ -10180,6 +10193,7 @@ public class World : MonoBehaviour
                 moongate.SetActive(false);
                 dungeon.SetActive(false);
                 dungeonMonsters.SetActive(false);
+                skyGameObject.SetActive(true);
 
                 for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
                 {
@@ -10223,6 +10237,8 @@ public class World : MonoBehaviour
                     party.SetActive(false);
                     moongate.SetActive(false);
                     dungeonMonsters.SetActive(false);
+                    skyGameObject.SetActive(false);
+
                     // check if we have the dungeon already created, create it if not
                     DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled.LOCATIONS.DUNGEONS);
                     if (dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
@@ -10254,7 +10270,8 @@ public class World : MonoBehaviour
                     moongate.SetActive(false);
                     dungeon.SetActive(false);
                     dungeonMonsters.SetActive(false);
-                    
+                    skyGameObject.SetActive(true);
+
                     int currentCombatTerrain = (int)Convert_Tile_to_Combat_Terrian(u4.current_tile);
 
                     for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
@@ -10286,6 +10303,8 @@ public class World : MonoBehaviour
                 party.SetActive(false);
                 moongate.SetActive(false);
                 dungeonMonsters.SetActive(false);
+                skyGameObject.SetActive(false);
+
                 // check if we have the dungeon already created, create it if not
                 DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled.LOCATIONS.DUNGEONS);
                 if (dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
@@ -10315,6 +10334,7 @@ public class World : MonoBehaviour
                 npcs.SetActive(false);
                 party.SetActive(true);
                 moongate.SetActive(false);
+                skyGameObject.SetActive(false);
 
                 // check if we have the dungeon already created, create it if not
                 DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled.LOCATIONS.DUNGEONS);
@@ -10358,6 +10378,7 @@ public class World : MonoBehaviour
                 moongate.SetActive(false);
                 dungeon.SetActive(false);
                 dungeonMonsters.SetActive(false);
+                skyGameObject.SetActive(true);
 
                 for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
                 {
@@ -10392,15 +10413,26 @@ public class World : MonoBehaviour
                 followWorld(activeCharacter);
 
                 int currentCombatTerrain;
-
                 // need to special case the combat when in the inn and in combat camp mode outside or in dungeon
                 if (u4.current_tile == U4_Decompiled.TILE.BRICK_FLOOR)
                 {
                     currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.INN;
+                    skyGameObject.SetActive(true);
+                }
+                else if ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
+                {
+                    currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.CAMP_DNG;
+                    skyGameObject.SetActive(false);
+                }
+                else if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
+                {
+                    currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.CAMP;
+                    skyGameObject.SetActive(true);
                 }
                 else
                 {
                     currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.CAMP;
+                    skyGameObject.SetActive(true);
                 }
 
                 for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)

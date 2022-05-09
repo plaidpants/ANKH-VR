@@ -1198,7 +1198,8 @@ public class U4_Decompiled : MonoBehaviour
         DNG4 = 20, // chest
         DNG5 = 21, // doorway
         DNG6 = 22, // secret doorway
-        MAX = 23
+        CAMP_DNG = 23, // dungeon camp combat map named CAMP.DNG
+        MAX = 24
     };
 
     // Separate thread to run the game, we could attempt to make the data gathering function thread safe but for now this will do
