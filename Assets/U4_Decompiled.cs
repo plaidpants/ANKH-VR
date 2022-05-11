@@ -753,6 +753,7 @@ public class U4_Decompiled : MonoBehaviour
     delegate INPUT_MODE main_input_mode();
     delegate ZSTATS_MODE main_zstats_mode();
     delegate ZSTATS_MODE main_zstats_character();
+    delegate void main_set_dir(DIRECTION direction);
 #endif
 
     void Awake()
@@ -2354,7 +2355,8 @@ sfx_magic2:
             resetJoystick1 = Time.time + joystickResetTime;
             resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
-                    ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+                    (((current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP))
+                    && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
@@ -2394,7 +2396,7 @@ sfx_magic2:
                     lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
             }
-            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
+            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING) || (current_mode == MODE.COMBAT_CAMP) || (current_mode == MODE.COMBAT))
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
@@ -2448,7 +2450,8 @@ sfx_magic2:
             resetJoystick1 = Time.time + joystickResetTime;
             resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
-                    ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+                    (((current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP))
+                    && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
@@ -2487,7 +2490,7 @@ sfx_magic2:
                     lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
             }
-            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
+            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING) || (current_mode == MODE.COMBAT_CAMP) || (current_mode == MODE.COMBAT))
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
@@ -2540,7 +2543,8 @@ sfx_magic2:
         {
             resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
-                    ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+                    (((current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP)) 
+                    && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
@@ -2579,7 +2583,7 @@ sfx_magic2:
                     lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
             }
-            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
+            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING) || (current_mode == MODE.COMBAT_CAMP) || (current_mode == MODE.COMBAT))
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
@@ -2617,6 +2621,10 @@ sfx_magic2:
 #endif
                     lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
+            }
+            else if (current_mode == MODE.DUNGEON)
+            {
+                // ignore left and right in the dungeon
             }
             else
             {
@@ -2632,7 +2640,8 @@ sfx_magic2:
         {
             resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
-                    ((current_mode == MODE.COMBAT) && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+                    (((current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP)) 
+                    && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
@@ -2671,7 +2680,7 @@ sfx_magic2:
                     lastKeyboardHit = (char)KEYS.VK_UP;
                 }
             }
-            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
+            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING) || (current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP))
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
@@ -2709,6 +2718,10 @@ sfx_magic2:
 #endif
                     lastKeyboardHit = (char)KEYS.VK_UP;
                 }
+            }
+            else if (current_mode == MODE.DUNGEON)
+            {
+                // ignore left and right in the dungeon
             }
             else
             {
@@ -3081,6 +3094,12 @@ sfx_magic2:
 #endif
             lastKeyboardHit = '9';
         }
+
+#if USE_UNITY_DLL_FUNCTION
+        main_set_dir(surface_party_direction);
+#else
+        Native.Invoke<main_set_dir>(nativeLibraryPtr, surface_party_direction);
+#endif 
 
         // check if we just finished playing a sound effect
         if (started_playing_sound_effect == true && specialEffectAudioSource.isPlaying == false)

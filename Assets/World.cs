@@ -39,6 +39,7 @@ public class World : MonoBehaviour
 
     //public GameObject[] Settlements;
     public GameObject[] CombatTerrains;
+    public GameObject CenterOfCombatTerrain;
 
     public List<string> talkWordList = new List<string>();
 
@@ -4497,6 +4498,11 @@ public class World : MonoBehaviour
             // save the game object in the array
             CombatTerrains[i] = gameObject;
         }
+
+        CenterOfCombatTerrain = new GameObject();
+        CenterOfCombatTerrain.transform.position = new Vector3(5f, 0, 250f);
+        CenterOfCombatTerrain.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+        CenterOfCombatTerrain.transform.SetParent(combatTerrainsObject.transform);
     }
 
     [SerializeField]
@@ -10174,7 +10180,12 @@ public class World : MonoBehaviour
                 }                
                 
                 // update last tile so we don't get stuck in a loop
-                lastCurrentTile = u4.current_tile;
+                lastCurrentTile = u4.current_tile; 
+                
+                if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+                {
+                    Camera.main.clearFlags = CameraClearFlags.Skybox;
+                }
             }
             else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
             {
@@ -10218,6 +10229,11 @@ public class World : MonoBehaviour
 
                 // update last tile so we don't get stuck in a loop
                 lastCurrentTile = u4.current_tile;
+
+                if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+                {
+                    Camera.main.clearFlags = CameraClearFlags.Skybox;
+                }
             }
             else if (u4.current_mode == U4_Decompiled.MODE.COMBAT)
             {
@@ -10252,6 +10268,12 @@ public class World : MonoBehaviour
                     {
                         CombatTerrains[i].gameObject.SetActive(false);
                     }
+
+                    if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
+                    {
+                        Camera.main.clearFlags = CameraClearFlags.SolidColor;
+                        Camera.main.backgroundColor = Color.black;
+                    }
                 }
                 else
                 {
@@ -10285,6 +10307,11 @@ public class World : MonoBehaviour
                             CombatTerrains[i].gameObject.SetActive(false);
                         }
                     }
+
+                    if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+                    {
+                        Camera.main.clearFlags = CameraClearFlags.Skybox;
+                    }
                 }
             }
             else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_ROOM) /* this is a dungeon room */
@@ -10317,6 +10344,12 @@ public class World : MonoBehaviour
                 for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
                 {
                     CombatTerrains[i].gameObject.SetActive(false);
+                }
+
+                if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
+                {
+                    Camera.main.clearFlags = CameraClearFlags.SolidColor;
+                    Camera.main.backgroundColor = Color.black;
                 }
             }
             else if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
@@ -10360,6 +10393,12 @@ public class World : MonoBehaviour
                 {
                     CombatTerrains[i].gameObject.SetActive(false);
                 }
+
+                if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
+                {
+                    Camera.main.clearFlags = CameraClearFlags.SolidColor;
+                    Camera.main.backgroundColor = Color.black;
+                }
             }
             else if (u4.current_mode == U4_Decompiled.MODE.SHRINE)
             {
@@ -10385,12 +10424,17 @@ public class World : MonoBehaviour
                     if (i == (int)U4_Decompiled.COMBAT_TERRAIN.SHRINE)
                     {
                         CombatTerrains[i].gameObject.SetActive(true); 
-                        followWorld(CombatTerrains[i].gameObject);
+                        followWorld(CenterOfCombatTerrain);
                     }
                     else
                     {
                         CombatTerrains[i].gameObject.SetActive(false);
                     }
+                }
+
+                if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+                {
+                    Camera.main.clearFlags = CameraClearFlags.Skybox;
                 }
             } 
             else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
@@ -10418,21 +10462,38 @@ public class World : MonoBehaviour
                 {
                     currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.INN;
                     skyGameObject.SetActive(true);
+                    if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+                    {
+                        Camera.main.clearFlags = CameraClearFlags.Skybox;
+                    }
                 }
                 else if ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
                 {
                     currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.CAMP_DNG;
-                    skyGameObject.SetActive(false);
+                    skyGameObject.SetActive(false); 
+                    if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
+                    {
+                        Camera.main.clearFlags = CameraClearFlags.SolidColor;
+                        Camera.main.backgroundColor = Color.black;
+                    }
                 }
                 else if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
                 {
                     currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.CAMP;
                     skyGameObject.SetActive(true);
+                    if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+                    {
+                        Camera.main.clearFlags = CameraClearFlags.Skybox;
+                    }
                 }
                 else
                 {
                     currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.CAMP;
                     skyGameObject.SetActive(true);
+                    if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+                    {
+                        Camera.main.clearFlags = CameraClearFlags.Skybox;
+                    }
                 }
 
                 for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
@@ -10440,7 +10501,14 @@ public class World : MonoBehaviour
                     if (i == currentCombatTerrain)
                     {
                         CombatTerrains[i].gameObject.SetActive(true);
-                        followWorld(CombatTerrains[i].gameObject);
+                        if (u4.currentActiveCharacter.active)
+                        {
+                            followWorld(activeCharacter);
+                        }
+                        else
+                        {
+                            followWorld(CenterOfCombatTerrain);
+                        }
                     }
                     else
                     {
@@ -10612,23 +10680,36 @@ public class World : MonoBehaviour
             }
         }
 
-        // keep the sky game object in sync with the game
+        // keep the sky game objects in sync with the game
         if (skyGameObject)
         {
             if ((u4.current_mode == U4_Decompiled.MODE.OUTDOORS)  || (u4.current_mode == U4_Decompiled.MODE.BUILDING))
             {
                 skyGameObject.transform.localPosition = new Vector3(u4.Party._x, 0, 255 - u4.Party._y);
             }
-            else if(u4.current_mode == U4_Decompiled.MODE.COMBAT)
+            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT)
             {
                 skyGameObject.transform.localPosition = new Vector3(u4.currentActiveCharacter.x, 0, 255 - u4.currentActiveCharacter.y);
+            }
+            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
+            {
+                if (u4.currentActiveCharacter.active)
+                {
+                    skyGameObject.transform.localPosition = new Vector3(u4.currentActiveCharacter.x, 0, 255 - u4.currentActiveCharacter.y);
+                }
+                else
+                {
+                    skyGameObject.transform.localPosition = CenterOfCombatTerrain.transform.localPosition;
+                }
             }
         }
 
         // keep the party game object in sync with the game
         if (partyGameObject)
         {
-            if ((u4.current_mode == U4_Decompiled.MODE.OUTDOORS) || (u4.current_mode == U4_Decompiled.MODE.BUILDING) || (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP))
+            if ((u4.current_mode == U4_Decompiled.MODE.OUTDOORS) || 
+                (u4.current_mode == U4_Decompiled.MODE.BUILDING) || 
+                (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP))
             {
                 partyGameObject.transform.localPosition = new Vector3(u4.Party._x, 255 - u4.Party._y, 0);
                 if (Camera.main.transform.eulerAngles.y != 0)
@@ -10656,10 +10737,6 @@ public class World : MonoBehaviour
                     {
                         rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
                     }
-                }
-                if (Camera.main.clearFlags != CameraClearFlags.Skybox)
-                {
-                    Camera.main.clearFlags = CameraClearFlags.Skybox;
                 }
             }
             else if (u4.current_mode == U4_Decompiled.MODE.COMBAT)
@@ -10692,22 +10769,34 @@ public class World : MonoBehaviour
                             }
                         }
                     }
-                    if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
-                    {
-                        Camera.main.clearFlags = CameraClearFlags.SolidColor;
-                        Camera.main.backgroundColor = Color.black;
-                    }
                 }
                 else
                 {
-                    //partyGameObject.transform.localPosition = new Vector3(Party._x, 255 - Party._y, 0);
                     if (Camera.main.transform.eulerAngles.y != 0)
                     {
-                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                    }
-                    if (Camera.main.clearFlags != CameraClearFlags.Skybox)
-                    {
-                        Camera.main.clearFlags = CameraClearFlags.Skybox;
+                        if (rotateTransform)
+                        {
+                            if (u4.surface_party_direction == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                            }
+                        }
+                        else
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                        }
                     }
                 }
             }
@@ -10738,19 +10827,9 @@ public class World : MonoBehaviour
                         }
                     }
                 }
-                if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
-                {
-                    Camera.main.clearFlags = CameraClearFlags.SolidColor;
-                    Camera.main.backgroundColor = Color.black;
-                }
             }
             else if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
             {
-                if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
-                {
-                    Camera.main.clearFlags = CameraClearFlags.SolidColor;
-                    Camera.main.backgroundColor = Color.black;
-                }
                 partyGameObject.transform.localPosition = new Vector3(u4.Party._x * 11 + 5, (7 - u4.Party._y) * 11 + 5, 0);
                 if (rotateTransform)
                 {
@@ -10778,7 +10857,8 @@ public class World : MonoBehaviour
                 GameText.GetComponent<UnityEngine.UI.Text>().text = u4.gameText;
             }
 
-            if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
+            if ((u4.current_mode == U4_Decompiled.MODE.DUNGEON) || 
+                ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
                 windDirection.GetComponent<UnityEngine.UI.Text>().text = (char)(0x10) + "Level" + (char)(0x12) + (char)(u4.Party._z + '1') + (char)(0x11);
             }
