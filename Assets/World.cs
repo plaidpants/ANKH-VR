@@ -4964,6 +4964,341 @@ public class World : MonoBehaviour
         }
     }
 
+    public struct tHeader
+    {//size 0x11
+        /*+00*/
+        public ushort magic;//0x1234
+        /*+02*/
+        public ushort xsize, ysize;//320,200
+        /*+06*/
+        public byte __06;
+        public byte __07;
+        public byte __08;
+        public byte __09;
+        /*+0a*/
+        public byte bitsinf;//2
+        /*+0b*/
+        public byte emark;//0xff
+        /*+0c*/
+        public char evideo;//'A'
+        /*+0d*/
+        public byte edesc;//[1 == edata is pallet]
+        /*+0e*/
+        public byte __0e;
+        /*+0f*/
+        public ushort esize;
+    };
+
+    public struct tBlock
+    {
+        /*+00*/
+        public ushort PBSIZE;
+        /*+02*/
+        public ushort size;
+        /*+05*/
+        public byte MBYTE;
+    };
+
+    Texture2D LoadPicFile(string file)
+    {
+        int fileIndex = 0;
+
+        if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + file))
+        {
+            Debug.Log("Could not find pic file " + Application.persistentDataPath + "/u4/" + file);
+            return null;
+        }
+
+        // read the file
+        byte[] picFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + "/u4/" + file);
+
+        // check if the file is at least the size of the header plus the length
+        if (picFileData.Length < 0x11 + 0x02)
+        {
+            Debug.Log("Picture file incorrect length " + picFileData.Length);
+            return null;
+        }
+
+        tHeader header = new tHeader();
+
+        header.magic = System.BitConverter.ToUInt16(picFileData, fileIndex); //0x1234
+        fileIndex += 2;
+        header.xsize = System.BitConverter.ToUInt16(picFileData, fileIndex); //320
+        fileIndex += 2;
+        header.ysize = System.BitConverter.ToUInt16(picFileData, fileIndex); //200
+        fileIndex += 2;
+        header.__06 = picFileData[fileIndex++];
+        header.__07 = picFileData[fileIndex++];
+        header.__08 = picFileData[fileIndex++];
+        header.__09 = picFileData[fileIndex++];
+        header.bitsinf = picFileData[fileIndex++];  //2
+        header.emark = picFileData[fileIndex++]; //0xff 
+        header.evideo = (char)picFileData[fileIndex++]; //'A'
+        header.edesc = picFileData[fileIndex++]; //[1 == edata is pallet]
+        header.__0e = picFileData[fileIndex++];
+        header.esize = System.BitConverter.ToUInt16(picFileData, fileIndex);
+        fileIndex += 2;
+
+        // check header
+        if (header.magic != 0x1234 ||
+            //header.xsize != 320 || // vertical pixels
+            //header.ysize != 200 || // horizonal pixels
+            header.bitsinf != 2 || // bits per pixel
+            header.emark != 0xff ||
+            header.evideo != 'A' ||
+            header.edesc != 1)
+        {
+            return null;
+        }
+
+        // allocate destination for unpacked data
+        byte[] dest = new byte[header.xsize * header.ysize / (8 / header.bitsinf) /* 0x3e80 or 16000*/];
+
+        // allocate destination texture
+        Texture2D texture = new Texture2D(header.xsize, header.ysize);
+
+        byte[] eData = new byte[header.esize];
+
+        for (int i = 0; i < header.esize; i ++)
+        {
+            eData[i] = picFileData[fileIndex++];
+        }
+
+        // destination index
+        int pdest = 0;
+
+        // read in the number of blocks to process
+        ushort numblks = System.BitConverter.ToUInt16(picFileData, fileIndex);
+        fileIndex += 2;
+
+        for (int i = 0; i < numblks; i ++) 
+        {
+			tBlock BLOCK = new tBlock();
+			int len;
+
+            // read in the block info
+            BLOCK.PBSIZE = System.BitConverter.ToUInt16(picFileData, fileIndex);
+            fileIndex += 2;
+            BLOCK.size = System.BitConverter.ToUInt16(picFileData, fileIndex);
+            fileIndex += 2;
+            /*+05*/
+            BLOCK.MBYTE = picFileData[fileIndex++];
+
+            int work = fileIndex;
+            int p = work;
+			int block_end = work + BLOCK.PBSIZE - 5 /* size of tBlock */;
+            fileIndex += (BLOCK.PBSIZE - 5 /* size of tBlock */);
+            do 
+            {
+				len = 1;
+				byte byt = picFileData[p++];
+				if (byt == BLOCK.MBYTE) 
+                {
+					len = picFileData[p++];
+					if(len == 0) 
+                    {
+                        len = System.BitConverter.ToUInt16(picFileData, p);
+                        p += 2;
+
+                    }
+                    byt = picFileData[p++];
+				} 
+                while (len-- != 0)
+                {
+                    dest[pdest++] = byt;
+                }
+			} while (p < block_end);
+		}
+
+        // reset destination pointer
+        pdest = 0;
+
+        // transfer to texture
+        for (int i = 0; i < header.ysize; i++)
+        {
+            for (int j = 0; j < header.xsize; j += 4)
+            {
+                byte byt = dest[pdest++];
+                texture.SetPixel(j + 0, i, CGAColorPalette[(byt & 0xc0) >> 6]);
+                texture.SetPixel(j + 1, i, CGAColorPalette[(byt & 0x30) >> 4]);
+                texture.SetPixel(j + 2, i, CGAColorPalette[(byt & 0x0c) >> 2]);
+                texture.SetPixel(j + 3, i, CGAColorPalette[(byt & 0x03) >> 0]);
+            }
+        }
+        texture.Apply();
+
+        return texture;
+    }
+
+    Texture2D LoadPicFile2(string file)
+    {
+        if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + file))
+        {
+            Debug.Log("Could not find pic file " + Application.persistentDataPath + "/u4/" + file);
+            return null;
+        }
+
+        // read the file
+        byte[] picFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + "/u4/" + file);
+
+        lzw l = new lzw();
+
+        long s = l.GetDecompressedSize(picFileData, picFileData.Length);
+        byte[] dest = new byte[s];
+        l.Decompress(picFileData, dest, picFileData.Length);
+
+        return Gra_3(40, 152, 0, 0, dest, 0, -1, 0);
+    }
+
+    Texture2D LoadPicFile3(string file)
+    {
+        if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + file))
+        {
+            Debug.Log("Could not find pic file " + Application.persistentDataPath + "/u4/" + file);
+            return null;
+        }
+
+        // read the file
+        byte[] picFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + "/u4/" + file);
+
+        lzw l = new lzw();
+
+        long s = l.GetDecompressedSize(picFileData, picFileData.Length);
+        byte[] dest = new byte[s];
+        l.Decompress(picFileData, dest, picFileData.Length);
+
+        return Gra_4(80, 152, 0, 0, dest, 0, -1, 0);
+    }
+    ushort[] RANDOM = {
+                    0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
+                    0x0000,0x0001,0xC004,0x0010,0x0080,0x0104,0x0400,0x0401,
+                    0x0100,0xC3C0,0x1000,0xC410,0x1004,0x0411,0x0110,0x03C4,
+                    0x1080,0xC481,0x0110,0xC104,0x1010,0xD101,0x1084,0x13C1,
+                    0x1010,0x1304,0xC484,0x3CF0,0x0F3C,0x0F3F,0x3C84,0x3C3F,
+                    0x10F1,0x13FC,0xCFC1,0x3CF1,0xCFCF,0x3CFF,0xD13F,0x3FF1,
+                    0xD3F1,0xF3FC,0x3C8F,0xCF8F,0x3F3F,0xFFCF,0x13FC,0xCFFF,
+                    0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF
+                };
+    public Texture2D Gra_3(
+        int width_in_char, 
+        int height,
+        int src_x_in_char, 
+        int src_y,
+        byte [] p,
+        int dst_y,
+        int random_stuff,
+        int dst_x_in_char,
+        int skip = 7)
+    {
+        int i, j;
+        int src_0; // index
+        int width;
+        int dst_x;
+
+        src_0 = (src_x_in_char * 8) / 4;
+        width = width_in_char * 8;
+        dst_x = dst_x_in_char * 8;
+
+        // allocate destination texture
+        Texture2D texture = new Texture2D(width, height);
+
+        for (i = 0; i < height; i++)
+        {
+            int src;
+
+            src = src_0 + ((src_y + i) & 1) * 0x2000 + ((src_y + i) >> 1) * 80;
+            for (j = 0; j < width; j += 2 * 4)
+            {
+                ushort word;
+
+                word = System.BitConverter.ToUInt16(p, src + skip);
+
+                src += 2;
+
+                if (random_stuff != -1)
+                {
+                    if (word == 0)
+                    {
+                        continue;
+                    }
+
+                    word &= RANDOM[(random_stuff & 0xff) + (Random.Range(0, 7))];
+                }
+
+                texture.SetPixel(dst_x + j + 0, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x00c0) >> 6]);
+                texture.SetPixel(dst_x + j + 1, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x0030) >> 4]);
+                texture.SetPixel(dst_x + j + 2, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x000c) >> 2]);
+                texture.SetPixel(dst_x + j + 3, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x0003) >> 0]);
+                texture.SetPixel(dst_x + j + 4, height - 1 - (dst_y + i), CGAColorPalette[(word & 0xc000) >> 14]);
+                texture.SetPixel(dst_x + j + 5, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x3000) >> 12]);
+                texture.SetPixel(dst_x + j + 6, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x0c00) >> 10]);
+                texture.SetPixel(dst_x + j + 7, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x0300) >> 8]);
+            }
+        }
+
+        texture.Apply();
+
+        return texture;
+    }
+
+    public Texture2D Gra_4(
+        int width_in_char,
+        int height,
+        int src_x_in_char,
+        int src_y,
+        byte[] p,
+        int dst_y,
+        int random_stuff,
+        int dst_x_in_char,
+        int skip = 7)
+    {
+        int i, j;
+        int src_0; // index
+        int width;
+        int dst_x;
+
+        src_0 = (src_x_in_char * 8) / 2;
+        width = width_in_char * 8 / 2;
+        dst_x = dst_x_in_char * 8 / 2;
+
+        // allocate destination texture
+        Texture2D texture = new Texture2D(width, height);
+
+        for (i = 0; i < height; i++)
+        {
+            int src;
+
+            src = src_0 + ((src_y + i) & 1) * 0x2000 + ((src_y + i) >> 1) * 80;
+            for (j = 0; j < width; j += 2 * 2)
+            {
+                ushort word;
+
+                word = System.BitConverter.ToUInt16(p, src + skip);
+
+                src += 2;
+
+                if (random_stuff != -1)
+                {
+                    if (word == 0)
+                    {
+                        continue;
+                    }
+
+                    word &= RANDOM[(random_stuff & 0xff) + (Random.Range(0, 7))];
+                }
+
+                texture.SetPixel(dst_x + j + 0, height - 1 - (dst_y + i), EGAColorPalette[(word & 0xF000) >> 12]);
+                texture.SetPixel(dst_x + j + 1, height - 1 - (dst_y + i), EGAColorPalette[(word & 0x0F00) >> 8]);
+                texture.SetPixel(dst_x + j + 2, height - 1 - (dst_y + i), EGAColorPalette[(word & 0x00F0) >> 4]);
+                texture.SetPixel(dst_x + j + 3, height - 1 - (dst_y + i), EGAColorPalette[(word & 0x000F) >> 0]);
+            }
+        }
+
+        texture.Apply();
+
+        return texture;
+    }
+
     [SerializeField]
     public DUNGEON[] dungeons = new DUNGEON[(int)DUNGEONS.MAX];
     void LoadDungeons()
@@ -6028,9 +6363,9 @@ public class World : MonoBehaviour
         bubblePrefab.GetComponent<RectTransform>().localPosition = new Vector3(-2.0f, 0.5f, -2.0f);
         bubblePrefab.transform.localEulerAngles = new Vector3(-90.0f, 0.0f, 0.0f);
         */
-    }
+}
 
-    bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
+bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
     {
         return (tileIndex == U4_Decompiled.TILE.BRICK_WALL
                     || tileIndex == U4_Decompiled.TILE.LARGE_ROCKS
@@ -9067,6 +9402,53 @@ public class World : MonoBehaviour
     U4_Decompiled.TILE[][,] combatMaps = new U4_Decompiled.TILE[(int)U4_Decompiled.COMBAT_TERRAIN.MAX][,];
     CombatMonsterStartPositions[][] combatMonsterStartPositions = new CombatMonsterStartPositions[(int)U4_Decompiled.COMBAT_TERRAIN.MAX][];
     CombatPartyStartPositions[][] combatPartyStartPositions = new CombatPartyStartPositions[(int)U4_Decompiled.COMBAT_TERRAIN.MAX][];
+
+    public Texture2D[] picture;
+    public Texture2D[] picture2;
+    public enum PICTURE
+    {
+        RUNE_0 = 0,/*I*/
+        RUNE_1 = 1,/*N*/
+        RUNE_2 = 2,/*F*/
+        RUNE_3 = 3,/*T*/
+        RUNE_4 = 4,/*Y*/
+        RUNE_5 = 5,/*infinity symbol*/
+        START = 6,
+        KEY7 = 7,
+        STONCRCL = 8,
+        TRUTH = 9,
+        LOVE = 10,
+        COURAGE = 11,
+        HONESTY = 12,
+        COMPASSN = 13,
+        VALOR = 14,
+        JUSTICE = 15,
+        SACRIFIC = 16,
+        HONOR = 17,
+        SPIRIT = 18,
+        HUMILITY = 19,
+        MAX = 21
+    };
+
+    public enum PICTURE2
+    {
+        /* The use a different format for the title.exe */
+        OUTSIDE = 0,
+        PORTAL = 1,
+        TREE = 2,
+        INSIDE = 3,
+        WAGON = 4,
+        GYPSY = 5,
+        ABACUS = 6,
+        HONCOM = 7,
+        VALJUS = 8,
+        SACHONOR = 9,
+        SPIRHUM = 10,
+        TITLE = 11,
+        ANIMATE = 12,
+        MAX = 13
+    };
+
     private void Start()
     {
         // this object needs to move around so it needs to be above the other which are based on the whole world map
@@ -9174,6 +9556,21 @@ public class World : MonoBehaviour
             settlementsMapGameObjects[i] = new GameObject[32, 32];
             CreateMapSubsetPass2(settlementGameObject, ref settlementMap[i], ref settlementsMapGameObjects[i], true);
             //CreateMapLabels(settlementGameObject, ref settlementMap[i]);
+        }
+
+        picture = new Texture2D[(int)PICTURE.MAX];
+
+        for (int i = 0; i < (int)PICTURE.MAX; i++)
+        {
+            picture[i] = LoadPicFile(((PICTURE)i).ToString() + ".PIC");
+        }
+
+        picture2 = new Texture2D[(int)PICTURE2.MAX];
+
+        for (int i = 0; i < (int)PICTURE2.MAX; i++)
+        {
+            //picture2[i] = LoadPicFile3(((PICTURE2)i).ToString() + ".EGA");
+            picture2[i] = LoadPicFile2(((PICTURE2)i).ToString() +  ".PIC");
         }
 
         // everything I need it now loaded, start the game engine thread
