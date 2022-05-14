@@ -4999,7 +4999,7 @@ public class World : MonoBehaviour
         public byte MBYTE;
     };
 
-    Texture2D LoadPicFile(string file)
+    Texture2D LoadAVATARPicFile(string file)
     {
         int fileIndex = 0;
 
@@ -5130,7 +5130,7 @@ public class World : MonoBehaviour
         return texture;
     }
 
-    Texture2D LoadPicFile2(string file)
+    Texture2D LoadTITLEPicPictureFile(string file)
     {
         if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + file))
         {
@@ -5147,10 +5147,10 @@ public class World : MonoBehaviour
         byte[] dest = new byte[s];
         l.Decompress(picFileData, dest, picFileData.Length);
 
-        return Gra_3(40, 152, 0, 0, dest, 0, -1, 0);
+        return PIC_To_Texture2D(320, 200, dest, -1);
     }
 
-    Texture2D LoadPicFile3(string file)
+    Texture2D LoadTITLEEGAPictureFile(string file)
     {
         if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + file))
         {
@@ -5167,8 +5167,10 @@ public class World : MonoBehaviour
         byte[] dest = new byte[s];
         l.Decompress(picFileData, dest, picFileData.Length);
 
-        return Gra_4(80, 152, 0, 0, dest, 0, -1, 0);
+        return EGA_To_Texture2D(320, 200, dest, -1);
     }
+
+    // TODO get this from the exe or create my own
     ushort[] RANDOM = {
                     0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
                     0x0000,0x0001,0xC004,0x0010,0x0080,0x0104,0x0400,0x0401,
@@ -5179,60 +5181,51 @@ public class World : MonoBehaviour
                     0xD3F1,0xF3FC,0x3C8F,0xCF8F,0x3F3F,0xFFCF,0x13FC,0xCFFF,
                     0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF
                 };
-    public Texture2D Gra_3(
-        int width_in_char, 
+    public Texture2D PIC_To_Texture2D(
+        int width, 
         int height,
-        int src_x_in_char, 
-        int src_y,
-        byte [] p,
-        int dst_y,
-        int random_stuff,
-        int dst_x_in_char,
-        int skip = 7)
+        byte [] raw,
+        int randomStuff)
     {
-        int i, j;
-        int src_0; // index
-        int width;
-        int dst_x;
-
-        src_0 = (src_x_in_char * 8) / 4;
-        width = width_in_char * 8;
-        dst_x = dst_x_in_char * 8;
+        int x, y;
 
         // allocate destination texture
         Texture2D texture = new Texture2D(width, height);
 
-        for (i = 0; i < height; i++)
+        for (y = 0; y < height; y++)
         {
             int src;
 
-            src = src_0 + ((src_y + i) & 1) * 0x2000 + ((src_y + i) >> 1) * 80;
-            for (j = 0; j < width; j += 2 * 4)
+            // Note: there is a 7 byte header on these files, not sure what it contains
+            // Note: this is interlaced
+            src = (y % 2) * 0x2000 + (y / 2) * (width / 4) + 7;
+            for (x = 0; x < width; x += 8)
             {
                 ushort word;
 
-                word = System.BitConverter.ToUInt16(p, src + skip);
+                word = System.BitConverter.ToUInt16(raw, src);
 
                 src += 2;
 
-                if (random_stuff != -1)
+                if (randomStuff != -1)
                 {
                     if (word == 0)
                     {
                         continue;
                     }
 
-                    word &= RANDOM[(random_stuff & 0xff) + (Random.Range(0, 7))];
+                    word &= RANDOM[(randomStuff & 0xff) + (Random.Range(0, 7))];
                 }
 
-                texture.SetPixel(dst_x + j + 0, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x00c0) >> 6]);
-                texture.SetPixel(dst_x + j + 1, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x0030) >> 4]);
-                texture.SetPixel(dst_x + j + 2, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x000c) >> 2]);
-                texture.SetPixel(dst_x + j + 3, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x0003) >> 0]);
-                texture.SetPixel(dst_x + j + 4, height - 1 - (dst_y + i), CGAColorPalette[(word & 0xc000) >> 14]);
-                texture.SetPixel(dst_x + j + 5, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x3000) >> 12]);
-                texture.SetPixel(dst_x + j + 6, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x0c00) >> 10]);
-                texture.SetPixel(dst_x + j + 7, height - 1 - (dst_y + i), CGAColorPalette[(word & 0x0300) >> 8]);
+                // two bits per pixel
+                texture.SetPixel(x + 0, height - 1 - y, CGAColorPalette[(word & 0x00c0) >> 6]);
+                texture.SetPixel(x + 1, height - 1 - y, CGAColorPalette[(word & 0x0030) >> 4]);
+                texture.SetPixel(x + 2, height - 1 - y, CGAColorPalette[(word & 0x000c) >> 2]);
+                texture.SetPixel(x + 3, height - 1 - y, CGAColorPalette[(word & 0x0003) >> 0]);
+                texture.SetPixel(x + 4, height - 1 - y, CGAColorPalette[(word & 0xc000) >> 14]);
+                texture.SetPixel(x + 5, height - 1 - y, CGAColorPalette[(word & 0x3000) >> 12]);
+                texture.SetPixel(x + 6, height - 1 - y, CGAColorPalette[(word & 0x0c00) >> 10]);
+                texture.SetPixel(x + 7, height - 1 - y, CGAColorPalette[(word & 0x0300) >> 8]);
             }
         }
 
@@ -5241,56 +5234,45 @@ public class World : MonoBehaviour
         return texture;
     }
 
-    public Texture2D Gra_4(
-        int width_in_char,
+    public Texture2D EGA_To_Texture2D(
+        int width,
         int height,
-        int src_x_in_char,
-        int src_y,
-        byte[] p,
-        int dst_y,
-        int random_stuff,
-        int dst_x_in_char,
-        int skip = 7)
+        byte[] raw,
+        int randomStuff)
     {
-        int i, j;
-        int src_0; // index
-        int width;
-        int dst_x;
-
-        src_0 = (src_x_in_char * 8) / 2;
-        width = width_in_char * 8 / 2;
-        dst_x = dst_x_in_char * 8 / 2;
+        int x, y;
 
         // allocate destination texture
         Texture2D texture = new Texture2D(width, height);
 
-        for (i = 0; i < height; i++)
+        for (y = 0; y < height; y++)
         {
             int src;
 
-            src = src_0 + ((src_y + i) & 1) * 0x2000 + ((src_y + i) >> 1) * 80;
-            for (j = 0; j < width; j += 2 * 2)
+            src = y * width / 2;
+            for (x = 0; x < width; x += 4)
             {
                 ushort word;
 
-                word = System.BitConverter.ToUInt16(p, src + skip);
+                word = System.BitConverter.ToUInt16(raw, src);
 
                 src += 2;
 
-                if (random_stuff != -1)
+                if (randomStuff != -1)
                 {
-                    if (word == 0)
+                    if (word != 0)
                     {
                         continue;
                     }
 
-                    word &= RANDOM[(random_stuff & 0xff) + (Random.Range(0, 7))];
+                    word &= RANDOM[(randomStuff & 0xff) + (Random.Range(0, 7))];
                 }
 
-                texture.SetPixel(dst_x + j + 0, height - 1 - (dst_y + i), EGAColorPalette[(word & 0xF000) >> 12]);
-                texture.SetPixel(dst_x + j + 1, height - 1 - (dst_y + i), EGAColorPalette[(word & 0x0F00) >> 8]);
-                texture.SetPixel(dst_x + j + 2, height - 1 - (dst_y + i), EGAColorPalette[(word & 0x00F0) >> 4]);
-                texture.SetPixel(dst_x + j + 3, height - 1 - (dst_y + i), EGAColorPalette[(word & 0x000F) >> 0]);
+                // 4 bits per pixel, these pixels are swapped
+                texture.SetPixel(x + 1, height - 1 - y, EGAColorPalette[(word & 0x000F) >> 0]);
+                texture.SetPixel(x + 0, height - 1 - y, EGAColorPalette[(word & 0x00F0) >> 4]);
+                texture.SetPixel(x + 3, height - 1 - y, EGAColorPalette[(word & 0x0F00) >> 8]);
+                texture.SetPixel(x + 2, height - 1 - y, EGAColorPalette[(word & 0xF000) >> 12]);
             }
         }
 
@@ -9427,7 +9409,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         HONOR = 17,
         SPIRIT = 18,
         HUMILITY = 19,
-        MAX = 21
+        MAX = 20
     };
 
     public enum PICTURE2
@@ -9562,15 +9544,15 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
         for (int i = 0; i < (int)PICTURE.MAX; i++)
         {
-            picture[i] = LoadPicFile(((PICTURE)i).ToString() + ".PIC");
+            picture[i] = LoadAVATARPicFile(((PICTURE)i).ToString() + ".PIC");
         }
 
         picture2 = new Texture2D[(int)PICTURE2.MAX];
 
         for (int i = 0; i < (int)PICTURE2.MAX; i++)
         {
-            //picture2[i] = LoadPicFile3(((PICTURE2)i).ToString() + ".EGA");
-            picture2[i] = LoadPicFile2(((PICTURE2)i).ToString() +  ".PIC");
+            //picture2[i] = LoadTITLEEGAPictureFile(((PICTURE2)i).ToString() + ".EGA");
+            picture2[i] = LoadTITLEPicPictureFile(((PICTURE2)i).ToString() +  ".PIC");
         }
 
         // everything I need it now loaded, start the game engine thread
