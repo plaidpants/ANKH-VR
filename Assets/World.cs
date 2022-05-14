@@ -5130,6 +5130,93 @@ public class World : MonoBehaviour
         return texture;
     }
 
+    Texture2D LoadAVATAREGAFile(string file)
+    {
+        // check if the file exists
+        if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + file))
+        {
+            Debug.Log("Could not find pic file " + Application.persistentDataPath + "/u4/" + file);
+            return null;
+        }
+
+        // read the file
+        byte[] picFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + "/u4/" + file);
+
+        // check if the file at least has some size
+        if (picFileData.Length == 0)
+        {
+            Debug.Log("Picture file incorrect length " + picFileData.Length);
+            return null;
+        }
+
+        // allocate destination for unpacked data, 2 pixels per byte
+        byte[] dest = new byte[320 * 200 / 2];
+
+        // allocate destination texture
+        Texture2D texture = new Texture2D(320, 200);
+
+        // reset source and destination indexes
+        int destinationIndex = 0;
+        int fileIndex = 0;
+
+        // simple rle using magic code
+        while (fileIndex < picFileData.Length)
+        {
+            // magic code is 2
+            const byte MAGIC_CODE = 0x02;
+
+            // read in the block info
+            byte data = picFileData[fileIndex++];
+
+            // check if data is the magic code
+            if (data == MAGIC_CODE)
+            {
+                // get the length of the rle
+                byte length = picFileData[fileIndex++];
+
+                // get the data byte to use
+                data = picFileData[fileIndex++];
+
+                // fill destination with a runo of length of data 
+                while (length-- != 0)
+                {
+                    // copy the data
+                    dest[destinationIndex++] = data;
+                }
+            }
+            else
+            {
+                // just copy the data to the destination
+                dest[destinationIndex++] = data;
+            }
+        }
+
+        // reset destination pointer
+        destinationIndex = 0;
+
+        // transfer to texture
+        for (int y = 0; y < 200; y++)
+        {
+            for (int x = 0; x < 320; x += 4)
+            {
+                ushort word = System.BitConverter.ToUInt16(dest, destinationIndex);
+
+                destinationIndex += 2;
+
+                // 4 bits per pixel, these pixels are swapped
+                texture.SetPixel(x + 1, 200 - 1 - y, EGAColorPalette[(word & 0x000F) >> 0]);
+                texture.SetPixel(x + 0, 200 - 1 - y, EGAColorPalette[(word & 0x00F0) >> 4]);
+                texture.SetPixel(x + 3, 200 - 1 - y, EGAColorPalette[(word & 0x0F00) >> 8]);
+                texture.SetPixel(x + 2, 200 - 1 - y, EGAColorPalette[(word & 0xF000) >> 12]);
+            }
+        }
+
+        // apply pixels set above to texture
+        texture.Apply();
+
+        return texture;
+    }
+
     Texture2D LoadTITLEPicPictureFile(string file)
     {
         if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + file))
@@ -9544,7 +9631,8 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
         for (int i = 0; i < (int)PICTURE.MAX; i++)
         {
-            picture[i] = LoadAVATARPicFile(((PICTURE)i).ToString() + ".PIC");
+            //picture[i] = LoadAVATARPicFile(((PICTURE)i).ToString() + ".PIC");
+            picture[i] = LoadAVATAREGAFile(((PICTURE)i).ToString() + ".EGA");
         }
 
         picture2 = new Texture2D[(int)PICTURE2.MAX];

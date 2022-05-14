@@ -286,9 +286,9 @@ public class lzw
 
     int hashType3(int hashCode)
     {
-        const long probeOffset = 509;   // a prime number
+        const long hashOffset = 509;   // a prime number
 
-        long newHashCode = (hashCode + probeOffset) & 0xfff;
+        long newHashCode = (hashCode + hashOffset) & 0xfff;
         return (int)newHashCode;
     }
 
