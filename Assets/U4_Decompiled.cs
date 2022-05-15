@@ -16,6 +16,7 @@ public class U4_Decompiled : MonoBehaviour
     public AudioSource specialEffectAudioSource;
     public string gameText;
     public string npcText;
+    public string visionFilename;
     public TALK_INDEX npcTalkIndex = TALK_INDEX.INVALID;
     public bool started_playing_sound_effect = false;
     [SerializeField]
@@ -754,6 +755,7 @@ public class U4_Decompiled : MonoBehaviour
     delegate ZSTATS_MODE main_zstats_mode();
     delegate ZSTATS_MODE main_zstats_character();
     delegate void main_set_dir(DIRECTION direction);
+    delegate void main_GetVision(byte[] buffer, int length);
 #endif
 
     void Awake()
@@ -3447,6 +3449,24 @@ sfx_magic2:
             {
                 gameText = "" + (char)(0x1f  - ((int)(Time.time * 3) % 4));
             }
+
+            System.Array.Clear(buffer, 0, buffer.Length);
+
+#if USE_UNITY_DLL_FUNCTION
+            main_NPC_Text(buffer, buffer.Length);
+#else
+            Native.Invoke<main_GetVision>(nativeLibraryPtr, buffer, buffer.Length);
+#endif
+            int len;
+            for (len = 0; len < 255; len++)
+            {
+                if (buffer[len] == 0)
+                {
+                    break;
+                }
+            }
+
+            visionFilename = enc.GetString(buffer, 0, len);
 
             // read the circular npc text buffer from the game engine
             // this is different than the text above as it has speaking information

@@ -9472,20 +9472,23 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
     CombatMonsterStartPositions[][] combatMonsterStartPositions = new CombatMonsterStartPositions[(int)U4_Decompiled.COMBAT_TERRAIN.MAX][];
     CombatPartyStartPositions[][] combatPartyStartPositions = new CombatPartyStartPositions[(int)U4_Decompiled.COMBAT_TERRAIN.MAX][];
 
+    public Image vision;
+
     public Texture2D[] picture;
     public Texture2D[] picture2;
     public enum PICTURE
     {
-        RUNE_0 = 0,/*I*/
-        RUNE_1 = 1,/*N*/
-        RUNE_2 = 2,/*F*/
-        RUNE_3 = 3,/*T*/
-        RUNE_4 = 4,/*Y*/
-        RUNE_5 = 5,/*infinity symbol*/
-        START = 6,
-        KEY7 = 7,
-        STONCRCL = 8,
-        TRUTH = 9,
+        /* The use a special format for the AVATAR.EXE both PIC and EGA files are different than TITLE.EXE */
+        RUNE_0 = 0, // I
+        RUNE_1 = 1, // N
+        RUNE_2 = 2, // F
+        RUNE_3 = 3, // T
+        RUNE_4 = 4, // Y
+        RUNE_5 = 5, // infinity symbol
+        START = 6, // main screen layout
+        KEY7 = 7, // keyhole
+        STONCRCL = 8, // end game, return to stone circle
+        TRUTH = 9, // these are combined and displayed in the end game
         LOVE = 10,
         COURAGE = 11,
         HONESTY = 12,
@@ -9501,20 +9504,20 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
     public enum PICTURE2
     {
-        /* The use a different format for the title.exe */
-        OUTSIDE = 0,
-        PORTAL = 1,
-        TREE = 2,
-        INSIDE = 3,
-        WAGON = 4,
-        GYPSY = 5,
-        ABACUS = 6,
-        HONCOM = 7,
-        VALJUS = 8,
-        SACHONOR = 9,
-        SPIRHUM = 10,
-        TITLE = 11,
-        ANIMATE = 12,
+        /* The use a special format for the TITLE.EXE both PIC and EGA files are different than AVATAR.EXE */
+        OUTSIDE = 0, // outside circus
+        PORTAL = 1, // stone circle for portal
+        TREE = 2, // outside tree
+        INSIDE = 3, // inside circus
+        WAGON = 4, // gypsy wagon
+        GYPSY = 5, // gypsy fortune teller
+        ABACUS = 6, // abacus and beads
+        HONCOM = 7, // honor and compassion tarot cards
+        VALJUS = 8, // valor and justice tarot cards
+        SACHONOR = 9, // sacrafice and honor tarot cards
+        SPIRHUM = 10, // spirit and humility tarot cards
+        TITLE = 11, // title screen
+        ANIMATE = 12, // large animated character frames from the title screen
         MAX = 13
     };
 
@@ -9635,12 +9638,15 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             picture[i] = LoadAVATAREGAFile(((PICTURE)i).ToString() + ".EGA");
         }
 
+        vision.sprite = null;
+        vision.color = new Color(0f, 0f, 0f, 0f);
+
         picture2 = new Texture2D[(int)PICTURE2.MAX];
 
         for (int i = 0; i < (int)PICTURE2.MAX; i++)
         {
-            //picture2[i] = LoadTITLEEGAPictureFile(((PICTURE2)i).ToString() + ".EGA");
-            picture2[i] = LoadTITLEPicPictureFile(((PICTURE2)i).ToString() +  ".PIC");
+            //picture2[i] = LoadTITLEPicPictureFile(((PICTURE2)i).ToString() +  ".PIC");
+            picture2[i] = LoadTITLEEGAPictureFile(((PICTURE2)i).ToString() + ".EGA");
         }
 
         // everything I need it now loaded, start the game engine thread
@@ -11683,8 +11689,22 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             {
                 reagentsStatus.SetActive(false);
             }
+
+            if (u4.visionFilename.Length > 0)
+            {
+                if (lastVisionFilename != u4.visionFilename)
+                {
+                    Texture2D texture = LoadAVATAREGAFile(u4.visionFilename.Replace(".pic", ".EGA"));
+                    vision.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+                    vision.color = new Color(255f, 255f, 255f, 255f);
+
+                    lastVisionFilename = u4.visionFilename;
+                }
+            }
         }
     }
+
+    public string lastVisionFilename;
 
     // The font is setup so if the high bit is set it will use the inverse highlighted text
     // this function will set the high bit on all the characters in a string so when displayed with the font
