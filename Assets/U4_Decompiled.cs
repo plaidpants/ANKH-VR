@@ -85,8 +85,7 @@ public class U4_Decompiled : MonoBehaviour
         MANTRA_WORD = 40,
         USE_ITEM_WORD = 36,
         USE_STONE_COLOR_WORD = 37,
-        END_GAME_INFINITY_WORD = 42,
-        END_GAME_VERAMOCOR_WORD = 43,
+        END_GAME_WORD = 51,
         // general input
         GENERAL_YES_NO_WORD = 39,
         GENERAL_YES_NO = 10,
@@ -114,8 +113,10 @@ public class U4_Decompiled : MonoBehaviour
         MAIN_LOOP = 18,
         DUNGEON_LOOP = 17,
         COMBAT_LOOP = 44,
+        // delay is active, can skip
+        DELAY_CONTINUE = 46,
         // delay is active, no input
-        DELAY = 46,
+        DELAY_NO_CONTINUE = 52,
         // drive letter for PCs, not really useful here
         DRIVE_LETTER = 45,
     }

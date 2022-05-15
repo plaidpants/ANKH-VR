@@ -62,6 +62,7 @@ public class World : MonoBehaviour
     public GameObject TalkCitizen;
     public GameObject TalkHealer;
     public GameObject TalkContinue;
+    public Button TalkContinueButton;
     public GameObject TalkYN;
     public GameObject TalkYesNo;
     public GameObject TalkBuySell;
@@ -87,10 +88,9 @@ public class World : MonoBehaviour
 
     public GameObject TalkPubWord;
     public GameObject TalkDigit0123;
-    public GameObject TalkInfinity;
-    public GameObject TalkVeramocor;
     public GameObject TalkVirtue;
     public GameObject TalkDirection;
+    public GameObject TalkEndGame;
 
 
     // reference to game engine
@@ -4999,14 +4999,26 @@ public class World : MonoBehaviour
         public byte MBYTE;
     };
 
-    Texture2D LoadAVATARPicFile(string file)
+    void ClearTexture(Texture2D texture, Color color)
+    {
+        for (int y = 0; y < texture.height; y++)
+        {
+            for (int x = 0; x < texture.width; x++)
+            {
+                texture.SetPixel(x, y, color);
+            }
+        }
+        texture.Apply();
+    }
+
+    void LoadAVATARPicFile(string file, Texture2D texture)
     {
         int fileIndex = 0;
 
         if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + file))
         {
             Debug.Log("Could not find pic file " + Application.persistentDataPath + "/u4/" + file);
-            return null;
+            return;
         }
 
         // read the file
@@ -5016,7 +5028,7 @@ public class World : MonoBehaviour
         if (picFileData.Length < 0x11 + 0x02)
         {
             Debug.Log("Picture file incorrect length " + picFileData.Length);
-            return null;
+            return;
         }
 
         tHeader header = new tHeader();
@@ -5048,14 +5060,11 @@ public class World : MonoBehaviour
             header.evideo != 'A' ||
             header.edesc != 1)
         {
-            return null;
+            return;
         }
 
         // allocate destination for unpacked data
         byte[] dest = new byte[header.xsize * header.ysize / (8 / header.bitsinf) /* 0x3e80 or 16000*/];
-
-        // allocate destination texture
-        Texture2D texture = new Texture2D(header.xsize, header.ysize);
 
         byte[] eData = new byte[header.esize];
 
@@ -5114,29 +5123,45 @@ public class World : MonoBehaviour
         pdest = 0;
 
         // transfer to texture
+        // The end game sequence relies on images overlapping each other so we
+        // will only copy if the pixel is not black
         for (int i = 0; i < header.ysize; i++)
         {
             for (int j = 0; j < header.xsize; j += 4)
             {
                 byte byt = dest[pdest++];
-                texture.SetPixel(j + 0, i, CGAColorPalette[(byt & 0xc0) >> 6]);
-                texture.SetPixel(j + 1, i, CGAColorPalette[(byt & 0x30) >> 4]);
-                texture.SetPixel(j + 2, i, CGAColorPalette[(byt & 0x0c) >> 2]);
-                texture.SetPixel(j + 3, i, CGAColorPalette[(byt & 0x03) >> 0]);
+                Color color = CGAColorPalette[(byt & 0xc0) >> 6];
+                if (color != Color.black)
+                {
+                    texture.SetPixel(j + 0, i, color);
+                }
+                color = CGAColorPalette[(byt & 0x30) >> 4];
+                if (color != Color.black)
+                {
+                    texture.SetPixel(j + 1, i, color);
+                }
+                color = CGAColorPalette[(byt & 0x0c) >> 2];
+                if (color != Color.black)
+                {
+                    texture.SetPixel(j + 2, i, color);
+                }
+                color = CGAColorPalette[(byt & 0x03) >> 0];
+                if (color != Color.black)
+                {
+                    texture.SetPixel(j + 3, i, color);
+                }
             }
         }
         texture.Apply();
-
-        return texture;
     }
 
-    Texture2D LoadAVATAREGAFile(string file)
+    void LoadAVATAREGAFile(string file, Texture2D texture)
     {
         // check if the file exists
         if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + file))
         {
             Debug.Log("Could not find pic file " + Application.persistentDataPath + "/u4/" + file);
-            return null;
+            return;
         }
 
         // read the file
@@ -5146,14 +5171,11 @@ public class World : MonoBehaviour
         if (picFileData.Length == 0)
         {
             Debug.Log("Picture file incorrect length " + picFileData.Length);
-            return null;
+            return;
         }
 
         // allocate destination for unpacked data, 2 pixels per byte
         byte[] dest = new byte[320 * 200 / 2];
-
-        // allocate destination texture
-        Texture2D texture = new Texture2D(320, 200);
 
         // reset source and destination indexes
         int destinationIndex = 0;
@@ -5195,6 +5217,8 @@ public class World : MonoBehaviour
         destinationIndex = 0;
 
         // transfer to texture
+        // The end game sequence relies on images overlapping each other so we
+        // will only copy if the pixel is not black
         for (int y = 0; y < 200; y++)
         {
             for (int x = 0; x < 320; x += 4)
@@ -5203,21 +5227,54 @@ public class World : MonoBehaviour
 
                 destinationIndex += 2;
 
-                // 4 bits per pixel, these pixels are swapped
-                texture.SetPixel(x + 1, 200 - 1 - y, EGAColorPalette[(word & 0x000F) >> 0]);
-                texture.SetPixel(x + 0, 200 - 1 - y, EGAColorPalette[(word & 0x00F0) >> 4]);
-                texture.SetPixel(x + 3, 200 - 1 - y, EGAColorPalette[(word & 0x0F00) >> 8]);
-                texture.SetPixel(x + 2, 200 - 1 - y, EGAColorPalette[(word & 0xF000) >> 12]);
+                Color color = EGAColorPalette[(word & 0x000F) >> 0];
+                if (color != Color.black)
+                {
+                    texture.SetPixel(x + 1, texture.height - 1 - y, color);
+                }
+                color = EGAColorPalette[(word & 0x00F0) >> 4];
+                if (color != Color.black)
+                {
+                    texture.SetPixel(x + 0, texture.height - 1 - y, color);
+                }
+                color = EGAColorPalette[(word & 0x0F00) >> 8];
+                if (color != Color.black)
+                {
+                    texture.SetPixel(x + 3, texture.height - 1 - y, color);
+                }
+                color = EGAColorPalette[(word & 0xF000) >> 12];
+                if (color != Color.black)
+                {
+                    texture.SetPixel(x + 2, texture.height - 1 - y, color);
+                }
             }
         }
 
         // apply pixels set above to texture
         texture.Apply();
-
-        return texture;
     }
 
-    Texture2D LoadTITLEPicPictureFile(string file)
+    Texture2D LoadTITLEPicPictureFile(string file, Texture2D texture)
+    {
+        if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + file))
+        {
+            Debug.Log("Could not find pic file " + Application.persistentDataPath + "/u4/" + file);
+            return null;
+        }
+
+        // read the file
+        byte[] picFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + "/u4/" + file);
+
+        lzw l = new lzw();
+
+        long s = l.GetDecompressedSize(picFileData, picFileData.Length);
+        byte[] uncompressedFileData = new byte[s];
+        l.Decompress(picFileData, uncompressedFileData, picFileData.Length);
+
+        return PIC_To_Texture2D(uncompressedFileData, -1, texture);
+    }
+
+    Texture2D LoadTITLEEGAPictureFile(string file, Texture2D texture)
     {
         if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + file))
         {
@@ -5234,27 +5291,7 @@ public class World : MonoBehaviour
         byte[] dest = new byte[s];
         l.Decompress(picFileData, dest, picFileData.Length);
 
-        return PIC_To_Texture2D(320, 200, dest, -1);
-    }
-
-    Texture2D LoadTITLEEGAPictureFile(string file)
-    {
-        if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + file))
-        {
-            Debug.Log("Could not find pic file " + Application.persistentDataPath + "/u4/" + file);
-            return null;
-        }
-
-        // read the file
-        byte[] picFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + "/u4/" + file);
-
-        lzw l = new lzw();
-
-        long s = l.GetDecompressedSize(picFileData, picFileData.Length);
-        byte[] dest = new byte[s];
-        l.Decompress(picFileData, dest, picFileData.Length);
-
-        return EGA_To_Texture2D(320, 200, dest, -1);
+        return EGA_To_Texture2D(dest, -1, texture);
     }
 
     // TODO get this from the exe or create my own
@@ -5269,24 +5306,20 @@ public class World : MonoBehaviour
                     0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF
                 };
     public Texture2D PIC_To_Texture2D(
-        int width, 
-        int height,
         byte [] raw,
-        int randomStuff)
+        int randomStuff,
+        Texture2D texture)
     {
         int x, y;
 
-        // allocate destination texture
-        Texture2D texture = new Texture2D(width, height);
-
-        for (y = 0; y < height; y++)
+        for (y = 0; y < texture.height; y++)
         {
             int src;
 
             // Note: there is a 7 byte header on these files, not sure what it contains
             // Note: this is interlaced
-            src = (y % 2) * 0x2000 + (y / 2) * (width / 4) + 7;
-            for (x = 0; x < width; x += 8)
+            src = (y % 2) * 0x2000 + (y / 2) * (texture.width / 4) + 7;
+            for (x = 0; x < texture.width; x += 8)
             {
                 ushort word;
 
@@ -5305,14 +5338,14 @@ public class World : MonoBehaviour
                 }
 
                 // two bits per pixel
-                texture.SetPixel(x + 0, height - 1 - y, CGAColorPalette[(word & 0x00c0) >> 6]);
-                texture.SetPixel(x + 1, height - 1 - y, CGAColorPalette[(word & 0x0030) >> 4]);
-                texture.SetPixel(x + 2, height - 1 - y, CGAColorPalette[(word & 0x000c) >> 2]);
-                texture.SetPixel(x + 3, height - 1 - y, CGAColorPalette[(word & 0x0003) >> 0]);
-                texture.SetPixel(x + 4, height - 1 - y, CGAColorPalette[(word & 0xc000) >> 14]);
-                texture.SetPixel(x + 5, height - 1 - y, CGAColorPalette[(word & 0x3000) >> 12]);
-                texture.SetPixel(x + 6, height - 1 - y, CGAColorPalette[(word & 0x0c00) >> 10]);
-                texture.SetPixel(x + 7, height - 1 - y, CGAColorPalette[(word & 0x0300) >> 8]);
+                texture.SetPixel(x + 0, texture.height - 1 - y, CGAColorPalette[(word & 0x00c0) >> 6]);
+                texture.SetPixel(x + 1, texture.height - 1 - y, CGAColorPalette[(word & 0x0030) >> 4]);
+                texture.SetPixel(x + 2, texture.height - 1 - y, CGAColorPalette[(word & 0x000c) >> 2]);
+                texture.SetPixel(x + 3, texture.height - 1 - y, CGAColorPalette[(word & 0x0003) >> 0]);
+                texture.SetPixel(x + 4, texture.height - 1 - y, CGAColorPalette[(word & 0xc000) >> 14]);
+                texture.SetPixel(x + 5, texture.height - 1 - y, CGAColorPalette[(word & 0x3000) >> 12]);
+                texture.SetPixel(x + 6, texture.height - 1 - y, CGAColorPalette[(word & 0x0c00) >> 10]);
+                texture.SetPixel(x + 7, texture.height - 1 - y, CGAColorPalette[(word & 0x0300) >> 8]);
             }
         }
 
@@ -5322,22 +5355,18 @@ public class World : MonoBehaviour
     }
 
     public Texture2D EGA_To_Texture2D(
-        int width,
-        int height,
         byte[] raw,
-        int randomStuff)
+        int randomStuff, 
+        Texture2D texture)
     {
         int x, y;
 
-        // allocate destination texture
-        Texture2D texture = new Texture2D(width, height);
-
-        for (y = 0; y < height; y++)
+        for (y = 0; y < texture.height; y++)
         {
             int src;
 
-            src = y * width / 2;
-            for (x = 0; x < width; x += 4)
+            src = y * texture.width / 2;
+            for (x = 0; x < texture.width; x += 4)
             {
                 ushort word;
 
@@ -5356,10 +5385,14 @@ public class World : MonoBehaviour
                 }
 
                 // 4 bits per pixel, these pixels are swapped
-                texture.SetPixel(x + 1, height - 1 - y, EGAColorPalette[(word & 0x000F) >> 0]);
-                texture.SetPixel(x + 0, height - 1 - y, EGAColorPalette[(word & 0x00F0) >> 4]);
-                texture.SetPixel(x + 3, height - 1 - y, EGAColorPalette[(word & 0x0F00) >> 8]);
-                texture.SetPixel(x + 2, height - 1 - y, EGAColorPalette[(word & 0xF000) >> 12]);
+                Color color = EGAColorPalette[(word & 0x000F) >> 0];
+                texture.SetPixel(x + 1, texture.height - 1 - y, color);
+                color = EGAColorPalette[(word & 0x00F0) >> 4];
+                texture.SetPixel(x + 0, texture.height - 1 - y, color);
+                color = EGAColorPalette[(word & 0x0F00) >> 8];
+                texture.SetPixel(x + 3, texture.height - 1 - y, color);
+                color = EGAColorPalette[(word & 0xF000) >> 12];
+                texture.SetPixel(x + 2, texture.height - 1 - y, color);
             }
         }
 
@@ -9473,9 +9506,12 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
     CombatPartyStartPositions[][] combatPartyStartPositions = new CombatPartyStartPositions[(int)U4_Decompiled.COMBAT_TERRAIN.MAX][];
 
     public Image vision;
+    Texture2D visionTexture;
 
-    public Texture2D[] picture;
+    public Texture2D[] picture1;
     public Texture2D[] picture2;
+    public Texture2D[] picture3;
+    public Texture2D[] picture4;
     public enum PICTURE
     {
         /* The use a special format for the AVATAR.EXE both PIC and EGA files are different than TITLE.EXE */
@@ -9630,31 +9666,59 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             //CreateMapLabels(settlementGameObject, ref settlementMap[i]);
         }
 
-        picture = new Texture2D[(int)PICTURE.MAX];
-
-        for (int i = 0; i < (int)PICTURE.MAX; i++)
-        {
-            //picture[i] = LoadAVATARPicFile(((PICTURE)i).ToString() + ".PIC");
-            picture[i] = LoadAVATAREGAFile(((PICTURE)i).ToString() + ".EGA");
-        }
-
+        // set the vision to blank
         vision.sprite = null;
         vision.color = new Color(0f, 0f, 0f, 0f);
 
-        picture2 = new Texture2D[(int)PICTURE2.MAX];
-
-        for (int i = 0; i < (int)PICTURE2.MAX; i++)
-        {
-            //picture2[i] = LoadTITLEPicPictureFile(((PICTURE2)i).ToString() +  ".PIC");
-            picture2[i] = LoadTITLEEGAPictureFile(((PICTURE2)i).ToString() + ".EGA");
-        }
+        // allocate vision texture that we can overlap pictures onto
+        visionTexture = new Texture2D(320, 200);
+        ClearTexture(visionTexture, EGAColorPalette[(int)EGA_COLOR.BLACK]);
 
         // everything I need it now loaded, start the game engine thread
         u4.StartThread();
 
         //GameObject dungeonExpandedLevelGameObject = CreateDungeonExpandedLevel(DUNGEONS.HYTHLOTH, 4);
 
-        // Some test stuff, commented out for the moment
+        // Some test stuff, can commented out as needed
+
+        picture1 = new Texture2D[(int)PICTURE.MAX];
+        picture2 = new Texture2D[(int)PICTURE.MAX];
+
+        picture3 = new Texture2D[(int)PICTURE2.MAX];
+        picture4 = new Texture2D[(int)PICTURE2.MAX];
+
+
+        for (int i = 0; i < (int)PICTURE.MAX; i++)
+        {
+            picture1[i] = new Texture2D(320, 200);
+            ClearTexture(picture1[i], CGAColorPalette[(int)CGA_COLOR.BLACK]);
+            LoadAVATARPicFile(((PICTURE)i).ToString() + ".PIC", picture1[i]);
+            picture2[i] = new Texture2D(320, 200);
+            ClearTexture(picture2[i], EGAColorPalette[(int)EGA_COLOR.BLACK]);
+            LoadAVATAREGAFile(((PICTURE)i).ToString() + ".EGA", picture2[i]);
+        }
+
+        for (int i = (int)PICTURE.TRUTH; i <= (int)PICTURE.HUMILITY; i++)
+        {
+            LoadAVATARPicFile(((PICTURE)i).ToString() + ".PIC", picture1[(int)PICTURE.TRUTH]);
+        }
+
+        for (int i = (int)PICTURE.TRUTH; i <= (int)PICTURE.HUMILITY; i++)
+        {
+            LoadAVATAREGAFile(((PICTURE)i).ToString() + ".EGA", picture2[(int)PICTURE.TRUTH]);
+        }
+
+        for (int i = 0; i < (int)PICTURE2.MAX; i++)
+        {
+            picture3[i] = new Texture2D(320, 200);
+            ClearTexture(picture3[i], CGAColorPalette[(int)CGA_COLOR.BLACK]);
+            LoadTITLEPicPictureFile(((PICTURE2)i).ToString() + ".PIC", picture3[i]);
+            picture4[i] = new Texture2D(320, 200);
+            ClearTexture(picture4[i], EGAColorPalette[(int)EGA_COLOR.BLACK]);
+            LoadTITLEEGAPictureFile(((PICTURE2)i).ToString() + ".EGA", picture4[i]);
+        }
+
+
 
         //GameObject dungeonsRoomsGameObject = new GameObject("Dungeon Rooms");
         //CreateDungeonRooms(dungeonsRoomsGameObject);
@@ -10118,12 +10182,32 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkHealer.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_CONTINUE)
+            if ((u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_CONTINUE) ||
+                (u4.inputMode == U4_Decompiled.INPUT_MODE.DELAY_CONTINUE) ||
+                (u4.inputMode == U4_Decompiled.INPUT_MODE.DELAY_NO_CONTINUE))
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkContinue.SetActive(true);
+                if (u4.inputMode == U4_Decompiled.INPUT_MODE.DELAY_CONTINUE)
+                {
+                    TalkContinueButton.gameObject.SetActive(true);
+                }
+                else if (u4.inputMode == U4_Decompiled.INPUT_MODE.DELAY_NO_CONTINUE)
+                {
+                    TalkContinueButton.gameObject.SetActive(false);
+
+                    if (vision.sprite == null)
+                    {
+                        // no continue button and nothing to display so just disable the panel entirely
+                        InputPanel.SetActive(false);
+                    }
+                }
+                else
+                {
+                    TalkContinueButton.gameObject.SetActive(true);
+                }
             }
             else
             {
@@ -10203,12 +10287,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkPartyCharacter.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.DELAY)
-            {
-                InputPanel.SetActive(false);
-                Talk.SetActive(false);
-                Action.SetActive(false);
-            }
+
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.PUB_WORD)
             {
@@ -10322,6 +10401,33 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             {
                 TalkVirtue.SetActive(false);
             }
+            
+            if (u4.inputMode == U4_Decompiled.INPUT_MODE.END_GAME_WORD)
+            {
+                /*
+                Honesty
+                Compassion
+                Valor
+                Justice
+                Sacrifice
+                Honor
+                Spirituality
+                Humility
+                Love
+                Truth
+                Courage
+                */
+
+                InputPanel.SetActive(true);
+                Talk.SetActive(true);
+                Action.SetActive(false);
+                TalkEndGame.SetActive(true);
+            }
+            else
+            {
+                TalkEndGame.SetActive(false);
+            }
+            
 
             if (u4.inputMode == U4_Decompiled.INPUT_MODE.USE_ITEM_WORD)
             {
@@ -10525,30 +10631,6 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             else
             {
                 TalkDigit0123.SetActive(false);
-            }
-
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.END_GAME_INFINITY_WORD)
-            {
-                InputPanel.SetActive(true);
-                Talk.SetActive(true);
-                Action.SetActive(false);
-                TalkInfinity.SetActive(true);
-            }
-            else
-            {
-                TalkInfinity.SetActive(false);
-            }
-
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.END_GAME_VERAMOCOR_WORD)
-            {
-                InputPanel.SetActive(true);
-                Talk.SetActive(true);
-                Action.SetActive(false);
-                TalkVeramocor.SetActive(true);
-            }
-            else
-            {
-                TalkVeramocor.SetActive(false);
             }
 
             // disable this for now
@@ -11690,15 +11772,21 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 reagentsStatus.SetActive(false);
             }
 
-            if (u4.visionFilename.Length > 0)
+            if (lastVisionFilename != u4.visionFilename)
             {
-                if (lastVisionFilename != u4.visionFilename)
+                if (u4.visionFilename.Length > 0)
                 {
-                    Texture2D texture = LoadAVATAREGAFile(u4.visionFilename.Replace(".pic", ".EGA"));
-                    vision.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+                    LoadAVATAREGAFile(u4.visionFilename.Replace(".pic", ".EGA"), visionTexture);
+                    vision.sprite = Sprite.Create(visionTexture, new Rect(0.0f, 0.0f, visionTexture.width, visionTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
                     vision.color = new Color(255f, 255f, 255f, 255f);
 
                     lastVisionFilename = u4.visionFilename;
+                }
+                else
+                {
+                    vision.sprite = null;
+                    vision.color = new Color(0f, 0f, 0f, 0f);
+                    ClearTexture(visionTexture, EGAColorPalette[(int)EGA_COLOR.BLACK]);
                 }
             }
         }
