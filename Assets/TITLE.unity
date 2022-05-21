@@ -11507,12 +11507,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   specialEffectAudioSource: {fileID: 1461463985}
   gameText: 
-  pictureFilename: 
-  pictureFilenameDest: 0
   started_playing_sound_effect: 0
   lastKeyboardHit: 0
   inputMode: 0
-  timerPeriod: 0.01
+  timerPeriod: 0.001
   soundEffects:
   - {fileID: 8300000, guid: 45499e07390e8e14b8b776dd5413cb28, type: 3}
   - {fileID: 8300000, guid: a0e2330f873c2904da5e4f9c594151b2, type: 3}
@@ -15812,7 +15810,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1632083496
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16829,7 +16827,7 @@ MonoBehaviour:
   pictureTexture: {fileID: 0}
   lastPictureFilename: 
   lastPictureDest: 0
-  timerPeriod: 0.01
+  timerPeriod: 0.001
   flagTimerPeriod: 0.1
   fontAtlas: {fileID: 0}
   fontTransparentAtlas: {fileID: 0}
@@ -19452,16 +19450,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2115965913}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 720628944195230082}
-  m_RootOrder: 1
+  m_Father: {fileID: 720628943064199177}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 168, y: -142}
   m_SizeDelta: {x: 320, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2115965915
@@ -20256,6 +20254,7 @@ RectTransform:
   - {fileID: 720628943297383880}
   - {fileID: 720628944195230082}
   - {fileID: 1351502198}
+  - {fileID: 2115965914}
   m_Father: {fileID: 720628942877266221}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -20322,7 +20321,7 @@ GameObject:
   - component: {fileID: 720628943297383880}
   - component: {fileID: 2073173408}
   m_Layer: 5
-  m_Name: TalkYN
+  m_Name: TalkAB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20402,9 +20401,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: U4_Decompiled, Assembly-CSharp
-        m_MethodName: CommandSayN
+      - m_Target: {fileID: 999847451}
+        m_TargetAssemblyTypeName: U4_Decompiled_TITLE, Assembly-CSharp
+        m_MethodName: CommandSayButtonName
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -20455,7 +20454,7 @@ GameObject:
   - component: {fileID: 720628943387052688}
   - component: {fileID: 720628943387052689}
   m_Layer: 5
-  m_Name: No
+  m_Name: B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20553,7 +20552,7 @@ GameObject:
   - component: {fileID: 720628943760913861}
   - component: {fileID: 720628943760913858}
   m_Layer: 5
-  m_Name: Yes
+  m_Name: A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20603,9 +20602,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: U4_Decompiled, Assembly-CSharp
-        m_MethodName: CommandSayY
+      - m_Target: {fileID: 999847451}
+        m_TargetAssemblyTypeName: U4_Decompiled_TITLE, Assembly-CSharp
+        m_MethodName: CommandSayButtonName
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -20751,7 +20750,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: No
+  m_Text: B
 --- !u!224 &720628944195230082
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20764,7 +20763,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4051553513891482040}
-  - {fileID: 2115965914}
   m_Father: {fileID: 720628943064199177}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -20868,7 +20866,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Yes
+  m_Text: A
 --- !u!222 &739237784233646680
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -20921,8 +20919,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: U4_Decompiled, Assembly-CSharp
+      - m_Target: {fileID: 999847451}
+        m_TargetAssemblyTypeName: U4_Decompiled_TITLE, Assembly-CSharp
         m_MethodName: CommandSayContinue
         m_Mode: 1
         m_Arguments:

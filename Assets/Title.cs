@@ -7187,6 +7187,7 @@ public class Title : MonoBehaviour
 
         // allocate the onscreen texture
         pictureTexture = new Texture2D(320, 200);
+        pictureTexture.filterMode = FilterMode.Point;
         ClearTexture(pictureTexture, EGAColorPalette[(int)EGA_COLOR.BLACK]);
 
         // set the onscreen texture to the sprite
@@ -7543,7 +7544,7 @@ public class Title : MonoBehaviour
                 TalkChoice.SetActive(false);
             }
 
-            if ((u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_CONTINUE) || 
+            if ((u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_CONTINUE) ||
                     (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_NO_CONTINUE))
             {
                 InputPanel.SetActive(true);
@@ -7570,6 +7571,11 @@ public class Title : MonoBehaviour
             else
             {
                 TalkContinue.SetActive(false);
+            }
+
+            if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.LAUNCH_GAME)
+            {
+                Application.LoadLevel(1);
             }
         }
 
