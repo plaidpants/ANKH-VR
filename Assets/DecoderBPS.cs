@@ -165,7 +165,7 @@ public class DecoderBSP : MonoBehaviour
 		}
 		catch
         {
-			Debug.Log("AVATAR.DLL already in use");
+			Debug.Log("DLL already in use");
         }
 	}
 }
