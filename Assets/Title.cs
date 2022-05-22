@@ -7533,7 +7533,7 @@ public class Title : MonoBehaviour
                 else
                 {
                     InputPanel.SetActive(false);
-                    //Application.LoadLevel(1); // TODO reenable this
+                    Application.LoadLevel(1);
                 }
 
                 if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.MAIN_MENU)
