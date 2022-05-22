@@ -28,6 +28,8 @@ public class Title : MonoBehaviour
     public GameObject InputPanel;
     public GameObject MainMainLoop;
     public GameObject Keyboard;
+    public GameObject KeyboardUpper;
+    public GameObject KeyboardLower;
     public GameObject GameText;
     public GameObject Picture;
     public GameObject TalkChoice;
@@ -7536,6 +7538,12 @@ public class Title : MonoBehaviour
 
                 if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.MAIN_MENU)
                 {
+                    u4_TITLE.gameText = "In another world, in a time to come.\n \nOptions:\n";
+                    GameText.GetComponentInChildren<Text>().alignment = TextAnchor.LowerCenter;
+
+                    RectTransform rt = GameText.GetComponent<RectTransform>();
+                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, 30);
+
                     MainMainLoop.SetActive(true);
                 }
                 else
@@ -7545,8 +7553,15 @@ public class Title : MonoBehaviour
 
                 if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.NAME)
                 {
-                    u4_TITLE.gameText = "By what name shalt thou be known in this world and time? \n";
+                    u4_TITLE.gameText = "By what name shalt thou be known in this world and time? \n \n              ";
+                    GameText.GetComponentInChildren<Text>().alignment = TextAnchor.LowerLeft;
+
+                    RectTransform rt = GameText.GetComponent<RectTransform>();
+                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, 40);
+
                     Keyboard.SetActive(true);
+                    KeyboardUpper.SetActive(true);
+                    KeyboardLower.SetActive(false);
                 }
                 else
                 {
@@ -7555,7 +7570,8 @@ public class Title : MonoBehaviour
 
                 if ((u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_TEXT_CONTINUE) ||
                        (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.NAME) ||
-                       (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.A_OR_B_CHOICE))
+                       (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.A_OR_B_CHOICE) ||
+                       (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.MAIN_MENU))
                 {
                     GameText.SetActive(true);
                 }
@@ -7567,13 +7583,16 @@ public class Title : MonoBehaviour
                 if ((u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_TEXT_CONTINUE)||
                         (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.A_OR_B_CHOICE))
                 {
-                    RectTransform rt = Picture.GetComponent<RectTransform>();
+                    RectTransform rt = GameText.GetComponent<RectTransform>();
+                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, 85);
+
+                    rt = Picture.GetComponent<RectTransform>();
                     rt.sizeDelta = new Vector2(rt.sizeDelta.x, 155);
                 }
                 else
                 {
                     RectTransform rt = Picture.GetComponent<RectTransform>();
-                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, 100);
+                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, 99);
                 }
 
                 if ((u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.MAIN_MENU) ||
