@@ -9532,6 +9532,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 720628943907804777, guid: 264ae02e2b95e0345960362312f0ab15,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 608211745}
+    - target: {fileID: 720628943907804777, guid: 264ae02e2b95e0345960362312f0ab15,
+        type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 720628943907804779, guid: 264ae02e2b95e0345960362312f0ab15,
+        type: 3}
+      propertyPath: m_InteractionManager
+      value: 
+      objectReference: {fileID: 572009428}
     - target: {fileID: 720628944224568446, guid: 264ae02e2b95e0345960362312f0ab15,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

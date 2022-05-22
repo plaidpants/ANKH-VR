@@ -56,6 +56,7 @@ public class U4_Decompiled_TITLE : MonoBehaviour
 
     public enum INPUT_MODE
     {
+        NONE = 0,
         MALE_OR_FEMALE = 1,
         NAME = 2,
         A_OR_B_CHOICE = 3,
@@ -68,7 +69,9 @@ public class U4_Decompiled_TITLE : MonoBehaviour
         // drive letter for PCs, not really useful here
         DRIVE_LETTER = 6,
 
-        LAUNCH_GAME = 8
+        LAUNCH_GAME = 8,
+
+        DELAY_TEXT_CONTINUE = 9,
     }
 
     // tiles
@@ -709,15 +712,19 @@ public class U4_Decompiled_TITLE : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        //StartThread();
     }
 
    public void StartThread()
     {
-        // start a thread with the DLL main task
-        trd = new Thread(new ThreadStart(this.ThreadTask));
-        trd.IsBackground = true;
-        trd.Start();
+        // don't start it twice
+        if (trd == null)
+        {
+            // start a thread with the DLL main task
+            trd = new Thread(new ThreadStart(this.ThreadTask));
+            trd.IsBackground = true;
+            trd.Start();
+        }
     }
 
     IEnumerator SayWordCoroutine(string word)
@@ -757,21 +764,59 @@ public class U4_Decompiled_TITLE : MonoBehaviour
     {
         StartCoroutine(SayWordCoroutine(clickedButtonName));
     }
+
     public void CommandSayWord(string word)
     {
         StartCoroutine(SayWordCoroutine(word));
+    }
+    public void CommandA()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit(character);
+#else
+        Native.Invoke<main_keyboardHit>(U4_Decompiled_TITLE.nativeLibraryPtr2, 'A');
+#endif
+        lastKeyboardHit = 'A';
+    }
+    public void CommandB()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit(character);
+#else
+        Native.Invoke<main_keyboardHit>(U4_Decompiled_TITLE.nativeLibraryPtr2, 'B');
+#endif
+        lastKeyboardHit = 'B';
+    }
+    public void CommandM()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit(character);
+#else
+        Native.Invoke<main_keyboardHit>(U4_Decompiled_TITLE.nativeLibraryPtr2, 'M');
+#endif
+        lastKeyboardHit = 'M';
     }
     public void CommandSayCharacter(char character)
     {
 #if USE_UNITY_DLL_FUNCTION
         main_keyboardHit(character);
 #else
-        Native.Invoke<main_keyboardHit>(U4_Decompiled_TITLE.nativeLibraryPtr2, character);
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr2, character);
 #endif
         lastKeyboardHit = character;
     }
 
-    public void CommandSayContinue()
+    public void CommandF()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit(character);
+#else
+        Native.Invoke<main_keyboardHit>(U4_Decompiled_TITLE.nativeLibraryPtr2, 'F');
+#endif
+        lastKeyboardHit = 'F';
+    }
+
+    public void CommandContinue()
     {
 #if USE_UNITY_DLL_FUNCTION
         main_keyboardHit((char)KEYS.VK_RETURN);
@@ -781,6 +826,15 @@ public class U4_Decompiled_TITLE : MonoBehaviour
         lastKeyboardHit = (char)KEYS.VK_RETURN;
     }
 
+    public void CommandBackspace()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit((char)KEYS.VK_RETURN);
+#else
+        Native.Invoke<main_keyboardHit>(U4_Decompiled_TITLE.nativeLibraryPtr2, (char)KEYS.VK_BACK);
+#endif
+        lastKeyboardHit = (char)KEYS.VK_BACK;
+    }
 
     void OnApplicationQuit()
     {
@@ -812,25 +866,28 @@ catch
 
         lastKeyboardHit = (char)KEYS.VK_ESCAPE;
 
-        // wait for the game engine thread to complete/return
-        while (trd.IsAlive == true)
+        if (trd != null)
         {
-            ;
-        }
+            // wait for the game engine thread to complete/return
+            while (trd.IsAlive == true)
+            {
+                ;
+            }
 
-        // It is now safe to unload the DLL
-        if (U4_Decompiled_TITLE.nativeLibraryPtr2 != System.IntPtr.Zero)
-        {
-            //Debug.Log("Unload AVATAR.DLL");
+            // It is now safe to unload the DLL
+            if (U4_Decompiled_TITLE.nativeLibraryPtr2 != System.IntPtr.Zero)
+            {
+                //Debug.Log("Unload AVATAR.DLL");
 #if PLATFORM_ANDROID && !UNITY_EDITOR
             Debug.Log(Native.dlclose(nativeLibraryPtr2) == 0
                           ? "Native library successfully unloaded."
                           : "Native library could not be unloaded.");
 #else
-            Debug.Log(Native.FreeLibrary(U4_Decompiled_TITLE.nativeLibraryPtr2)
-                          ? "Native library successfully unloaded."
-                          : "Native library could not be unloaded.");
+                Debug.Log(Native.FreeLibrary(U4_Decompiled_TITLE.nativeLibraryPtr2)
+                              ? "Native library successfully unloaded."
+                              : "Native library could not be unloaded.");
 #endif
+            }
         }
     }
 
@@ -1451,13 +1508,25 @@ catch
                 }
 
                 string engineText = enc.GetString(bytebuffer, 0, text_size);
+                int i;
+
+
 
                 // add the ACSII encoded text to the display text plus read the whirlpool character
                 gameText = gameText + engineText + (char)(0x1f - ((int)(Time.time * 3) % 4));
 
+                // remove any backspace characters
+                for (i = 1; i < gameText.Length; i++)
+                {
+                    // check for a backspace
+                    if (gameText[i] == (char)8)
+                    {
+                        gameText = gameText.Remove(i - 1, 2);
+                    }
+                }
+
                 // remove all but the last 20 lines of text from the text buffer
                 int newline_count = 0;
-                int i;
                 const int MAX_NEWLINES = 20;
                 for (i = gameText.Length - 1; (i > 0) && (newline_count < MAX_NEWLINES); i--)
                 {

@@ -27,11 +27,12 @@ public class Title : MonoBehaviour
 
     public GameObject InputPanel;
     public GameObject MainMainLoop;
+    public GameObject Keyboard;
+    public GameObject GameText;
+    public GameObject Picture;
     public GameObject TalkChoice;
     public GameObject TalkContinue;
-    public Button TalkContinueButton;
     public GameObject TalkMF;
-    public GameObject GameText;
 
     // reference to game engine
     public U4_Decompiled_TITLE u4_TITLE;
@@ -4789,7 +4790,8 @@ public class Title : MonoBehaviour
             }
         }
 
-        destination.Apply();
+        // we will do this at the end of the update call instead
+        //destination.Apply();
     }
 
     bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
@@ -7477,6 +7479,7 @@ public class Title : MonoBehaviour
     public float flagTimerPeriod = 0.10f;
 
     GameObject hiddenWorldMapGameObject;
+    U4_Decompiled_TITLE.INPUT_MODE lastInputMode = 0;
 
     // Update is called once per frame
     void Update()
@@ -7508,166 +7511,208 @@ public class Title : MonoBehaviour
 
             if (u4_TITLE.gameText != null && GameText != null)
             {
-                GameText.GetComponent<UnityEngine.UI.Text>().text = u4_TITLE.gameText;
+                GameText.GetComponentInChildren<UnityEngine.UI.Text>().text = u4_TITLE.gameText;
             }
 
-            if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.MAIN_MENU)
+            if (lastInputMode != u4_TITLE.inputMode)
             {
-                InputPanel.SetActive(true);
-                MainMainLoop.SetActive(true);
-            }
-            else
-            {
-                InputPanel.SetActive(false);
-                MainMainLoop.SetActive(false);
-            }
-
-            if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.MALE_OR_FEMALE)
-            {
-                InputPanel.SetActive(true);
-                TalkMF.SetActive(true);
-            }
-            else
-            {
-                InputPanel.SetActive(false);
-                TalkMF.SetActive(false);
-            }
-
-            if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.A_OR_B_CHOICE)
-            {
-                InputPanel.SetActive(true);
-                TalkChoice.SetActive(true);
-            }
-            else
-            {
-                InputPanel.SetActive(false);
-                TalkChoice.SetActive(false);
-            }
-
-            if ((u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_CONTINUE) ||
-                    (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_NO_CONTINUE))
-            {
-                InputPanel.SetActive(true);
-                TalkContinue.SetActive(true);
-                if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_CONTINUE)
+                if (lastInputMode == U4_Decompiled_TITLE.INPUT_MODE.NAME)
                 {
-                    TalkContinueButton.gameObject.SetActive(true);
+                    // clear the text after a name is entered
+                    u4_TITLE.gameText = "";
                 }
-                else if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_NO_CONTINUE)
-                {
-                    TalkContinueButton.gameObject.SetActive(false);
 
-                    if (picture.sprite == null)
+                lastInputMode = u4_TITLE.inputMode;
+
+                if (u4_TITLE.inputMode != U4_Decompiled_TITLE.INPUT_MODE.LAUNCH_GAME)
+                {
+                    InputPanel.SetActive(true);
+                }
+                else
+                {
+                    InputPanel.SetActive(false);
+                    //Application.LoadLevel(1); // TODO reenable this
+                }
+
+                if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.MAIN_MENU)
+                {
+                    MainMainLoop.SetActive(true);
+                }
+                else
+                {
+                    MainMainLoop.SetActive(false);
+                }
+
+                if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.NAME)
+                {
+                    u4_TITLE.gameText = "By what name shalt thou be known in this world and time? \n";
+                    Keyboard.SetActive(true);
+                }
+                else
+                {
+                    Keyboard.SetActive(false);
+                }
+
+                if ((u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_TEXT_CONTINUE) ||
+                       (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.NAME) ||
+                       (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.A_OR_B_CHOICE))
+                {
+                    GameText.SetActive(true);
+                }
+                else
+                {
+                    GameText.SetActive(false);
+                }
+
+                if ((u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_TEXT_CONTINUE)||
+                        (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.A_OR_B_CHOICE))
+                {
+                    RectTransform rt = Picture.GetComponent<RectTransform>();
+                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, 155);
+                }
+                else
+                {
+                    RectTransform rt = Picture.GetComponent<RectTransform>();
+                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, 100);
+                }
+
+                if ((u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.MAIN_MENU) ||
+                        (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.MALE_OR_FEMALE) ||
+                        (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.A_OR_B_CHOICE) ||
+                        (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_TEXT_CONTINUE) ||
+                        (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_NO_CONTINUE) ||
+                        (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_CONTINUE) ||
+                        (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.NAME))
+                {
+                    Picture.SetActive(true);
+                }
+                else
+                {
+                    Picture.SetActive(false);
+                }
+
+                if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.A_OR_B_CHOICE)
+                {
+                    TalkChoice.SetActive(true);
+                }
+                else
+                {
+                    TalkChoice.SetActive(false);
+                }
+
+                if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.MALE_OR_FEMALE)
+                {
+                    TalkMF.SetActive(true);
+                }
+                else
+                {
+                    TalkMF.SetActive(false);
+                }
+
+                if ((u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_CONTINUE) ||
+                        (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.DELAY_TEXT_CONTINUE))
+                {
+                    TalkContinue.SetActive(true);
+                }
+                else
+                {
+                    TalkContinue.SetActive(false);
+                }
+            }
+            
+            while (u4_TITLE.loadPictureQueue.Count != 0)
+            {
+                U4_Decompiled_TITLE.LoadPicture loadPicture = u4_TITLE.loadPictureQueue.Dequeue();
+                if (loadPicture.filename.Length > 0)
+                {
+                    lastPictureFilename = loadPicture.filename;
+                    lastPictureDest = loadPicture.dest;
+
+                    if (!pictureTextureAtlas.ContainsKey(lastPictureDest))
                     {
-                        // no continue button and nothing to display so just disable the panel entirely
-                        InputPanel.SetActive(false);
+                        // create new texture
+                        Texture2D addPictureTexture = new Texture2D(320, 200);
+
+                        byte[] destRaw = LoadTITLEEGAPictureFile(loadPicture.filename.ToLower().Replace(".pic", ".ega"));
+                        EGA_To_Texture2D(destRaw, addPictureTexture);
+
+                        pictureTextureAtlas.Add(lastPictureDest, addPictureTexture);
+                        pictureRawAtlas.Add(lastPictureDest, destRaw);
+                    }
+                    else
+                    {
+                        // update texture with new picture from file
+                        byte[] destRaw = LoadTITLEEGAPictureFile(loadPicture.filename.ToLower().Replace(".pic", ".ega"));
+                        EGA_To_Texture2D(destRaw, (Texture2D)pictureTextureAtlas[lastPictureDest]);
+                        pictureRawAtlas[loadPicture.dest] = destRaw;
                     }
                 }
-                else
-                {
-                    TalkContinueButton.gameObject.SetActive(true);
-                }
             }
-            else
-            {
-                TalkContinue.SetActive(false);
-            }
-
-            if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.LAUNCH_GAME)
-            {
-                Application.LoadLevel(1);
-            }
-        }
-
-        while (u4_TITLE.loadPictureQueue.Count != 0)
-        {
-            U4_Decompiled_TITLE.LoadPicture loadPicture = u4_TITLE.loadPictureQueue.Dequeue();
-            if (loadPicture.filename.Length > 0)
-            {
-                lastPictureFilename = loadPicture.filename;
-                lastPictureDest = loadPicture.dest;
-
-                if (!pictureTextureAtlas.ContainsKey(lastPictureDest))
-                {
-                    // create new texture
-                    Texture2D addPictureTexture = new Texture2D(320, 200);
-
-                    byte [] destRaw = LoadTITLEEGAPictureFile(loadPicture.filename.ToLower().Replace(".pic", ".ega"));
-                    EGA_To_Texture2D(destRaw, addPictureTexture);
-
-                    pictureTextureAtlas.Add(lastPictureDest, addPictureTexture);
-                    pictureRawAtlas.Add(lastPictureDest, destRaw);
-                }
-                else
-                {
-                    // update texture with new picture from file
-                    byte[] destRaw = LoadTITLEEGAPictureFile(loadPicture.filename.ToLower().Replace(".pic", ".ega"));
-                    EGA_To_Texture2D(destRaw, (Texture2D)pictureTextureAtlas[lastPictureDest]);
-                    pictureRawAtlas[loadPicture.dest] = destRaw;
-                }
-            }
-        }
-
-        while (u4_TITLE.screenCopyFrameQueue.Count != 0)
-        {
-            U4_Decompiled_TITLE.ScreenCopyFrame screenCopyFrame = u4_TITLE.screenCopyFrameQueue.Dequeue();
             
-            Texture2D sourceTexture = (Texture2D)pictureTextureAtlas[screenCopyFrame.p];
-            byte[] raw = (byte [])pictureRawAtlas[screenCopyFrame.p];
-
-            if (sourceTexture != null && raw != null)
+            while (u4_TITLE.screenCopyFrameQueue.Count != 0)
             {
-                if (screenCopyFrame.random_stuff == -1)
+                U4_Decompiled_TITLE.ScreenCopyFrame screenCopyFrame = u4_TITLE.screenCopyFrameQueue.Dequeue();
+
+                Texture2D sourceTexture = (Texture2D)pictureTextureAtlas[screenCopyFrame.p];
+                byte[] raw = (byte[])pictureRawAtlas[screenCopyFrame.p];
+
+                if (sourceTexture != null && raw != null)
                 {
-                    Graphics.CopyTexture(
-                        sourceTexture,
-                        0,
-                        0,
-                        screenCopyFrame.src_x_in_char * 8,
-                        sourceTexture.height - screenCopyFrame.src_y - screenCopyFrame.height,
-                        screenCopyFrame.width_in_char * 8,
-                        screenCopyFrame.height,
-                        pictureTexture,
-                        0,
-                        0,
-                        screenCopyFrame.dst_x_in_char * 8,
-                        pictureTexture.height - screenCopyFrame.dst_y - screenCopyFrame.height);
+                    if (screenCopyFrame.random_stuff == -1)
+                    {
+                        Graphics.CopyTexture(
+                            sourceTexture,
+                            0,
+                            0,
+                            screenCopyFrame.src_x_in_char * 8,
+                            sourceTexture.height - screenCopyFrame.src_y - screenCopyFrame.height,
+                            screenCopyFrame.width_in_char * 8,
+                            screenCopyFrame.height,
+                            pictureTexture,
+                            0,
+                            0,
+                            screenCopyFrame.dst_x_in_char * 8,
+                            pictureTexture.height - screenCopyFrame.dst_y - screenCopyFrame.height);
+                    }
+                    else
+                    {
+                        CopyTexture2D(
+                            raw,
+                            screenCopyFrame.src_x_in_char * 8,
+                            screenCopyFrame.src_y,
+                            screenCopyFrame.dst_x_in_char * 8,
+                            screenCopyFrame.dst_y,
+                            screenCopyFrame.width_in_char * 8,
+                            screenCopyFrame.height,
+                            screenCopyFrame.random_stuff,
+                            pictureTexture);
+                    }
                 }
-                else
+            }
+
+            if (u4_TITLE.screenDotQueue.Count > 4)
+            {
+                while (u4_TITLE.screenDotQueue.Count != 0)
                 {
-                    CopyTexture2D(
-                        raw,
-                        screenCopyFrame.src_x_in_char * 8,
-                        screenCopyFrame.src_y,
-                        screenCopyFrame.dst_x_in_char * 8,
-                        screenCopyFrame.dst_y,
-                        screenCopyFrame.width_in_char * 8,
-                        screenCopyFrame.height,
-                        screenCopyFrame.random_stuff,
-                        pictureTexture);
+                    U4_Decompiled_TITLE.ScreenDot screenDot = u4_TITLE.screenDotQueue.Dequeue();
+
+                    // convert back to EGA colors because the game engine is running with different palette
+                    if (screenDot.color == 3)
+                    {
+                        pictureTexture.SetPixel(screenDot.x, 199 - screenDot.y, EGAColorPalette[(int)EGA_COLOR.BRIGHT_CYAN]);
+                    }
+                    else if (screenDot.color == 2)
+                    {
+                        pictureTexture.SetPixel(screenDot.x, 199 - screenDot.y, EGAColorPalette[(int)EGA_COLOR.RED]);
+                    }
+                    else
+                    {
+                        pictureTexture.SetPixel(screenDot.x, 199 - screenDot.y, CGAColorPalette[screenDot.color]);
+                    }
                 }
             }
+            pictureTexture.Apply(); // TODO: try to do this only once per frame at the end to speed things up
         }
-
-        while (u4_TITLE.screenDotQueue.Count != 0)
-        {
-            U4_Decompiled_TITLE.ScreenDot screenDot = u4_TITLE.screenDotQueue.Dequeue();
-
-            // convert back to EGA colors because the game engine is running with different palette
-            if (screenDot.color == 3)
-            {
-                pictureTexture.SetPixel(screenDot.x, 199 - screenDot.y, EGAColorPalette[(int)EGA_COLOR.BRIGHT_CYAN]);
-            }
-            else if (screenDot.color == 2)
-            {
-                pictureTexture.SetPixel(screenDot.x, 199 - screenDot.y, EGAColorPalette[(int)EGA_COLOR.RED]);
-            }
-            else
-            {
-                pictureTexture.SetPixel(screenDot.x, 199 - screenDot.y, CGAColorPalette[screenDot.color]);
-            }
-        }
-        pictureTexture.Apply();
     }
 
     // The font is setup so if the high bit is set it will use the inverse highlighted text
@@ -8095,7 +8140,7 @@ public class Title : MonoBehaviour
         myTransparentFont.material = materialTransparent;
 
         // Set the font in the game text UI
-        GameText.GetComponent<UnityEngine.UI.Text>().font = myFont;
+        GameText.GetComponentInChildren<UnityEngine.UI.Text>().font = myFont;
 
         Button[] buttons = InputPanel.GetComponentsInChildren<Button>(true);
 
