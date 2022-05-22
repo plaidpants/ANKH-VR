@@ -7544,6 +7544,8 @@ public class Title : MonoBehaviour
                     RectTransform rt = GameText.GetComponent<RectTransform>();
                     rt.sizeDelta = new Vector2(rt.sizeDelta.x, 30);
 
+                    u4_TITLE.specialEffectAudioSource.Stop();
+
                     MainMainLoop.SetActive(true);
                 }
                 else
@@ -7584,7 +7586,7 @@ public class Title : MonoBehaviour
                         (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.A_OR_B_CHOICE))
                 {
                     RectTransform rt = GameText.GetComponent<RectTransform>();
-                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, 85);
+                    rt.sizeDelta = new Vector2(rt.sizeDelta.x, 94);
 
                     rt = Picture.GetComponent<RectTransform>();
                     rt.sizeDelta = new Vector2(rt.sizeDelta.x, 155);
@@ -7709,7 +7711,7 @@ public class Title : MonoBehaviour
                 }
             }
 
-            if (u4_TITLE.screenDotQueue.Count > 4)
+            if (u4_TITLE.screenDotQueue.Count > 0)
             {
                 while (u4_TITLE.screenDotQueue.Count != 0)
                 {

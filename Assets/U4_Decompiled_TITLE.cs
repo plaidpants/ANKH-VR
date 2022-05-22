@@ -1433,7 +1433,7 @@ catch
                     musicSource.Play();
 
                     // get ready for next music
-                    currentMusic = (MUSIC)((int)currentMusic + 1 % (int)MUSIC.MAX);
+                    currentMusic = (MUSIC)((int)(currentMusic + 1) % (int)MUSIC.MAX);
                 }
             }
 
@@ -1509,8 +1509,6 @@ catch
 
                 string engineText = enc.GetString(bytebuffer, 0, text_size);
                 int i;
-
-
 
                 // add the ACSII encoded text to the display text plus read the whirlpool character
                 gameText = gameText + engineText + (char)(0x1f - ((int)(Time.time * 3) % 4));
