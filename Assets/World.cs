@@ -11091,6 +11091,563 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     }
                 }
             }
+
+
+            // keep the sky game objects in sync with the game
+            if (skyGameObject)
+            {
+                if ((u4.current_mode == U4_Decompiled.MODE.OUTDOORS) || (u4.current_mode == U4_Decompiled.MODE.BUILDING))
+                {
+                    skyGameObject.transform.localPosition = new Vector3(u4.Party._x, 0, 255 - u4.Party._y);
+                }
+                else if (u4.current_mode == U4_Decompiled.MODE.COMBAT)
+                {
+                    skyGameObject.transform.localPosition = new Vector3(u4.currentActiveCharacter.x, 0, 255 - u4.currentActiveCharacter.y);
+                }
+                else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
+                {
+                    if (u4.currentActiveCharacter.active)
+                    {
+                        skyGameObject.transform.localPosition = new Vector3(u4.currentActiveCharacter.x, 0, 255 - u4.currentActiveCharacter.y);
+                    }
+                    else
+                    {
+                        skyGameObject.transform.localPosition = CenterOfCombatTerrain.transform.localPosition;
+                    }
+                }
+            }
+
+            // keep the party game object in sync with the game
+            if (partyGameObject)
+            {
+                if ((u4.current_mode == U4_Decompiled.MODE.OUTDOORS) ||
+                    (u4.current_mode == U4_Decompiled.MODE.BUILDING) ||
+                    (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP))
+                {
+                    partyGameObject.transform.localPosition = new Vector3(u4.Party._x, 255 - u4.Party._y, 0);
+                    if (Camera.main.transform.eulerAngles.y != 0)
+                    {
+                        if (rotateTransform)
+                        {
+                            if (u4.surface_party_direction == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                            }
+                        }
+                        else
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                        }
+                    }
+                }
+                else if (u4.current_mode == U4_Decompiled.MODE.COMBAT)
+                {
+                    if ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
+                    {
+                        //partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
+                        if (Camera.main.transform.eulerAngles.y != 0)
+                        {
+                            //rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+
+                            // if we are going to do rotation then we need to adjust the directional controls when in combat in the dungeon also
+                            if (rotateTransform)
+                            {
+                                if (u4.Party._dir == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                                {
+                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                                }
+                                else if (u4.Party._dir == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                                {
+                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                                }
+                                else if (u4.Party._dir == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                                {
+                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                                }
+                                else if (u4.Party._dir == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                                {
+                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Camera.main.transform.eulerAngles.y != 0)
+                        {
+                            if (rotateTransform)
+                            {
+                                if (u4.surface_party_direction == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                                {
+                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                                }
+                                else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                                {
+                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                                }
+                                else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                                {
+                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                                }
+                                else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                                {
+                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                                }
+                            }
+                            else
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                            }
+                        }
+                    }
+                }
+                else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_ROOM)
+                {
+                    //partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
+                    if (Camera.main.transform.eulerAngles.y != 0)
+                    {
+                        //rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+
+                        if (rotateTransform)
+                        {
+                            if (u4.Party._dir == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (u4.Party._dir == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (u4.Party._dir == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                            }
+                            else if (u4.Party._dir == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                            }
+                        }
+                    }
+                }
+                else if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
+                {
+                    partyGameObject.transform.localPosition = new Vector3(u4.Party._x * 11 + 5, (7 - u4.Party._y) * 11 + 5, 0);
+                    if (rotateTransform)
+                    {
+                        if (u4.Party._dir == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                        }
+                        else if (u4.Party._dir == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                        }
+                        else if (u4.Party._dir == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                        }
+                        else if (u4.Party._dir == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                        }
+                    }
+                }
+
+                if (u4.gameText != null && GameText != null)
+                {
+                    GameText.GetComponent<UnityEngine.UI.Text>().text = u4.gameText;
+                }
+
+                if ((u4.current_mode == U4_Decompiled.MODE.DUNGEON) ||
+                    ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+                {
+                    windDirection.GetComponent<UnityEngine.UI.Text>().text = (char)(0x10) + "Level" + (char)(0x12) + (char)(u4.Party._z + '1') + (char)(0x11);
+                }
+                else
+                {
+                    windDirection.GetComponent<UnityEngine.UI.Text>().text = (char)(0x10) + "Wind" + (char)(0x12);
+
+                    switch (u4.WindDir)
+                    {
+                        case U4_Decompiled.DIRECTION.NORTH:
+                            windDirection.GetComponent<UnityEngine.UI.Text>().text += "North" + (char)(0x11);
+                            break;
+                        case U4_Decompiled.DIRECTION.SOUTH:
+                            windDirection.GetComponent<UnityEngine.UI.Text>().text += "South" + (char)(0x11);
+                            break;
+                        case U4_Decompiled.DIRECTION.EAST:
+                            windDirection.GetComponent<UnityEngine.UI.Text>().text += (char)(0x12) + "East" + (char)(0x11);
+                            break;
+                        case U4_Decompiled.DIRECTION.WEST:
+                            windDirection.GetComponent<UnityEngine.UI.Text>().text += (char)(0x12) + "West" + (char)(0x11);
+                            break;
+                    }
+                }
+                moons.GetComponent<UnityEngine.UI.Text>().text = "" + (char)(0x10) + (char)(((u4.Party._trammel - 1) & 7) + 0x14) + (char)(0x12) + (char)(((u4.Party._felucca - 1) & 7) + 0x14) + (char)(0x11);
+
+                //trammelLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.Party._trammel * (360f / 8f), 0f);
+                //feluccaLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.Party._felucca * (360f / 8f), 0f);
+                //trammelLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.D_1665 * (360f / 256f), 0f);
+                //feluccaLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.D_1666 * (360f / 256f), 0f);
+
+                trammelLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, Mathf.LerpAngle(trammelLight.GetComponent<Light>().transform.eulerAngles.y, 180f - (float)u4.D_1665 * (360f / 256f), Time.deltaTime), 0f);
+                feluccaLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, Mathf.LerpAngle(feluccaLight.GetComponent<Light>().transform.eulerAngles.y, 180f - (float)u4.D_1666 * (360f / 256f), Time.deltaTime), 0f);
+                //sunLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, Mathf.LerpAngle(sunLight.GetComponent<Light>().transform.eulerAngles.y, 180f - (float)u4.D_1666 * (360f / 256f), Time.deltaTime), 0f);
+
+
+                System.Globalization.TextInfo myTI = new System.Globalization.CultureInfo("en-US", false).TextInfo;
+
+                statsOverview.GetComponent<UnityEngine.UI.Text>().text = "" + '\n';
+
+                for (int i = 0; i < 8; i++)
+                {
+                    if (i < u4.Party.f_1d8)
+                    {
+                        if (u4.Party.chara[i].highlight)
+                        {
+                            statsOverview.GetComponent<UnityEngine.UI.Text>().text += highlight((i + 1) + "-" + u4.Party.chara[i].name.PadRight(18, ' ') + u4.Party.chara[i].hitPoint.ToString().PadLeft(4, ' ') + (char)(u4.Party.chara[i].state) + '\n');
+                        }
+                        else
+                        {
+                            statsOverview.GetComponent<UnityEngine.UI.Text>().text += (i + 1) + "-" + u4.Party.chara[i].name.PadRight(18, ' ') + u4.Party.chara[i].hitPoint.ToString().PadLeft(4, ' ') + (char)(u4.Party.chara[i].state) + '\n';
+                        }
+                    }
+                    else
+                    {
+                        statsOverview.GetComponent<UnityEngine.UI.Text>().text += '\n';
+                    }
+                }
+
+                string bottomStatus = "" + '\n' + ("Food:" + (int)(u4.Party._food / 100)).ToString().PadRight(12, ' ') + (char)(u4.spell_sta);
+
+                if ((u4.Party._tile == U4_Decompiled.TILE.SHIP_EAST) ||
+                    (u4.Party._tile == U4_Decompiled.TILE.SHIP_WEST) ||
+                    (u4.Party._tile == U4_Decompiled.TILE.SHIP_NORTH) ||
+                    (u4.Party._tile == U4_Decompiled.TILE.SHIP_SOUTH))
+                {
+                    bottomStatus += ("Ship:" + u4.Party._ship).PadLeft(12, ' ');
+                }
+                else
+                {
+                    bottomStatus += ("Gold:" + u4.Party._gold).PadLeft(12, ' '); ;
+                }
+
+                statsOverview.GetComponent<UnityEngine.UI.Text>().text += bottomStatus;
+
+                for (int i = 0; i < characterStatus.Length; i++)
+                {
+                    if (i < u4.Party.f_1d8)
+                    {
+                        int classLength = u4.Party.chara[i].Class.ToString().Length;
+
+                        characterStatus[i].GetComponent<UnityEngine.UI.Text>().text = "" +
+                            (char)(0x10) + u4.Party.chara[i].name + (char)(0x11) + '\n' +
+                            (char)(u4.Party.chara[i].sex) + myTI.ToTitleCase(u4.Party.chara[i].Class.ToString().ToLower()).PadLeft(12 + classLength / 2, ' ').PadRight(23, ' ') + (char)u4.Party.chara[i].state + '\n' +
+                            '\n' +
+                            " MP:" + u4.Party.chara[i].magicPoints.ToString().PadLeft(2, '0').PadRight(14, ' ') + "LV:" + ((int)(u4.Party.chara[i].hitPointsMaximum / 100)).ToString().PadRight(4, ' ') + '\n' +
+                            "STR:" + u4.Party.chara[i].strength.ToString().PadLeft(2, '0').PadRight(14, ' ') + "HP:" + u4.Party.chara[i].hitPoint.ToString().PadLeft(4, '0') + '\n' +
+                            "DEX:" + u4.Party.chara[i].dexterity.ToString().PadLeft(2, '0').PadRight(14, ' ') + "HM:" + u4.Party.chara[i].hitPointsMaximum.ToString().PadLeft(4, '0') + '\n' +
+                            "INT:" + u4.Party.chara[i].intelligence.ToString().PadLeft(2, '0').PadRight(14, ' ') + "EX:" + u4.Party.chara[i].experiencePoints.ToString().PadLeft(4, '0') + '\n' +
+                            "W:" + myTI.ToTitleCase(u4.Party.chara[i].currentWeapon.ToString().Replace('_', ' ').ToLower()).PadRight(23, ' ') + '\n' +
+                            "A:" + myTI.ToTitleCase(u4.Party.chara[i].currentArmor.ToString().Replace('_', ' ').ToLower()).PadRight(23, ' ') + '\n' +
+                            bottomStatus;
+                    }
+                    else
+                    {
+                        characterStatus[i].GetComponent<UnityEngine.UI.Text>().text = "\n\n\n\n\n\n\n\n" + bottomStatus;
+                    }
+                }
+
+                weaponsStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
+                    (char)(0x10) + "Weapons" + (char)(0x11) + '\n' +
+                    "A  -Hands   Cross Bow-I" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.CROSSBOW] + '\n' +
+                    'B' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.STAFF].ToString().PadLeft(2, '0') + "-Staff Flaming Oil-J" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.FLAMING_OIL].ToString().PadLeft(2, '0') + '\n' +
+                    'C' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.DAGGER].ToString().PadLeft(2, '0') + "-Dagger    Halbert-K" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.HALBERD].ToString().PadLeft(2, '0') + '\n' +
+                    'D' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.SLING].ToString().PadLeft(2, '0') + "-Sling   Magic Axe-L" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_AXE].ToString().PadLeft(2, '0') + '\n' +
+                    'E' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MACE].ToString().PadLeft(2, '0') + "-Mace  Magic Sword-M" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_SWORD].ToString().PadLeft(2, '0') + '\n' +
+                    'F' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.AXE].ToString().PadLeft(2, '0') + "-Axe     Magic Bow-N" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_BOW].ToString().PadLeft(2, '0') + '\n' +
+                    'G' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.SWORD].ToString().PadLeft(2, '0') + "-Sword  Magic Wand-O" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_WAND].ToString().PadLeft(2, '0') + '\n' +
+                    'H' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.BOW].ToString().PadLeft(2, '0') + "-Bow  Mystic Sword-P" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MYSTIC_SWORD].ToString().PadLeft(2, '0') + '\n' +
+                    bottomStatus;
+
+                armourStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
+                    (char)(0x10) + "Armour" + (char)(0x11) + '\n' +
+                    "A  " + "-No Armour".PadRight(22, ' ') + '\n' +
+                    'B' + u4.Party._armors[(int)U4_Decompiled.ARMOR.CLOTH].ToString().PadLeft(2, '0') + "-Clothing".PadRight(22, ' ') + '\n' +
+                    'C' + u4.Party._armors[(int)U4_Decompiled.ARMOR.LEATHER].ToString().PadLeft(2, '0') + "-Leather".PadRight(22, ' ') + '\n' +
+                    'D' + u4.Party._armors[(int)U4_Decompiled.ARMOR.CHAIN_MAIL].ToString().PadLeft(2, '0') + "-Chain Mail".PadRight(22, ' ') + '\n' +
+                    'E' + u4.Party._armors[(int)U4_Decompiled.ARMOR.PLATE_MAIL].ToString().PadLeft(2, '0') + "-Plate Mail".PadRight(22, ' ') + '\n' +
+                    'F' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MAGIC_CHAIN].ToString().PadLeft(2, '0') + "-Magic Chain Mail".PadRight(22, ' ') + '\n' +
+                    'G' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MAGIC_PLATE].ToString().PadLeft(2, '0') + "-Magic Plate Mail".PadRight(22, ' ') + '\n' +
+                    'H' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MYSTIC_ROBE].ToString().PadLeft(2, '0') + "-Mystic Robe".PadRight(22, ' ') + '\n' +
+                    bottomStatus;
+
+                reagentsStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
+                    (char)(0x10) + "Reagents" + (char)(0x11) + '\n' +
+                    'A' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.SULFER_ASH].ToString().PadLeft(2, '0') + "-Sulfer Ash".PadRight(22, ' ') + '\n' +
+                    'B' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.GINSENG].ToString().PadLeft(2, '0') + "-Ginseng".PadRight(22, ' ') + '\n' +
+                    'C' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.GARLIC].ToString().PadLeft(2, '0') + "-Galic".PadRight(22, ' ') + '\n' +
+                    'D' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.SPIDER_SILK].ToString().PadLeft(2, '0') + "-Spider Silk".PadRight(22, ' ') + '\n' +
+                    'E' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.BLOOD_MOSS].ToString().PadLeft(2, '0') + "-Blood Moss".PadRight(22, ' ') + '\n' +
+                    'F' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.BLACK_PEARL].ToString().PadLeft(2, '0') + "-Black Pearl".PadRight(22, ' ') + '\n' +
+                    'G' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.NIGHTSHADE].ToString().PadLeft(2, '0') + "-Nightshade".PadRight(22, ' ') + '\n' +
+                    'H' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.MANDRAKE].ToString().PadLeft(2, '0') + "-Mandrake Root".PadRight(22, ' ') + '\n' +
+                    bottomStatus;
+
+                mixturesStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
+                    (char)(0x10) + "Mixtures" + (char)(0x11) + '\n' +
+                    "Awak-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.AWAKEN].ToString().PadLeft(2, '0') + " IceBa-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.ICEBALLS].ToString().PadLeft(2, '0') + " Quick-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.QUICKNESS].ToString().PadLeft(2, '0') + '\n' +
+                    "Blin-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.BLINK].ToString().PadLeft(2, '0') + "  Jinx-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.JINX].ToString().PadLeft(2, '0') + "  Resu-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.RESURECTION].ToString().PadLeft(2, '0') + '\n' +
+                    "Cure-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.CURE].ToString().PadLeft(2, '0') + "  Kill-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.KILL].ToString().PadLeft(2, '0') + " Sleep-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.SLEEP].ToString().PadLeft(2, '0') + '\n' +
+                    "Disp-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.DISPELL].ToString().PadLeft(2, '0') + " Light-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.LIGHT].ToString().PadLeft(2, '0') + " Tremo-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.TREMOR].ToString().PadLeft(2, '0') + '\n' +
+                    "Eneg-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.ENERGY].ToString().PadLeft(2, '0') + " Missl-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.MAGIC_MISSLE].ToString().PadLeft(2, '0') + " Undea-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.UNDEAD].ToString().PadLeft(2, '0') + '\n' +
+                    "Fire-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.FIREBALL].ToString().PadLeft(2, '0') + " Negat-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.NEGATE].ToString().PadLeft(2, '0') + "  View-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.VIEW].ToString().PadLeft(2, '0') + '\n' +
+                    "Gate-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.GATE].ToString().PadLeft(2, '0') + "  Open-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.OPEN].ToString().PadLeft(2, '0') + " Winds-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.WINDS].ToString().PadLeft(2, '0') + '\n' +
+                    "Heal-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.HEAL].ToString().PadLeft(2, '0') + " Prote-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.PROTECT].ToString().PadLeft(2, '0') + "  X-It-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.X_IT].ToString().PadLeft(2, '0') + '\n' +
+                    bottomStatus;
+
+                equipmentStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
+                    (char)(0x10) + "Equipment" + (char)(0x11) + '\n' +
+                    'A' + u4.Party._torches.ToString().PadLeft(2, '0') + "-Torches".PadRight(22, ' ') + '\n' +
+                    'B' + u4.Party._gems.ToString().PadLeft(2, '0') + "-Gems".PadRight(22, ' ') + '\n' +
+                    'C' + u4.Party._keys.ToString().PadLeft(2, '0') + "-Keys".PadRight(22, ' ') + '\n' +
+                    'D' + u4.Party._sextants.ToString().PadLeft(2, '0') + "-Sextants".PadRight(22, ' ') + "\n\n\n\n\n" +
+                    bottomStatus;
+
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text = "" + '\n' +
+                    "Stones: ";
+
+                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.BLUE))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=blue>Bl</color>";
+                }
+                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.YELLOW))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=yellow>Ye</color>";
+                }
+                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.RED))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=red>Re</color>";
+                }
+                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.GREEN))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=green>Gr</color>";
+                }
+                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.ORANGE))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=orange>Or</color>";
+                }
+                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.PURPLE))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=purple>Pu</color>";
+                }
+                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.WHITE))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=white>Wh</color>";
+                }
+                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.BLACK))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=grey>Bl</color>";
+                }
+
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
+                    "Runes: ";
+
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.HONOR))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Honor ";
+                }
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.COMPASSION))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Compassion ";
+                }
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.VALOR))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Valor ";
+                }
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.JUSTICE))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Justice ";
+                }
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.HUMILITY))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Humility ";
+                }
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.HONESTY))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Honesty ";
+                }
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.SPIRITUALITY))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Spirituality ";
+                }
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.SACRIFICE))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Sacrifice";
+                }
+
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
+                   "Items: ";
+
+                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.BELL))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Bell ";
+                }
+                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.BOOK))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Book ";
+                }
+                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.WHEEL))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Wheel ";
+                }
+                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.HORN))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Horn ";
+                }
+                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.CANDLE))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Candle ";
+                }
+                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.SKULL))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Skull ";
+                }
+
+                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
+                   "Key:";
+
+                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.LOVE_KEY))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Love ";
+                }
+                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.TRUTH_KEY))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Truth ";
+                }
+                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.COMPASSION_KEY))
+                {
+                    itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Compassion";
+                }
+
+                itemsStatusHeading.GetComponent<UnityEngine.UI.Text>().text = "" +
+                    (char)(0x10) + "Items" + (char)(0x11) + "\n\n\n\n\n\n\n\n\n" +
+                    bottomStatus;
+
+                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.CHARACTER_OVERVIEW)
+                {
+                    statsOverview.SetActive(true);
+                }
+                else
+                {
+                    statsOverview.SetActive(false);
+                }
+                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.CHARACTER_DETAIL)
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        if (u4.zstats_character == i)
+                        {
+                            characterStatus[i].SetActive(true);
+                        }
+                        else
+                        {
+                            characterStatus[i].SetActive(false);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        characterStatus[i].SetActive(false);
+                    }
+
+                }
+
+                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.WEAPONS)
+                {
+                    weaponsStatus.SetActive(true);
+                }
+                else
+                {
+                    weaponsStatus.SetActive(false);
+                }
+                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.ARMOUR)
+                {
+                    armourStatus.SetActive(true);
+                }
+                else
+                {
+                    armourStatus.SetActive(false);
+                }
+
+                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.EQUIPMENT)
+                {
+                    equipmentStatus.SetActive(true);
+                }
+                else
+                {
+                    equipmentStatus.SetActive(false);
+                }
+
+                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.ITEMS)
+                {
+                    itemsStatus.SetActive(true);
+                }
+                else
+                {
+                    itemsStatus.SetActive(false);
+                }
+
+                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.MIXTURES)
+                {
+                    mixturesStatus.SetActive(true);
+                }
+                else
+                {
+                    mixturesStatus.SetActive(false);
+                }
+
+                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.REAGENTS)
+                {
+                    reagentsStatus.SetActive(true);
+                }
+                else
+                {
+                    reagentsStatus.SetActive(false);
+                }
+
+                if (lastVisionFilename != u4.visionFilename)
+                {
+                    if (u4.visionFilename.Length > 0)
+                    {
+                        LoadAVATAREGAFile(u4.visionFilename.Replace(".pic", ".EGA"), visionTexture);
+                        vision.sprite = Sprite.Create(visionTexture, new Rect(0.0f, 0.0f, visionTexture.width, visionTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
+                        vision.color = new Color(255f, 255f, 255f, 255f);
+
+                        lastVisionFilename = u4.visionFilename;
+                    }
+                    else
+                    {
+                        vision.sprite = null;
+                        vision.color = new Color(0f, 0f, 0f, 0f);
+                        ClearTexture(visionTexture, EGAColorPalette[(int)EGA_COLOR.BLACK]);
+                    }
+                }
+            }
         }
 
         // make party a billboard
@@ -11232,562 +11789,6 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     }
                 }
                 */
-            }
-        }
-
-        // keep the sky game objects in sync with the game
-        if (skyGameObject)
-        {
-            if ((u4.current_mode == U4_Decompiled.MODE.OUTDOORS)  || (u4.current_mode == U4_Decompiled.MODE.BUILDING))
-            {
-                skyGameObject.transform.localPosition = new Vector3(u4.Party._x, 0, 255 - u4.Party._y);
-            }
-            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT)
-            {
-                skyGameObject.transform.localPosition = new Vector3(u4.currentActiveCharacter.x, 0, 255 - u4.currentActiveCharacter.y);
-            }
-            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
-            {
-                if (u4.currentActiveCharacter.active)
-                {
-                    skyGameObject.transform.localPosition = new Vector3(u4.currentActiveCharacter.x, 0, 255 - u4.currentActiveCharacter.y);
-                }
-                else
-                {
-                    skyGameObject.transform.localPosition = CenterOfCombatTerrain.transform.localPosition;
-                }
-            }
-        }
-
-        // keep the party game object in sync with the game
-        if (partyGameObject)
-        {
-            if ((u4.current_mode == U4_Decompiled.MODE.OUTDOORS) || 
-                (u4.current_mode == U4_Decompiled.MODE.BUILDING) || 
-                (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP))
-            {
-                partyGameObject.transform.localPosition = new Vector3(u4.Party._x, 255 - u4.Party._y, 0);
-                if (Camera.main.transform.eulerAngles.y != 0)
-                {
-                    if (rotateTransform)
-                    {
-                        if (u4.surface_party_direction == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
-                        }
-                        else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                        }
-                        else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
-                        }
-                        else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
-                        }
-                    }
-                    else
-                    {
-                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                    }
-                }
-            }
-            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT)
-            {
-                if ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
-                {
-                    //partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
-                    if (Camera.main.transform.eulerAngles.y != 0)
-                    {
-                        //rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-
-                        // if we are going to do rotation then we need to adjust the directional controls when in combat in the dungeon also
-                        if (rotateTransform)
-                        {
-                            if (u4.Party._dir == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
-                            }
-                            else if (u4.Party._dir == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                            }
-                            else if (u4.Party._dir == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
-                            }
-                            else if (u4.Party._dir == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (Camera.main.transform.eulerAngles.y != 0)
-                    {
-                        if (rotateTransform)
-                        {
-                            if (u4.surface_party_direction == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
-                            }
-                            else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                            }
-                            else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
-                            }
-                            else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
-                            }
-                        }
-                        else
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                        }
-                    }
-                }
-            }
-            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_ROOM)
-            {
-                //partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
-                if (Camera.main.transform.eulerAngles.y != 0)
-                {
-                    //rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-
-                    if (rotateTransform)
-                    {
-                        if (u4.Party._dir == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
-                        }
-                        else if (u4.Party._dir == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                        }
-                        else if (u4.Party._dir == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
-                        }
-                        else if (u4.Party._dir == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
-                        }
-                    }
-                }
-            }
-            else if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
-            {
-                partyGameObject.transform.localPosition = new Vector3(u4.Party._x * 11 + 5, (7 - u4.Party._y) * 11 + 5, 0);
-                if (rotateTransform)
-                {
-                    if (u4.Party._dir == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
-                    {
-                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
-                    }
-                    else if (u4.Party._dir == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
-                    {
-                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                    }
-                    else if (u4.Party._dir == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
-                    {
-                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
-                    }
-                    else if (u4.Party._dir == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
-                    {
-                        rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
-                    }
-                }
-            }
-
-            if (u4.gameText != null && GameText != null)
-            {
-                GameText.GetComponent<UnityEngine.UI.Text>().text = u4.gameText;
-            }
-
-            if ((u4.current_mode == U4_Decompiled.MODE.DUNGEON) || 
-                ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
-            {
-                windDirection.GetComponent<UnityEngine.UI.Text>().text = (char)(0x10) + "Level" + (char)(0x12) + (char)(u4.Party._z + '1') + (char)(0x11);
-            }
-            else
-            {
-                windDirection.GetComponent<UnityEngine.UI.Text>().text = (char)(0x10) + "Wind" + (char)(0x12);
-
-                switch (u4.WindDir)
-                {
-                    case U4_Decompiled.DIRECTION.NORTH:
-                        windDirection.GetComponent<UnityEngine.UI.Text>().text += "North" + (char)(0x11);
-                        break;
-                    case U4_Decompiled.DIRECTION.SOUTH:
-                        windDirection.GetComponent<UnityEngine.UI.Text>().text += "South" + (char)(0x11);
-                        break;
-                    case U4_Decompiled.DIRECTION.EAST:
-                        windDirection.GetComponent<UnityEngine.UI.Text>().text += (char)(0x12) + "East" + (char)(0x11);
-                        break;
-                    case U4_Decompiled.DIRECTION.WEST:
-                        windDirection.GetComponent<UnityEngine.UI.Text>().text += (char)(0x12) + "West" + (char)(0x11);
-                        break;
-                }
-            }
-            moons.GetComponent<UnityEngine.UI.Text>().text = "" + (char)(0x10) + (char)(((u4.Party._trammel - 1) & 7) + 0x14) + (char)(0x12) + (char)(((u4.Party._felucca - 1) & 7) + 0x14) + (char)(0x11);
-
-            //trammelLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.Party._trammel * (360f / 8f), 0f);
-            //feluccaLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.Party._felucca * (360f / 8f), 0f);
-            //trammelLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.D_1665 * (360f / 256f), 0f);
-            //feluccaLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, 180f - (float)u4.D_1666 * (360f / 256f), 0f);
-
-            trammelLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, Mathf.LerpAngle(trammelLight.GetComponent<Light>().transform.eulerAngles.y, 180f - (float)u4.D_1665 * (360f / 256f), Time.deltaTime), 0f);
-            feluccaLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, Mathf.LerpAngle(feluccaLight.GetComponent<Light>().transform.eulerAngles.y, 180f - (float)u4.D_1666 * (360f / 256f), Time.deltaTime), 0f);
-            //sunLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, Mathf.LerpAngle(sunLight.GetComponent<Light>().transform.eulerAngles.y, 180f - (float)u4.D_1666 * (360f / 256f), Time.deltaTime), 0f);
-
-
-            System.Globalization.TextInfo myTI = new System.Globalization.CultureInfo("en-US", false).TextInfo;
-
-            statsOverview.GetComponent<UnityEngine.UI.Text>().text = "" + '\n';
-
-            for (int i = 0; i < 8; i++)
-            {
-                if (i < u4.Party.f_1d8)
-                {
-                    if (u4.Party.chara[i].highlight)
-                    {
-                        statsOverview.GetComponent<UnityEngine.UI.Text>().text += highlight((i + 1) + "-" + u4.Party.chara[i].name.PadRight(18, ' ') + u4.Party.chara[i].hitPoint.ToString().PadLeft(4, ' ') + (char)(u4.Party.chara[i].state) + '\n');
-                    }
-                    else
-                    {
-                        statsOverview.GetComponent<UnityEngine.UI.Text>().text += (i + 1) + "-" + u4.Party.chara[i].name.PadRight(18, ' ') + u4.Party.chara[i].hitPoint.ToString().PadLeft(4, ' ') + (char)(u4.Party.chara[i].state) + '\n';
-                    }
-                }
-                else
-                {
-                    statsOverview.GetComponent<UnityEngine.UI.Text>().text += '\n';
-                }
-            }
-
-            string bottomStatus = "" + '\n' + ("Food:" + (int)(u4.Party._food / 100)).ToString().PadRight(12, ' ') + (char)(u4.spell_sta);
-
-            if ((u4.Party._tile == U4_Decompiled.TILE.SHIP_EAST) ||
-                (u4.Party._tile == U4_Decompiled.TILE.SHIP_WEST) ||
-                (u4.Party._tile == U4_Decompiled.TILE.SHIP_NORTH) ||
-                (u4.Party._tile == U4_Decompiled.TILE.SHIP_SOUTH))
-            {
-                bottomStatus += ("Ship:" + u4.Party._ship).PadLeft(12, ' ');
-            }
-            else
-            {
-                bottomStatus += ("Gold:" + u4.Party._gold).PadLeft(12, ' '); ;
-            }
-
-            statsOverview.GetComponent<UnityEngine.UI.Text>().text += bottomStatus;
-
-            for (int i = 0; i < characterStatus.Length; i++)
-            {
-                if (i < u4.Party.f_1d8)
-                {
-                    int classLength = u4.Party.chara[i].Class.ToString().Length;
-
-                    characterStatus[i].GetComponent<UnityEngine.UI.Text>().text = "" +
-                        (char)(0x10) + u4.Party.chara[i].name + (char)(0x11) + '\n' +
-                        (char)(u4.Party.chara[i].sex) + myTI.ToTitleCase(u4.Party.chara[i].Class.ToString().ToLower()).PadLeft(12 + classLength / 2, ' ').PadRight(23, ' ') + (char)u4.Party.chara[i].state + '\n' +
-                        '\n' +
-                        " MP:" + u4.Party.chara[i].magicPoints.ToString().PadLeft(2, '0').PadRight(14, ' ') + "LV:" + ((int)(u4.Party.chara[i].hitPointsMaximum / 100)).ToString().PadRight(4, ' ') + '\n' +
-                        "STR:" + u4.Party.chara[i].strength.ToString().PadLeft(2, '0').PadRight(14, ' ') + "HP:" + u4.Party.chara[i].hitPoint.ToString().PadLeft(4, '0') + '\n' +
-                        "DEX:" + u4.Party.chara[i].dexterity.ToString().PadLeft(2, '0').PadRight(14, ' ') + "HM:" + u4.Party.chara[i].hitPointsMaximum.ToString().PadLeft(4, '0') + '\n' +
-                        "INT:" + u4.Party.chara[i].intelligence.ToString().PadLeft(2, '0').PadRight(14, ' ') + "EX:" + u4.Party.chara[i].experiencePoints.ToString().PadLeft(4, '0') + '\n' +
-                        "W:" + myTI.ToTitleCase(u4.Party.chara[i].currentWeapon.ToString().Replace('_', ' ').ToLower()).PadRight(23, ' ') + '\n' +
-                        "A:" + myTI.ToTitleCase(u4.Party.chara[i].currentArmor.ToString().Replace('_', ' ').ToLower()).PadRight(23, ' ') + '\n' +
-                        bottomStatus;
-                }
-                else
-                {
-                    characterStatus[i].GetComponent<UnityEngine.UI.Text>().text = "\n\n\n\n\n\n\n\n" + bottomStatus;
-                }
-            }
-
-            weaponsStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
-                (char)(0x10) + "Weapons" + (char)(0x11) + '\n' +
-                "A  -Hands   Cross Bow-I" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.CROSSBOW] + '\n' +
-                'B' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.STAFF].ToString().PadLeft(2, '0') + "-Staff Flaming Oil-J" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.FLAMING_OIL].ToString().PadLeft(2, '0') + '\n' +
-                'C' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.DAGGER].ToString().PadLeft(2, '0') + "-Dagger    Halbert-K" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.HALBERD].ToString().PadLeft(2, '0') + '\n' +
-                'D' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.SLING].ToString().PadLeft(2, '0') + "-Sling   Magic Axe-L" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_AXE].ToString().PadLeft(2, '0') + '\n' +
-                'E' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MACE].ToString().PadLeft(2, '0') + "-Mace  Magic Sword-M" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_SWORD].ToString().PadLeft(2, '0') + '\n' +
-                'F' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.AXE].ToString().PadLeft(2, '0') + "-Axe     Magic Bow-N" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_BOW].ToString().PadLeft(2, '0') + '\n' +
-                'G' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.SWORD].ToString().PadLeft(2, '0') + "-Sword  Magic Wand-O" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_WAND].ToString().PadLeft(2, '0') + '\n' +
-                'H' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.BOW].ToString().PadLeft(2, '0') + "-Bow  Mystic Sword-P" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MYSTIC_SWORD].ToString().PadLeft(2, '0') + '\n' +
-                bottomStatus;
-
-            armourStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
-                (char)(0x10) + "Armour" + (char)(0x11) + '\n' +
-                "A  " + "-No Armour".PadRight(22, ' ') + '\n' +
-                'B' + u4.Party._armors[(int)U4_Decompiled.ARMOR.CLOTH].ToString().PadLeft(2, '0') + "-Clothing".PadRight(22, ' ') + '\n' +
-                'C' + u4.Party._armors[(int)U4_Decompiled.ARMOR.LEATHER].ToString().PadLeft(2, '0') + "-Leather".PadRight(22, ' ') + '\n' +
-                'D' + u4.Party._armors[(int)U4_Decompiled.ARMOR.CHAIN_MAIL].ToString().PadLeft(2, '0') + "-Chain Mail".PadRight(22, ' ') + '\n' +
-                'E' + u4.Party._armors[(int)U4_Decompiled.ARMOR.PLATE_MAIL].ToString().PadLeft(2, '0') + "-Plate Mail".PadRight(22, ' ') + '\n' +
-                'F' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MAGIC_CHAIN].ToString().PadLeft(2, '0') + "-Magic Chain Mail".PadRight(22, ' ') + '\n' +
-                'G' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MAGIC_PLATE].ToString().PadLeft(2, '0') + "-Magic Plate Mail".PadRight(22, ' ') + '\n' +
-                'H' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MYSTIC_ROBE].ToString().PadLeft(2, '0') + "-Mystic Robe".PadRight(22, ' ') + '\n' +
-                bottomStatus;
-
-            reagentsStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
-                (char)(0x10) + "Reagents" + (char)(0x11) + '\n' +
-                'A' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.SULFER_ASH].ToString().PadLeft(2, '0') + "-Sulfer Ash".PadRight(22, ' ') + '\n' +
-                'B' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.GINSENG].ToString().PadLeft(2, '0') + "-Ginseng".PadRight(22, ' ') + '\n' +
-                'C' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.GARLIC].ToString().PadLeft(2, '0') + "-Galic".PadRight(22, ' ') + '\n' +
-                'D' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.SPIDER_SILK].ToString().PadLeft(2, '0') + "-Spider Silk".PadRight(22, ' ') + '\n' +
-                'E' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.BLOOD_MOSS].ToString().PadLeft(2, '0') + "-Blood Moss".PadRight(22, ' ') + '\n' +
-                'F' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.BLACK_PEARL].ToString().PadLeft(2, '0') + "-Black Pearl".PadRight(22, ' ') + '\n' +
-                'G' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.NIGHTSHADE].ToString().PadLeft(2, '0') + "-Nightshade".PadRight(22, ' ') + '\n' +
-                'H' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.MANDRAKE].ToString().PadLeft(2, '0') + "-Mandrake Root".PadRight(22, ' ') + '\n' +
-                bottomStatus;
-
-            mixturesStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
-                (char)(0x10) + "Mixtures" + (char)(0x11) + '\n' +
-                "Awak-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.AWAKEN].ToString().PadLeft(2, '0') + " IceBa-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.ICEBALLS].ToString().PadLeft(2, '0') + " Quick-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.QUICKNESS].ToString().PadLeft(2, '0') + '\n' +
-                "Blin-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.BLINK].ToString().PadLeft(2, '0') + "  Jinx-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.JINX].ToString().PadLeft(2, '0') + "  Resu-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.RESURECTION].ToString().PadLeft(2, '0') + '\n' +
-                "Cure-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.CURE].ToString().PadLeft(2, '0') + "  Kill-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.KILL].ToString().PadLeft(2, '0') + " Sleep-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.SLEEP].ToString().PadLeft(2, '0') + '\n' +
-                "Disp-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.DISPELL].ToString().PadLeft(2, '0') + " Light-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.LIGHT].ToString().PadLeft(2, '0') + " Tremo-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.TREMOR].ToString().PadLeft(2, '0') + '\n' +
-                "Eneg-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.ENERGY].ToString().PadLeft(2, '0') + " Missl-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.MAGIC_MISSLE].ToString().PadLeft(2, '0') + " Undea-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.UNDEAD].ToString().PadLeft(2, '0') + '\n' +
-                "Fire-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.FIREBALL].ToString().PadLeft(2, '0') + " Negat-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.NEGATE].ToString().PadLeft(2, '0') + "  View-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.VIEW].ToString().PadLeft(2, '0') + '\n' +
-                "Gate-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.GATE].ToString().PadLeft(2, '0') + "  Open-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.OPEN].ToString().PadLeft(2, '0') + " Winds-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.WINDS].ToString().PadLeft(2, '0') + '\n' +
-                "Heal-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.HEAL].ToString().PadLeft(2, '0') + " Prote-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.PROTECT].ToString().PadLeft(2, '0') + "  X-It-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.X_IT].ToString().PadLeft(2, '0') + '\n' +
-                bottomStatus;
-
-            equipmentStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
-                (char)(0x10) + "Equipment" + (char)(0x11) + '\n' +
-                'A' + u4.Party._torches.ToString().PadLeft(2, '0') + "-Torches".PadRight(22, ' ') + '\n' +
-                'B' + u4.Party._gems.ToString().PadLeft(2, '0') + "-Gems".PadRight(22, ' ') + '\n' +
-                'C' + u4.Party._keys.ToString().PadLeft(2, '0') + "-Keys".PadRight(22, ' ') + '\n' +
-                'D' + u4.Party._sextants.ToString().PadLeft(2, '0') + "-Sextants".PadRight(22, ' ') + "\n\n\n\n\n" +
-                bottomStatus;
-
-            itemsStatus.GetComponent<UnityEngine.UI.Text>().text = "" + '\n' +
-                "Stones: ";
-
-            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.BLUE))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=blue>Bl</color>";
-            }
-            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.YELLOW))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=yellow>Ye</color>";
-            }
-            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.RED))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=red>Re</color>";
-            }
-            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.GREEN))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=green>Gr</color>";
-            }
-            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.ORANGE))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=orange>Or</color>";
-            }
-            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.PURPLE))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=purple>Pu</color>";
-            }
-            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.WHITE))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=white>Wh</color>";
-            }
-            if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.BLACK))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=grey>Bl</color>";
-            }
-
-            itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
-                "Runes: ";
-
-            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.HONOR))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Honor ";
-            }
-            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.COMPASSION))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Compassion ";
-            }
-            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.VALOR))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Valor ";
-            }
-            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.JUSTICE))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Justice ";
-            }
-            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.HUMILITY))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Humility ";
-            }
-            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.HONESTY))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Honesty ";
-            }
-            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.SPIRITUALITY))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Spirituality ";
-            }
-            if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.SACRIFICE))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Sacrifice";
-            }
-
-            itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
-               "Items: ";
-
-            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.BELL))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Bell ";
-            }
-            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.BOOK))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Book ";
-            }
-            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.WHEEL))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Wheel ";
-            }
-            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.HORN))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Horn ";
-            }
-            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.CANDLE))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Candle ";
-            }
-            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.SKULL))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Skull ";
-            }
-
-            itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
-               "Key:";
-
-            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.LOVE_KEY))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Love ";
-            }
-            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.TRUTH_KEY))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Truth ";
-            }
-            if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.COMPASSION_KEY))
-            {
-                itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Compassion";
-            }
-
-            itemsStatusHeading.GetComponent<UnityEngine.UI.Text>().text = "" +
-                (char)(0x10) + "Items" + (char)(0x11) + "\n\n\n\n\n\n\n\n\n" +
-                bottomStatus;
-
-            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.CHARACTER_OVERVIEW)
-            {
-                statsOverview.SetActive(true);
-            }
-            else
-            {
-                statsOverview.SetActive(false);
-            }
-            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.CHARACTER_DETAIL)
-            {
-                for (int i = 0; i < 8; i++)
-                {
-                    if (u4.zstats_character == i)
-                    {
-                        characterStatus[i].SetActive(true);
-                    }
-                    else
-                    {
-                        characterStatus[i].SetActive(false);
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < 8; i++)
-                {
-                    characterStatus[i].SetActive(false);
-                }
-
-            }
-
-            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.WEAPONS)
-            {
-                weaponsStatus.SetActive(true);
-            }
-            else
-            {
-                weaponsStatus.SetActive(false);
-            }
-            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.ARMOUR)
-            {
-                armourStatus.SetActive(true);
-            }
-            else
-            {
-                armourStatus.SetActive(false);
-            }
-
-            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.EQUIPMENT)
-            {
-                equipmentStatus.SetActive(true);
-            }
-            else
-            {
-                equipmentStatus.SetActive(false);
-            }
-
-            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.ITEMS)
-            {
-                itemsStatus.SetActive(true);
-            }
-            else
-            {
-                itemsStatus.SetActive(false);
-            }
-
-            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.MIXTURES)
-            {
-                mixturesStatus.SetActive(true);
-            }
-            else
-            {
-                mixturesStatus.SetActive(false);
-            }
-
-            if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.REAGENTS)
-            {
-                reagentsStatus.SetActive(true);
-            }
-            else
-            {
-                reagentsStatus.SetActive(false);
-            }
-
-            if (lastVisionFilename != u4.visionFilename)
-            {
-                if (u4.visionFilename.Length > 0)
-                {
-                    LoadAVATAREGAFile(u4.visionFilename.Replace(".pic", ".EGA"), visionTexture);
-                    vision.sprite = Sprite.Create(visionTexture, new Rect(0.0f, 0.0f, visionTexture.width, visionTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
-                    vision.color = new Color(255f, 255f, 255f, 255f);
-
-                    lastVisionFilename = u4.visionFilename;
-                }
-                else
-                {
-                    vision.sprite = null;
-                    vision.color = new Color(0f, 0f, 0f, 0f);
-                    ClearTexture(visionTexture, EGAColorPalette[(int)EGA_COLOR.BLACK]);
-                }
             }
         }
     }

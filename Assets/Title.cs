@@ -5255,18 +5255,20 @@ public class Title : MonoBehaviour
 
         // this takes about 150ms for the 64x64 outside grid.
         Combine(terrainGameObject);
-        Combine2(animatedTerrrainGameObject);
+        //Combine2(animatedTerrrainGameObject); // TODO figure out why this doesn't work in the actual .exe
+        Combine(animatedTerrrainGameObject);
         Combine(billboardTerrrainGameObject); // combine separately from terrain above as we need to point these towards the player
 
         // add our little water animator script
         // adding a script component in the editor is a significant performance hit, avoid adding if already present
-        if (animatedTerrrainGameObject.GetComponent<Animate1>() == null)
+        /*
+         * if (animatedTerrrainGameObject.GetComponent<Animate1>() == null)
         {
             animatedTerrrainGameObject.AddComponent<Animate1>();
         }
-
+        */
         // Position the settlement in place
-        mapGameObject.transform.position = new Vector3(0, 0, 224);
+        mapGameObject.transform.position = new Vector3(-5, 0, 7);
 
         // rotate settlement into place
         mapGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
@@ -6200,7 +6202,7 @@ public class Title : MonoBehaviour
                 }
             }
 
-            //Resources.UnloadUnusedAssets();
+            Resources.UnloadUnusedAssets();
         }
 
         // Restore position
@@ -6343,7 +6345,7 @@ public class Title : MonoBehaviour
                 }
             }
 
-            //Resources.UnloadUnusedAssets();
+            Resources.UnloadUnusedAssets();
         }
 
         // Restore position
@@ -7733,6 +7735,13 @@ public class Title : MonoBehaviour
                 }
             }
             pictureTexture.Apply(); // TODO: try to do this only once per frame at the end to speed things up
+
+            // TODO this is slower than other methods need to switch
+            if (u4_TITLE.mapChanged)
+            {
+                u4_TITLE.mapChanged = false;
+                CreateMap(gameObject, u4_TITLE.map);
+            }
         }
     }
 

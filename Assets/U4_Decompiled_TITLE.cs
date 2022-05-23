@@ -479,7 +479,9 @@ public class U4_Decompiled_TITLE : MonoBehaviour
     delegate int main_Text(byte[] buffer, int length);
     delegate int main_screen_copy_frame(int[] buffer, int length);
     delegate int main_dot(int[] buffer, int length);
-
+    delegate int main_D_3683(byte[] buffer, int length);
+    delegate int main_D_6976(byte[] buffer, int length);
+    delegate int main_D_3A24(byte[] buffer, int length);
 #endif
 
     void Awake()
@@ -1462,10 +1464,11 @@ catch
                 screenCopyFrame.random_stuff = intbuffer[i++];
                 screenCopyFrame.dst_x_in_char = intbuffer[i++];
 
-                if (screenCopyFrame.random_stuff != -1)
+                if ((screenCopyFrame.random_stuff != -1) && (playStartupSoundOnlyOnce == false))
                 {
                     if (started_playing_sound_effect == false)
                     {
+                        playStartupSoundOnlyOnce = true;
                         specialEffectAudioSource.PlayOneShot(soundEffects[(int)SOUND_EFFECT.STARTUP]);
 
                         started_playing_sound_effect = true;
@@ -1577,5 +1580,52 @@ catch
                 loadPictureQueue.Enqueue(loadPicture);
             }
         }
+
+#if USE_UNITY_DLL_FUNCTION
+        main_D_3683(buffer, buffer.Length);
+#else
+        Native.Invoke<main_D_3683>(nativeLibraryPtr2, bytebuffer, bytebuffer.Length);
+#endif
+        buffer_index = 0;
+        for (int y = 0; y < 5; y++)
+        {
+            for (int x = 0; x < 19; x++)
+            {
+                initialMap[x, y] = (U4_Decompiled.TILE)bytebuffer[buffer_index++];
+            }
+        }
+
+#if USE_UNITY_DLL_FUNCTION
+        main_D_3A24(buffer, buffer.Length);
+#else
+        Native.Invoke<main_D_3A24>(nativeLibraryPtr2, bytebuffer, bytebuffer.Length);
+#endif
+        bool pendingMapChanged = false;
+        buffer_index = 0;
+        for (int y = 0; y < 5; y++)
+        {
+            for (int x = 0; x < 19; x++)
+            {
+                U4_Decompiled.TILE tile = (U4_Decompiled.TILE)bytebuffer[buffer_index++];
+                if (tile != map[x, y])
+                {
+                    map[x, y] = tile;
+                    pendingMapChanged = true;
+                }
+            }
+        }
+
+        mapChanged = pendingMapChanged;
+
+#if USE_UNITY_DLL_FUNCTION
+        main_D_6976(buffer, buffer.Length);
+#else
+        Native.Invoke<main_D_6976>(nativeLibraryPtr2, bytebuffer, bytebuffer.Length);
+#endif
     }
+
+    bool playStartupSoundOnlyOnce = false;
+    public U4_Decompiled.TILE[,] map = new U4_Decompiled.TILE[19,5];
+    public bool mapChanged = false;
+    public U4_Decompiled.TILE[,] initialMap = new U4_Decompiled.TILE[19, 5];
 }

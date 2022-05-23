@@ -3243,7 +3243,7 @@ sfx_magic2:
                 if (SoundFlag != 0)
                 {
                     // check if we started talking to someone new
-                    if (lastNPCTalkIndex != npcTalkIndex)
+                    if ((lastNPCTalkIndex != npcTalkIndex) || (musicSource.clip == null))
                     {
                         // check we just started talking to lord british
                         if (npcTalkIndex == TALK_INDEX.LORD_BRITISH)
@@ -3300,7 +3300,7 @@ sfx_magic2:
                     }
 
                     // check if the game engine game mode has changed and the game engine has sound enabled
-                    if (lastModeForMusic != current_mode)
+                    if ((lastModeForMusic != current_mode) || (musicSource.clip == null))
                     {
                         // update the last game mode to the current game mode
                         lastModeForMusic = current_mode;
