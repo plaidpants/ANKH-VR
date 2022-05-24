@@ -54,6 +54,8 @@ public class World : MonoBehaviour
     public GameObject keyword1Button;
     public GameObject keyword2Button;
     public GameObject InputPanel;
+    public GameObject StatsPanel;
+    public GameObject TextPanel;
     public GameObject Talk;
     public GameObject Action;
     public GameObject ActionMainLoop;
@@ -11853,6 +11855,11 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
     public string charsetEGAFilepath = "/u4/CHARSET.EGA";
     public string charsetCGAFilepath = "/u4/CHARSET.CGA";
 
+    const int fontHeight = 10;
+    const int fontWidth = 10;
+    const int fontXOffset = 1;
+    const int fontYOffset = 1;
+
     void LoadCharSetEGA()
     {
         Color alpha = new Color(0, 0, 0, 0);
@@ -11873,8 +11880,10 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         }
 
         // create a texture for this font
-        fontAtlas = new Texture2D(8 * 16, 8 * 8 * 2, TextureFormat.RGBA32, false);
-        fontTransparentAtlas = new Texture2D(8 * 16, 8 * 8, TextureFormat.RGBA32, false);
+        fontAtlas = new Texture2D(fontWidth * 16, fontHeight * 8 * 2, TextureFormat.RGBA32, false);
+        ClearTexture(fontAtlas, EGAColorPalette[(int)EGA_COLOR.BLACK]);
+        fontTransparentAtlas = new Texture2D(fontWidth * 16, fontHeight * 8, TextureFormat.RGBA32, false);
+        ClearTexture(fontTransparentAtlas, alpha);
 
         // we want pixles not fuzzy images
         fontAtlas.filterMode = FilterMode.Point;
@@ -11900,11 +11909,11 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     // use black as alpha channel
                     //if (colorIndex == 0)
                     //{
-                    //    fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height + 64, alpha);
+                    //    fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height + fontHeight * 8, alpha);
                     //}
                     //else
                     {
-                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height + 64, color);
+                        fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height + fontHeight * 8, color);
                     }
 
                     // set the color of the second half of the nibble
@@ -11912,11 +11921,11 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     color = EGAColorPalette[colorIndex];
                     //if (colorIndex == 0)
                     //{
-                    //    fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height+ 64, alpha);
+                    //    fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height + fontHeight * 8, alpha);
                     //}
                     //else
                     {
-                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height + 64, color);
+                        fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height + fontHeight * 8, color);
                     }
 
                     // go to the next byte in the file
@@ -11947,11 +11956,11 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     // use black as alpha channel
                     //if (colorIndex == 0)
                     //{
-                    //    fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                    //    fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, alpha);
                     //}
                     //else
                     {
-                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
+                        fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, color);
                     }
 
                     // set the color of the second half of the nibble
@@ -11959,11 +11968,11 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     color = EGAColorPalette[15 - colorIndex];
                     //if (colorIndex == 0)
                     //{
-                    //    fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                    //    fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, alpha);
                     //}
                     //else
                     {
-                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
+                        fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, color);
                     }
 
                     // go to the next byte in the file
@@ -11997,11 +12006,11 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     // use black as alpha channel
                     if (colorIndex == 0)
                     {
-                        fontTransparentAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                        fontTransparentAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, alpha);
                     }
                     else
                     {
-                        fontTransparentAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
+                        fontTransparentAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, color);
                     }
 
                     // set the color of the second half of the nibble
@@ -12009,11 +12018,11 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     color = EGAColorPalette[colorIndex];
                     if (colorIndex == 0)
                     {
-                        fontTransparentAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                        fontTransparentAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, alpha);
                     }
                     else
                     {
-                        fontTransparentAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
+                        fontTransparentAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, color);
                     }
 
                     // go to the next byte in the file
@@ -12128,8 +12137,8 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             charInfo.advance = 8;
 
             r = new Rect();
-            r.x = (i % 16) * (8 / texW);
-            r.y = (i / 16) * (8 / texH);
+            r.x = (i % 16) * (fontWidth / texW) + 1.0f / texW;
+            r.y = (i / 16) * (fontHeight / texH) + 1.0f / texH;
             r.width = 8 / texW;
             r.height = 8 / texH;
             r.y = 1f - r.y - r.height;
@@ -12157,9 +12166,12 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             charInfos[i] = charInfo;
         }
 
-        CharacterInfo[] charInfosTransparent = new CharacterInfo[256];
+        texW = transparentTexture.width;
+        texH = transparentTexture.height;
 
-        for (int i = 0; i < charInfos.Length; i++)
+        CharacterInfo[] charInfosTransparent = new CharacterInfo[128];
+
+        for (int i = 0; i < charInfosTransparent.Length; i++)
         {
             CharacterInfo charInfo = new CharacterInfo();
 
@@ -12167,8 +12179,8 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             charInfo.advance = 8;
 
             r = new Rect();
-            r.x = (i % 16) * (8 / texW);
-            r.y = (i / 16) * (8 / texH);
+            r.x = (i % 16) * (fontWidth / texW) + 1.0f / texW;
+            r.y = (i / 16) * (fontHeight / texH) + 1.0f / texH;
             r.width = 8 / texW;
             r.height = 8 / texH;
             r.y = 1f - r.y - r.height;
@@ -12243,15 +12255,34 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         myFont.material = material;
         myTransparentFont.material = materialTransparent;
 
-        // Set the font in the game text UI
-        GameText.GetComponent<UnityEngine.UI.Text>().font = myFont;
-        statsOverview.GetComponent<UnityEngine.UI.Text>().font = myFont;
-        windDirection.GetComponent<UnityEngine.UI.Text>().font = myFont;
-        moons.GetComponent<UnityEngine.UI.Text>().font = myFont;
+        myFont.characterInfo = charInfos;
+        myTransparentFont.characterInfo = charInfosTransparent;
 
-        Talk.GetComponent<UnityEngine.UI.Text>().font = myFont;
-        Action.GetComponent<UnityEngine.UI.Text>().font = myFont;
 
+
+
+        // set all the text objects to myFont in the input panel
+        Text[] text = InputPanel.GetComponentsInChildren<Text>(true);
+        foreach (Text t in text)
+        {
+            t.font = myFont;
+        }
+
+        // set all the text objects to myFont in the stats panel
+        text = StatsPanel.GetComponentsInChildren<Text>(true);
+        foreach (Text t in text)
+        {
+            t.font = myFont;
+        }
+
+        // set all the text objects to myFont in the game text panel
+        text = TextPanel.GetComponentsInChildren<Text>(true);
+        foreach (Text t in text)
+        {
+            t.font = myFont;
+        }
+
+        // set again all the button text objects in the input panel to myTransparentFont
         Button[] buttons = InputPanel.GetComponentsInChildren<Button>(true);
 
         foreach (Button b in buttons)

@@ -7778,6 +7778,10 @@ public class Title : MonoBehaviour
     public Font myTransparentFont;
     public string charsetEGAFilepath = "/u4/CHARSET.EGA";
     public string charsetCGAFilepath = "/u4/CHARSET.CGA";
+    const int fontHeight = 10;
+    const int fontWidth = 10;
+    const int fontXOffset = 1;
+    const int fontYOffset = 1;
 
     void LoadCharSetEGA()
     {
@@ -7799,8 +7803,10 @@ public class Title : MonoBehaviour
         }
 
         // create a texture for this font
-        fontAtlas = new Texture2D(8 * 16, 8 * 8 * 2, TextureFormat.RGBA32, false);
-        fontTransparentAtlas = new Texture2D(8 * 16, 8 * 8, TextureFormat.RGBA32, false);
+        fontAtlas = new Texture2D(fontWidth * 16, fontHeight * 8 * 2, TextureFormat.RGBA32, false);
+        ClearTexture(fontAtlas, EGAColorPalette[(int)EGA_COLOR.BLACK]);
+        fontTransparentAtlas = new Texture2D(fontWidth * 16, fontHeight * 8, TextureFormat.RGBA32, false);
+        ClearTexture(fontTransparentAtlas, alpha);
 
         // we want pixles not fuzzy images
         fontAtlas.filterMode = FilterMode.Point;
@@ -7826,11 +7832,11 @@ public class Title : MonoBehaviour
                     // use black as alpha channel
                     //if (colorIndex == 0)
                     //{
-                    //    fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height + 64, alpha);
+                    //    fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height + fontHeight * 8, alpha);
                     //}
                     //else
                     {
-                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height + 64, color);
+                        fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height + fontHeight * 8, color);
                     }
 
                     // set the color of the second half of the nibble
@@ -7838,11 +7844,11 @@ public class Title : MonoBehaviour
                     color = EGAColorPalette[colorIndex];
                     //if (colorIndex == 0)
                     //{
-                    //    fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height+ 64, alpha);
+                    //    fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height + fontHeight * 8, alpha);
                     //}
                     //else
                     {
-                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height + 64, color);
+                        fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height + fontHeight * 8, color);
                     }
 
                     // go to the next byte in the file
@@ -7873,11 +7879,11 @@ public class Title : MonoBehaviour
                     // use black as alpha channel
                     //if (colorIndex == 0)
                     //{
-                    //    fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                    //    fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, alpha);
                     //}
                     //else
                     {
-                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
+                        fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, color);
                     }
 
                     // set the color of the second half of the nibble
@@ -7885,11 +7891,11 @@ public class Title : MonoBehaviour
                     color = EGAColorPalette[15 - colorIndex];
                     //if (colorIndex == 0)
                     //{
-                    //    fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                    //    fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, alpha);
                     //}
                     //else
                     {
-                        fontAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
+                        fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, color);
                     }
 
                     // go to the next byte in the file
@@ -7923,11 +7929,11 @@ public class Title : MonoBehaviour
                     // use black as alpha channel
                     if (colorIndex == 0)
                     {
-                        fontTransparentAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                        fontTransparentAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, alpha);
                     }
                     else
                     {
-                        fontTransparentAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
+                        fontTransparentAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, color);
                     }
 
                     // set the color of the second half of the nibble
@@ -7935,11 +7941,11 @@ public class Title : MonoBehaviour
                     color = EGAColorPalette[colorIndex];
                     if (colorIndex == 0)
                     {
-                        fontTransparentAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, alpha);
+                        fontTransparentAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, alpha);
                     }
                     else
                     {
-                        fontTransparentAtlas.SetPixel((character % 16) * 8 + width++, (7 - (character / 16)) * 8 + 7 - height, color);
+                        fontTransparentAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, color);
                     }
 
                     // go to the next byte in the file
@@ -8054,8 +8060,8 @@ public class Title : MonoBehaviour
             charInfo.advance = 8;
 
             r = new Rect();
-            r.x = (i % 16) * (8 / texW);
-            r.y = (i / 16) * (8 / texH);
+            r.x = (i % 16) * (fontWidth / texW) + 1.0f / texW;
+            r.y = (i / 16) * (fontHeight / texH) + 1.0f / texH;
             r.width = 8 / texW;
             r.height = 8 / texH;
             r.y = 1f - r.y - r.height;
@@ -8083,9 +8089,12 @@ public class Title : MonoBehaviour
             charInfos[i] = charInfo;
         }
 
-        CharacterInfo[] charInfosTransparent = new CharacterInfo[256];
+        texW = transparentTexture.width;
+        texH = transparentTexture.height;
 
-        for (int i = 0; i < charInfos.Length; i++)
+        CharacterInfo[] charInfosTransparent = new CharacterInfo[128];
+
+        for (int i = 0; i < charInfosTransparent.Length; i++)
         {
             CharacterInfo charInfo = new CharacterInfo();
 
@@ -8093,8 +8102,8 @@ public class Title : MonoBehaviour
             charInfo.advance = 8;
 
             r = new Rect();
-            r.x = (i % 16) * (8 / texW);
-            r.y = (i / 16) * (8 / texH);
+            r.x = (i % 16) * (fontWidth / texW) + 1.0f / texW;
+            r.y = (i / 16) * (fontHeight / texH) + 1.0f / texH;
             r.width = 8 / texW;
             r.height = 8 / texH;
             r.y = 1f - r.y - r.height;
@@ -8160,7 +8169,7 @@ public class Title : MonoBehaviour
 #else
         // Create material
         Material material = new Material(Shader.Find("UI/Default"));
-        material.mainTexture = texture; 
+        material.mainTexture = texture;
         Material materialTransparent = new Material(Shader.Find("UI/Default"));
         materialTransparent.mainTexture = transparentTexture;
 
@@ -8169,9 +8178,20 @@ public class Title : MonoBehaviour
         myFont.material = material;
         myTransparentFont.material = materialTransparent;
 
-        // Set the font in the game text UI
-        GameText.GetComponentInChildren<UnityEngine.UI.Text>().font = myFont;
+        myFont.characterInfo = charInfos;
+        myTransparentFont.characterInfo = charInfosTransparent;
 
+
+
+
+        // set all the text objects to myFont in the input panel
+        Text[] text = InputPanel.GetComponentsInChildren<Text>(true);
+        foreach (Text t in text)
+        {
+            t.font = myFont;
+        }
+
+        // set again all the button text objects in the input panel to myTransparentFont
         Button[] buttons = InputPanel.GetComponentsInChildren<Button>(true);
 
         foreach (Button b in buttons)
@@ -8182,6 +8202,7 @@ public class Title : MonoBehaviour
                 t.font = myTransparentFont;
             }
         }
+
 #endif
     }
 }
