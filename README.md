@@ -12,8 +12,6 @@ Install the game on your Windows PC in a folder.
 
 e.g. [GOGLibrary]\Ultima 4 - Quest of the Avatar
 
-Run the game at least once to create a party and start the game and save the game using the "(I)nitiate New Game" and "(J)ourney onward" and "(Q)uit & save" function. This will create a game save file.
-
 Download, rename and place in the ultima 4 install folder the original mockingboard music or other suitable music in mp3 or ogg format.
   
 http://www.applevault.com/ultima/
@@ -40,15 +38,15 @@ or
 
 https://bitbucket.org/mcmagi/ultima-exodus/downloads/u4-voyd-music-12.zip
 
-Move the gog.com save files created above after running the game at least once from the install folder cloud_saves directory to the root of the ultima 4 install directory or other game save files you would like to use.
-  
+Move any game save files you would like to use to the root of the ultima 4 install directory.
+
 MONSTERS.SAV
   
 OUTMONST.SAV
   
 PARTY.SAV
 
-Download the appropriate AVATAR.bps patch file for your system from the link below and copy it to the ultima 4 install directory
+Download the appropriate AVATAR.bps & TITLE.bps patch file for your system from the link below and copy them to the ultima 4 install directory
   
 https://github.com/plaidpants/u4-decompiled/releases
 
@@ -68,6 +66,8 @@ sdcard\Android\data\com.SwivelChairGames.ANHKVR\files\u4
                                                                  
 This project does not contain any copyrighted game assets or code or text or graphics or fonts or any other intellectual property related to Ultima 4 it relies completely on the files from the original game. This project is not licensed by Origin Systems or Electronic Arts.
 
+![OculusScreenshot1653440228](https://user-images.githubusercontent.com/8979271/170156004-6984eb32-8968-4600-94c2-9c7536495fbb.jpeg)
+![OculusScreenshot1653440283](https://user-images.githubusercontent.com/8979271/170156009-a6912951-2b66-4b0e-a269-0e5af692f717.jpeg)
 ![OculusScreenshot1651018124](https://user-images.githubusercontent.com/8979271/165412915-4acd534b-1021-4a26-8a6e-382fc15d91a3.jpeg)
 ![OculusScreenshot1648335085](https://user-images.githubusercontent.com/8979271/163682632-7b579fef-d83a-43d6-82e3-e933a85602ec.jpeg)
 ![OculusScreenshot1650143616](https://user-images.githubusercontent.com/8979271/163691827-da3db1af-fe13-41d9-a65e-8d7db2a1ac9d.jpeg)
