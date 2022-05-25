@@ -7654,36 +7654,7 @@ public class Title : MonoBehaviour
                     TalkContinue.SetActive(false);
                 }
             }
-            
-            while (u4_TITLE.loadPictureQueue.Count != 0)
-            {
-                U4_Decompiled_TITLE.LoadPicture loadPicture = u4_TITLE.loadPictureQueue.Dequeue();
-                if (loadPicture.filename.Length > 0)
-                {
-                    lastPictureFilename = loadPicture.filename;
-                    lastPictureDest = loadPicture.dest;
 
-                    if (!pictureTextureAtlas.ContainsKey(lastPictureDest))
-                    {
-                        // create new texture
-                        Texture2D addPictureTexture = new Texture2D(320, 200);
-
-                        byte[] destRaw = LoadTITLEEGAPictureFile(loadPicture.filename.ToLower().Replace(".pic", ".ega"));
-                        EGA_To_Texture2D(destRaw, addPictureTexture);
-
-                        pictureTextureAtlas.Add(lastPictureDest, addPictureTexture);
-                        pictureRawAtlas.Add(lastPictureDest, destRaw);
-                    }
-                    else
-                    {
-                        // update texture with new picture from file
-                        byte[] destRaw = LoadTITLEEGAPictureFile(loadPicture.filename.ToLower().Replace(".pic", ".ega"));
-                        EGA_To_Texture2D(destRaw, (Texture2D)pictureTextureAtlas[lastPictureDest]);
-                        pictureRawAtlas[loadPicture.dest] = destRaw;
-                    }
-                }
-            }
-            
             while (u4_TITLE.screenCopyFrameQueue.Count != 0)
             {
                 U4_Decompiled_TITLE.ScreenCopyFrame screenCopyFrame = u4_TITLE.screenCopyFrameQueue.Dequeue();
@@ -7721,6 +7692,35 @@ public class Title : MonoBehaviour
                             screenCopyFrame.height,
                             screenCopyFrame.random_stuff,
                             pictureTexture);
+                    }
+                }
+            }
+
+            while (u4_TITLE.loadPictureQueue.Count != 0)
+            {
+                U4_Decompiled_TITLE.LoadPicture loadPicture = u4_TITLE.loadPictureQueue.Dequeue();
+                if (loadPicture.filename.Length > 0)
+                {
+                    lastPictureFilename = loadPicture.filename;
+                    lastPictureDest = loadPicture.dest;
+
+                    if (!pictureTextureAtlas.ContainsKey(lastPictureDest))
+                    {
+                        // create new texture
+                        Texture2D addPictureTexture = new Texture2D(320, 200);
+
+                        byte[] destRaw = LoadTITLEEGAPictureFile(loadPicture.filename.ToLower().Replace(".pic", ".ega"));
+                        EGA_To_Texture2D(destRaw, addPictureTexture);
+
+                        pictureTextureAtlas.Add(lastPictureDest, addPictureTexture);
+                        pictureRawAtlas.Add(lastPictureDest, destRaw);
+                    }
+                    else
+                    {
+                        // update texture with new picture from file
+                        byte[] destRaw = LoadTITLEEGAPictureFile(loadPicture.filename.ToLower().Replace(".pic", ".ega"));
+                        EGA_To_Texture2D(destRaw, (Texture2D)pictureTextureAtlas[lastPictureDest]);
+                        pictureRawAtlas[loadPicture.dest] = destRaw;
                     }
                 }
             }
