@@ -66,6 +66,9 @@ sdcard\Android\data\com.SwivelChairGames.ANHKVR\files\u4
                                                                  
 This project does not contain any copyrighted game assets or code or text or graphics or fonts or any other intellectual property related to Ultima 4 it relies completely on the files from the original game. This project is not licensed by Origin Systems or Electronic Arts.
 
+This project uses the free asset "Effects Pro: Simple Image Effects" from the Unity Asset Store for the magic inverse screen effect, MIT license.
+https://assetstore.unity.com/packages/vfx/shaders/fullscreen-camera-effects/effects-pro-simple-image-effects-191099
+
 ![OculusScreenshot1653440228](https://user-images.githubusercontent.com/8979271/170156004-6984eb32-8968-4600-94c2-9c7536495fbb.jpeg)
 ![OculusScreenshot1653440283](https://user-images.githubusercontent.com/8979271/170156009-a6912951-2b66-4b0e-a269-0e5af692f717.jpeg)
 ![OculusScreenshot1651018124](https://user-images.githubusercontent.com/8979271/165412915-4acd534b-1021-4a26-8a6e-382fc15d91a3.jpeg)
