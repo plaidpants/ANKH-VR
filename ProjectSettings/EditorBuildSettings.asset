@@ -18,7 +18,7 @@ EditorBuildSettings:
       type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: a5d02445c1ba2fe489593dc31ba3c625,
       type: 2}
-    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 1a4c68ca72a83449f938d669337cb305,
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 21ca0e8e263bfa541ace82c9f2f2e7ee,
       type: 2}
-    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 1104404b7d95eac4da621a36f9e45da0,
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 5b47d254f3c92f041906fd6c50a629c3,
       type: 2}
