@@ -14943,6 +14943,26 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 572009428}
+    - target: {fileID: 5510408782067353023, guid: f5219ef5f258d1f408f942aec9436bd7,
+        type: 3}
+      propertyPath: m_FontData.m_MaxSize
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510408782067353023, guid: f5219ef5f258d1f408f942aec9436bd7,
+        type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510408782067353023, guid: f5219ef5f258d1f408f942aec9436bd7,
+        type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510408782067353023, guid: f5219ef5f258d1f408f942aec9436bd7,
+        type: 3}
+      propertyPath: m_FontData.m_LineSpacing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5510408782241448649, guid: f5219ef5f258d1f408f942aec9436bd7,
         type: 3}
       propertyPath: m_Material

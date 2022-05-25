@@ -11881,7 +11881,16 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
         // create a texture for this font
         fontAtlas = new Texture2D(fontWidth * 16, fontHeight * 8 * 2, TextureFormat.RGBA32, false);
-        ClearTexture(fontAtlas, EGAColorPalette[(int)EGA_COLOR.BLACK]);
+        // set half the texture to black, leave the other half white so the inverted chars don't have fringes
+        for (int y = fontAtlas.height / 2; y < fontAtlas.height; y++)
+        {
+            for (int x = 0; x < fontAtlas.width; x++)
+            {
+                fontAtlas.SetPixel(x, y, EGAColorPalette[(int)EGA_COLOR.BLACK]);
+            }
+        }
+        fontAtlas.Apply();
+
         fontTransparentAtlas = new Texture2D(fontWidth * 16, fontHeight * 8, TextureFormat.RGBA32, false);
         ClearTexture(fontTransparentAtlas, alpha);
 
@@ -12257,9 +12266,6 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
         myFont.characterInfo = charInfos;
         myTransparentFont.characterInfo = charInfosTransparent;
-
-
-
 
         // set all the text objects to myFont in the input panel
         Text[] text = InputPanel.GetComponentsInChildren<Text>(true);

@@ -5255,18 +5255,18 @@ public class Title : MonoBehaviour
 
         // this takes about 150ms for the 64x64 outside grid.
         Combine(terrainGameObject);
-        //Combine2(animatedTerrrainGameObject); // TODO figure out why this doesn't work in the actual .exe
-        Combine(animatedTerrrainGameObject);
+        Combine2(animatedTerrrainGameObject); // TODO figure out why this doesn't work in the actual .exe
+        //Combine(animatedTerrrainGameObject);
         Combine(billboardTerrrainGameObject); // combine separately from terrain above as we need to point these towards the player
 
         // add our little water animator script
         // adding a script component in the editor is a significant performance hit, avoid adding if already present
-        /*
-         * if (animatedTerrrainGameObject.GetComponent<Animate1>() == null)
+
+        if (animatedTerrrainGameObject.GetComponent<Animate1>() == null)
         {
             animatedTerrrainGameObject.AddComponent<Animate1>();
         }
-        */
+
         // Position the settlement in place
         mapGameObject.transform.position = new Vector3(-5, 0, 7);
 
@@ -6249,8 +6249,17 @@ public class Title : MonoBehaviour
 
         if (objectsToCombine.Length > 0)
         {
-            originalSizeW = objectsToCombine[0].GetComponent<MeshRenderer>().material.mainTexture.width;
-            originalSizeH = objectsToCombine[0].GetComponent<MeshRenderer>().material.mainTexture.height;
+            Texture checkTexture = objectsToCombine[0].GetComponent<MeshRenderer>().material.mainTexture;
+            if (checkTexture && checkTexture.width > 0)
+            {
+                originalSizeW = checkTexture.width;
+                originalSizeH = checkTexture.height;
+            }
+            else
+            {
+                originalSizeW = expandedTileWidth;
+                originalSizeH = expandedTileHeight;
+            }
             textureCount = GetTextureSize(objectsToCombine);
             sizeW = textureCount * originalSizeW;
             combinedTexture = new Texture2D(sizeW, originalSizeH, textureFormat, useMipMaps);
@@ -6262,7 +6271,7 @@ public class Title : MonoBehaviour
             for (int i = 0; i < objectsToCombine.Length; i++)
             {
                 texture = (Texture2D)objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture;
-                if (!textureAtlas.ContainsKey(texture))
+                if (texture && !textureAtlas.ContainsKey(texture))
                 {
                     int x = index * originalSizeW;
                     int y = 0;
@@ -6283,11 +6292,12 @@ public class Title : MonoBehaviour
             for (int i = 0; i < objectsToCombine.Length; i++)
             {
                 mesh = objectsToCombine[i].GetComponent<MeshFilter>().mesh;
+                Material mat = objectsToCombine[i].GetComponent<MeshRenderer>().material;
                 Vector2[] uv = new Vector2[mesh.uv.Length];
                 Vector2 offset;
-                if (textureAtlas.ContainsKey(objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture))
+                if (textureAtlas.ContainsKey(mat.mainTexture))
                 {
-                    offset = (Vector2)textureAtlas[objectsToCombine[i].GetComponent<MeshRenderer>().material.mainTexture];
+                    offset = (Vector2)textureAtlas[mat.mainTexture];
                     for (int u = 0; u < mesh.uv.Length; u++)
                     {
                         uv[u] = mesh.uv[u];
@@ -6309,7 +6319,7 @@ public class Title : MonoBehaviour
             CombineInstance[] combine = new CombineInstance[objectsToCombine.Length];
             for (int i = 0; i < objectsToCombine.Length; i++)
             {
-                if (objectsToCombine[i].isStatic)
+                //if (objectsToCombine[i].isStatic)
                 {
                     staticCount++;
                     combine[i].mesh = objectsToCombine[i].GetComponent<MeshFilter>().mesh;
@@ -6325,11 +6335,13 @@ public class Title : MonoBehaviour
                 filter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
                 filter.mesh.CombineMeshes(combine);
                 renderer.material = material;
+                renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
+                renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
 
                 // Disable all the static object renderers
                 for (int i = 0; i < objectsToCombine.Length; i++)
                 {
-                    if (objectsToCombine[i].isStatic)
+                    //if (objectsToCombine[i].isStatic)
                     {
                         if (destroy)
                         {
@@ -8181,9 +8193,6 @@ public class Title : MonoBehaviour
         myFont.characterInfo = charInfos;
         myTransparentFont.characterInfo = charInfosTransparent;
 
-
-
-
         // set all the text objects to myFont in the input panel
         Text[] text = InputPanel.GetComponentsInChildren<Text>(true);
         foreach (Text t in text)
@@ -8191,7 +8200,7 @@ public class Title : MonoBehaviour
             t.font = myFont;
         }
 
-        // set again all the button text objects in the input panel to myTransparentFont
+        // set again just the button text objects in the input panel to myTransparentFont
         Button[] buttons = InputPanel.GetComponentsInChildren<Button>(true);
 
         foreach (Button b in buttons)
@@ -8202,7 +8211,6 @@ public class Title : MonoBehaviour
                 t.font = myTransparentFont;
             }
         }
-
 #endif
     }
 }
