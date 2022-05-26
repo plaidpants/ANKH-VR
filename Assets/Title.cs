@@ -7816,7 +7816,22 @@ public class Title : MonoBehaviour
 
         // create a texture for this font
         fontAtlas = new Texture2D(fontWidth * 16, fontHeight * 8 * 2, TextureFormat.RGBA32, false);
-        ClearTexture(fontAtlas, EGAColorPalette[(int)EGA_COLOR.BLACK]);
+        // set half the texture to black, leave the other half white so the inverted chars don't have fringes
+        for (int y = 0; y < fontAtlas.height; y++)
+        {
+            for (int x = 0; x < fontAtlas.width; x++)
+            {
+                if (y < fontAtlas.height / 2)
+                {
+                    fontAtlas.SetPixel(x, y, EGAColorPalette[(int)EGA_COLOR.WHITE]);
+                }
+                else
+                {
+                    fontAtlas.SetPixel(x, y, EGAColorPalette[(int)EGA_COLOR.BLACK]);
+                }
+            }
+        }
+
         fontTransparentAtlas = new Texture2D(fontWidth * 16, fontHeight * 8, TextureFormat.RGBA32, false);
         ClearTexture(fontTransparentAtlas, alpha);
 
