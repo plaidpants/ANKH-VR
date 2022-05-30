@@ -10,9 +10,6 @@ public class World : MonoBehaviour
     // used for automatic klimb and decsend ladders
     public U4_Decompiled.TILE lastCurrentTile;
 
-    // color pallettes and 2D tile textures
-    public Color[] CGAColorPalette;
-    public Color[] EGAColorPalette;
     public Texture2D[] originalTiles;
     public Texture2D[] expandedTiles;
 
@@ -196,271 +193,6 @@ public class World : MonoBehaviour
         return combat_terrain;
     }
 
-    enum EGA_COLOR
-    {
-        BLACK = 0,
-        BLUE = 1,
-        GREEN = 2,
-        CYAN = 3,
-        RED = 4,
-        MEGENTA = 5,
-        BROWN = 6,
-        LIGHT_GRAY = 7,
-        DARK_GRAY = 8,
-        BRIGHT_BLUE = 9,
-        BRIGHT_GREEN = 10,
-        BRIGHT_CYAN = 11,
-        BRIGHT_RED = 12,
-        BRIGHT_MEGENTA = 13,
-        BRIGHT_YELLOW = 14,
-        WHITE = 15,
-        MAX = 16
-    };
-
-    void InitializeEGAPalette()
-    {
-        // create a EGA color palette
-        EGAColorPalette = new Color[(int)EGA_COLOR.MAX];
-        ColorUtility.TryParseHtmlString("#000000", out EGAColorPalette[(int)EGA_COLOR.BLACK]);
-        ColorUtility.TryParseHtmlString("#0000AA", out EGAColorPalette[(int)EGA_COLOR.BLUE]);
-        ColorUtility.TryParseHtmlString("#00AA00", out EGAColorPalette[(int)EGA_COLOR.GREEN]);
-        ColorUtility.TryParseHtmlString("#00AAAA", out EGAColorPalette[(int)EGA_COLOR.CYAN]);
-        ColorUtility.TryParseHtmlString("#AA0000", out EGAColorPalette[(int)EGA_COLOR.RED]);
-        ColorUtility.TryParseHtmlString("#AA00AA", out EGAColorPalette[(int)EGA_COLOR.MEGENTA]);
-        ColorUtility.TryParseHtmlString("#AA5500", out EGAColorPalette[(int)EGA_COLOR.BROWN]);
-        ColorUtility.TryParseHtmlString("#AAAAAA", out EGAColorPalette[(int)EGA_COLOR.LIGHT_GRAY]);
-        ColorUtility.TryParseHtmlString("#555555", out EGAColorPalette[(int)EGA_COLOR.DARK_GRAY]);
-        ColorUtility.TryParseHtmlString("#5555FF", out EGAColorPalette[(int)EGA_COLOR.BRIGHT_BLUE]);
-        ColorUtility.TryParseHtmlString("#55FF55", out EGAColorPalette[(int)EGA_COLOR.BRIGHT_GREEN]);
-        ColorUtility.TryParseHtmlString("#55FFFF", out EGAColorPalette[(int)EGA_COLOR.BRIGHT_CYAN]);
-        ColorUtility.TryParseHtmlString("#FF5555", out EGAColorPalette[(int)EGA_COLOR.BRIGHT_RED]);
-        ColorUtility.TryParseHtmlString("#FF55FF", out EGAColorPalette[(int)EGA_COLOR.BRIGHT_MEGENTA]);
-        ColorUtility.TryParseHtmlString("#FFFF55", out EGAColorPalette[(int)EGA_COLOR.BRIGHT_YELLOW]);
-        ColorUtility.TryParseHtmlString("#FFFFFF", out EGAColorPalette[(int)EGA_COLOR.WHITE]);
-    }
-
-    enum CGA_COLOR
-    {
-        BLACK = 0,
-        CYAN = 1,
-        MEGENTA = 2,
-        WHITE = 3,
-        MAX = 4
-    };
-
-    void InitializeCGAPalette()
-    {
-        // create CGA color palette
-        CGAColorPalette = new Color[(int)CGA_COLOR.MAX];
-        ColorUtility.TryParseHtmlString("#000000", out CGAColorPalette[(int)CGA_COLOR.BLACK]);
-        ColorUtility.TryParseHtmlString("#00AAAA", out CGAColorPalette[(int)CGA_COLOR.CYAN]);
-        ColorUtility.TryParseHtmlString("#AA00AA", out CGAColorPalette[(int)CGA_COLOR.MEGENTA]);
-        ColorUtility.TryParseHtmlString("#AAAAAA", out CGAColorPalette[(int)CGA_COLOR.WHITE]);
-    }
-
-    enum APPLE2_COLOR
-    {
-        BLACK = 0,
-        GREEN = 1,
-        PURPLE = 2,
-        BLUE = 3,
-        ORANGE = 4,
-        GREENWHITE = 5,
-        PURPLEWHITE = 6,
-        BLUEWHITE = 7,
-        ORANGEWHITE = 8,
-        GREENBLACK = 9,
-        PURPLEBLACK = 10,
-        BLUEBLACK = 11,
-        ORANGEBLACK = 12,
-        WHITE = 13,
-        MAX = 14
-    };
-
-    public Color[] Apple2ColorPalette;
-
-    void InitializeApple2Palette()
-    {
-        // create CGA color palette
-        Apple2ColorPalette = new Color[(int)APPLE2_COLOR.MAX];
-        ColorUtility.TryParseHtmlString("#000000", out Apple2ColorPalette[(int)APPLE2_COLOR.BLACK]);
-        ColorUtility.TryParseHtmlString("#38CB00", out Apple2ColorPalette[(int)APPLE2_COLOR.GREEN]);
-        ColorUtility.TryParseHtmlString("#C734FF", out Apple2ColorPalette[(int)APPLE2_COLOR.PURPLE]);
-        ColorUtility.TryParseHtmlString("#0DA1FF", out Apple2ColorPalette[(int)APPLE2_COLOR.BLUE]);
-        ColorUtility.TryParseHtmlString("#F25E00", out Apple2ColorPalette[(int)APPLE2_COLOR.ORANGE]);
-
-        ColorUtility.TryParseHtmlString("#9ACB88", out Apple2ColorPalette[(int)APPLE2_COLOR.GREENWHITE]);
-        ColorUtility.TryParseHtmlString("#E8ABFF", out Apple2ColorPalette[(int)APPLE2_COLOR.PURPLEWHITE]);
-        ColorUtility.TryParseHtmlString("#ABDFFF", out Apple2ColorPalette[(int)APPLE2_COLOR.BLUEWHITE]);
-        ColorUtility.TryParseHtmlString("#F2C1A2", out Apple2ColorPalette[(int)APPLE2_COLOR.ORANGEWHITE]);
-
-        ColorUtility.TryParseHtmlString("#124000", out Apple2ColorPalette[(int)APPLE2_COLOR.GREENBLACK]);
-        ColorUtility.TryParseHtmlString("#320D40", out Apple2ColorPalette[(int)APPLE2_COLOR.PURPLEBLACK]);
-        ColorUtility.TryParseHtmlString("#042940", out Apple2ColorPalette[(int)APPLE2_COLOR.BLUEBLACK]);
-        ColorUtility.TryParseHtmlString("#401900", out Apple2ColorPalette[(int)APPLE2_COLOR.ORANGEBLACK]);
-
-        ColorUtility.TryParseHtmlString("#FFFFFF", out Apple2ColorPalette[(int)APPLE2_COLOR.WHITE]);
-    }
-
-    Color Apple2ColorOdd(bool highBitSet, bool previousPixel, bool pixel, bool nextPixel)
-    {
-        Color color;
-
-        if (!previousPixel && !pixel && !nextPixel) //000
-        {
-            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
-        }
-        else if (previousPixel && !pixel && !nextPixel) //100
-        {
-            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
-        }
-        else if (!previousPixel && pixel && !nextPixel) //010
-        {
-            if (highBitSet)
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.BLUE];
-            }
-            else
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.PURPLE];
-            }
-        }
-        else if (previousPixel && pixel && !nextPixel) //110
-        {
-            if (highBitSet)
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.BLUEWHITE];
-            }
-            else
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.PURPLEWHITE];
-            }
-        }
-        else if (!previousPixel && !pixel && nextPixel) //001
-        {
-            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
-        }
-        else if (previousPixel && !pixel && nextPixel) //101
-        {
-            if (highBitSet)
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.ORANGEBLACK];
-            }
-            else
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.GREENBLACK];
-            }
-        }
-        else if (!previousPixel && pixel && nextPixel) //011
-        {
-            if (highBitSet)
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.BLUEWHITE];
-            }
-            else
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.PURPLEWHITE];
-            }
-        }
-        else if (previousPixel && pixel && nextPixel) //111
-        {
-            color = Apple2ColorPalette[(int)APPLE2_COLOR.WHITE];
-        }
-        else
-        {
-            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
-        }
-
-        return color;
-    }
-
-    Color Apple2ColorEven(bool highBitSet, bool previousPixel, bool pixel, bool nextPixel)
-    {
-        Color color;
-
-        if (!previousPixel && !pixel && !nextPixel) //000
-        {
-            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
-        }
-        else if (previousPixel && !pixel && !nextPixel) //100
-        {
-            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
-        }
-        else if (!previousPixel && pixel && !nextPixel) //010
-        {
-            if (highBitSet)
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.ORANGE];
-            }
-            else
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.GREEN];
-            }
-        }
-        else if (previousPixel && pixel && !nextPixel) //110
-        {
-            if (highBitSet)
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.ORANGEWHITE];
-            }
-            else
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.GREENWHITE];
-            }
-        }
-        else if (!previousPixel && !pixel && nextPixel) //001
-        {
-            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
-        }
-        else if (previousPixel && !pixel && nextPixel) //101
-        {
-            if (highBitSet)
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.BLUEBLACK];
-            }
-            else
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.PURPLEBLACK];
-            }
-        }
-        else if (!previousPixel && pixel && nextPixel) //011
-        {
-            if (highBitSet)
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.ORANGEWHITE];
-            }
-            else
-            {
-                color = Apple2ColorPalette[(int)APPLE2_COLOR.GREENWHITE];
-            }
-        }
-        else if (previousPixel && pixel && nextPixel)
-        {
-            color = Apple2ColorPalette[(int)APPLE2_COLOR.WHITE];
-        }
-        else
-        {
-            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
-        }
-
-        return color;
-    }
-
-    Color Apple2ColorBW(bool highBitSet, bool previousPixel, bool pixel, bool nextPixel)
-    {
-        Color color;
-
-        if (!pixel) //000
-        {
-            color = Apple2ColorPalette[(int)APPLE2_COLOR.BLACK];
-        }
-        else //111
-        {
-            color = Apple2ColorPalette[(int)APPLE2_COLOR.WHITE];
-        }
-
-        return color;
-    }
 
     public Texture2D PNGAtlas;
     public string PNGFilepath;
@@ -581,39 +313,39 @@ public class World : MonoBehaviour
                     previousPixel = false;
                     pixel = (pixelBlock & 0x01) != 0;
                     nextPixel = (pixelBlock & 0x02) != 0;
-                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x04) != 0;
-                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x08) != 0;
-                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x10) != 0;
-                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x20) != 0;
-                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x40) != 0;
-                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     // next pixel is in the other file
                     pixelBlock = fileData2[index];
                     nextPixel = (pixelBlock & 0x01) != 0;
-                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
 
                     // do the second half of the tile from the other file
@@ -622,38 +354,38 @@ public class World : MonoBehaviour
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x02) != 0;
-                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x04) != 0;
-                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x08) != 0;
-                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x10) != 0;
-                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x20) != 0;
-                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x40) != 0;
-                    color = Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     // assume no tiling on the side of the tile
                     nextPixel = false;
-                    color = Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
+                    color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
                     currentTile.SetPixel(width++, y, color);
                 }
             }
@@ -707,10 +439,10 @@ public class World : MonoBehaviour
                 {
                     // set the color of the first half of the nibble
                     int colorIndex = fileData[index] >> 4;
-                    Color color = EGAColorPalette[colorIndex];
+                    Color color = Palette.EGAColorPalette[colorIndex];
 
                     // check if these are people/creatures/ladders/anhk and use black as alpha channel 61
-                    if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                    if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
                         (tile == (int)U4_Decompiled.TILE.ANKH ||
                         tile == (int)U4_Decompiled.TILE.LADDER_UP ||
                         tile == (int)U4_Decompiled.TILE.LADDER_DOWN ||
@@ -744,12 +476,12 @@ public class World : MonoBehaviour
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // remove the brown line that overlaps the bridge support
-                    else if ((colorIndex == (int)EGA_COLOR.BROWN) && tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM && height == 9)
+                    else if ((colorIndex == (int)Palette.EGA_COLOR.BROWN) && tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM && height == 9)
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // special case the horse black eyes
-                    else if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                    else if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
                         (tile == (int)U4_Decompiled.TILE.HORSE_EAST))
                     {
                         if ((width == 13) && (height == 4))
@@ -762,7 +494,7 @@ public class World : MonoBehaviour
                         }
                     }
                     // special case the horse black eyes
-                    else if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                    else if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
                         (tile == (int)U4_Decompiled.TILE.HORSE_WEST))
                     {
                         if ((width == 3) && (height == 5))
@@ -776,7 +508,7 @@ public class World : MonoBehaviour
                     }
                     // others where we need to make green an alpha channel also like towns/ruins/villages
                     // so the grass speckels don't show when we use the tile as a billboard
-                    else if (((colorIndex == (int)EGA_COLOR.BLACK) || (colorIndex == (int)EGA_COLOR.GREEN)) &&
+                    else if (((colorIndex == (int)Palette.EGA_COLOR.BLACK) || (colorIndex == (int)Palette.EGA_COLOR.GREEN)) &&
                         (tile == (int)U4_Decompiled.TILE.VILLAGE ||
                         tile == (int)U4_Decompiled.TILE.TOWN ||
                         tile == (int)U4_Decompiled.TILE.RUINS))
@@ -784,26 +516,26 @@ public class World : MonoBehaviour
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // remove green grass specals from moongates 
-                    else if (((colorIndex == (int)EGA_COLOR.BLACK) || (colorIndex == (int)EGA_COLOR.GREEN)) &&
+                    else if (((colorIndex == (int)Palette.EGA_COLOR.BLACK) || (colorIndex == (int)Palette.EGA_COLOR.GREEN)) &&
                         (tile >= (int)U4_Decompiled.TILE.MOONGATE1 && tile <= (int)U4_Decompiled.TILE.MOONGATE4))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // make the moongates blue and yellow transparent
-                    else if (((colorIndex == (int)EGA_COLOR.BRIGHT_YELLOW) || (colorIndex == (int)EGA_COLOR.BRIGHT_BLUE)) &&
+                    else if (((colorIndex == (int)Palette.EGA_COLOR.BRIGHT_YELLOW) || (colorIndex == (int)Palette.EGA_COLOR.BRIGHT_BLUE)) &&
                         (tile >= (int)U4_Decompiled.TILE.MOONGATE1 && tile <= (int)U4_Decompiled.TILE.MOONGATE4))
                     {
                         color.a = 0.75f;
                         currentTile.SetPixel(width++, currentTile.height - height - 1, color);
                     }
                     // remove blue water from these squid tiles and make black and blue into alpha
-                    else if (((colorIndex == (int)EGA_COLOR.BLACK) || (colorIndex == (int)EGA_COLOR.BRIGHT_BLUE)) &&
+                    else if (((colorIndex == (int)Palette.EGA_COLOR.BLACK) || (colorIndex == (int)Palette.EGA_COLOR.BRIGHT_BLUE)) &&
                         (tile == (int)U4_Decompiled.TILE.SQUID || tile == (int)U4_Decompiled.TILE.SQUID2))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // ships
-                    else if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                    else if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
                         ((tile >= (int)U4_Decompiled.TILE.SHIP_WEST && tile <= (int)U4_Decompiled.TILE.SHIP_SOUTH) ||
                         (tile >= (int)U4_Decompiled.TILE.PIRATE_WEST && tile <= (int)U4_Decompiled.TILE.PIRATE_SOUTH)))
                     {
@@ -812,7 +544,7 @@ public class World : MonoBehaviour
                     // make energy fields are transparent
                     else if (tile >= (int)U4_Decompiled.TILE.POISON_FIELD && tile <= (int)U4_Decompiled.TILE.SLEEP_FIELD)
                     {
-                        if (colorIndex == (int)EGA_COLOR.BLACK)
+                        if (colorIndex == (int)Palette.EGA_COLOR.BLACK)
                         {
                             currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                         }
@@ -830,11 +562,11 @@ public class World : MonoBehaviour
 
                     // set the color of the second half of the nibble
                     colorIndex = fileData[index] & 0xf;
-                    color = EGAColorPalette[colorIndex];
+                    color = Palette.EGAColorPalette[colorIndex];
 
                     // check if these are people/creatures and use black as alpha channel
                     // check if these are people/creatures/ladders/anhk and use black as alpha channel
-                    if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                    if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
                         (tile == (int)U4_Decompiled.TILE.ANKH ||
                         tile == (int)U4_Decompiled.TILE.LADDER_UP ||
                         tile == (int)U4_Decompiled.TILE.LADDER_DOWN ||
@@ -868,13 +600,13 @@ public class World : MonoBehaviour
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // remove the brown line that overlaps the bridge support
-                    else if ((colorIndex == (int)EGA_COLOR.BROWN) && tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM && height == 9)
+                    else if ((colorIndex == (int)Palette.EGA_COLOR.BROWN) && tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM && height == 9)
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // others where we need to make green an alpha channel also like towns/ruins/villages
                     // so the green grass speckels don't show when we use the tile standing upright
-                    else if (((colorIndex == (int)EGA_COLOR.BLACK) || (colorIndex == (int)EGA_COLOR.GREEN)) &&
+                    else if (((colorIndex == (int)Palette.EGA_COLOR.BLACK) || (colorIndex == (int)Palette.EGA_COLOR.GREEN)) &&
                         (tile == (int)U4_Decompiled.TILE.VILLAGE ||
                         tile == (int)U4_Decompiled.TILE.TOWN ||
                         tile == (int)U4_Decompiled.TILE.RUINS))
@@ -882,26 +614,26 @@ public class World : MonoBehaviour
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // remove green grass specals from moongates 
-                    else if (((colorIndex == (int)EGA_COLOR.BLACK) || (colorIndex == (int)EGA_COLOR.GREEN)) &&
+                    else if (((colorIndex == (int)Palette.EGA_COLOR.BLACK) || (colorIndex == (int)Palette.EGA_COLOR.GREEN)) &&
                         (tile >= (int)U4_Decompiled.TILE.MOONGATE1 && tile <= (int)U4_Decompiled.TILE.MOONGATE4))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // make the moongates blue and yellow transparent TODO make black inside portal transparent also
-                    else if (((colorIndex == (int)EGA_COLOR.BRIGHT_YELLOW) || (colorIndex == (int)EGA_COLOR.BRIGHT_BLUE)) &&
+                    else if (((colorIndex == (int)Palette.EGA_COLOR.BRIGHT_YELLOW) || (colorIndex == (int)Palette.EGA_COLOR.BRIGHT_BLUE)) &&
                         (tile >= (int)U4_Decompiled.TILE.MOONGATE1 && tile <= (int)U4_Decompiled.TILE.MOONGATE4))
                     {
                         color.a = 0.75f;
                         currentTile.SetPixel(width++, currentTile.height - height - 1, color);
                     }
                     // remove blue water from these tiles and make black and blue into alpha
-                    else if (((colorIndex == (int)EGA_COLOR.BLACK) || (colorIndex == (int)EGA_COLOR.BRIGHT_BLUE)) &&
+                    else if (((colorIndex == (int)Palette.EGA_COLOR.BLACK) || (colorIndex == (int)Palette.EGA_COLOR.BRIGHT_BLUE)) &&
                         (tile == (int)U4_Decompiled.TILE.SQUID || tile == (int)U4_Decompiled.TILE.SQUID2))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // special case the horse black eyes
-                    else if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                    else if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
                         (tile == (int)U4_Decompiled.TILE.HORSE_EAST))
                     {
                         if ((width == 13) && (height == 4))
@@ -914,7 +646,7 @@ public class World : MonoBehaviour
                         }
                     }
                     // special case the horse black eyes
-                    else if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                    else if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
                         (tile == (int)U4_Decompiled.TILE.HORSE_WEST))
                     {
                         if ((width == 3) && (height == 5))
@@ -927,7 +659,7 @@ public class World : MonoBehaviour
                         }
                     }
                     // ships
-                    else if ((colorIndex == (int)EGA_COLOR.BLACK) &&
+                    else if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
                         ((tile >= (int)U4_Decompiled.TILE.SHIP_WEST && tile <= (int)U4_Decompiled.TILE.SHIP_SOUTH) ||
                         (tile >= (int)U4_Decompiled.TILE.PIRATE_WEST && tile <= (int)U4_Decompiled.TILE.PIRATE_SOUTH)))
                     {
@@ -936,7 +668,7 @@ public class World : MonoBehaviour
                     // energy fields are transparent
                     else if (tile >= (int)U4_Decompiled.TILE.POISON_FIELD && tile <= (int)U4_Decompiled.TILE.SLEEP_FIELD)
                     {
-                        if (colorIndex == (int)EGA_COLOR.BLACK)
+                        if (colorIndex == (int)Palette.EGA_COLOR.BLACK)
                         {
                             currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                         }
@@ -1005,35 +737,35 @@ public class World : MonoBehaviour
                     int colorIndex;
 
                     colorIndex = (fileData[index + 0x20] & 0xC0) >> 6;
-                    Color color = CGAColorPalette[colorIndex];
+                    Color color = Palette.CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width, currentTile.height - height - 2, color);
 
                     colorIndex = (fileData[index + 0x00] & 0xC0) >> 6;
-                    color = CGAColorPalette[colorIndex];
+                    color = Palette.CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width++, currentTile.height - height - 1, color);
 
                     colorIndex = (fileData[index + 0x20] & 0x30) >> 4;
-                    color = CGAColorPalette[colorIndex];
+                    color = Palette.CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width, currentTile.height - height - 2, color);
 
                     colorIndex = (fileData[index + 0x00] & 0x30) >> 4;
-                    color = CGAColorPalette[colorIndex];
+                    color = Palette.CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width++, currentTile.height - height - 1, color);
 
                     colorIndex = (fileData[index + 0x20] & 0x0C) >> 2;
-                    color = CGAColorPalette[colorIndex];
+                    color = Palette.CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width, currentTile.height - height - 2, color);
 
                     colorIndex = (fileData[index + 0x00] & 0x0C) >> 2;
-                    color = CGAColorPalette[colorIndex];
+                    color = Palette.CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width++, currentTile.height - height - 1, color);
 
                     colorIndex = (fileData[index + 0x20] & 0x03) >> 0;
-                    color = CGAColorPalette[colorIndex];
+                    color = Palette.CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width, currentTile.height - height - 2, color);
 
                     colorIndex = (fileData[index + 0x00] & 0x03) >> 0;
-                    color = CGAColorPalette[colorIndex];
+                    color = Palette.CGAColorPalette[colorIndex];
                     currentTile.SetPixel(width++, currentTile.height - height - 1, color);
 
                     // go to the next byte in the file
@@ -1821,22 +1553,22 @@ public class World : MonoBehaviour
             for (int j = 0; j < header.xsize; j += 4)
             {
                 byte byt = dest[pdest++];
-                Color color = CGAColorPalette[(byt & 0xc0) >> 6];
+                Color color = Palette.CGAColorPalette[(byt & 0xc0) >> 6];
                 if (color != Color.black)
                 {
                     texture.SetPixel(j + 0, i, color);
                 }
-                color = CGAColorPalette[(byt & 0x30) >> 4];
+                color = Palette.CGAColorPalette[(byt & 0x30) >> 4];
                 if (color != Color.black)
                 {
                     texture.SetPixel(j + 1, i, color);
                 }
-                color = CGAColorPalette[(byt & 0x0c) >> 2];
+                color = Palette.CGAColorPalette[(byt & 0x0c) >> 2];
                 if (color != Color.black)
                 {
                     texture.SetPixel(j + 2, i, color);
                 }
-                color = CGAColorPalette[(byt & 0x03) >> 0];
+                color = Palette.CGAColorPalette[(byt & 0x03) >> 0];
                 if (color != Color.black)
                 {
                     texture.SetPixel(j + 3, i, color);
@@ -1918,22 +1650,22 @@ public class World : MonoBehaviour
 
                 destinationIndex += 2;
 
-                Color color = EGAColorPalette[(word & 0x000F) >> 0];
+                Color color = Palette.EGAColorPalette[(word & 0x000F) >> 0];
                 if (color != Color.black)
                 {
                     texture.SetPixel(x + 1, texture.height - 1 - y, color);
                 }
-                color = EGAColorPalette[(word & 0x00F0) >> 4];
+                color = Palette.EGAColorPalette[(word & 0x00F0) >> 4];
                 if (color != Color.black)
                 {
                     texture.SetPixel(x + 0, texture.height - 1 - y, color);
                 }
-                color = EGAColorPalette[(word & 0x0F00) >> 8];
+                color = Palette.EGAColorPalette[(word & 0x0F00) >> 8];
                 if (color != Color.black)
                 {
                     texture.SetPixel(x + 3, texture.height - 1 - y, color);
                 }
-                color = EGAColorPalette[(word & 0xF000) >> 12];
+                color = Palette.EGAColorPalette[(word & 0xF000) >> 12];
                 if (color != Color.black)
                 {
                     texture.SetPixel(x + 2, texture.height - 1 - y, color);
@@ -2029,14 +1761,14 @@ public class World : MonoBehaviour
                 }
 
                 // two bits per pixel
-                texture.SetPixel(x + 0, texture.height - 1 - y, CGAColorPalette[(word & 0x00c0) >> 6]);
-                texture.SetPixel(x + 1, texture.height - 1 - y, CGAColorPalette[(word & 0x0030) >> 4]);
-                texture.SetPixel(x + 2, texture.height - 1 - y, CGAColorPalette[(word & 0x000c) >> 2]);
-                texture.SetPixel(x + 3, texture.height - 1 - y, CGAColorPalette[(word & 0x0003) >> 0]);
-                texture.SetPixel(x + 4, texture.height - 1 - y, CGAColorPalette[(word & 0xc000) >> 14]);
-                texture.SetPixel(x + 5, texture.height - 1 - y, CGAColorPalette[(word & 0x3000) >> 12]);
-                texture.SetPixel(x + 6, texture.height - 1 - y, CGAColorPalette[(word & 0x0c00) >> 10]);
-                texture.SetPixel(x + 7, texture.height - 1 - y, CGAColorPalette[(word & 0x0300) >> 8]);
+                texture.SetPixel(x + 0, texture.height - 1 - y, Palette.CGAColorPalette[(word & 0x00c0) >> 6]);
+                texture.SetPixel(x + 1, texture.height - 1 - y, Palette.CGAColorPalette[(word & 0x0030) >> 4]);
+                texture.SetPixel(x + 2, texture.height - 1 - y, Palette.CGAColorPalette[(word & 0x000c) >> 2]);
+                texture.SetPixel(x + 3, texture.height - 1 - y, Palette.CGAColorPalette[(word & 0x0003) >> 0]);
+                texture.SetPixel(x + 4, texture.height - 1 - y, Palette.CGAColorPalette[(word & 0xc000) >> 14]);
+                texture.SetPixel(x + 5, texture.height - 1 - y, Palette.CGAColorPalette[(word & 0x3000) >> 12]);
+                texture.SetPixel(x + 6, texture.height - 1 - y, Palette.CGAColorPalette[(word & 0x0c00) >> 10]);
+                texture.SetPixel(x + 7, texture.height - 1 - y, Palette.CGAColorPalette[(word & 0x0300) >> 8]);
             }
         }
 
@@ -2076,13 +1808,13 @@ public class World : MonoBehaviour
                 }
 
                 // 4 bits per pixel, these pixels are swapped
-                Color color = EGAColorPalette[(word & 0x000F) >> 0];
+                Color color = Palette.EGAColorPalette[(word & 0x000F) >> 0];
                 texture.SetPixel(x + 1, texture.height - 1 - y, color);
-                color = EGAColorPalette[(word & 0x00F0) >> 4];
+                color = Palette.EGAColorPalette[(word & 0x00F0) >> 4];
                 texture.SetPixel(x + 0, texture.height - 1 - y, color);
-                color = EGAColorPalette[(word & 0x0F00) >> 8];
+                color = Palette.EGAColorPalette[(word & 0x0F00) >> 8];
                 texture.SetPixel(x + 3, texture.height - 1 - y, color);
-                color = EGAColorPalette[(word & 0xF000) >> 12];
+                color = Palette.EGAColorPalette[(word & 0xF000) >> 12];
                 texture.SetPixel(x + 2, texture.height - 1 - y, color);
             }
         }
@@ -5481,9 +5213,9 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         dungeonMonsters.transform.localRotation = Quaternion.identity;
 
         // initialize the palette and load the tiles
-        InitializeEGAPalette();
-        InitializeCGAPalette();
-        InitializeApple2Palette();
+        Palette.InitializeEGAPalette();
+        Palette.InitializeCGAPalette();
+        Palette.InitializeApple2Palette();
         LoadTilesEGA();
         //LoadTilesCGA();
         //LoadTilesApple2();
@@ -5543,7 +5275,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
         // allocate vision texture that we can overlap pictures onto
         visionTexture = new Texture2D(320, 200);
-        ClearTexture(visionTexture, EGAColorPalette[(int)EGA_COLOR.BLACK]);
+        ClearTexture(visionTexture, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
 
         // everything I need it now loaded, start the game engine thread
         u4.StartThread();
@@ -5562,10 +5294,10 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         for (int i = 0; i < (int)PICTURE.MAX; i++)
         {
             picture1[i] = new Texture2D(320, 200);
-            ClearTexture(picture1[i], CGAColorPalette[(int)CGA_COLOR.BLACK]);
+            ClearTexture(picture1[i], Palette.CGAColorPalette[(int)Palette.CGA_COLOR.BLACK]);
             LoadAVATARPicFile(((PICTURE)i).ToString() + ".PIC", picture1[i]);
             picture2[i] = new Texture2D(320, 200);
-            ClearTexture(picture2[i], EGAColorPalette[(int)EGA_COLOR.BLACK]);
+            ClearTexture(picture2[i], Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
             LoadAVATAREGAFile(((PICTURE)i).ToString() + ".EGA", picture2[i]);
         }
 
@@ -5582,10 +5314,10 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         for (int i = 0; i < (int)PICTURE2.MAX; i++)
         {
             picture3[i] = new Texture2D(320, 200);
-            ClearTexture(picture3[i], CGAColorPalette[(int)CGA_COLOR.BLACK]);
+            ClearTexture(picture3[i], Palette.CGAColorPalette[(int)Palette.CGA_COLOR.BLACK]);
             LoadTITLEPicPictureFile(((PICTURE2)i).ToString() + ".PIC", picture3[i]);
             picture4[i] = new Texture2D(320, 200);
-            ClearTexture(picture4[i], EGAColorPalette[(int)EGA_COLOR.BLACK]);
+            ClearTexture(picture4[i], Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
             LoadTITLEEGAPictureFile(((PICTURE2)i).ToString() + ".EGA", picture4[i]);
         }
 
@@ -5880,18 +5612,18 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
 
             Color alpha = new Color(0, 0, 0, 0);
-            //EGAColorPalette[(int)EGA_COLOR.BLACK];
+            //Palette.EGAColorPalette[(int)EGA_COLOR.BLACK];
 
             for (int y = y1; y <= y2; y++)
             {
                 for (int x = x1; x <= x2; x++)
                 {
                     Color color = combinedExpandedTexture.GetPixel(offset_x + x, offset_y + expandedTileHeight - 1 - y);
-                    if ((color == EGAColorPalette[(int)EGA_COLOR.RED]) || (color == alpha))
+                    if ((color == Palette.EGAColorPalette[(int)Palette.EGA_COLOR.RED]) || (color == alpha))
                     {
                         if (Random.Range(0, 100) <= 50)
                         {
-                            combinedExpandedTexture.SetPixel(offset_x + x, offset_y + expandedTileHeight - 1 - y, EGAColorPalette[(int)EGA_COLOR.RED]);
+                            combinedExpandedTexture.SetPixel(offset_x + x, offset_y + expandedTileHeight - 1 - y, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.RED]);
                         }
                         else
                         {
@@ -7513,7 +7245,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     {
                         vision.sprite = null;
                         vision.color = new Color(0f, 0f, 0f, 0f);
-                        ClearTexture(visionTexture, EGAColorPalette[(int)EGA_COLOR.BLACK]);
+                        ClearTexture(visionTexture, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
                     }
                 }
             }
@@ -7759,11 +7491,11 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             {
                 if (y < fontAtlas.height / 2)
                 {
-                    fontAtlas.SetPixel(x, y, EGAColorPalette[(int)EGA_COLOR.WHITE]);
+                    fontAtlas.SetPixel(x, y, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.WHITE]);
                 }
                 else
                 {
-                    fontAtlas.SetPixel(x, y, EGAColorPalette[(int)EGA_COLOR.BLACK]);
+                    fontAtlas.SetPixel(x, y, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
                 }
             }
         }
@@ -7791,7 +7523,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 {
                     // set the color of the first half of the nibble
                     int colorIndex = fileData[fileIndex] >> 4;
-                    Color color = EGAColorPalette[colorIndex];
+                    Color color = Palette.EGAColorPalette[colorIndex];
 
                     // use black as alpha channel
                     //if (colorIndex == 0)
@@ -7805,7 +7537,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
                     // set the color of the second half of the nibble
                     colorIndex = fileData[fileIndex] & 0xf;
-                    color = EGAColorPalette[colorIndex];
+                    color = Palette.EGAColorPalette[colorIndex];
                     //if (colorIndex == 0)
                     //{
                     //    fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height + fontHeight * 8, alpha);
@@ -7838,7 +7570,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 {
                     // set the color of the first half of the nibble
                     int colorIndex = fileData[fileIndex] >> 4;
-                    Color color = EGAColorPalette[15 - colorIndex]; // flip the colors
+                    Color color = Palette.EGAColorPalette[15 - colorIndex]; // flip the colors
 
                     // use black as alpha channel
                     //if (colorIndex == 0)
@@ -7852,7 +7584,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
                     // set the color of the second half of the nibble
                     colorIndex = fileData[fileIndex] & 0xf;
-                    color = EGAColorPalette[15 - colorIndex];
+                    color = Palette.EGAColorPalette[15 - colorIndex];
                     //if (colorIndex == 0)
                     //{
                     //    fontAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, alpha);
@@ -7888,7 +7620,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 {
                     // set the color of the first half of the nibble
                     int colorIndex = fileData[fileIndex] >> 4;
-                    Color color = EGAColorPalette[colorIndex];
+                    Color color = Palette.EGAColorPalette[colorIndex];
 
                     // use black as alpha channel
                     if (colorIndex == 0)
@@ -7902,7 +7634,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
                     // set the color of the second half of the nibble
                     colorIndex = fileData[fileIndex] & 0xf;
-                    color = EGAColorPalette[colorIndex];
+                    color = Palette.EGAColorPalette[colorIndex];
                     if (colorIndex == 0)
                     {
                         fontTransparentAtlas.SetPixel((character % 16) * fontWidth + fontXOffset + width++, (7 - (character / 16)) * fontHeight + fontYOffset + 7 - height, alpha);
@@ -7963,35 +7695,35 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 for (int width = 0; width < currentTile.width; /* width incremented below */ )
                 {
                     int colorIndex = (fileData[index + 0x20] & 0xC0) >> 6;
-                    Color color = EGAColorPalette[colorIndex];
+                    Color color = Palette.EGAColorPalette[colorIndex];
                     currentTile.SetPixel(width, currentTile.height - height - 2, color);
 
                     colorIndex = (fileData[index] & 0xC0) >> 6;
-                    color = EGAColorPalette[colorIndex];
+                    color = Palette.EGAColorPalette[colorIndex];
                     currentTile.SetPixel(width++, currentTile.height - height - 1, color);
 
                     colorIndex = (fileData[index + 0x20] & 0x30) >> 4;
-                    color = EGAColorPalette[colorIndex];
+                    color = Palette.EGAColorPalette[colorIndex];
                     currentTile.SetPixel(width, currentTile.height - height - 2, color);
 
                     colorIndex = (fileData[index] & 0x30) >> 4;
-                    color = EGAColorPalette[colorIndex];
+                    color = Palette.EGAColorPalette[colorIndex];
                     currentTile.SetPixel(width++, currentTile.height - height - 1, color);
 
                     colorIndex = (fileData[index + 0x20] & 0x0C) >> 2;
-                    color = EGAColorPalette[colorIndex];
+                    color = Palette.EGAColorPalette[colorIndex];
                     currentTile.SetPixel(width, currentTile.height - height - 2, color);
 
                     colorIndex = (fileData[index] & 0x0C) >> 2;
-                    color = EGAColorPalette[colorIndex];
+                    color = Palette.EGAColorPalette[colorIndex];
                     currentTile.SetPixel(width++, currentTile.height - height - 1, color);
 
                     colorIndex = (fileData[index + 0x20] & 0x03) >> 0;
-                    color = EGAColorPalette[colorIndex];
+                    color = Palette.EGAColorPalette[colorIndex];
                     currentTile.SetPixel(width, currentTile.height - height - 2, color);
 
                     colorIndex = (fileData[index] & 0x03) >> 0;
-                    color = EGAColorPalette[colorIndex];
+                    color = Palette.EGAColorPalette[colorIndex];
                     currentTile.SetPixel(width++, currentTile.height - height - 1, color);
 
                     // go to the next byte in the file
