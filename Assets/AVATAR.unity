@@ -7856,7 +7856,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 999847450}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2765fbfc6779ab2408366f3eea832140, type: 3}
+  m_Script: {fileID: 11500000, guid: 90b46a6418e4b4b4ebb4d43be0744f5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   specialEffectAudioSource: {fileID: 1461463985}
@@ -8341,32 +8341,32 @@ MonoBehaviour:
     _chtile: 0
   keyword1: 
   keyword2: 
-  hit_time_period: 0.04
+  hit_time_period: 0.01
   last_hit_expire_time: 0
   D_96F8: 0
   D_946C: 0
   WindDir: 0
   spell_sta: 0
   soundEffects:
-  - {fileID: 8300000, guid: 43558c554e950e94998b35d05e7aa15b, type: 3}
-  - {fileID: 8300000, guid: 45499e07390e8e14b8b776dd5413cb28, type: 3}
-  - {fileID: 8300000, guid: 721d9f2759724f5409b389f448d87bac, type: 3}
-  - {fileID: 8300000, guid: e50cee0dea7b5d54786c04626e0ec909, type: 3}
-  - {fileID: 8300000, guid: 8f09d343b7e9164459aaa64a2e912d7d, type: 3}
-  - {fileID: 8300000, guid: 549aacd0b65651840b5fd74de83188f1, type: 3}
-  - {fileID: 8300000, guid: bf8481acfcaf84648900d4224984a3fb, type: 3}
-  - {fileID: 8300000, guid: 549aacd0b65651840b5fd74de83188f1, type: 3}
-  - {fileID: 8300000, guid: ad1ca75ca401b6c41ab1eb620df20925, type: 3}
-  - {fileID: 8300000, guid: a7ab2bbeae8a96a4bbbb220c47adc41a, type: 3}
-  - {fileID: 8300000, guid: a7ab2bbeae8a96a4bbbb220c47adc41a, type: 3}
-  - {fileID: 8300000, guid: a7ab2bbeae8a96a4bbbb220c47adc41a, type: 3}
-  - {fileID: 8300000, guid: a7ab2bbeae8a96a4bbbb220c47adc41a, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   adjustSound: 94
   lastMode: -1
   surface_party_direction: 1
   resetJoystick1: 0
   resetJoystick2: 0
-  joystickResetTime: 0.25
+  joystickResetTime: 0.1
   open_door_x: 0
   open_door_y: 0
   open_door_timer: 0
