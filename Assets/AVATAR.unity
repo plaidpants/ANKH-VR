@@ -13182,10 +13182,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lastCurrentTile: 0
-  CGAColorPalette: []
-  EGAColorPalette: []
   originalTiles: []
   expandedTiles: []
+  myFont: {fileID: 12800000, guid: 6a1639c5fcbb6ab42953975a5166d0e4, type: 2}
+  myTransparentFont: {fileID: 12800000, guid: b8e211fb837b63846a3ffdd669460e95, type: 2}
   mainTerrain: {fileID: 0}
   terrain: {fileID: 0}
   animatedTerrrain: {fileID: 0}
@@ -13252,7 +13252,6 @@ MonoBehaviour:
   TalkDirection: {fileID: 170383736}
   TalkEndGame: {fileID: 851848903}
   u4: {fileID: 999847451}
-  Apple2ColorPalette: []
   PNGAtlas: {fileID: 0}
   PNGFilepath: /u4/shapes.png
   convertDungeonTileToCombat: 10000000110000001200000013000000140000001000000010000000100000001000000010000000100000001000000015000000100000001000000010000000
@@ -13299,12 +13298,6 @@ MonoBehaviour:
   wasJustInside: 0
   readyToAutomaticallyEnter: 1
   rotateTransform: {fileID: 572009426}
-  fontAtlas: {fileID: 0}
-  fontTransparentAtlas: {fileID: 0}
-  myFont: {fileID: 12800000, guid: 6a1639c5fcbb6ab42953975a5166d0e4, type: 2}
-  myTransparentFont: {fileID: 12800000, guid: b8e211fb837b63846a3ffdd669460e95, type: 2}
-  charsetEGAFilepath: /u4/CHARSET.EGA
-  charsetCGAFilepath: /u4/CHARSET.CGA
 --- !u!4 &1753957574
 Transform:
   m_ObjectHideFlags: 0
