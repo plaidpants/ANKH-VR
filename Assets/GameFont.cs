@@ -1,3 +1,4 @@
+//#define CREATE_DUMMY_FONT
 using UnityEngine;
 
 public class GameFont
@@ -23,10 +24,30 @@ public class GameFont
         texture.Apply();
     }
 
+    static void ClearHalfTexture(Texture2D texture, Color color1, Color color2)
+    {
+        for (int y = 0; y < texture.height; y++)
+        {
+            for (int x = 0; x < texture.width; x++)
+            {
+                if (y < texture.height / 2)
+                {
+                    texture.SetPixel(x, y, color1);
+                }
+                else
+                {
+                    texture.SetPixel(x, y, color2);
+                }
+            }
+        }
+        texture.Apply();
+    }
+
     public static void LoadCharSetEGA()
     {
         Color alpha = new Color(0, 0, 0, 0);
 
+        // check if the file exists
         if (!System.IO.File.Exists(Application.persistentDataPath + charsetEGAFilepath))
         {
             Debug.Log("Could not find EGA charset file " + Application.persistentDataPath + charsetEGAFilepath);
@@ -36,6 +57,7 @@ public class GameFont
         // read the file
         byte[] fileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + charsetEGAFilepath);
 
+        // check if the file is the right size
         if (fileData.Length != 8 * 1024)
         {
             Debug.Log("EGA charset file incorrect length " + fileData.Length);
@@ -44,26 +66,17 @@ public class GameFont
 
         // create a texture for this font
         fontAtlas = new Texture2D(fontWidth * 16, fontHeight * 8 * 2, TextureFormat.RGBA32, false);
-        // set half the texture to black, leave the other half white so the inverted chars don't have fringes
-        for (int y = 0; y < fontAtlas.height; y++)
-        {
-            for (int x = 0; x < fontAtlas.width; x++)
-            {
-                if (y < fontAtlas.height / 2)
-                {
-                    fontAtlas.SetPixel(x, y, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.WHITE]);
-                }
-                else
-                {
-                    fontAtlas.SetPixel(x, y, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
-                }
-            }
-        }
 
+        // set half the texture to black, leave the other half white so the inverted chars don't have fringes
+        ClearHalfTexture(fontAtlas, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.WHITE], Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
+
+        // create a texture for the transparent version of this font
         fontTransparentAtlas = new Texture2D(fontWidth * 16, fontHeight * 8, TextureFormat.RGBA32, false);
+
+        // clear the texture with a black alpha so anything we don't set pixels on is transparent
         ClearTexture(fontTransparentAtlas, alpha);
 
-        // we want pixles not fuzzy images
+        // we want pixels not fuzzy images for these fonts
         fontAtlas.filterMode = FilterMode.Point;
         fontTransparentAtlas.filterMode = FilterMode.Point;
 
@@ -113,7 +126,7 @@ public class GameFont
         }
 
         // need inverse characters also for highlighting
-        // so we will add those to the end and use them
+        // so we will add an additional 128 chars to the end and use them
         // dynamically by setting the high bit in the characters
         // in the strings we display
 
@@ -159,12 +172,12 @@ public class GameFont
             }
         }
 
-        // Actually apply all previous SetPixel and SetPixels changes from above
+        // Actually apply all previous SetPixel and SetPixels changes from above for the first font
         fontAtlas.Apply();
 
         // need another set of characters for buttons that are transparent where black
         // so button highlighting works correctly.
-        // We will add these to a new texture that we will use in a different font
+        // We will add these to a new font texture that we will use in a different font
         // since these will not be used dynamically like the inverse characters above.
 
         // reset the file index to generate transparent chars
@@ -422,14 +435,14 @@ public class GameFont
         UnityEditor.AssetDatabase.CreateAsset (myFont, "Assets/font.fontsettings");
         System.IO.File.WriteAllBytes("Assets/u4font.png", texture.EncodeToPNG());
 #else
-        // Create material
+        // Create font materials based on the font textures we created above
         Material material = new Material(Shader.Find("UI/Default"));
         material.mainTexture = texture;
         Material materialTransparent = new Material(Shader.Find("UI/Default"));
         materialTransparent.mainTexture = transparentTexture;
 
-        // just update font with original game texture,
-        // everything else should already be set from when we created the asset file above
+        // update font with original game textures,
+        // everything else should already be set from when we created the asset file passed in above
         myFont.material = material;
         myTransparentFont.material = materialTransparent;
 

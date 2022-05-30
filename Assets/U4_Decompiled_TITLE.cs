@@ -1591,7 +1591,7 @@ catch
         {
             for (int x = 0; x < 19; x++)
             {
-                initialMap[x, y] = (U4_Decompiled.TILE)bytebuffer[buffer_index++];
+                initialMap[x, y] = (U4_Decompiled_AVATAR.TILE)bytebuffer[buffer_index++];
             }
         }
 
@@ -1606,7 +1606,7 @@ catch
         {
             for (int x = 0; x < 19; x++)
             {
-                U4_Decompiled.TILE tile = (U4_Decompiled.TILE)bytebuffer[buffer_index++];
+                U4_Decompiled_AVATAR.TILE tile = (U4_Decompiled_AVATAR.TILE)bytebuffer[buffer_index++];
                 if (tile != map[x, y])
                 {
                     map[x, y] = tile;
@@ -1625,7 +1625,7 @@ catch
     }
 
     bool playStartupSoundOnlyOnce = false;
-    public U4_Decompiled.TILE[,] map = new U4_Decompiled.TILE[19,5];
+    public U4_Decompiled_AVATAR.TILE[,] map = new U4_Decompiled_AVATAR.TILE[19,5];
     public bool mapChanged = false;
-    public U4_Decompiled.TILE[,] initialMap = new U4_Decompiled.TILE[19, 5];
+    public U4_Decompiled_AVATAR.TILE[,] initialMap = new U4_Decompiled_AVATAR.TILE[19, 5];
 }

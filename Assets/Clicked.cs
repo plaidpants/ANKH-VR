@@ -11,7 +11,7 @@ public class Clicked : MonoBehaviour
         WORD,
         CHARACTER
     }
-    public U4_Decompiled engine;
+    public U4_Decompiled_AVATAR engine;
     public string word = "none";
     public char character = ' ';
     public MODE mode = MODE.BUTTON;
@@ -24,7 +24,7 @@ public class Clicked : MonoBehaviour
 
     public void OnClicked()
     {
-        U4_Decompiled.clickedButtonName = transform.gameObject.name;
+        U4_Decompiled_AVATAR.clickedButtonName = transform.gameObject.name;
         if (engine)
         {
             if (mode == MODE.BUTTON)

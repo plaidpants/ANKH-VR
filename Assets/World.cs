@@ -1,5 +1,3 @@
-//#define CREATE_DUMMY_FONT
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +6,7 @@ using UnityEngine.UI;
 public class World : MonoBehaviour
 {
     // used for automatic klimb and decsend ladders
-    public U4_Decompiled.TILE lastCurrentTile;
+    public U4_Decompiled_AVATAR.TILE lastCurrentTile;
 
     public Texture2D[] originalTiles;
     public Texture2D[] expandedTiles;
@@ -96,13 +94,13 @@ public class World : MonoBehaviour
 
 
     // reference to game engine
-    public U4_Decompiled u4;
+    public U4_Decompiled_AVATAR u4;
 
     // this array size can be adjusted to display more or less of the map at runtime
-    U4_Decompiled.TILE[,] raycastSettlementMap = new U4_Decompiled.TILE[64, 64];
+    U4_Decompiled_AVATAR.TILE[,] raycastSettlementMap = new U4_Decompiled_AVATAR.TILE[64, 64];
 
     // this array size can be adjusted to display more or less of the map at runtime
-    U4_Decompiled.TILE[,] raycastOutdoorMap = new U4_Decompiled.TILE[128, 128];
+    U4_Decompiled_AVATAR.TILE[,] raycastOutdoorMap = new U4_Decompiled_AVATAR.TILE[128, 128];
  //   U4_Decompiled.TILE[,] raycastOutdoorMap = new U4_Decompiled.TILE[256, 256];
 
    
@@ -112,81 +110,81 @@ public class World : MonoBehaviour
     // logic here so I can on the fly determine the combat terrain to display by exposing the interal variables used in the
     // original function. The INN or shop or camp case is handled elsewhere (e.g. In the middle of the night, while out for a stroll...)
 
-    public U4_Decompiled.COMBAT_TERRAIN Convert_Tile_to_Combat_Terrian(U4_Decompiled.TILE tile)
+    public U4_Decompiled_AVATAR.COMBAT_TERRAIN Convert_Tile_to_Combat_Terrian(U4_Decompiled_AVATAR.TILE tile)
     {
-        U4_Decompiled.COMBAT_TERRAIN combat_terrain;
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN combat_terrain;
 
 
-        if (u4.Party._tile <= U4_Decompiled.TILE.SHIP_SOUTH || (U4_Decompiled.TILE)((byte)u4.current_tile & ~3) == U4_Decompiled.TILE.SHIP_WEST)
+        if (u4.Party._tile <= U4_Decompiled_AVATAR.TILE.SHIP_SOUTH || (U4_Decompiled_AVATAR.TILE)((byte)u4.current_tile & ~3) == U4_Decompiled_AVATAR.TILE.SHIP_WEST)
         {
-            if (u4.D_96F8 == U4_Decompiled.TILE.PIRATE_WEST)
+            if (u4.D_96F8 == U4_Decompiled_AVATAR.TILE.PIRATE_WEST)
             {
-                combat_terrain = U4_Decompiled.COMBAT_TERRAIN.SHIPSHIP;
+                combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.SHIPSHIP;
             }
-            else if (u4.D_946C <= U4_Decompiled.TILE.SHALLOW_WATER)
+            else if (u4.D_946C <= U4_Decompiled_AVATAR.TILE.SHALLOW_WATER)
             {
-                combat_terrain = U4_Decompiled.COMBAT_TERRAIN.SHIPSEA;
+                combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.SHIPSEA;
             }
             else
             {
-                combat_terrain = U4_Decompiled.COMBAT_TERRAIN.SHIPSHOR;
+                combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.SHIPSHOR;
             }
         }
         else
         {
-            if (u4.D_96F8 == U4_Decompiled.TILE.PIRATE_WEST)
+            if (u4.D_96F8 == U4_Decompiled_AVATAR.TILE.PIRATE_WEST)
             {
-                combat_terrain = U4_Decompiled.COMBAT_TERRAIN.SHORSHIP;
+                combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.SHORSHIP;
             }
-            else if (u4.D_946C <= U4_Decompiled.TILE.SHALLOW_WATER)
+            else if (u4.D_946C <= U4_Decompiled_AVATAR.TILE.SHALLOW_WATER)
             {
-                combat_terrain = U4_Decompiled.COMBAT_TERRAIN.SHORE;
+                combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.SHORE;
             }
             else
             {
                 switch (tile)
                 {
-                    case U4_Decompiled.TILE.SWAMP:
+                    case U4_Decompiled_AVATAR.TILE.SWAMP:
                         {
-                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.MARSH;
+                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.MARSH;
                             break;
                         }
-                    case U4_Decompiled.TILE.BRUSH:
+                    case U4_Decompiled_AVATAR.TILE.BRUSH:
                         {
-                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.BRUSH;
+                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.BRUSH;
                             break;
                         }
-                    case U4_Decompiled.TILE.FOREST:
+                    case U4_Decompiled_AVATAR.TILE.FOREST:
                         {
-                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.FOREST;
+                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.FOREST;
                             break;
                         }
-                    case U4_Decompiled.TILE.HILLS:
+                    case U4_Decompiled_AVATAR.TILE.HILLS:
                         {
-                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.HILL;
+                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.HILL;
                             break;
                         }
-                    case U4_Decompiled.TILE.DUNGEON:
+                    case U4_Decompiled_AVATAR.TILE.DUNGEON:
                         {
-                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.DUNGEON;
+                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.DUNGEON;
                             break;
                         }
-                    case U4_Decompiled.TILE.BRICK_FLOOR:
+                    case U4_Decompiled_AVATAR.TILE.BRICK_FLOOR:
                         {
-                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.BRICK;
+                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.BRICK;
                             break;
                         }
-                    case U4_Decompiled.TILE.BRIDGE:
-                    case U4_Decompiled.TILE.BRIDGE_TOP:
-                    case U4_Decompiled.TILE.BRIDGE_BOTTOM:
-                    case U4_Decompiled.TILE.WOOD_FLOOR:
+                    case U4_Decompiled_AVATAR.TILE.BRIDGE:
+                    case U4_Decompiled_AVATAR.TILE.BRIDGE_TOP:
+                    case U4_Decompiled_AVATAR.TILE.BRIDGE_BOTTOM:
+                    case U4_Decompiled_AVATAR.TILE.WOOD_FLOOR:
                         {
-                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.BRIDGE;
+                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.BRIDGE;
                             break;
                         }
                     default:
                         {
-                            combat_terrain = U4_Decompiled.COMBAT_TERRAIN.GRASS;
+                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.GRASS;
                             break;
                         }
                 }
@@ -446,46 +444,46 @@ public class World : MonoBehaviour
 
                     // check if these are people/creatures/ladders/anhk and use black as alpha channel 61
                     if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
-                        (tile == (int)U4_Decompiled.TILE.ANKH ||
-                        tile == (int)U4_Decompiled.TILE.LADDER_UP ||
-                        tile == (int)U4_Decompiled.TILE.LADDER_DOWN ||
-                        tile == (int)U4_Decompiled.TILE.FOREST ||
-                        tile == (int)U4_Decompiled.TILE.COOKING_FIRE ||
-                        tile == (int)U4_Decompiled.TILE.SHRINE ||
-                        tile == (int)U4_Decompiled.TILE.ALTAR ||
-                        tile == (int)U4_Decompiled.TILE.BALOON ||
+                        (tile == (int)U4_Decompiled_AVATAR.TILE.ANKH ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.LADDER_UP ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.LADDER_DOWN ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.FOREST ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.COOKING_FIRE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.SHRINE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.ALTAR ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.BALOON ||
                         //tile == (int)U4_Decompiled.TILE.CHEST ||
-                        tile == (int)U4_Decompiled.TILE.CASTLE ||
-                        tile == (int)U4_Decompiled.TILE.CASTLE_LEFT ||
-                        tile == (int)U4_Decompiled.TILE.CASTLE_ENTRANCE ||
-                        tile == (int)U4_Decompiled.TILE.CASTLE_RIGHT ||
-                        tile == (int)U4_Decompiled.TILE.VILLAGE ||
-                        tile == (int)U4_Decompiled.TILE.BRIDGE ||
-                        tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM ||
-                        tile == (int)U4_Decompiled.TILE.BRIDGE_TOP ||
-                        tile == (int)U4_Decompiled.TILE.BRUSH ||
-                        tile == (int)U4_Decompiled.TILE.NIXIE ||
-                        tile == (int)U4_Decompiled.TILE.NIXIE2 ||
-                        (tile >= (int)U4_Decompiled.TILE.MISSLE_ATTACK_SMALL && tile <= (int)U4_Decompiled.TILE.MISSLE_ATTACK_RED) ||
-                        (tile >= (int)U4_Decompiled.TILE.PARTY && tile <= (int)U4_Decompiled.TILE.SHEPHERD2) ||
-                        (tile >= (int)U4_Decompiled.TILE.GUARD && tile <= (int)U4_Decompiled.TILE.LORD_BRITISH2) ||
-                        (tile >= (int)U4_Decompiled.TILE.SERPENT && tile <= (int)U4_Decompiled.TILE.WATER_SPOUT2) ||
-                        (tile >= (int)U4_Decompiled.TILE.BAT && tile <= (int)U4_Decompiled.TILE.TROLL4) ||
-                        (tile >= (int)U4_Decompiled.TILE.INSECTS && tile <= (int)U4_Decompiled.TILE.INSECTS4) ||
-                        (tile >= (int)U4_Decompiled.TILE.PHANTOM && tile <= (int)U4_Decompiled.TILE.MAGE_NPC4) ||
-                        (tile >= (int)U4_Decompiled.TILE.LAVA_LIZARD && tile <= (int)U4_Decompiled.TILE.ZORN4) ||
-                        (tile >= (int)U4_Decompiled.TILE.HYDRA && tile <= (int)U4_Decompiled.TILE.BALRON4)))
+                        tile == (int)U4_Decompiled_AVATAR.TILE.CASTLE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.CASTLE_LEFT ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.CASTLE_ENTRANCE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.CASTLE_RIGHT ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.VILLAGE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.BRIDGE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.BRIDGE_BOTTOM ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.BRIDGE_TOP ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.BRUSH ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.NIXIE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.NIXIE2 ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.MISSLE_ATTACK_SMALL && tile <= (int)U4_Decompiled_AVATAR.TILE.MISSLE_ATTACK_RED) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.PARTY && tile <= (int)U4_Decompiled_AVATAR.TILE.SHEPHERD2) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.GUARD && tile <= (int)U4_Decompiled_AVATAR.TILE.LORD_BRITISH2) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.SERPENT && tile <= (int)U4_Decompiled_AVATAR.TILE.WATER_SPOUT2) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.BAT && tile <= (int)U4_Decompiled_AVATAR.TILE.TROLL4) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.INSECTS && tile <= (int)U4_Decompiled_AVATAR.TILE.INSECTS4) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.PHANTOM && tile <= (int)U4_Decompiled_AVATAR.TILE.MAGE_NPC4) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.LAVA_LIZARD && tile <= (int)U4_Decompiled_AVATAR.TILE.ZORN4) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.HYDRA && tile <= (int)U4_Decompiled_AVATAR.TILE.BALRON4)))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // remove the brown line that overlaps the bridge support
-                    else if ((colorIndex == (int)Palette.EGA_COLOR.BROWN) && tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM && height == 9)
+                    else if ((colorIndex == (int)Palette.EGA_COLOR.BROWN) && tile == (int)U4_Decompiled_AVATAR.TILE.BRIDGE_BOTTOM && height == 9)
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // special case the horse black eyes
                     else if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
-                        (tile == (int)U4_Decompiled.TILE.HORSE_EAST))
+                        (tile == (int)U4_Decompiled_AVATAR.TILE.HORSE_EAST))
                     {
                         if ((width == 13) && (height == 4))
                         {
@@ -498,7 +496,7 @@ public class World : MonoBehaviour
                     }
                     // special case the horse black eyes
                     else if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
-                        (tile == (int)U4_Decompiled.TILE.HORSE_WEST))
+                        (tile == (int)U4_Decompiled_AVATAR.TILE.HORSE_WEST))
                     {
                         if ((width == 3) && (height == 5))
                         {
@@ -512,40 +510,40 @@ public class World : MonoBehaviour
                     // others where we need to make green an alpha channel also like towns/ruins/villages
                     // so the grass speckels don't show when we use the tile as a billboard
                     else if (((colorIndex == (int)Palette.EGA_COLOR.BLACK) || (colorIndex == (int)Palette.EGA_COLOR.GREEN)) &&
-                        (tile == (int)U4_Decompiled.TILE.VILLAGE ||
-                        tile == (int)U4_Decompiled.TILE.TOWN ||
-                        tile == (int)U4_Decompiled.TILE.RUINS))
+                        (tile == (int)U4_Decompiled_AVATAR.TILE.VILLAGE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.TOWN ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.RUINS))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // remove green grass specals from moongates 
                     else if (((colorIndex == (int)Palette.EGA_COLOR.BLACK) || (colorIndex == (int)Palette.EGA_COLOR.GREEN)) &&
-                        (tile >= (int)U4_Decompiled.TILE.MOONGATE1 && tile <= (int)U4_Decompiled.TILE.MOONGATE4))
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.MOONGATE1 && tile <= (int)U4_Decompiled_AVATAR.TILE.MOONGATE4))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // make the moongates blue and yellow transparent
                     else if (((colorIndex == (int)Palette.EGA_COLOR.BRIGHT_YELLOW) || (colorIndex == (int)Palette.EGA_COLOR.BRIGHT_BLUE)) &&
-                        (tile >= (int)U4_Decompiled.TILE.MOONGATE1 && tile <= (int)U4_Decompiled.TILE.MOONGATE4))
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.MOONGATE1 && tile <= (int)U4_Decompiled_AVATAR.TILE.MOONGATE4))
                     {
                         color.a = 0.75f;
                         currentTile.SetPixel(width++, currentTile.height - height - 1, color);
                     }
                     // remove blue water from these squid tiles and make black and blue into alpha
                     else if (((colorIndex == (int)Palette.EGA_COLOR.BLACK) || (colorIndex == (int)Palette.EGA_COLOR.BRIGHT_BLUE)) &&
-                        (tile == (int)U4_Decompiled.TILE.SQUID || tile == (int)U4_Decompiled.TILE.SQUID2))
+                        (tile == (int)U4_Decompiled_AVATAR.TILE.SQUID || tile == (int)U4_Decompiled_AVATAR.TILE.SQUID2))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // ships
                     else if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
-                        ((tile >= (int)U4_Decompiled.TILE.SHIP_WEST && tile <= (int)U4_Decompiled.TILE.SHIP_SOUTH) ||
-                        (tile >= (int)U4_Decompiled.TILE.PIRATE_WEST && tile <= (int)U4_Decompiled.TILE.PIRATE_SOUTH)))
+                        ((tile >= (int)U4_Decompiled_AVATAR.TILE.SHIP_WEST && tile <= (int)U4_Decompiled_AVATAR.TILE.SHIP_SOUTH) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.PIRATE_WEST && tile <= (int)U4_Decompiled_AVATAR.TILE.PIRATE_SOUTH)))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // make energy fields are transparent
-                    else if (tile >= (int)U4_Decompiled.TILE.POISON_FIELD && tile <= (int)U4_Decompiled.TILE.SLEEP_FIELD)
+                    else if (tile >= (int)U4_Decompiled_AVATAR.TILE.POISON_FIELD && tile <= (int)U4_Decompiled_AVATAR.TILE.SLEEP_FIELD)
                     {
                         if (colorIndex == (int)Palette.EGA_COLOR.BLACK)
                         {
@@ -570,74 +568,74 @@ public class World : MonoBehaviour
                     // check if these are people/creatures and use black as alpha channel
                     // check if these are people/creatures/ladders/anhk and use black as alpha channel
                     if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
-                        (tile == (int)U4_Decompiled.TILE.ANKH ||
-                        tile == (int)U4_Decompiled.TILE.LADDER_UP ||
-                        tile == (int)U4_Decompiled.TILE.LADDER_DOWN ||
-                        tile == (int)U4_Decompiled.TILE.FOREST ||
-                        tile == (int)U4_Decompiled.TILE.COOKING_FIRE ||
-                        tile == (int)U4_Decompiled.TILE.SHRINE ||
-                        tile == (int)U4_Decompiled.TILE.ALTAR ||
-                        tile == (int)U4_Decompiled.TILE.BALOON ||
+                        (tile == (int)U4_Decompiled_AVATAR.TILE.ANKH ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.LADDER_UP ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.LADDER_DOWN ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.FOREST ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.COOKING_FIRE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.SHRINE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.ALTAR ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.BALOON ||
                         //tile == (int)U4_Decompiled.TILE.CHEST ||
-                        tile == (int)U4_Decompiled.TILE.CASTLE ||
-                        tile == (int)U4_Decompiled.TILE.CASTLE_LEFT ||
-                        tile == (int)U4_Decompiled.TILE.CASTLE_ENTRANCE ||
-                        tile == (int)U4_Decompiled.TILE.CASTLE_RIGHT ||
-                        tile == (int)U4_Decompiled.TILE.VILLAGE ||
-                        tile == (int)U4_Decompiled.TILE.BRIDGE ||
-                        tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM ||
-                        tile == (int)U4_Decompiled.TILE.BRIDGE_TOP ||
-                        tile == (int)U4_Decompiled.TILE.BRUSH ||
-                        tile == (int)U4_Decompiled.TILE.NIXIE ||
-                        tile == (int)U4_Decompiled.TILE.NIXIE2 ||
-                        (tile >= (int)U4_Decompiled.TILE.MISSLE_ATTACK_SMALL && tile <= (int)U4_Decompiled.TILE.MISSLE_ATTACK_RED) ||
-                        (tile >= (int)U4_Decompiled.TILE.PARTY && tile <= (int)U4_Decompiled.TILE.SHEPHERD2) ||
-                        (tile >= (int)U4_Decompiled.TILE.GUARD && tile <= (int)U4_Decompiled.TILE.LORD_BRITISH2) ||
-                        (tile >= (int)U4_Decompiled.TILE.SERPENT && tile <= (int)U4_Decompiled.TILE.WATER_SPOUT2) ||
-                        (tile >= (int)U4_Decompiled.TILE.BAT && tile <= (int)U4_Decompiled.TILE.TROLL4) ||
-                        (tile >= (int)U4_Decompiled.TILE.INSECTS && tile <= (int)U4_Decompiled.TILE.INSECTS4) ||
-                        (tile >= (int)U4_Decompiled.TILE.PHANTOM && tile <= (int)U4_Decompiled.TILE.MAGE_NPC4) ||
-                        (tile >= (int)U4_Decompiled.TILE.LAVA_LIZARD && tile <= (int)U4_Decompiled.TILE.ZORN4) ||
-                        (tile >= (int)U4_Decompiled.TILE.HYDRA && tile <= (int)U4_Decompiled.TILE.BALRON4)))
+                        tile == (int)U4_Decompiled_AVATAR.TILE.CASTLE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.CASTLE_LEFT ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.CASTLE_ENTRANCE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.CASTLE_RIGHT ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.VILLAGE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.BRIDGE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.BRIDGE_BOTTOM ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.BRIDGE_TOP ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.BRUSH ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.NIXIE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.NIXIE2 ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.MISSLE_ATTACK_SMALL && tile <= (int)U4_Decompiled_AVATAR.TILE.MISSLE_ATTACK_RED) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.PARTY && tile <= (int)U4_Decompiled_AVATAR.TILE.SHEPHERD2) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.GUARD && tile <= (int)U4_Decompiled_AVATAR.TILE.LORD_BRITISH2) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.SERPENT && tile <= (int)U4_Decompiled_AVATAR.TILE.WATER_SPOUT2) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.BAT && tile <= (int)U4_Decompiled_AVATAR.TILE.TROLL4) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.INSECTS && tile <= (int)U4_Decompiled_AVATAR.TILE.INSECTS4) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.PHANTOM && tile <= (int)U4_Decompiled_AVATAR.TILE.MAGE_NPC4) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.LAVA_LIZARD && tile <= (int)U4_Decompiled_AVATAR.TILE.ZORN4) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.HYDRA && tile <= (int)U4_Decompiled_AVATAR.TILE.BALRON4)))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // remove the brown line that overlaps the bridge support
-                    else if ((colorIndex == (int)Palette.EGA_COLOR.BROWN) && tile == (int)U4_Decompiled.TILE.BRIDGE_BOTTOM && height == 9)
+                    else if ((colorIndex == (int)Palette.EGA_COLOR.BROWN) && tile == (int)U4_Decompiled_AVATAR.TILE.BRIDGE_BOTTOM && height == 9)
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // others where we need to make green an alpha channel also like towns/ruins/villages
                     // so the green grass speckels don't show when we use the tile standing upright
                     else if (((colorIndex == (int)Palette.EGA_COLOR.BLACK) || (colorIndex == (int)Palette.EGA_COLOR.GREEN)) &&
-                        (tile == (int)U4_Decompiled.TILE.VILLAGE ||
-                        tile == (int)U4_Decompiled.TILE.TOWN ||
-                        tile == (int)U4_Decompiled.TILE.RUINS))
+                        (tile == (int)U4_Decompiled_AVATAR.TILE.VILLAGE ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.TOWN ||
+                        tile == (int)U4_Decompiled_AVATAR.TILE.RUINS))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // remove green grass specals from moongates 
                     else if (((colorIndex == (int)Palette.EGA_COLOR.BLACK) || (colorIndex == (int)Palette.EGA_COLOR.GREEN)) &&
-                        (tile >= (int)U4_Decompiled.TILE.MOONGATE1 && tile <= (int)U4_Decompiled.TILE.MOONGATE4))
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.MOONGATE1 && tile <= (int)U4_Decompiled_AVATAR.TILE.MOONGATE4))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // make the moongates blue and yellow transparent TODO make black inside portal transparent also
                     else if (((colorIndex == (int)Palette.EGA_COLOR.BRIGHT_YELLOW) || (colorIndex == (int)Palette.EGA_COLOR.BRIGHT_BLUE)) &&
-                        (tile >= (int)U4_Decompiled.TILE.MOONGATE1 && tile <= (int)U4_Decompiled.TILE.MOONGATE4))
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.MOONGATE1 && tile <= (int)U4_Decompiled_AVATAR.TILE.MOONGATE4))
                     {
                         color.a = 0.75f;
                         currentTile.SetPixel(width++, currentTile.height - height - 1, color);
                     }
                     // remove blue water from these tiles and make black and blue into alpha
                     else if (((colorIndex == (int)Palette.EGA_COLOR.BLACK) || (colorIndex == (int)Palette.EGA_COLOR.BRIGHT_BLUE)) &&
-                        (tile == (int)U4_Decompiled.TILE.SQUID || tile == (int)U4_Decompiled.TILE.SQUID2))
+                        (tile == (int)U4_Decompiled_AVATAR.TILE.SQUID || tile == (int)U4_Decompiled_AVATAR.TILE.SQUID2))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // special case the horse black eyes
                     else if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
-                        (tile == (int)U4_Decompiled.TILE.HORSE_EAST))
+                        (tile == (int)U4_Decompiled_AVATAR.TILE.HORSE_EAST))
                     {
                         if ((width == 13) && (height == 4))
                         {
@@ -650,7 +648,7 @@ public class World : MonoBehaviour
                     }
                     // special case the horse black eyes
                     else if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
-                        (tile == (int)U4_Decompiled.TILE.HORSE_WEST))
+                        (tile == (int)U4_Decompiled_AVATAR.TILE.HORSE_WEST))
                     {
                         if ((width == 3) && (height == 5))
                         {
@@ -663,13 +661,13 @@ public class World : MonoBehaviour
                     }
                     // ships
                     else if ((colorIndex == (int)Palette.EGA_COLOR.BLACK) &&
-                        ((tile >= (int)U4_Decompiled.TILE.SHIP_WEST && tile <= (int)U4_Decompiled.TILE.SHIP_SOUTH) ||
-                        (tile >= (int)U4_Decompiled.TILE.PIRATE_WEST && tile <= (int)U4_Decompiled.TILE.PIRATE_SOUTH)))
+                        ((tile >= (int)U4_Decompiled_AVATAR.TILE.SHIP_WEST && tile <= (int)U4_Decompiled_AVATAR.TILE.SHIP_SOUTH) ||
+                        (tile >= (int)U4_Decompiled_AVATAR.TILE.PIRATE_WEST && tile <= (int)U4_Decompiled_AVATAR.TILE.PIRATE_SOUTH)))
                     {
                         currentTile.SetPixel(width++, currentTile.height - height - 1, alpha);
                     }
                     // energy fields are transparent
-                    else if (tile >= (int)U4_Decompiled.TILE.POISON_FIELD && tile <= (int)U4_Decompiled.TILE.SLEEP_FIELD)
+                    else if (tile >= (int)U4_Decompiled_AVATAR.TILE.POISON_FIELD && tile <= (int)U4_Decompiled_AVATAR.TILE.SLEEP_FIELD)
                     {
                         if (colorIndex == (int)Palette.EGA_COLOR.BLACK)
                         {
@@ -796,7 +794,7 @@ public class World : MonoBehaviour
         public int start_y;
     }
     void LoadCombatMap(string combatMapFilepath, 
-        ref U4_Decompiled.TILE[,] combatMap, 
+        ref U4_Decompiled_AVATAR.TILE[,] combatMap, 
         ref CombatMonsterStartPositions [] monsterStartPositions, 
         ref CombatPartyStartPositions [] partyStartPositions)
     {
@@ -862,7 +860,7 @@ public class World : MonoBehaviour
         {
             for (int x = 0; x < 11; x++)
             {
-                combatMap[x, y] = (U4_Decompiled.TILE)combatMapFileData[fileIndex++];
+                combatMap[x, y] = (U4_Decompiled_AVATAR.TILE)combatMapFileData[fileIndex++];
             }
         }
     }
@@ -873,19 +871,19 @@ public class World : MonoBehaviour
         GameObject combatTerrainsObject = new GameObject();
         combatTerrainsObject.name = "Combat Terrains";
 
-        CombatTerrains = new GameObject[(int)U4_Decompiled.COMBAT_TERRAIN.MAX];
+        CombatTerrains = new GameObject[(int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX];
 
         // go through all the combat terrains and load their maps and create a game object to hold them
         // as a child of the above combat terrains game object
-        for (int i = 0; i<(int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+        for (int i = 0; i<(int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
         {
             // allocate space for the individual map
-            combatMaps[i] = new U4_Decompiled.TILE[11, 11];
+            combatMaps[i] = new U4_Decompiled_AVATAR.TILE[11, 11];
             // allocate space for the monster and party starting positions
             combatMonsterStartPositions[i] = new CombatMonsterStartPositions[16];
             combatPartyStartPositions[i] = new CombatPartyStartPositions[8];
 
-            if (i == (int)U4_Decompiled.COMBAT_TERRAIN.CAMP_DNG)
+            if (i == (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.CAMP_DNG)
             {
                 // this one has a different name format
                 LoadCombatMap("/u4/CAMP.DNG",
@@ -896,7 +894,7 @@ public class World : MonoBehaviour
             else
             {
                 // load the combat map from the original files
-                LoadCombatMap("/u4/" + ((U4_Decompiled.COMBAT_TERRAIN)i).ToString() + ".CON",
+                LoadCombatMap("/u4/" + ((U4_Decompiled_AVATAR.COMBAT_TERRAIN)i).ToString() + ".CON",
                     ref combatMaps[i],
                     ref combatMonsterStartPositions[i],
                     ref combatPartyStartPositions[i]);
@@ -907,7 +905,7 @@ public class World : MonoBehaviour
             gameObject.transform.SetParent(combatTerrainsObject.transform);
 
             // set it's name to match the combat terrain being created
-            gameObject.name = ((U4_Decompiled.COMBAT_TERRAIN) i).ToString();
+            gameObject.name = ((U4_Decompiled_AVATAR.COMBAT_TERRAIN) i).ToString();
 
             // create the combat terrain based on the loaded map
             CreateMap(gameObject, combatMaps[i]);
@@ -932,7 +930,7 @@ public class World : MonoBehaviour
     }
 
     [SerializeField]
-    U4_Decompiled.TILE[,] entireMapTILEs = new U4_Decompiled.TILE[32 * 8, 32 * 8];
+    U4_Decompiled_AVATAR.TILE[,] entireMapTILEs = new U4_Decompiled_AVATAR.TILE[32 * 8, 32 * 8];
 
     [SerializeField]
     GameObject[,] entireMapGameObjects = new GameObject[32 * 8, 32 * 8];
@@ -981,7 +979,7 @@ public class World : MonoBehaviour
                 {
                     for (int width = 0; width < 32; width++)
                     {
-                        entireMapTILEs[x * 32 + width, y * 32 + height] = (U4_Decompiled.TILE)worldMapFileData[fileIndex++];
+                        entireMapTILEs[x * 32 + width, y * 32 + height] = (U4_Decompiled_AVATAR.TILE)worldMapFileData[fileIndex++];
                     }
                 }
             }
@@ -1052,7 +1050,7 @@ public class World : MonoBehaviour
     [SerializeField]
     public struct FLOOR_TRIGGER
     {
-        public U4_Decompiled.TILE changeTile;
+        public U4_Decompiled_AVATAR.TILE changeTile;
         public int trigger_x, trigger_y;
         public int changeTile_x1, changeTile_y1;
         public int changeTile_x2, changeTile_y2;
@@ -1061,7 +1059,7 @@ public class World : MonoBehaviour
     [SerializeField]
     public struct DUNGEON_MONSTER
     {
-        public U4_Decompiled.TILE monster;
+        public U4_Decompiled_AVATAR.TILE monster;
         public int x, y;
     }
 
@@ -1080,7 +1078,7 @@ public class World : MonoBehaviour
         public DUNGEON_PARTY_START_LOCATION[] partyEastEntry; // 0-7 (east entry)
         public DUNGEON_PARTY_START_LOCATION[] partySouthEntry; // 0-7 (south entry)
         public DUNGEON_PARTY_START_LOCATION[] partyWestEntry; // 0-7 (west entry)
-        public U4_Decompiled.TILE[,] dungeonRoomMap; // 11x11 map matrix for room
+        public U4_Decompiled_AVATAR.TILE[,] dungeonRoomMap; // 11x11 map matrix for room
     }
 
     [SerializeField]
@@ -1120,24 +1118,24 @@ public class World : MonoBehaviour
         WALL = 0xF0
     */
     // only the upper nibble defines the dungeon tile, the lower nibble is used for active dungeon monsters
-    public U4_Decompiled.COMBAT_TERRAIN[] convertDungeonTileToCombat  =
+    public U4_Decompiled_AVATAR.COMBAT_TERRAIN[] convertDungeonTileToCombat  =
     { 
-        U4_Decompiled.COMBAT_TERRAIN.DNG0, // HALLWAY -> hallway
-        U4_Decompiled.COMBAT_TERRAIN.DNG1, // LADDER_UP -> ladder up
-        U4_Decompiled.COMBAT_TERRAIN.DNG2, // LADDER_DOWN -> ladder down
-        U4_Decompiled.COMBAT_TERRAIN.DNG3, // LADDER_UP_AND_DOWN -> ladder up and down
-        U4_Decompiled.COMBAT_TERRAIN.DNG4, // TREASURE_CHEST -> chest
-        U4_Decompiled.COMBAT_TERRAIN.DNG0, // CEILING_HOLE -> hallway
-        U4_Decompiled.COMBAT_TERRAIN.DNG0, // FLOOR_HOLE -> hallway
-        U4_Decompiled.COMBAT_TERRAIN.DNG0, // MAGIC_ORB -> hallway
-        U4_Decompiled.COMBAT_TERRAIN.DNG0, // TRAP -> hallway
-        U4_Decompiled.COMBAT_TERRAIN.DNG0, // FOUNTAIN -> hallway
-        U4_Decompiled.COMBAT_TERRAIN.DNG0, // FIELD -> hallway
-        U4_Decompiled.COMBAT_TERRAIN.DNG0, // ALTAR -> hallway
-        U4_Decompiled.COMBAT_TERRAIN.DNG5, // DOOR -> doorway 
-        U4_Decompiled.COMBAT_TERRAIN.DNG0, // DUNGEON_ROOM -> hallway
-        U4_Decompiled.COMBAT_TERRAIN.DNG0, // DOOR_SECRECT -> secret doorway  /* DNG6 make secret door just regular hallway as we do the secret door/wall on the ajacent room/hallway */
-        U4_Decompiled.COMBAT_TERRAIN.DNG0  // WALL -> hallway, just in case
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // HALLWAY -> hallway
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG1, // LADDER_UP -> ladder up
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG2, // LADDER_DOWN -> ladder down
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG3, // LADDER_UP_AND_DOWN -> ladder up and down
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG4, // TREASURE_CHEST -> chest
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // CEILING_HOLE -> hallway
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // FLOOR_HOLE -> hallway
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // MAGIC_ORB -> hallway
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // TRAP -> hallway
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // FOUNTAIN -> hallway
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // FIELD -> hallway
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // ALTAR -> hallway
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG5, // DOOR -> doorway 
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // DUNGEON_ROOM -> hallway
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // DOOR_SECRECT -> secret doorway  /* DNG6 make secret door just regular hallway as we do the secret door/wall on the ajacent room/hallway */
+        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0  // WALL -> hallway, just in case
     };
 
     public enum NPC_MOVEMENT_MODE
@@ -1195,7 +1193,7 @@ public class World : MonoBehaviour
 
     public struct npc
     {
-        public U4_Decompiled.TILE tile;
+        public U4_Decompiled_AVATAR.TILE tile;
         public byte pos_x;
         public byte pos_y;
         public NPC_MOVEMENT_MODE movement;
@@ -1211,7 +1209,7 @@ public class World : MonoBehaviour
     public bool[][] npcQuestionAffectHumility = new bool[(int)SETTLEMENT.MAX][]; //16
     public int[][] npcProbabilityOfTurningAway = new int[(int)SETTLEMENT.MAX][]; //16
     public List<string>[][] npcStrings = new List<string>[(int)SETTLEMENT.MAX][]; //16
-    public U4_Decompiled.TILE[][,] settlementMap = new U4_Decompiled.TILE[(int)SETTLEMENT.MAX][,]; //32,32
+    public U4_Decompiled_AVATAR.TILE[][,] settlementMap = new U4_Decompiled_AVATAR.TILE[(int)SETTLEMENT.MAX][,]; //32,32
 
     void LoadSettlements()
     {
@@ -1235,7 +1233,7 @@ public class World : MonoBehaviour
             npcQuestionAffectHumility[settlement] = new bool[16];
             npcProbabilityOfTurningAway[settlement] = new int[16];
             npcStrings[settlement] = new List<string>[16];
-            settlementMap[settlement] = new U4_Decompiled.TILE[32,32];
+            settlementMap[settlement] = new U4_Decompiled_AVATAR.TILE[32,32];
 
             if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + ((SETTLEMENT)settlement).ToString() + ".ULT"))
             {
@@ -1353,7 +1351,7 @@ public class World : MonoBehaviour
             {
                 for (int width = 0; width < 32; width++)
                 {
-                    U4_Decompiled.TILE tileIndex = (U4_Decompiled.TILE)settlementFileData[bufferIndex++];
+                    U4_Decompiled_AVATAR.TILE tileIndex = (U4_Decompiled_AVATAR.TILE)settlementFileData[bufferIndex++];
                     settlementMap[settlement][width, height] = tileIndex;
                 }
             }
@@ -1361,7 +1359,7 @@ public class World : MonoBehaviour
             // load npc data from the map data
             for (int npcIndex = 0; npcIndex < 32; npcIndex++)
             {
-                U4_Decompiled.TILE npcTile = (U4_Decompiled.TILE)settlementFileData[0x400 + npcIndex];
+                U4_Decompiled_AVATAR.TILE npcTile = (U4_Decompiled_AVATAR.TILE)settlementFileData[0x400 + npcIndex];
                 settlementNPCs[settlement][npcIndex].tile = npcTile;
 
                 // zero indicates unused
@@ -1884,12 +1882,12 @@ public class World : MonoBehaviour
                 dungeons[index].dungeonRooms[room].partyEastEntry = new DUNGEON_PARTY_START_LOCATION[8];
                 dungeons[index].dungeonRooms[room].partySouthEntry = new DUNGEON_PARTY_START_LOCATION[8];
                 dungeons[index].dungeonRooms[room].partyWestEntry = new DUNGEON_PARTY_START_LOCATION[8];
-                dungeons[index].dungeonRooms[room].dungeonRoomMap = new U4_Decompiled.TILE[11, 11];
+                dungeons[index].dungeonRooms[room].dungeonRoomMap = new U4_Decompiled_AVATAR.TILE[11, 11];
 
                 // get the triggers
                 for (int i = 0; i < 4; i++)
                 {
-                    dungeons[index].dungeonRooms[room].triggers[i].changeTile = (U4_Decompiled.TILE)dungeonFileData[fileIndex++];
+                    dungeons[index].dungeonRooms[room].triggers[i].changeTile = (U4_Decompiled_AVATAR.TILE)dungeonFileData[fileIndex++];
                     dungeons[index].dungeonRooms[room].triggers[i].trigger_x = dungeonFileData[fileIndex] >> 4;
                     dungeons[index].dungeonRooms[room].triggers[i].trigger_y = dungeonFileData[fileIndex++] & 0xf;
                     dungeons[index].dungeonRooms[room].triggers[i].changeTile_x1 = dungeonFileData[fileIndex] >> 4;
@@ -1901,7 +1899,7 @@ public class World : MonoBehaviour
                 // get the monsters
                 for (int i = 0; i < 16; i++)
                 {
-                    dungeons[index].dungeonRooms[room].monsters[i].monster = (U4_Decompiled.TILE)dungeonFileData[fileIndex++];
+                    dungeons[index].dungeonRooms[room].monsters[i].monster = (U4_Decompiled_AVATAR.TILE)dungeonFileData[fileIndex++];
                 }
                 for (int i = 0; i < 16; i++)
                 {
@@ -1950,7 +1948,7 @@ public class World : MonoBehaviour
                 {
                     for (int x = 0; x < 11; x++)
                     {
-                        dungeons[index].dungeonRooms[room].dungeonRoomMap[x, y] = (U4_Decompiled.TILE)dungeonFileData[fileIndex++];
+                        dungeons[index].dungeonRooms[room].dungeonRoomMap[x, y] = (U4_Decompiled_AVATAR.TILE)dungeonFileData[fileIndex++];
                     }
                 }
 
@@ -1967,7 +1965,7 @@ public class World : MonoBehaviour
         // add all the monsters
         for (int i = 0; i < 16; i++)
         {
-            U4_Decompiled.TILE  monsterTile = dungeonRoom.monsters[i].monster;
+            U4_Decompiled_AVATAR.TILE  monsterTile = dungeonRoom.monsters[i].monster;
 
             if (monsterTile != 0)
             {
@@ -1986,7 +1984,7 @@ public class World : MonoBehaviour
                 // there is at least one case where the dungeon monster tile refers to an energy field.
                 // TODO: see if these are actually monsters or just static objects in the actual game,
                 // for now billboard them like actual monsters.
-                if ((monsterTile >= U4_Decompiled.TILE.POISON_FIELD) && (monsterTile <= U4_Decompiled.TILE.SLEEP_FIELD))
+                if ((monsterTile >= U4_Decompiled_AVATAR.TILE.POISON_FIELD) && (monsterTile <= U4_Decompiled_AVATAR.TILE.SLEEP_FIELD))
                 {
                     renderer.material.mainTexture = combinedLinearTexture;
                     renderer.material.mainTextureOffset = new Vector2((float)((int)monsterTile * originalTileWidth) / (float)renderer.material.mainTexture.width, 0.0f);
@@ -2102,7 +2100,7 @@ public class World : MonoBehaviour
                 }
 
                 // convert the monster nibble into a map tile
-                U4_Decompiled.TILE monsterTile = (U4_Decompiled.TILE)((checkDungeonTile << 2) - 4 + U4_Decompiled.TILE.RAT);
+                U4_Decompiled_AVATAR.TILE monsterTile = (U4_Decompiled_AVATAR.TILE)((checkDungeonTile << 2) - 4 + U4_Decompiled_AVATAR.TILE.RAT);
 
                 // did we create enough monster child game objects
                 if (monsterIndex < dungeonMonsters.transform.childCount)
@@ -2179,38 +2177,38 @@ public class World : MonoBehaviour
                     for (int x = 0; x < 8; x++)
                     {
                         GameObject mapTile;
-                        U4_Decompiled.TILE tileIndex;
+                        U4_Decompiled_AVATAR.TILE tileIndex;
                         DUNGEON_TILE dungeonTile = dungeons[index].dungeonTILEs[z][x, y];
 
                         if (dungeonTile == DUNGEON_TILE.WALL)
                         {
                             mapTile = Primitive.CreatePartialCube(true, true, true, true);
-                            tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.BRICK_WALL;
                         }
                         else if (dungeonTile == DUNGEON_TILE.HALLWAY)
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.TILED_FLOOR;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.TILED_FLOOR;
                         }
                         else if (dungeonTile == DUNGEON_TILE.LADDER_UP)
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.LADDER_UP;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.LADDER_UP;
                         }
                         else if (dungeonTile == DUNGEON_TILE.LADDER_DOWN)
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.LADDER_DOWN;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.LADDER_DOWN;
                         }
                         else if (dungeonTile == DUNGEON_TILE.LADDER_UP_AND_DOWN)
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.LADDER_DOWN; // TODO: need to overlap the up and down tiles, but this will do for now
+                            tileIndex = U4_Decompiled_AVATAR.TILE.LADDER_DOWN; // TODO: need to overlap the up and down tiles, but this will do for now
                         }
                         else if (dungeonTile == DUNGEON_TILE.TREASURE_CHEST)
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.CHEST;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.CHEST;
                         }
                         else if ((dungeonTile == DUNGEON_TILE.FOUNTAIN) ||
                                 (dungeonTile == DUNGEON_TILE.FOUNTAIN_CURE) ||
@@ -2219,59 +2217,59 @@ public class World : MonoBehaviour
                                 (dungeonTile == DUNGEON_TILE.FOUNTAIN_ACID))
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.SHALLOW_WATER;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.SHALLOW_WATER;
                         }
                         else if (dungeonTile == DUNGEON_TILE.FIELD_ENERGY)
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.ENERGY_FIELD;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.ENERGY_FIELD;
                         }
                         else if (dungeonTile == DUNGEON_TILE.FIELD_FIRE)
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.FIRE_FIELD;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.FIRE_FIELD;
                         }
                         else if (dungeonTile == DUNGEON_TILE.FIELD_POISON)
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.POISON_FIELD;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.POISON_FIELD;
                         }
                         else if (dungeonTile == DUNGEON_TILE.FIELD_SLEEP)
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.SLEEP_FIELD;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.SLEEP_FIELD;
                         }
                         else if (dungeonTile == DUNGEON_TILE.DOOR)
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.DOOR;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.DOOR;
                         }
                         else if (dungeonTile == DUNGEON_TILE.DOOR_SECRECT)
                         {
                             mapTile = Primitive.CreatePartialCube(true, true, true, true);
-                            tileIndex = U4_Decompiled.TILE.SECRET_BRICK_WALL;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.SECRET_BRICK_WALL;
                         }
                         else if (dungeonTile == DUNGEON_TILE.ALTAR)
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.ALTAR;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.ALTAR;
                         }
                         else if (dungeonTile == DUNGEON_TILE.MAGIC_ORB)
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.MISSLE_ATTACK_BLUE;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.MISSLE_ATTACK_BLUE;
                         }
                         else if ((dungeonTile == DUNGEON_TILE.TRAP_FALLING_ROCKS) ||
                             (dungeonTile == DUNGEON_TILE.TRAP_WIND_DARKNESS) ||
                             (dungeonTile == DUNGEON_TILE.TRAP_PIT))
                         {
                             mapTile = Primitive.CreateQuad();
-                            tileIndex = U4_Decompiled.TILE.TILED_FLOOR;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.TILED_FLOOR;
                         }
                         else
                         {
                             mapTile = Primitive.CreateQuad(); 
-                            tileIndex = U4_Decompiled.TILE.TILED_FLOOR;
+                            tileIndex = U4_Decompiled_AVATAR.TILE.TILED_FLOOR;
                         }
 
                         mapTile.transform.SetParent(dungeonLevelGameObject.transform);
@@ -2290,8 +2288,8 @@ public class World : MonoBehaviour
         }
     }
 
-    U4_Decompiled.TILE[,] CreateDungeonHallway(ref DUNGEON_TILE[,] dungeonTileMap, ref DUNGEON_ROOM[] dungeonRooms, int posx, int posy, int posz,
-        U4_Decompiled.TILE centerTile = U4_Decompiled.TILE.TILED_FLOOR)
+    U4_Decompiled_AVATAR.TILE[,] CreateDungeonHallway(ref DUNGEON_TILE[,] dungeonTileMap, ref DUNGEON_ROOM[] dungeonRooms, int posx, int posy, int posz,
+        U4_Decompiled_AVATAR.TILE centerTile = U4_Decompiled_AVATAR.TILE.TILED_FLOOR)
     {
         DUNGEON_TILE left = dungeonTileMap[posx, (posy + 1) % 8]; //  0,-1
         DUNGEON_TILE above = dungeonTileMap[(posx + 8 - 1) % 8, posy]; // -1, 0
@@ -2303,15 +2301,15 @@ public class World : MonoBehaviour
         DUNGEON_TILE diagonalRightAbove = dungeonTileMap[(posx + 1) % 8, (posy + 1) % 8];      //  1, 0 ->   1,-1
         DUNGEON_TILE diagonalLeftAbove = dungeonTileMap[(posx + 8 - 1) % 8, (posy + 1) % 8];   //  0, 1 ->  -1,-1
 
-        U4_Decompiled.TILE tileIndex;
+        U4_Decompiled_AVATAR.TILE tileIndex;
 
-        U4_Decompiled.TILE[,] map = new U4_Decompiled.TILE[11, 11];
+        U4_Decompiled_AVATAR.TILE[,] map = new U4_Decompiled_AVATAR.TILE[11, 11];
 
         for (int y = 0; y < 11; y++)
         {
             for (int x = 0; x < 11; x++)
             {
-                tileIndex = U4_Decompiled.TILE.TILED_FLOOR;
+                tileIndex = U4_Decompiled_AVATAR.TILE.TILED_FLOOR;
 
                 // center
                 if ((x == 5) && (y == 5))
@@ -2324,44 +2322,44 @@ public class World : MonoBehaviour
                 {
                     if ((x == 5) && (left == DUNGEON_TILE.DOOR_SECRECT))
                     {
-                        tileIndex = U4_Decompiled.TILE.SECRET_BRICK_WALL;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.SECRET_BRICK_WALL;
                     }
                     else
                     {
-                        tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.BRICK_WALL;
                     }
                 }
                 if (((above == DUNGEON_TILE.WALL) || (above == DUNGEON_TILE.DOOR_SECRECT)) && (x == 1))
                 {
                     if ((y == 5) && (above == DUNGEON_TILE.DOOR_SECRECT))
                     {
-                        tileIndex = U4_Decompiled.TILE.SECRET_BRICK_WALL;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.SECRET_BRICK_WALL;
                     }
                     else
                     {
-                        tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.BRICK_WALL;
                     }
                 }
                 if (((right == DUNGEON_TILE.WALL) || (right == DUNGEON_TILE.DOOR_SECRECT)) && (x == 9))
                 {
                     if ((y == 5) && (right == DUNGEON_TILE.DOOR_SECRECT))
                     {
-                        tileIndex = U4_Decompiled.TILE.SECRET_BRICK_WALL;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.SECRET_BRICK_WALL;
                     }
                     else
                     {
-                        tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.BRICK_WALL;
                     }
                 }
                 if (((below == DUNGEON_TILE.WALL) || (below == DUNGEON_TILE.DOOR_SECRECT)) && (y == 9))
                 {
                     if ((x == 5) && (below == DUNGEON_TILE.DOOR_SECRECT))
                     {
-                        tileIndex = U4_Decompiled.TILE.SECRET_BRICK_WALL;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.SECRET_BRICK_WALL;
                     }
                     else
                     {
-                        tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.BRICK_WALL;
                     }
                 }
 
@@ -2376,14 +2374,14 @@ public class World : MonoBehaviour
                         room += (posz >> 1) * 16;
                     }
 
-                    U4_Decompiled.TILE roomTileIndex = dungeonRooms[room].dungeonRoomMap[x, 10];
-                    if ((roomTileIndex == U4_Decompiled.TILE.TILED_FLOOR) || (roomTileIndex == U4_Decompiled.TILE.BRICK_FLOOR))
+                    U4_Decompiled_AVATAR.TILE roomTileIndex = dungeonRooms[room].dungeonRoomMap[x, 10];
+                    if ((roomTileIndex == U4_Decompiled_AVATAR.TILE.TILED_FLOOR) || (roomTileIndex == U4_Decompiled_AVATAR.TILE.BRICK_FLOOR))
                     {
-                        tileIndex = U4_Decompiled.TILE.TILED_FLOOR;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.TILED_FLOOR;
                     }
                     else
                     {
-                        tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.BRICK_WALL;
                     }
                 }
                 if (((above >= DUNGEON_TILE.DUNGEON_ROOM_0) && (above <= DUNGEON_TILE.DUNGEON_ROOM_15)) && (x == 0))
@@ -2395,14 +2393,14 @@ public class World : MonoBehaviour
                         room += (posz >> 1) * 16;
                     }
 
-                    U4_Decompiled.TILE roomTileIndex = dungeonRooms[room].dungeonRoomMap[10, y];
-                    if ((roomTileIndex == U4_Decompiled.TILE.TILED_FLOOR) || (roomTileIndex == U4_Decompiled.TILE.BRICK_FLOOR))
+                    U4_Decompiled_AVATAR.TILE roomTileIndex = dungeonRooms[room].dungeonRoomMap[10, y];
+                    if ((roomTileIndex == U4_Decompiled_AVATAR.TILE.TILED_FLOOR) || (roomTileIndex == U4_Decompiled_AVATAR.TILE.BRICK_FLOOR))
                     {
-                        tileIndex = U4_Decompiled.TILE.TILED_FLOOR;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.TILED_FLOOR;
                     }
                     else
                     {
-                        tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.BRICK_WALL;
                     }
 
                     //tileIndex = U4_Decompiled.TILE.BRICK_WALL;
@@ -2416,14 +2414,14 @@ public class World : MonoBehaviour
                         room += (posz >> 1) * 16;
                     }
 
-                    U4_Decompiled.TILE roomTileIndex = dungeonRooms[room].dungeonRoomMap[0, y];
-                    if ((roomTileIndex == U4_Decompiled.TILE.TILED_FLOOR) || (roomTileIndex == U4_Decompiled.TILE.BRICK_FLOOR))
+                    U4_Decompiled_AVATAR.TILE roomTileIndex = dungeonRooms[room].dungeonRoomMap[0, y];
+                    if ((roomTileIndex == U4_Decompiled_AVATAR.TILE.TILED_FLOOR) || (roomTileIndex == U4_Decompiled_AVATAR.TILE.BRICK_FLOOR))
                     {
-                        tileIndex = U4_Decompiled.TILE.TILED_FLOOR;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.TILED_FLOOR;
                     }
                     else
                     {
-                        tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.BRICK_WALL;
                     }
 
                     // tileIndex = U4_Decompiled.TILE.BRICK_WALL;
@@ -2437,14 +2435,14 @@ public class World : MonoBehaviour
                         room += (posz >> 1) * 16;
                     }
 
-                    U4_Decompiled.TILE roomTileIndex = dungeonRooms[room].dungeonRoomMap[x, 0];
-                    if ((roomTileIndex == U4_Decompiled.TILE.TILED_FLOOR) || (roomTileIndex == U4_Decompiled.TILE.BRICK_FLOOR))
+                    U4_Decompiled_AVATAR.TILE roomTileIndex = dungeonRooms[room].dungeonRoomMap[x, 0];
+                    if ((roomTileIndex == U4_Decompiled_AVATAR.TILE.TILED_FLOOR) || (roomTileIndex == U4_Decompiled_AVATAR.TILE.BRICK_FLOOR))
                     {
-                        tileIndex = U4_Decompiled.TILE.TILED_FLOOR;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.TILED_FLOOR;
                     }
                     else
                     {
-                        tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                        tileIndex = U4_Decompiled_AVATAR.TILE.BRICK_WALL;
                     }
                     // tileIndex = U4_Decompiled.TILE.BRICK_WALL;
                 }
@@ -2452,53 +2450,53 @@ public class World : MonoBehaviour
                 //corners
                 if ((x <= 1) && (y <= 1) && ((diagonalLeftAbove == DUNGEON_TILE.WALL) || (diagonalLeftAbove == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalLeftAbove >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalLeftAbove <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
-                    tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                    tileIndex = U4_Decompiled_AVATAR.TILE.BRICK_WALL;
                 }
                 if ((x >= 9) && (y <= 1) && ((diagonalRightAbove == DUNGEON_TILE.WALL) || (diagonalRightAbove == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalRightAbove >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalRightAbove <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
-                    tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                    tileIndex = U4_Decompiled_AVATAR.TILE.BRICK_WALL;
                 }
                 if ((x >= 9) && (y >= 9) && ((diagonalRightBelow == DUNGEON_TILE.WALL) || (diagonalRightBelow == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalRightBelow >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalRightBelow <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
-                    tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                    tileIndex = U4_Decompiled_AVATAR.TILE.BRICK_WALL;
                 }
                 if ((x <= 1) && (y >= 9) && ((diagonalLeftBelow == DUNGEON_TILE.WALL) || (diagonalLeftBelow == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalLeftBelow >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalLeftBelow <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
-                    tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+                    tileIndex = U4_Decompiled_AVATAR.TILE.BRICK_WALL;
                 }
                 if ((x == 0) && (y == 0) && ((diagonalLeftAbove == DUNGEON_TILE.WALL) || (diagonalLeftAbove == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalLeftAbove >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalLeftAbove <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
-                    tileIndex = U4_Decompiled.TILE.BLANK;
+                    tileIndex = U4_Decompiled_AVATAR.TILE.BLANK;
                 }
                 if ((x == 10) && (y == 0) && ((diagonalRightAbove == DUNGEON_TILE.WALL) || (diagonalRightAbove == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalRightAbove >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalRightAbove <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
-                    tileIndex = U4_Decompiled.TILE.BLANK;
+                    tileIndex = U4_Decompiled_AVATAR.TILE.BLANK;
                 }
                 if ((x == 10) && (y == 10) && ((diagonalRightBelow == DUNGEON_TILE.WALL) || (diagonalRightBelow == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalRightBelow >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalRightBelow <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
-                    tileIndex = U4_Decompiled.TILE.BLANK;
+                    tileIndex = U4_Decompiled_AVATAR.TILE.BLANK;
                 }
                 if ((x == 0) && (y == 10) && ((diagonalLeftBelow == DUNGEON_TILE.WALL) || (diagonalLeftBelow == DUNGEON_TILE.DOOR_SECRECT) || ((diagonalLeftBelow >= DUNGEON_TILE.DUNGEON_ROOM_0) && (diagonalLeftBelow <= DUNGEON_TILE.DUNGEON_ROOM_15))))
                 {
-                    tileIndex = U4_Decompiled.TILE.BLANK;
+                    tileIndex = U4_Decompiled_AVATAR.TILE.BLANK;
                 }
 
                 // override
                 if ((left == DUNGEON_TILE.WALL) && (y == 0))
                 {
-                    tileIndex = U4_Decompiled.TILE.BLANK;
+                    tileIndex = U4_Decompiled_AVATAR.TILE.BLANK;
                 }
                 if ((above == DUNGEON_TILE.WALL) && (x == 0))
                 {
-                    tileIndex = U4_Decompiled.TILE.BLANK;
+                    tileIndex = U4_Decompiled_AVATAR.TILE.BLANK;
                 }
                 if ((right == DUNGEON_TILE.WALL) && (x == 10))
                 {
-                    tileIndex = U4_Decompiled.TILE.BLANK;
+                    tileIndex = U4_Decompiled_AVATAR.TILE.BLANK;
                 }
                 if ((below == DUNGEON_TILE.WALL) && (y == 10))
                 {
-                    tileIndex = U4_Decompiled.TILE.BLANK;
+                    tileIndex = U4_Decompiled_AVATAR.TILE.BLANK;
                 }
 
                 map[x, y] = tileIndex;
@@ -2507,7 +2505,7 @@ public class World : MonoBehaviour
 
         return map;
     }
-    GameObject CreateDungeonBlock(U4_Decompiled.TILE tileIndex)
+    GameObject CreateDungeonBlock(U4_Decompiled_AVATAR.TILE tileIndex)
     {
         GameObject dungeonBlockGameObject = new GameObject();
         dungeonBlockGameObject.name = tileIndex.ToString();
@@ -2518,11 +2516,11 @@ public class World : MonoBehaviour
             {
                 GameObject mapTile;
 
-                if (tileIndex == U4_Decompiled.TILE.BRICK_WALL)
+                if (tileIndex == U4_Decompiled_AVATAR.TILE.BRICK_WALL)
                 {
                     mapTile = Primitive.CreatePartialCube(true, true, true, true);
                 }
-                else if (tileIndex == U4_Decompiled.TILE.TILED_FLOOR)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.TILED_FLOOR)
                 {
                     mapTile = Primitive.CreateQuad();
                 }
@@ -2593,10 +2591,10 @@ public class World : MonoBehaviour
                         )
                 {
                     // TODO figure out what to do with these traps
-                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(
+                    U4_Decompiled_AVATAR.TILE[,] map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level], 
                         ref dungeons[(int)dungeon].dungeonRooms, 
-                        x, y, level, U4_Decompiled.TILE.TILED_FLOOR);
+                        x, y, level, U4_Decompiled_AVATAR.TILE.TILED_FLOOR);
 
                     dungeonBlockGameObject = new GameObject();
                     CreateMap(dungeonBlockGameObject, map);
@@ -2613,10 +2611,10 @@ public class World : MonoBehaviour
                         || (dungeonTile == DUNGEON_TILE.FOUNTAIN_POISIN))
                 {
                     // TODO make a pretty fountain
-                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(
+                    U4_Decompiled_AVATAR.TILE[,] map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
-                        x, y, level, U4_Decompiled.TILE.SHALLOW_WATER);
+                        x, y, level, U4_Decompiled_AVATAR.TILE.SHALLOW_WATER);
 
                     dungeonBlockGameObject = new GameObject();
                     CreateMap(dungeonBlockGameObject, map);
@@ -2628,10 +2626,10 @@ public class World : MonoBehaviour
                 }
                 else if (dungeonTile == DUNGEON_TILE.FIELD_ENERGY)
                 {
-                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(
+                    U4_Decompiled_AVATAR.TILE[,] map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
-                        x, y, level, U4_Decompiled.TILE.ENERGY_FIELD);
+                        x, y, level, U4_Decompiled_AVATAR.TILE.ENERGY_FIELD);
 
                     dungeonBlockGameObject = new GameObject();
                     CreateMap(dungeonBlockGameObject, map);
@@ -2643,10 +2641,10 @@ public class World : MonoBehaviour
                 }
                 else if (dungeonTile == DUNGEON_TILE.FIELD_FIRE)
                 {
-                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(
+                    U4_Decompiled_AVATAR.TILE[,] map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
-                        x, y, level, U4_Decompiled.TILE.FIRE_FIELD);
+                        x, y, level, U4_Decompiled_AVATAR.TILE.FIRE_FIELD);
 
                     dungeonBlockGameObject = new GameObject();
                     CreateMap(dungeonBlockGameObject, map);
@@ -2658,10 +2656,10 @@ public class World : MonoBehaviour
                 }
                 else if (dungeonTile == DUNGEON_TILE.FIELD_POISON)
                 {
-                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(
+                    U4_Decompiled_AVATAR.TILE[,] map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
-                        x, y, level, U4_Decompiled.TILE.POISON_FIELD);
+                        x, y, level, U4_Decompiled_AVATAR.TILE.POISON_FIELD);
 
                     dungeonBlockGameObject = new GameObject();
                     CreateMap(dungeonBlockGameObject, map);
@@ -2674,10 +2672,10 @@ public class World : MonoBehaviour
                 else if (dungeonTile == DUNGEON_TILE.FIELD_SLEEP)
                 {
                     // TODO make a pretty fountain
-                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(
+                    U4_Decompiled_AVATAR.TILE[,] map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
-                        x, y, level, U4_Decompiled.TILE.SLEEP_FIELD);
+                        x, y, level, U4_Decompiled_AVATAR.TILE.SLEEP_FIELD);
 
                     dungeonBlockGameObject = new GameObject();
                     CreateMap(dungeonBlockGameObject, map);
@@ -2689,10 +2687,10 @@ public class World : MonoBehaviour
                 }
                 else if (dungeonTile == DUNGEON_TILE.TREASURE_CHEST)
                 {
-                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(
+                    U4_Decompiled_AVATAR.TILE[,] map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level], 
                         ref dungeons[(int)dungeon].dungeonRooms, 
-                        x, y, level, U4_Decompiled.TILE.CHEST);
+                        x, y, level, U4_Decompiled_AVATAR.TILE.CHEST);
 
                     dungeonBlockGameObject = new GameObject();
                     CreateMap(dungeonBlockGameObject, map);
@@ -2705,10 +2703,10 @@ public class World : MonoBehaviour
                 else if (dungeonTile == DUNGEON_TILE.MAGIC_ORB)
                 {
                     // TODO make orb into a billboard
-                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(
+                    U4_Decompiled_AVATAR.TILE[,] map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level], 
                         ref dungeons[(int)dungeon].dungeonRooms, 
-                        x, y, level, U4_Decompiled.TILE.MISSLE_ATTACK_BLUE);
+                        x, y, level, U4_Decompiled_AVATAR.TILE.MISSLE_ATTACK_BLUE);
 
                     dungeonBlockGameObject = new GameObject();
                     CreateMap(dungeonBlockGameObject, map);
@@ -2722,9 +2720,9 @@ public class World : MonoBehaviour
                 else if (dungeonTile == DUNGEON_TILE.ALTAR)
                 {
                     // TODO make altar into a billboard
-                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(ref dungeons[(int)dungeon].dungeonTILEs[level], 
+                    U4_Decompiled_AVATAR.TILE[,] map = CreateDungeonHallway(ref dungeons[(int)dungeon].dungeonTILEs[level], 
                         ref dungeons[(int)dungeon].dungeonRooms, 
-                        x, y, level, U4_Decompiled.TILE.ALTAR);
+                        x, y, level, U4_Decompiled_AVATAR.TILE.ALTAR);
 
                     dungeonBlockGameObject = new GameObject();
                     CreateMap(dungeonBlockGameObject, map);
@@ -2740,7 +2738,7 @@ public class World : MonoBehaviour
                     int combat = (int)convertDungeonTileToCombat[(int)dungeons[(int)dungeon].dungeonTILEs[level][x, y] >> 4];
 
                     // get a halway that fits
-                    U4_Decompiled.TILE[,] map = CreateDungeonHallway(ref dungeons[(int)dungeon].dungeonTILEs[level], ref dungeons[(int)dungeon].dungeonRooms, x, y, level);
+                    U4_Decompiled_AVATAR.TILE[,] map = CreateDungeonHallway(ref dungeons[(int)dungeon].dungeonTILEs[level], ref dungeons[(int)dungeon].dungeonRooms, x, y, level);
 
                     // check if we need to flip the door map
                     if ((dungeonTile == DUNGEON_TILE.DOOR) && 
@@ -2832,7 +2830,7 @@ public class World : MonoBehaviour
 
                     dungeonBlockGameObject = new GameObject();
                     CreateMap(dungeonBlockGameObject, map);
-                    dungeonBlockGameObject.name = "Combat map hallway " + ((U4_Decompiled.COMBAT_TERRAIN)combat).ToString();
+                    dungeonBlockGameObject.name = "Combat map hallway " + ((U4_Decompiled_AVATAR.COMBAT_TERRAIN)combat).ToString();
 
                     dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     dungeonBlockGameObject.SetActive(true);
@@ -2873,7 +2871,7 @@ public class World : MonoBehaviour
         MeshRenderer renderer = partyGameObject.GetComponent<MeshRenderer>();
 
         // set the tile
-        renderer.material.mainTexture = expandedTiles[(int)U4_Decompiled.TILE.PARTY];
+        renderer.material.mainTexture = expandedTiles[(int)U4_Decompiled_AVATAR.TILE.PARTY];
         renderer.material.mainTextureOffset = new Vector2((float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
         renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
 
@@ -2894,17 +2892,17 @@ public class World : MonoBehaviour
         */
 }
 
-bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
+bool CheckTileForOpacity(U4_Decompiled_AVATAR.TILE tileIndex)
     {
-        return (tileIndex == U4_Decompiled.TILE.BRICK_WALL
-                    || tileIndex == U4_Decompiled.TILE.LARGE_ROCKS
-                    || tileIndex == U4_Decompiled.TILE.SECRET_BRICK_WALL);
+        return (tileIndex == U4_Decompiled_AVATAR.TILE.BRICK_WALL
+                    || tileIndex == U4_Decompiled_AVATAR.TILE.LARGE_ROCKS
+                    || tileIndex == U4_Decompiled_AVATAR.TILE.SECRET_BRICK_WALL);
     }
 
-    bool CheckShortTileForOpacity(U4_Decompiled.TILE tileIndex)
+    bool CheckShortTileForOpacity(U4_Decompiled_AVATAR.TILE tileIndex)
     {
         return (CheckTileForOpacity(tileIndex) ||
-                    ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE)));
+                    ((tileIndex >= U4_Decompiled_AVATAR.TILE.A) && (tileIndex <= U4_Decompiled_AVATAR.TILE.BRACKET_SQUARE)));
     }
 
     // NOTE certain shaders used for things like sprites and unlit textures do not
@@ -2986,7 +2984,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
     public void FixMageTile3()
     {
         // adjust the pixels on mage tile #3
-        Texture2D currentTile = originalTiles[(int)U4_Decompiled.TILE.MAGE_NPC3];
+        Texture2D currentTile = originalTiles[(int)U4_Decompiled_AVATAR.TILE.MAGE_NPC3];
 
         // go through all the pixels in the source texture and shift them one pixel
         for (int height = 0; height < currentTile.height; height++)
@@ -3001,7 +2999,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         currentTile.Apply();
     }
 
-    public void CreateMap(GameObject mapGameObject, U4_Decompiled.TILE[,] map, bool lookAtCamera = true)
+    public void CreateMap(GameObject mapGameObject, U4_Decompiled_AVATAR.TILE[,] map, bool lookAtCamera = true)
     {
         GameObject terrainGameObject;
         GameObject animatedTerrrainGameObject;
@@ -3073,12 +3071,12 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 GameObject mapTile;
                 Vector3 location;
                 Vector3 rotation;
-                U4_Decompiled.TILE tileIndex;
+                U4_Decompiled_AVATAR.TILE tileIndex;
 
                 tileIndex = map[x, y];
 
                 // check if it tile is blank
-                if (tileIndex == U4_Decompiled.TILE.BLANK)
+                if (tileIndex == U4_Decompiled_AVATAR.TILE.BLANK)
                 {
                     // skip it
                     continue;
@@ -3086,10 +3084,10 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 // solid object, brick, rocks etc. make into cubes
                 else if (CheckTileForOpacity(tileIndex))
                 {
-                    U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE aboveTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE belowTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE leftTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE rightTile = U4_Decompiled_AVATAR.TILE.BLANK;
 
                     if (y > 0)
                         aboveTile = map[x, y - 1];
@@ -3107,13 +3105,13 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     useExpandedTile = true;
                 }
                 // Letters, make into short cubes
-                else if (((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE))
-                    || (tileIndex == U4_Decompiled.TILE.ARCHITECTURE))
+                else if (((tileIndex >= U4_Decompiled_AVATAR.TILE.A) && (tileIndex <= U4_Decompiled_AVATAR.TILE.BRACKET_SQUARE))
+                    || (tileIndex == U4_Decompiled_AVATAR.TILE.ARCHITECTURE))
                 {
-                    U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE aboveTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE belowTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE leftTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE rightTile = U4_Decompiled_AVATAR.TILE.BLANK;
 
                     if (y > 0)
                         aboveTile = map[x, y - 1];
@@ -3131,7 +3129,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     rotation = Vector3.zero;
                     useExpandedTile = true;
                 }
-                else if (tileIndex == U4_Decompiled.TILE.DIAGONAL_WATER_ARCHITECTURE1)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.DIAGONAL_WATER_ARCHITECTURE1)
                 {
                     mapTile = Primitive.CreateWedge();
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3140,7 +3138,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     useExpandedTile = true;
                 }
                 // make mountains into pyramids
-                else if (tileIndex == U4_Decompiled.TILE.MOUNTAINS)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.MOUNTAINS)
                 {
                     mapTile = Primitive.CreatePyramid(1.0f);
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3149,7 +3147,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     useExpandedTile = true;
                 }
                 // make dungeon entrace into pyramid, rotate so it faces the right direction
-                else if (tileIndex == U4_Decompiled.TILE.DUNGEON)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.DUNGEON)
                 {
                     mapTile = Primitive.CreatePyramid(0.2f);
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3158,7 +3156,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     useExpandedTile = true;
                 }
                 // make brush and hills into short pyramids
-                else if ((tileIndex == U4_Decompiled.TILE.BRUSH) || (tileIndex == U4_Decompiled.TILE.HILLS))
+                else if ((tileIndex == U4_Decompiled_AVATAR.TILE.BRUSH) || (tileIndex == U4_Decompiled_AVATAR.TILE.HILLS))
                 {
                     mapTile = Primitive.CreatePyramid(0.15f);
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3167,7 +3165,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     useExpandedTile = true;
                 }
                 // make rocks into little bigger short pyramids since you cannot walk over them
-                else if (tileIndex == U4_Decompiled.TILE.SMALL_ROCKS)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.SMALL_ROCKS)
                 {
                     mapTile = Primitive.CreatePyramid(0.25f);
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3176,18 +3174,18 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     useExpandedTile = true;
                 }
                 // trees we need to stand upright and face the camera
-                else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
-                    (tileIndex == U4_Decompiled.TILE.TOWN) ||
-                    (tileIndex == U4_Decompiled.TILE.VILLAGE) ||
-                    (tileIndex == U4_Decompiled.TILE.RUINS) ||
-                    (tileIndex == U4_Decompiled.TILE.ANKH) ||
-                    (tileIndex == U4_Decompiled.TILE.ALTAR) ||
+                else if ((tileIndex == U4_Decompiled_AVATAR.TILE.FOREST) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.TOWN) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.VILLAGE) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.RUINS) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.ANKH) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.ALTAR) ||
                    // (tileIndex == U4_Decompiled.TILE.CHEST) ||
-                    (tileIndex == U4_Decompiled.TILE.LADDER_UP) ||
-                    (tileIndex == U4_Decompiled.TILE.LADDER_DOWN) ||
-                    (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
-                    (tileIndex == U4_Decompiled.TILE.PARTY) || // the shrine map uses a fixed party tile instead of putting the party characters into the map
-                    (tileIndex == U4_Decompiled.TILE.CASTLE))
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_UP) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_DOWN) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.COOKING_FIRE) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.PARTY) || // the shrine map uses a fixed party tile instead of putting the party characters into the map
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.CASTLE))
                 {
                     // create a billboard gameobject
                     //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad); 
@@ -3212,7 +3210,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
                     useExpandedTile = true;
                 }
-                else if (tileIndex == U4_Decompiled.TILE.BRIDGE)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.BRIDGE)
                 {
                     mapTile = Primitive.CreateBridge();
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3220,7 +3218,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
                 }
-                else if (tileIndex == U4_Decompiled.TILE.BRIDGE_TOP)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.BRIDGE_TOP)
                 {
                     mapTile = Primitive.CreateBridgeUpper();
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3228,7 +3226,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
                 }
-                else if (tileIndex == U4_Decompiled.TILE.BRIDGE_BOTTOM)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.BRIDGE_BOTTOM)
                 {
                     mapTile = Primitive.CreateBridgeLower();
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3236,7 +3234,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
                 }
-                else if ((tileIndex == U4_Decompiled.TILE.DOOR) || (tileIndex == U4_Decompiled.TILE.LOCKED_DOOR))
+                else if ((tileIndex == U4_Decompiled_AVATAR.TILE.DOOR) || (tileIndex == U4_Decompiled_AVATAR.TILE.LOCKED_DOOR))
                 {
                     mapTile = Primitive.CreateDoor();
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3244,7 +3242,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
                 }
-                else if (tileIndex == U4_Decompiled.TILE.BRICK_FLOOR_COLUMN)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.BRICK_FLOOR_COLUMN)
                 {
                     mapTile = Primitive.CreatePillar();
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3252,7 +3250,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
                 }
-                else if (tileIndex == U4_Decompiled.TILE.SHIP_MAST)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.SHIP_MAST)
                 {
                     mapTile = Primitive.CreateMast();
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3260,7 +3258,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
                 }
-                else if (tileIndex == U4_Decompiled.TILE.SHIP_WHEEL)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.SHIP_WHEEL)
                 {
                     mapTile = Primitive.CreateWheel();
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3268,7 +3266,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
                 }
-                else if (tileIndex == U4_Decompiled.TILE.CHEST)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.CHEST)
                 {
                     mapTile = Primitive.CreateChest();
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3276,7 +3274,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
                 }
-                else if (tileIndex == U4_Decompiled.TILE.CASTLE_LEFT)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.CASTLE_LEFT)
                 {
                     mapTile = Primitive.CreateCastleLeft();
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3284,7 +3282,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
                 }
-                else if (tileIndex == U4_Decompiled.TILE.CASTLE_RIGHT)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.CASTLE_RIGHT)
                 {
                     mapTile = Primitive.CreateCastleRight();
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3292,7 +3290,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     useExpandedTile = true;
                 }
-                else if (tileIndex == U4_Decompiled.TILE.CASTLE_ENTRANCE)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.CASTLE_ENTRANCE)
                 {
                     mapTile = Primitive.CreateCastleCenter();
                     mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3306,9 +3304,9 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     mapTile = Primitive.CreateQuad();
                     // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
                     // TODO may need to have single textures for the three water tiles if we want to use UV animation to show wind direction
-                    if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) ||
-                        (tileIndex >= U4_Decompiled.TILE.POISON_FIELD && tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD)
-                        || (tileIndex == U4_Decompiled.TILE.LAVA))
+                    if ((tileIndex <= U4_Decompiled_AVATAR.TILE.SHALLOW_WATER) ||
+                        (tileIndex >= U4_Decompiled_AVATAR.TILE.POISON_FIELD && tileIndex <= U4_Decompiled_AVATAR.TILE.SLEEP_FIELD)
+                        || (tileIndex == U4_Decompiled_AVATAR.TILE.LAVA))
                     {
                         mapTile.transform.SetParent(animatedTerrrainGameObject.transform);
                         location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
@@ -3370,7 +3368,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         mapGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
     }
 
-    public void CreateMapSubset(GameObject mapGameObject, U4_Decompiled.TILE[,] map)
+    public void CreateMapSubset(GameObject mapGameObject, U4_Decompiled_AVATAR.TILE[,] map)
     {
         for (int y = 0; y < map.GetLength(1); y++)
         {
@@ -3379,12 +3377,12 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 GameObject mapTile;
                 Vector3 location = Vector3.zero;
                 Vector3 rotation = Vector3.zero;
-                U4_Decompiled.TILE tileIndex;
+                U4_Decompiled_AVATAR.TILE tileIndex;
 
                 tileIndex = map[x, y];
 
                 // check if it tile is blank
-                if (tileIndex == U4_Decompiled.TILE.BLANK)
+                if (tileIndex == U4_Decompiled_AVATAR.TILE.BLANK)
                 {
                     // skip it
                     continue;
@@ -3392,10 +3390,10 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 // solid object, brick, rocks etc. make into cubes
                 else if (CheckTileForOpacity(tileIndex))
                 {
-                    U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE aboveTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE belowTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE leftTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE rightTile = U4_Decompiled_AVATAR.TILE.BLANK;
 
                     if (y > 0)
                         aboveTile = map[x, y - 1];
@@ -3411,13 +3409,13 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     rotation = Vector3.zero;
                 }
                 // Letters, make into short cubes
-                else if (((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE))
-                    || (tileIndex == U4_Decompiled.TILE.ARCHITECTURE))
+                else if (((tileIndex >= U4_Decompiled_AVATAR.TILE.A) && (tileIndex <= U4_Decompiled_AVATAR.TILE.BRACKET_SQUARE))
+                    || (tileIndex == U4_Decompiled_AVATAR.TILE.ARCHITECTURE))
                 {
-                    U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
-                    U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE aboveTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE belowTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE leftTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                    U4_Decompiled_AVATAR.TILE rightTile = U4_Decompiled_AVATAR.TILE.BLANK;
 
                     if (y > 0)
                         aboveTile = map[x, y - 1];
@@ -3434,41 +3432,41 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     rotation = Vector3.zero;
                 }
                 // make mountains into pyramids
-                else if (tileIndex == U4_Decompiled.TILE.MOUNTAINS)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.MOUNTAINS)
                 {
                     mapTile = Primitive.CreatePyramid(1.0f);
                     rotation = new Vector3(0.0f, 180.0f, 0.0f); // rotate mountains to show their best side
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                 }
                 // make dungeon entrance into pyramid, rotate so it faces the right direction
-                else if (tileIndex == U4_Decompiled.TILE.DUNGEON)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.DUNGEON)
                 {
                     mapTile = Primitive.CreatePyramid(0.2f);
                     rotation = new Vector3(0.0f, 180.0f, 90.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                 }
                 // make brush and hills into short pyramids
-                else if ((tileIndex == U4_Decompiled.TILE.BRUSH) || (tileIndex == U4_Decompiled.TILE.HILLS))
+                else if ((tileIndex == U4_Decompiled_AVATAR.TILE.BRUSH) || (tileIndex == U4_Decompiled_AVATAR.TILE.HILLS))
                 {
                     mapTile = Primitive.CreatePyramid(0.15f);
                     rotation = new Vector3(0.0f, 180.0f, 90.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                 }
                 // make rocks into little bigger short pyramids since you cannot walk over them
-                else if (tileIndex == U4_Decompiled.TILE.SMALL_ROCKS)
+                else if (tileIndex == U4_Decompiled_AVATAR.TILE.SMALL_ROCKS)
                 {
                     mapTile = Primitive.CreatePyramid(0.25f);
                     rotation = new Vector3(0.0f, 180.0f, 90.0f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                 }
                 // tress we need to stand upright and face the camera
-                else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
-                    (tileIndex == U4_Decompiled.TILE.TOWN) ||
-                    (tileIndex == U4_Decompiled.TILE.ANKH) ||
-                    (tileIndex == U4_Decompiled.TILE.LADDER_UP) ||
-                    (tileIndex == U4_Decompiled.TILE.LADDER_DOWN) ||
-                    (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
-                    (tileIndex == U4_Decompiled.TILE.CASTLE))
+                else if ((tileIndex == U4_Decompiled_AVATAR.TILE.FOREST) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.TOWN) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.ANKH) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_UP) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_DOWN) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.COOKING_FIRE) ||
+                    (tileIndex == U4_Decompiled_AVATAR.TILE.CASTLE))
                 {
                     // create a billboard gameobject
                     //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -3492,9 +3490,9 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
                     // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
                     // TODO may need to have single textures for the three water tiles if we want to use UV animation to show wind direction
-                    if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) ||
-                        (tileIndex >= U4_Decompiled.TILE.POISON_FIELD && tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD)
-                        || (tileIndex == U4_Decompiled.TILE.LAVA))
+                    if ((tileIndex <= U4_Decompiled_AVATAR.TILE.SHALLOW_WATER) ||
+                        (tileIndex >= U4_Decompiled_AVATAR.TILE.POISON_FIELD && tileIndex <= U4_Decompiled_AVATAR.TILE.SLEEP_FIELD)
+                        || (tileIndex == U4_Decompiled_AVATAR.TILE.LAVA))
                     {
                         location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
                         rotation = Vector3.zero;
@@ -3525,7 +3523,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         }
     }
 
-    public GameObject CreateMapTileObject(GameObject terrainGameObject, GameObject billboardTerrrainGameObject, GameObject animatedTerrrainGameObject, U4_Decompiled.TILE tileIndex, ref U4_Decompiled.TILE[,] map, int x, int y, bool allWalls)
+    public GameObject CreateMapTileObject(GameObject terrainGameObject, GameObject billboardTerrrainGameObject, GameObject animatedTerrrainGameObject, U4_Decompiled_AVATAR.TILE tileIndex, ref U4_Decompiled_AVATAR.TILE[,] map, int x, int y, bool allWalls)
     {
         GameObject mapTile;
         Vector3 location = Vector3.zero;
@@ -3539,10 +3537,10 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         {
             if (allWalls == false)
             {
-                U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
-                U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
-                U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
-                U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+                U4_Decompiled_AVATAR.TILE aboveTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                U4_Decompiled_AVATAR.TILE belowTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                U4_Decompiled_AVATAR.TILE leftTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                U4_Decompiled_AVATAR.TILE rightTile = U4_Decompiled_AVATAR.TILE.BLANK;
 
                 if (y > 0)
                     aboveTile = map[x, y - 1];
@@ -3566,15 +3564,15 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useLinearTile = false;
         }
         // Letters, make into short cubes
-        else if (((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.BRACKET_SQUARE))
-            || (tileIndex == U4_Decompiled.TILE.ARCHITECTURE))
+        else if (((tileIndex >= U4_Decompiled_AVATAR.TILE.A) && (tileIndex <= U4_Decompiled_AVATAR.TILE.BRACKET_SQUARE))
+            || (tileIndex == U4_Decompiled_AVATAR.TILE.ARCHITECTURE))
         {
             if (allWalls == false)
             {
-                U4_Decompiled.TILE aboveTile = U4_Decompiled.TILE.BLANK;
-                U4_Decompiled.TILE belowTile = U4_Decompiled.TILE.BLANK;
-                U4_Decompiled.TILE leftTile = U4_Decompiled.TILE.BLANK;
-                U4_Decompiled.TILE rightTile = U4_Decompiled.TILE.BLANK;
+                U4_Decompiled_AVATAR.TILE aboveTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                U4_Decompiled_AVATAR.TILE belowTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                U4_Decompiled_AVATAR.TILE leftTile = U4_Decompiled_AVATAR.TILE.BLANK;
+                U4_Decompiled_AVATAR.TILE rightTile = U4_Decompiled_AVATAR.TILE.BLANK;
 
                 if (y > 0)
                     aboveTile = map[x, y - 1];
@@ -3600,7 +3598,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useLinearTile = false;
         }
         // make mountains into pyramids
-        else if (tileIndex == U4_Decompiled.TILE.MOUNTAINS)
+        else if (tileIndex == U4_Decompiled_AVATAR.TILE.MOUNTAINS)
         {
             mapTile = Primitive.CreatePyramid(1.0f);
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3610,7 +3608,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useLinearTile = false;
         }
         // make dungeon entrace into pyramid, rotate so it faces the right direction
-        else if (tileIndex == U4_Decompiled.TILE.DUNGEON)
+        else if (tileIndex == U4_Decompiled_AVATAR.TILE.DUNGEON)
         {
             mapTile = Primitive.CreatePyramid(0.2f);
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3620,7 +3618,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useLinearTile = false;
         }
         // make brush and hills into short pyramids
-        else if ((tileIndex == U4_Decompiled.TILE.BRUSH) || (tileIndex == U4_Decompiled.TILE.HILLS))
+        else if ((tileIndex == U4_Decompiled_AVATAR.TILE.BRUSH) || (tileIndex == U4_Decompiled_AVATAR.TILE.HILLS))
         {
             mapTile = Primitive.CreatePyramid(0.15f);
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3630,7 +3628,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useLinearTile = false;
         }
         // make rocks into little bigger short pyramids since you cannot walk over them
-        else if (tileIndex == U4_Decompiled.TILE.SMALL_ROCKS)
+        else if (tileIndex == U4_Decompiled_AVATAR.TILE.SMALL_ROCKS)
         {
             mapTile = Primitive.CreatePyramid(0.25f);
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3640,16 +3638,16 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useLinearTile = false;
         }
         // tress we need to stand upright and face the camera
-        else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
-            (tileIndex == U4_Decompiled.TILE.TOWN) ||
-            (tileIndex == U4_Decompiled.TILE.VILLAGE) ||
-            (tileIndex == U4_Decompiled.TILE.RUINS) ||
-            (tileIndex == U4_Decompiled.TILE.SHRINE) ||
-            (tileIndex == U4_Decompiled.TILE.ANKH) ||
-            (tileIndex == U4_Decompiled.TILE.LADDER_UP) ||
-            (tileIndex == U4_Decompiled.TILE.LADDER_DOWN) ||
-            (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
-            (tileIndex == U4_Decompiled.TILE.CASTLE))
+        else if ((tileIndex == U4_Decompiled_AVATAR.TILE.FOREST) ||
+            (tileIndex == U4_Decompiled_AVATAR.TILE.TOWN) ||
+            (tileIndex == U4_Decompiled_AVATAR.TILE.VILLAGE) ||
+            (tileIndex == U4_Decompiled_AVATAR.TILE.RUINS) ||
+            (tileIndex == U4_Decompiled_AVATAR.TILE.SHRINE) ||
+            (tileIndex == U4_Decompiled_AVATAR.TILE.ANKH) ||
+            (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_UP) ||
+            (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_DOWN) ||
+            (tileIndex == U4_Decompiled_AVATAR.TILE.COOKING_FIRE) ||
+            (tileIndex == U4_Decompiled_AVATAR.TILE.CASTLE))
         {
             mapTile = Primitive.CreateQuad();
             mapTile.transform.SetParent(billboardTerrrainGameObject.transform);
@@ -3660,7 +3658,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useExpandedTile = true;
             useLinearTile = false;
         }
-        else if (tileIndex == U4_Decompiled.TILE.BRIDGE)
+        else if (tileIndex == U4_Decompiled_AVATAR.TILE.BRIDGE)
         {
             mapTile = Primitive.CreateBridge();
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3669,7 +3667,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useExpandedTile = true;
             useLinearTile = false;
         }
-        else if (tileIndex == U4_Decompiled.TILE.BRIDGE_TOP)
+        else if (tileIndex == U4_Decompiled_AVATAR.TILE.BRIDGE_TOP)
         {
             mapTile = Primitive.CreateBridgeUpper();
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3678,7 +3676,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useExpandedTile = true;
             useLinearTile = false;
         }
-        else if (tileIndex == U4_Decompiled.TILE.BRIDGE_BOTTOM)
+        else if (tileIndex == U4_Decompiled_AVATAR.TILE.BRIDGE_BOTTOM)
         {
             mapTile = Primitive.CreateBridgeLower();
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3687,7 +3685,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useExpandedTile = true;
             useLinearTile = false;
         }
-        else if ((tileIndex == U4_Decompiled.TILE.DOOR) || (tileIndex == U4_Decompiled.TILE.LOCKED_DOOR))
+        else if ((tileIndex == U4_Decompiled_AVATAR.TILE.DOOR) || (tileIndex == U4_Decompiled_AVATAR.TILE.LOCKED_DOOR))
         {
             mapTile = Primitive.CreateDoor();
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3696,7 +3694,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useExpandedTile = true;
             useLinearTile = false;
         }
-        else if (tileIndex == U4_Decompiled.TILE.BRICK_FLOOR_COLUMN)
+        else if (tileIndex == U4_Decompiled_AVATAR.TILE.BRICK_FLOOR_COLUMN)
         {
             mapTile = Primitive.CreatePillar();
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3705,7 +3703,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useExpandedTile = true;
             useLinearTile = false;
         }
-        else if (tileIndex == U4_Decompiled.TILE.SHIP_MAST)
+        else if (tileIndex == U4_Decompiled_AVATAR.TILE.SHIP_MAST)
         {
             mapTile = Primitive.CreateMast();
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3714,7 +3712,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useExpandedTile = true;
             useLinearTile = false;
         }
-        else if (tileIndex == U4_Decompiled.TILE.SHIP_WHEEL)
+        else if (tileIndex == U4_Decompiled_AVATAR.TILE.SHIP_WHEEL)
         {
             mapTile = Primitive.CreateWheel();
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3723,7 +3721,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useExpandedTile = true;
             useLinearTile = false;
         }
-        else if (tileIndex == U4_Decompiled.TILE.CHEST)
+        else if (tileIndex == U4_Decompiled_AVATAR.TILE.CHEST)
         {
             mapTile = Primitive.CreateChest();
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3732,7 +3730,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useExpandedTile = true;
             useLinearTile = false;
         }
-        else if (tileIndex == U4_Decompiled.TILE.CASTLE_LEFT)
+        else if (tileIndex == U4_Decompiled_AVATAR.TILE.CASTLE_LEFT)
         {
             mapTile = Primitive.CreateCastleLeft();
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3741,7 +3739,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useExpandedTile = true;
             useLinearTile = false;
         }
-        else if (tileIndex == U4_Decompiled.TILE.CASTLE_RIGHT)
+        else if (tileIndex == U4_Decompiled_AVATAR.TILE.CASTLE_RIGHT)
         {
             mapTile = Primitive.CreateCastleRight();
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3750,7 +3748,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             useExpandedTile = true;
             useLinearTile = false;
         }
-        else if (tileIndex == U4_Decompiled.TILE.CASTLE_ENTRANCE)
+        else if (tileIndex == U4_Decompiled_AVATAR.TILE.CASTLE_ENTRANCE)
         {
             mapTile = Primitive.CreateCastleCenter();
             mapTile.transform.SetParent(terrainGameObject.transform);
@@ -3766,9 +3764,9 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
             // water, lava and entergy fields need to be handled separately so we can animate the texture using UV
             // TODO may need to have single textures for the three water tiles if we want to use UV animation to show wind direction
-            if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) ||
-                (tileIndex >= U4_Decompiled.TILE.POISON_FIELD && tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD)
-                || (tileIndex == U4_Decompiled.TILE.LAVA))
+            if ((tileIndex <= U4_Decompiled_AVATAR.TILE.SHALLOW_WATER) ||
+                (tileIndex >= U4_Decompiled_AVATAR.TILE.POISON_FIELD && tileIndex <= U4_Decompiled_AVATAR.TILE.SLEEP_FIELD)
+                || (tileIndex == U4_Decompiled_AVATAR.TILE.LAVA))
             {
                 mapTile.transform.SetParent(animatedTerrrainGameObject.transform);
                 location = new Vector3(x, map.GetLength(1) - 1 - y, 0.5f);
@@ -3863,14 +3861,14 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
     GameObject[] allMapTilesGameObjects = null;
 
-    GameObject GetCachedTileGameObject(GameObject terrainGameObject, GameObject billboardTerrrainGameObject, GameObject animatedTerrrainGameObject, U4_Decompiled.TILE tileIndex, ref U4_Decompiled.TILE[,] map, int x, int y, bool allWalls)
+    GameObject GetCachedTileGameObject(GameObject terrainGameObject, GameObject billboardTerrrainGameObject, GameObject animatedTerrrainGameObject, U4_Decompiled_AVATAR.TILE tileIndex, ref U4_Decompiled_AVATAR.TILE[,] map, int x, int y, bool allWalls)
     {
         if (allMapTilesGameObjects == null)
         {
-            allMapTilesGameObjects = new GameObject[(int)U4_Decompiled.TILE.MAX];
-            for (int i = 0; i < (int)U4_Decompiled.TILE.MAX; i++)
+            allMapTilesGameObjects = new GameObject[(int)U4_Decompiled_AVATAR.TILE.MAX];
+            for (int i = 0; i < (int)U4_Decompiled_AVATAR.TILE.MAX; i++)
             {
-                allMapTilesGameObjects[i] = CreateMapTileObject(terrainGameObject, billboardTerrrainGameObject, animatedTerrrainGameObject, (U4_Decompiled.TILE)i, ref map, 0, 0, true);
+                allMapTilesGameObjects[i] = CreateMapTileObject(terrainGameObject, billboardTerrrainGameObject, animatedTerrrainGameObject, (U4_Decompiled_AVATAR.TILE)i, ref map, 0, 0, true);
             }
         }
 
@@ -3889,12 +3887,12 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
     public struct Letter
     {
-        public U4_Decompiled.TILE tileIndex;
+        public U4_Decompiled_AVATAR.TILE tileIndex;
         public int x;
         public int y;
     }
 
-    public void CreateMapLabels(GameObject mapGameObject, ref U4_Decompiled.TILE[,] map)
+    public void CreateMapLabels(GameObject mapGameObject, ref U4_Decompiled_AVATAR.TILE[,] map)
     {
         Labels mapLabels = new Labels();
         mapLabels.labels = new List<Label>();
@@ -3945,12 +3943,12 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         {
             for (int x = 0; x < map.GetLength(0); x++)
             {
-                U4_Decompiled.TILE tileIndex;
+                U4_Decompiled_AVATAR.TILE tileIndex;
 
                 tileIndex = map[x, y];
 
                 // check if a tile is a letter
-                if ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.Z) || (tileIndex == U4_Decompiled.TILE.SPACE))
+                if ((tileIndex >= U4_Decompiled_AVATAR.TILE.A) && (tileIndex <= U4_Decompiled_AVATAR.TILE.Z) || (tileIndex == U4_Decompiled_AVATAR.TILE.SPACE))
                 {
                     // create a new label
                     Label label = new Label();
@@ -3963,7 +3961,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                         tileIndex = map[x, y];
 
                         // check if a tile is a letter
-                        if ((tileIndex >= U4_Decompiled.TILE.A) && (tileIndex <= U4_Decompiled.TILE.Z) || (tileIndex == U4_Decompiled.TILE.SPACE))
+                        if ((tileIndex >= U4_Decompiled_AVATAR.TILE.A) && (tileIndex <= U4_Decompiled_AVATAR.TILE.Z) || (tileIndex == U4_Decompiled_AVATAR.TILE.SPACE))
                         {
                             letter.tileIndex = tileIndex;
                             letter.x = x;
@@ -3997,20 +3995,20 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             for (int i = 0; i < label.letters.Count; i++)
             {
                 Letter letter = label.letters[i];
-                U4_Decompiled.TILE reverseTileIndex = label.letters[label.letters.Count - 1 - i].tileIndex;
+                U4_Decompiled_AVATAR.TILE reverseTileIndex = label.letters[label.letters.Count - 1 - i].tileIndex;
 
-                if (letter.tileIndex != U4_Decompiled.TILE.SPACE)
+                if (letter.tileIndex != U4_Decompiled_AVATAR.TILE.SPACE)
                 {
-                    labelGameObject.name += (char)(letter.tileIndex - U4_Decompiled.TILE.A + 'A');
+                    labelGameObject.name += (char)(letter.tileIndex - U4_Decompiled_AVATAR.TILE.A + 'A');
                 }
                 else
                 {
                     labelGameObject.name += ' ';
                 }
-                if (reverseTileIndex != U4_Decompiled.TILE.SPACE)
+                if (reverseTileIndex != U4_Decompiled_AVATAR.TILE.SPACE)
                 {
                     //reverseLabelGameObject.name += (char)(reverseTileIndex - U4_Decompiled.TILE.A + 'A');
-                    reverseLabelGameObject.name += (char)(letter.tileIndex - U4_Decompiled.TILE.A + 'A');
+                    reverseLabelGameObject.name += (char)(letter.tileIndex - U4_Decompiled_AVATAR.TILE.A + 'A');
                 }
                 else
                 {
@@ -4105,7 +4103,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
     }
 
 
-    public void CreateMapSubsetPass2(GameObject mapGameObject, ref U4_Decompiled.TILE[,] map, ref GameObject[,] mapGameObjects, bool allWalls = false)
+    public void CreateMapSubsetPass2(GameObject mapGameObject, ref U4_Decompiled_AVATAR.TILE[,] map, ref GameObject[,] mapGameObjects, bool allWalls = false)
     {
         GameObject terrainGameObject;
         GameObject animatedTerrrainGameObject;
@@ -4172,12 +4170,12 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         {
             for (int x = 0; x < map.GetLength(0); x++)
             {
-                U4_Decompiled.TILE tileIndex;
+                U4_Decompiled_AVATAR.TILE tileIndex;
 
                 tileIndex = map[x, y];
 
                 // check if it tile is blank
-                if (tileIndex == U4_Decompiled.TILE.BLANK)
+                if (tileIndex == U4_Decompiled_AVATAR.TILE.BLANK)
                 {
                     // skip it
                     continue;
@@ -4445,7 +4443,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         combinedExpandedMaterial.mainTexture = combinedExpandedTexture;
     }
 
-    public void AddFighters(U4_Decompiled.t_68[] currentFighters, U4_Decompiled.tCombat1[] currentCombat, int offsetx = 0, int offsety = 0)
+    public void AddFighters(U4_Decompiled_AVATAR.t_68[] currentFighters, U4_Decompiled_AVATAR.tCombat1[] currentCombat, int offsetx = 0, int offsety = 0)
     {
         // have we finished creating the world
         if (fighters == null)
@@ -4497,13 +4495,13 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         for (int fighterIndex = 0; fighterIndex < 16; fighterIndex++)
         {
             // get the tile
-            U4_Decompiled.TILE npcTile = currentFighters[fighterIndex]._tile;
-            U4_Decompiled.TILE npcCurrentTile = currentFighters[fighterIndex]._gtile;
+            U4_Decompiled_AVATAR.TILE npcTile = currentFighters[fighterIndex]._tile;
+            U4_Decompiled_AVATAR.TILE npcCurrentTile = currentFighters[fighterIndex]._gtile;
 
             // get the corresponding fighters game object
             Transform childoffighters = fighters.transform.GetChild(fighterIndex);
 
-            if (npcTile == U4_Decompiled.TILE.DEEP_WATER)
+            if (npcTile == U4_Decompiled_AVATAR.TILE.DEEP_WATER)
             {
                 childoffighters.gameObject.SetActive(false);
             }
@@ -4519,7 +4517,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             }
             else
             {
-                childoffighters.GetComponent<Animate3>().SetNPCTile(U4_Decompiled.TILE.SLEEP);
+                childoffighters.GetComponent<Animate3>().SetNPCTile(U4_Decompiled_AVATAR.TILE.SLEEP);
             }
 
             // update the position
@@ -4535,7 +4533,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         }
     }
 
-    public void AddCharacters(U4_Decompiled.tCombat2[] currentCombat2, U4_Decompiled.tParty currentParty, U4_Decompiled.t_68[] currentFighters, int offsetx = 0, int offsety = 0)
+    public void AddCharacters(U4_Decompiled_AVATAR.tCombat2[] currentCombat2, U4_Decompiled_AVATAR.tParty currentParty, U4_Decompiled_AVATAR.t_68[] currentFighters, int offsetx = 0, int offsety = 0)
     {
         // have we finished creating the world
         if (characters == null)
@@ -4586,7 +4584,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         // update all characters in the party table
         for (int characterIndex = 0; characterIndex < 8; characterIndex++)
         {
-            U4_Decompiled.TILE npcTile;
+            U4_Decompiled_AVATAR.TILE npcTile;
 
             if (characterIndex < currentParty.f_1d8)
             {
@@ -4602,7 +4600,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             // get the corresponding character game object
             Transform childofcharacters = characters.transform.GetChild(characterIndex);
 
-            if (npcTile == U4_Decompiled.TILE.DEEP_WATER)
+            if (npcTile == U4_Decompiled_AVATAR.TILE.DEEP_WATER)
             {
                 childofcharacters.gameObject.SetActive(false);
             }
@@ -4677,7 +4675,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         int posx = u4.moongate_x - (lastRaycastPlayer_posx - raycastOutdoorMap.GetLength(0) / 2 - 1);
         int posy = u4.moongate_y - (lastRaycastPlayer_posy - raycastOutdoorMap.GetLength(1) / 2 - 1);
         // can we see the npc
-        if (posx < 0 || posy < 0 || posx >= raycastOutdoorMap.GetLength(0) || posy >= raycastOutdoorMap.GetLength(1) || raycastOutdoorMap[posx, posy] == U4_Decompiled.TILE.BLANK)
+        if (posx < 0 || posy < 0 || posx >= raycastOutdoorMap.GetLength(0) || posy >= raycastOutdoorMap.GetLength(1) || raycastOutdoorMap[posx, posy] == U4_Decompiled_AVATAR.TILE.BLANK)
         {
             childofmoongate.gameObject.SetActive(false);
         }
@@ -4698,7 +4696,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         childofmoongate.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
     }
 
-    public void AddNPCs(U4_Decompiled.tNPC[] currentNpcs)
+    public void AddNPCs(U4_Decompiled_AVATAR.tNPC[] currentNpcs)
     {
         // have we finished creating the world
         if (npcs == null)
@@ -4753,11 +4751,11 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             Transform childofnpcs = npcs.transform.GetChild(npcIndex);
 
             // get the npc tile
-            U4_Decompiled.TILE npcTile = currentNpcs[npcIndex]._tile;
-            U4_Decompiled.TILE npcCurrentTile = currentNpcs[npcIndex]._gtile;
+            U4_Decompiled_AVATAR.TILE npcTile = currentNpcs[npcIndex]._tile;
+            U4_Decompiled_AVATAR.TILE npcCurrentTile = currentNpcs[npcIndex]._gtile;
 
             // check if npc is active
-            if (npcTile == U4_Decompiled.TILE.DEEP_WATER)
+            if (npcTile == U4_Decompiled_AVATAR.TILE.DEEP_WATER)
             {
                 // disable object if not active
                 childofnpcs.gameObject.SetActive(false);
@@ -4769,12 +4767,12 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 int posy = currentNpcs[npcIndex]._y;
 
                 // inside buildings we need to check extra stuff
-                if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
+                if (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING)
                 {
                     SETTLEMENT settlement;
 
                     // get the current settlement, need to special case BRITANNIA as the castle has two levels, use the ladder to determine which level
-                    if ((u4.Party._loc == U4_Decompiled.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == U4_Decompiled.TILE.LADDER_UP))
+                    if ((u4.Party._loc == U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == U4_Decompiled_AVATAR.TILE.LADDER_UP))
                     {
                         settlement = SETTLEMENT.LCB_1;
                     }
@@ -4797,7 +4795,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     posx = posx - (lastRaycastPlayer_posx - raycastSettlementMap.GetLength(0) / 2 - 1);
                     posy = posy - (lastRaycastPlayer_posy - raycastSettlementMap.GetLength(1) / 2 - 1);
                     // can we see the npc
-                    if (posx < 0 || posy < 0 || posx >= raycastSettlementMap.GetLength(0) || posy >= raycastSettlementMap.GetLength(1) || raycastSettlementMap[posx, posy] == U4_Decompiled.TILE.BLANK)
+                    if (posx < 0 || posy < 0 || posx >= raycastSettlementMap.GetLength(0) || posy >= raycastSettlementMap.GetLength(1) || raycastSettlementMap[posx, posy] == U4_Decompiled_AVATAR.TILE.BLANK)
                     {
                         childofnpcs.gameObject.SetActive(false);
                     }
@@ -4806,13 +4804,13 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                         childofnpcs.gameObject.SetActive(true);
                     }
                 }
-                else if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
+                else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS)
                 {
                     // adjust position based on the offset of the raycastSettlementMap due to the player position
                     posx = posx - (lastRaycastPlayer_posx - raycastOutdoorMap.GetLength(0) / 2 - 1);
                     posy = posy - (lastRaycastPlayer_posy - raycastOutdoorMap.GetLength(1) / 2 - 1);
                     // can we see the npc
-                    if (posx < 0 || posy < 0 || posx >= raycastOutdoorMap.GetLength(0) || posy >= raycastOutdoorMap.GetLength(1) || raycastOutdoorMap[posx, posy] == U4_Decompiled.TILE.BLANK)
+                    if (posx < 0 || posy < 0 || posx >= raycastOutdoorMap.GetLength(0) || posy >= raycastOutdoorMap.GetLength(1) || raycastOutdoorMap[posx, posy] == U4_Decompiled_AVATAR.TILE.BLANK)
                     {
                         childofnpcs.gameObject.SetActive(false);
                     }
@@ -4841,7 +4839,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             }
         }
     }
-    public void AddHits(List<U4_Decompiled.hit> currentHitList, int offsetx = 0, int offsety = 0)
+    public void AddHits(List<U4_Decompiled_AVATAR.hit> currentHitList, int offsetx = 0, int offsety = 0)
     {
         // have we finished creating the world
         if (hits == null)
@@ -4893,7 +4891,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             if (hitIndex < currentHitList.Count)
             {
                 // get the tile
-                U4_Decompiled.TILE hitTile = currentHitList[hitIndex].tile;
+                U4_Decompiled_AVATAR.TILE hitTile = currentHitList[hitIndex].tile;
 
                 // update the tile of the game object
                 childofhits.GetComponent<Renderer>().material.mainTexture = originalTiles[(int)hitTile];
@@ -4919,7 +4917,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         }
     }
 
-    public void AddActiveCharacter(U4_Decompiled.activeCharacter currentActiveCharacter, int offsetx = 0, int offsety = 0)
+    public void AddActiveCharacter(U4_Decompiled_AVATAR.activeCharacter currentActiveCharacter, int offsetx = 0, int offsety = 0)
     {
         if (activeCharacter == null)
         {
@@ -4960,14 +4958,14 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
     }
 
     // cast one ray
-    void Cast_Ray(ref U4_Decompiled.TILE[,] map, 
+    void Cast_Ray(ref U4_Decompiled_AVATAR.TILE[,] map, 
         int diff_x,
         int diff_y,
         int pos_x,
         int pos_y, 
-        ref U4_Decompiled.TILE[,] raycastMap, int offset_x, int offset_y, U4_Decompiled.TILE wrapTile)
+        ref U4_Decompiled_AVATAR.TILE[,] raycastMap, int offset_x, int offset_y, U4_Decompiled_AVATAR.TILE wrapTile)
     {
-        U4_Decompiled.TILE temp_tile;
+        U4_Decompiled_AVATAR.TILE temp_tile;
 
         // are we outside the destination raycast map area, stop here
         if (pos_x - offset_x >= raycastMap.GetLength(0) || pos_y - offset_y >= raycastMap.GetLength(1) || pos_x - offset_x < 0 || pos_y - offset_y < 0)
@@ -4976,7 +4974,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         }
 
         // has the tile already been copied, if so stop here
-        if (raycastMap[pos_x - offset_x, pos_y - offset_y] != U4_Decompiled.TILE.BLANK)
+        if (raycastMap[pos_x - offset_x, pos_y - offset_y] != U4_Decompiled_AVATAR.TILE.BLANK)
         {
             return;
         }
@@ -4984,7 +4982,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         // check if we should wrap the source map or if we should fill
         // any tile outside of the map area with a specific tile such as GRASS
         // are we outside the source map?
-        if ((wrapTile != U4_Decompiled.TILE.BLANK) && (pos_x >= map.GetLength(0) || pos_y >= map.GetLength(1) || pos_x < 0 || pos_y < 0))
+        if ((wrapTile != U4_Decompiled_AVATAR.TILE.BLANK) && (pos_x >= map.GetLength(0) || pos_y >= map.GetLength(1) || pos_x < 0 || pos_y < 0))
         {
             temp_tile = wrapTile;
             raycastMap[pos_x - offset_x, pos_y - offset_y] = temp_tile;
@@ -4997,11 +4995,11 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         }
 
         // check the tile for opaque tiles
-        if ((temp_tile == U4_Decompiled.TILE.FOREST) ||
-            (temp_tile == U4_Decompiled.TILE.MOUNTAINS) ||
-            (temp_tile == U4_Decompiled.TILE.BLANK) ||
-            (temp_tile == U4_Decompiled.TILE.SECRET_BRICK_WALL) ||
-            (temp_tile == U4_Decompiled.TILE.BRICK_WALL))
+        if ((temp_tile == U4_Decompiled_AVATAR.TILE.FOREST) ||
+            (temp_tile == U4_Decompiled_AVATAR.TILE.MOUNTAINS) ||
+            (temp_tile == U4_Decompiled_AVATAR.TILE.BLANK) ||
+            (temp_tile == U4_Decompiled_AVATAR.TILE.SECRET_BRICK_WALL) ||
+            (temp_tile == U4_Decompiled_AVATAR.TILE.BRICK_WALL))
         {
             return;
         }
@@ -5044,7 +5042,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
     }
 
     // visible area (raycast)
-    void raycast(ref U4_Decompiled.TILE[,] map, int pos_x, int pos_y, ref U4_Decompiled.TILE[,] raycastMap, int offset_x, int offset_y, U4_Decompiled.TILE wrapTile)
+    void raycast(ref U4_Decompiled_AVATAR.TILE[,] map, int pos_x, int pos_y, ref U4_Decompiled_AVATAR.TILE[,] raycastMap, int offset_x, int offset_y, U4_Decompiled_AVATAR.TILE wrapTile)
     {
         if (pos_x < 0 || pos_y < 0 || pos_x >= map.GetLength(0) || pos_y >= map.GetLength(1))
         {
@@ -5062,7 +5060,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         }
 
         // disable raycast outdoors when in the ballon and it is airborne, just copy all the tiles instead
-        if ((u4.Party._tile == U4_Decompiled.TILE.BALOON) && (u4.Party.f_1dc == 1))
+        if ((u4.Party._tile == U4_Decompiled_AVATAR.TILE.BALOON) && (u4.Party.f_1dc == 1))
         {
             for (int y = 0; y < raycastMap.GetLength(1); y++)
             {
@@ -5079,12 +5077,12 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             {
                 for (int x = 0; x < raycastMap.GetLength(0); x++)
                 {
-                    raycastMap[x, y] = U4_Decompiled.TILE.BLANK;
+                    raycastMap[x, y] = U4_Decompiled_AVATAR.TILE.BLANK;
                 }
             }
 
             // copy the starting position as it is alway visible given the map offset
-            U4_Decompiled.TILE currentTile = map[pos_x, pos_y];
+            U4_Decompiled_AVATAR.TILE currentTile = map[pos_x, pos_y];
             raycastMap[pos_x - offset_x, pos_y - offset_y] = currentTile;
 
             // cast out recusively from the starting position
@@ -5103,13 +5101,13 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
     int lastRaycastPlayer_posx = -1;
     int lastRaycastPlayer_posy = -1;
     int lastRaycastPlayer_f_1dc = -1;
-    U4_Decompiled.DIRECTION lastRaycastP_surface_party_direction = (U4_Decompiled.DIRECTION )(-1);
+    U4_Decompiled_AVATAR.DIRECTION lastRaycastP_surface_party_direction = (U4_Decompiled_AVATAR.DIRECTION )(-1);
     bool last_door_timer = false;
 
     // create a temp TILE map array to hold the combat terrains as we load them
-    U4_Decompiled.TILE[][,] combatMaps = new U4_Decompiled.TILE[(int)U4_Decompiled.COMBAT_TERRAIN.MAX][,];
-    CombatMonsterStartPositions[][] combatMonsterStartPositions = new CombatMonsterStartPositions[(int)U4_Decompiled.COMBAT_TERRAIN.MAX][];
-    CombatPartyStartPositions[][] combatPartyStartPositions = new CombatPartyStartPositions[(int)U4_Decompiled.COMBAT_TERRAIN.MAX][];
+    U4_Decompiled_AVATAR.TILE[][,] combatMaps = new U4_Decompiled_AVATAR.TILE[(int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX][,];
+    CombatMonsterStartPositions[][] combatMonsterStartPositions = new CombatMonsterStartPositions[(int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX][];
+    CombatPartyStartPositions[][] combatPartyStartPositions = new CombatPartyStartPositions[(int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX][];
 
     public Image vision;
     Texture2D visionTexture;
@@ -5289,7 +5287,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         CreateCombatTerrains();
 
         // get a reference to the game engine
-        u4 = FindObjectOfType<U4_Decompiled>();
+        u4 = FindObjectOfType<U4_Decompiled_AVATAR>();
 
         // initialize hidden map
         hiddenWorldMapGameObject = new GameObject("Hidden World Map");
@@ -5418,7 +5416,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             const int swap_x2 = 8;
             const int swap_y1 = 2;
             const int swap_y2 = 3;
-            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.CASTLE_ENTRANCE;
+            U4_Decompiled_AVATAR.TILE tileIndex = U4_Decompiled_AVATAR.TILE.CASTLE_ENTRANCE;
 
             int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
             int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
@@ -5439,7 +5437,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             const int swap_x2 = 8;
             const int swap_y1 = 4;
             const int swap_y2 = 5;
-            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.TOWN;
+            U4_Decompiled_AVATAR.TILE tileIndex = U4_Decompiled_AVATAR.TILE.TOWN;
 
             int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
             int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
@@ -5460,7 +5458,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             const int swap_x2 = 12;
             const int swap_y1 = 2;
             const int swap_y2 = 3;
-            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.CASTLE;
+            U4_Decompiled_AVATAR.TILE tileIndex = U4_Decompiled_AVATAR.TILE.CASTLE;
 
             int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
             int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
@@ -5481,7 +5479,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             const int swap_x2 = 8;
             const int swap_y1 = 2;
             const int swap_y2 = 3;
-            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_WEST;
+            U4_Decompiled_AVATAR.TILE tileIndex = U4_Decompiled_AVATAR.TILE.SHIP_WEST;
 
             int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
             int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
@@ -5502,7 +5500,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             const int swap_x2 = 9;
             const int swap_y1 = 2;
             const int swap_y2 = 3;
-            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_EAST;
+            U4_Decompiled_AVATAR.TILE tileIndex = U4_Decompiled_AVATAR.TILE.SHIP_EAST;
 
             int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
             int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
@@ -5524,7 +5522,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             const int swap_x2 = 8;
             const int swap_y1 = 2;
             const int swap_y2 = 3;
-            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_WEST;
+            U4_Decompiled_AVATAR.TILE tileIndex = U4_Decompiled_AVATAR.TILE.SHIP_WEST;
 
             int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
             int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
@@ -5545,7 +5543,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             const int swap_x2 = 9;
             const int swap_y1 = 2;
             const int swap_y2 = 3;
-            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_EAST;
+            U4_Decompiled_AVATAR.TILE tileIndex = U4_Decompiled_AVATAR.TILE.SHIP_EAST;
 
             int x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth;
             int y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight;
@@ -5567,7 +5565,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             const int swap_x2 = 8;
             const int swap_y1 = 2;
             const int swap_y2 = 3;
-            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_WEST;
+            U4_Decompiled_AVATAR.TILE tileIndex = U4_Decompiled_AVATAR.TILE.SHIP_WEST;
             Texture2D tex = originalTiles[(int)tileIndex];
             Color color1 = tex.GetPixel(swap_x1, originalTileHeight - 1 - swap_y2);
             Color color2 = tex.GetPixel(swap_x1, originalTileHeight - 1 - swap_y1);
@@ -5585,7 +5583,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             const int swap_x2 = 9;
             const int swap_y1 = 2;
             const int swap_y2 = 3;
-            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_EAST;
+            U4_Decompiled_AVATAR.TILE tileIndex = U4_Decompiled_AVATAR.TILE.SHIP_EAST;
             Texture2D tex = originalTiles[(int)tileIndex];
             Color color1 = tex.GetPixel(swap_x1, originalTileHeight - 1 - swap_y2);
             Color color2 = tex.GetPixel(swap_x1, originalTileHeight - 1 - swap_y1);
@@ -5604,7 +5602,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             const int swap_x2 = 8 + TILE_BORDER_SIZE;
             const int swap_y1 = 2 + TILE_BORDER_SIZE;
             const int swap_y2 = 3 + TILE_BORDER_SIZE;
-            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_WEST;
+            U4_Decompiled_AVATAR.TILE tileIndex = U4_Decompiled_AVATAR.TILE.SHIP_WEST;
             Texture2D tex = expandedTiles[(int)tileIndex];
             Color color1 = tex.GetPixel(swap_x1, expandedTileHeight - 1 - swap_y2);
             Color color2 = tex.GetPixel(swap_x1, expandedTileHeight - 1 - swap_y1);
@@ -5622,7 +5620,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             const int swap_x2 = 9 + TILE_BORDER_SIZE;
             const int swap_y1 = 2 + TILE_BORDER_SIZE;
             const int swap_y2 = 3 + TILE_BORDER_SIZE;
-            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.SHIP_EAST;
+            U4_Decompiled_AVATAR.TILE tileIndex = U4_Decompiled_AVATAR.TILE.SHIP_EAST;
             Texture2D tex = expandedTiles[(int)tileIndex];
             Color color1 = tex.GetPixel(swap_x1, expandedTileHeight - 1 - swap_y2);
             Color color2 = tex.GetPixel(swap_x1, expandedTileHeight - 1 - swap_y1);
@@ -5641,7 +5639,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             const int x2 = 9;
             const int y1 = 9;
             const int y2 = 16;
-            U4_Decompiled.TILE tileIndex = U4_Decompiled.TILE.COOKING_FIRE;
+            U4_Decompiled_AVATAR.TILE tileIndex = U4_Decompiled_AVATAR.TILE.COOKING_FIRE;
 
             int offset_x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth + TILE_BORDER_SIZE;
             int offset_y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight + TILE_BORDER_SIZE;
@@ -5712,7 +5710,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             timer -= timerExpired;
             timerExpired = timerPeriod;
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.CITIZEN_WORD)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.CITIZEN_WORD)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -5723,7 +5721,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 bool keyword2found = false;
 
                 SETTLEMENT settlement;
-                if ((u4.Party._loc == U4_Decompiled.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == U4_Decompiled.TILE.LADDER_UP))
+                if ((u4.Party._loc == U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == U4_Decompiled_AVATAR.TILE.LADDER_UP))
                 {
                     settlement = SETTLEMENT.LCB_1;
                 }
@@ -5783,7 +5781,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkCitizen.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_YES_NO)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.GENERAL_YES_NO)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -5795,7 +5793,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkYN.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_YES_NO_WORD)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.GENERAL_YES_NO_WORD)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -5807,7 +5805,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkYesNo.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_HEALER)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.ASK_LETTER_HEALER)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -5819,19 +5817,19 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkHealer.SetActive(false);
             }
 
-            if ((u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_CONTINUE) ||
-                (u4.inputMode == U4_Decompiled.INPUT_MODE.DELAY_CONTINUE) ||
-                (u4.inputMode == U4_Decompiled.INPUT_MODE.DELAY_NO_CONTINUE))
+            if ((u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.GENERAL_CONTINUE) ||
+                (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.DELAY_CONTINUE) ||
+                (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.DELAY_NO_CONTINUE))
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
                 Action.SetActive(false);
                 TalkContinue.SetActive(true);
-                if (u4.inputMode == U4_Decompiled.INPUT_MODE.DELAY_CONTINUE)
+                if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.DELAY_CONTINUE)
                 {
                     TalkContinueButton.gameObject.SetActive(true);
                 }
-                else if (u4.inputMode == U4_Decompiled.INPUT_MODE.DELAY_NO_CONTINUE)
+                else if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.DELAY_NO_CONTINUE)
                 {
                     TalkContinueButton.gameObject.SetActive(false);
 
@@ -5851,7 +5849,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkContinue.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.MAIN_LOOP)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.MAIN_LOOP)
             {
                 InputPanel.SetActive(true);
                 Action.SetActive(true);
@@ -5863,7 +5861,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 ActionMainLoop.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.DUNGEON_LOOP)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.DUNGEON_LOOP)
             {
                 InputPanel.SetActive(true);
                 Action.SetActive(true);
@@ -5875,7 +5873,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 ActionDungeonLoop.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.HAWKWIND_WORD)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.HAWKWIND_WORD)
             {
                 InputPanel.SetActive(true);
                 // TODO: need to filter buttons like citizen talk with word list
@@ -5888,7 +5886,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkHawWind.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_FOOD_OR_ALE)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.ASK_LETTER_FOOD_OR_ALE)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -5900,7 +5898,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkFoodAle.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_BUY_SELL)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.GENERAL_BUY_SELL)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -5912,7 +5910,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkBuySell.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_ASK_CHARACTER_NUMBER)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.GENERAL_ASK_CHARACTER_NUMBER)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(false);
@@ -5926,7 +5924,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
 
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.PUB_WORD)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.PUB_WORD)
             {
                 /* TODO search for these words
                 "black stone",
@@ -5948,7 +5946,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkPubWord.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.MANTRA_WORD)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.MANTRA_WORD)
             {
                 /*
                 "ahm", Honesty
@@ -5971,7 +5969,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkMantras.SetActive(false);
             }
             
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.LOAD_BRITISH_WORD)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.LOAD_BRITISH_WORD)
             {
                 /*
                 char* D_6FF0[28] = {
@@ -6016,7 +6014,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkLordBritish.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.VIRTUE_WORD)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.VIRTUE_WORD)
             {
                 /*
                 Honesty
@@ -6039,7 +6037,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkVirtue.SetActive(false);
             }
             
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.END_GAME_WORD)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.END_GAME_WORD)
             {
                 /*
                 Honesty
@@ -6066,7 +6064,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             }
             
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.USE_ITEM_WORD)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.USE_ITEM_WORD)
             {
                 /*
                 "stone"
@@ -6091,7 +6089,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkUseItem.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.USE_STONE_COLOR_WORD)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.USE_STONE_COLOR_WORD)
             {
                 /*
                 "Blue",
@@ -6114,7 +6112,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkColors.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_2_DIGITS)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.GENERAL_NUMBER_INPUT_2_DIGITS)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -6126,7 +6124,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 Talk2DigitInput.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_3_DIGITS)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.GENERAL_NUMBER_INPUT_3_DIGITS)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -6138,7 +6136,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 Talk3DigitInput.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.COMBAT_LOOP)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.COMBAT_LOOP)
             {
                 InputPanel.SetActive(true);
                 Action.SetActive(true);
@@ -6150,7 +6148,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 ActionCombatLoop.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_WEAPON)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.ASK_LETTER_WEAPON)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -6162,7 +6160,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkWeapon.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_ARMOR)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.ASK_LETTER_ARMOR)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -6174,7 +6172,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkArmor.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_GUILD)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.ASK_LETTER_GUILD)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -6186,7 +6184,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkGuild.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_REAGENT)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.ASK_LETTER_REAGENT)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -6198,7 +6196,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkReagents.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_SPELL)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.ASK_LETTER_SPELL)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -6210,7 +6208,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkSpells.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_1_DIGITS)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.GENERAL_NUMBER_INPUT_1_DIGITS)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -6222,7 +6220,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 Talk1DigitInput.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ENERGY_TYPE_POISON_FIRE_LIGHTNING_SLEEP)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.ENERGY_TYPE_POISON_FIRE_LIGHTNING_SLEEP)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -6234,7 +6232,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkEnergy.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_TELESCOPE)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.ASK_LETTER_TELESCOPE)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -6246,7 +6244,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkTelescope.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.ASK_LETTER_PHASE)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.ASK_LETTER_PHASE)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -6258,7 +6256,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 TalkPhase.SetActive(false);
             }
 
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_NUMBER_INPUT_0_1_2_3)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.GENERAL_NUMBER_INPUT_0_1_2_3)
             {
                 InputPanel.SetActive(true);
                 Talk.SetActive(true);
@@ -6273,7 +6271,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             // disable this for now
             // TODO if this is going to be an actual input panel it needs to support
             // rotation and direction like the controller do
-            if (u4.inputMode == U4_Decompiled.INPUT_MODE.GENERAL_DIRECTION)
+            if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.GENERAL_DIRECTION)
             {
                 InputPanel.SetActive(false);
                 Talk.SetActive(false);
@@ -6289,7 +6287,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             if (lastMode != u4.current_mode)
             {
                 // did we just come out of somewhere to the outdoors
-                if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
+                if (u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS)
                 {
                     // flag that we were just inside
                     wasJustInside = true;
@@ -6299,7 +6297,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 lastMode = u4.current_mode;
             }
 
-            if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
+            if (u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS)
             {
                 AddNPCs(u4._npc);
                 AddMoongate();
@@ -6318,20 +6316,20 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 dungeonMonsters.SetActive(false);
                 skyGameObject.SetActive(true);
 
-                for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                 {
                     CombatTerrains[i].gameObject.SetActive(false);
                 }
 
                 // automatically enter things when you are on an enterable tile unless just left somewhere or you are flying in the balloon
                 if ((readyToAutomaticallyEnter == true) && (u4.Party.f_1dc == 0) &&
-                    ((u4.current_tile == U4_Decompiled.TILE.CASTLE_ENTRANCE) ||
-                    (u4.current_tile == U4_Decompiled.TILE.CASTLE) ||
-                    (u4.current_tile == U4_Decompiled.TILE.TOWN) ||
-                    (u4.current_tile == U4_Decompiled.TILE.VILLAGE) ||
-                    (u4.current_tile == U4_Decompiled.TILE.DUNGEON) ||
-                    (u4.current_tile == U4_Decompiled.TILE.RUINS) ||
-                    (u4.current_tile == U4_Decompiled.TILE.SHRINE)))
+                    ((u4.current_tile == U4_Decompiled_AVATAR.TILE.CASTLE_ENTRANCE) ||
+                    (u4.current_tile == U4_Decompiled_AVATAR.TILE.CASTLE) ||
+                    (u4.current_tile == U4_Decompiled_AVATAR.TILE.TOWN) ||
+                    (u4.current_tile == U4_Decompiled_AVATAR.TILE.VILLAGE) ||
+                    (u4.current_tile == U4_Decompiled_AVATAR.TILE.DUNGEON) ||
+                    (u4.current_tile == U4_Decompiled_AVATAR.TILE.RUINS) ||
+                    (u4.current_tile == U4_Decompiled_AVATAR.TILE.SHRINE)))
                 {
                     u4.CommandEnter();
                     readyToAutomaticallyEnter = false;
@@ -6339,33 +6337,33 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
                 // wait until we move off of an entrance tile after leaving somewhere
                 if ((wasJustInside == true) &&
-                    (u4.current_tile != U4_Decompiled.TILE.CASTLE_ENTRANCE) &&
-                    (u4.current_tile != U4_Decompiled.TILE.CASTLE) &&
-                    (u4.current_tile != U4_Decompiled.TILE.TOWN) &&
-                    (u4.current_tile != U4_Decompiled.TILE.VILLAGE) &&
-                    (u4.current_tile != U4_Decompiled.TILE.DUNGEON) &&
-                    (u4.current_tile != U4_Decompiled.TILE.RUINS) &&
-                    (u4.current_tile!= U4_Decompiled.TILE.SHRINE))
+                    (u4.current_tile != U4_Decompiled_AVATAR.TILE.CASTLE_ENTRANCE) &&
+                    (u4.current_tile != U4_Decompiled_AVATAR.TILE.CASTLE) &&
+                    (u4.current_tile != U4_Decompiled_AVATAR.TILE.TOWN) &&
+                    (u4.current_tile != U4_Decompiled_AVATAR.TILE.VILLAGE) &&
+                    (u4.current_tile != U4_Decompiled_AVATAR.TILE.DUNGEON) &&
+                    (u4.current_tile != U4_Decompiled_AVATAR.TILE.RUINS) &&
+                    (u4.current_tile!= U4_Decompiled_AVATAR.TILE.SHRINE))
                 {
                     readyToAutomaticallyEnter = true;
                     wasJustInside = false;
                 }
 
                 // automatically board horse, ship and balloon
-                if (((u4.current_tile == U4_Decompiled.TILE.HORSE_EAST) ||
-                    (u4.current_tile == U4_Decompiled.TILE.HORSE_EAST) ||
-                    (u4.current_tile == U4_Decompiled.TILE.SHIP_EAST) ||
-                    (u4.current_tile == U4_Decompiled.TILE.SHIP_NORTH) ||
-                    (u4.current_tile == U4_Decompiled.TILE.SHIP_WEST) ||
-                    (u4.current_tile == U4_Decompiled.TILE.SHIP_SOUTH) ||
-                    (u4.current_tile == U4_Decompiled.TILE.BALOON)) && 
-                    (lastCurrentTile != U4_Decompiled.TILE.HORSE_EAST) &&
-                    (lastCurrentTile != U4_Decompiled.TILE.HORSE_EAST) &&
-                    (lastCurrentTile != U4_Decompiled.TILE.SHIP_EAST) &&
-                    (lastCurrentTile != U4_Decompiled.TILE.SHIP_NORTH) &&
-                    (lastCurrentTile != U4_Decompiled.TILE.SHIP_WEST) &&
-                    (lastCurrentTile != U4_Decompiled.TILE.SHIP_SOUTH) &&
-                    (lastCurrentTile != U4_Decompiled.TILE.BALOON)  && 
+                if (((u4.current_tile == U4_Decompiled_AVATAR.TILE.HORSE_EAST) ||
+                    (u4.current_tile == U4_Decompiled_AVATAR.TILE.HORSE_EAST) ||
+                    (u4.current_tile == U4_Decompiled_AVATAR.TILE.SHIP_EAST) ||
+                    (u4.current_tile == U4_Decompiled_AVATAR.TILE.SHIP_NORTH) ||
+                    (u4.current_tile == U4_Decompiled_AVATAR.TILE.SHIP_WEST) ||
+                    (u4.current_tile == U4_Decompiled_AVATAR.TILE.SHIP_SOUTH) ||
+                    (u4.current_tile == U4_Decompiled_AVATAR.TILE.BALOON)) && 
+                    (lastCurrentTile != U4_Decompiled_AVATAR.TILE.HORSE_EAST) &&
+                    (lastCurrentTile != U4_Decompiled_AVATAR.TILE.HORSE_EAST) &&
+                    (lastCurrentTile != U4_Decompiled_AVATAR.TILE.SHIP_EAST) &&
+                    (lastCurrentTile != U4_Decompiled_AVATAR.TILE.SHIP_NORTH) &&
+                    (lastCurrentTile != U4_Decompiled_AVATAR.TILE.SHIP_WEST) &&
+                    (lastCurrentTile != U4_Decompiled_AVATAR.TILE.SHIP_SOUTH) &&
+                    (lastCurrentTile != U4_Decompiled_AVATAR.TILE.BALOON)  && 
                     (u4.lastKeyboardHit != 'X'))
                 {
                     u4.CommandBoard();
@@ -6379,7 +6377,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     Camera.main.clearFlags = CameraClearFlags.Skybox;
                 }
             }
-            else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING)
             {
                 AddNPCs(u4._npc);
                 AddMoongate();
@@ -6398,23 +6396,23 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 dungeonMonsters.SetActive(false);
                 skyGameObject.SetActive(true);
 
-                for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                 {
                     CombatTerrains[i].gameObject.SetActive(false);
                 }
 
                 // automatic Klimb and Descend ladders
-                if ((u4.current_tile == U4_Decompiled.TILE.LADDER_UP) &&
-                    (lastCurrentTile != U4_Decompiled.TILE.LADDER_UP) &&
-                    (lastCurrentTile != U4_Decompiled.TILE.LADDER_DOWN))
+                if ((u4.current_tile == U4_Decompiled_AVATAR.TILE.LADDER_UP) &&
+                    (lastCurrentTile != U4_Decompiled_AVATAR.TILE.LADDER_UP) &&
+                    (lastCurrentTile != U4_Decompiled_AVATAR.TILE.LADDER_DOWN))
                 {
                     u4.CommandKlimb();
                 }
 
                 // automatic Klimb and Descend ladders
-                if ((u4.current_tile == U4_Decompiled.TILE.LADDER_DOWN) &&
-                    (lastCurrentTile != U4_Decompiled.TILE.LADDER_UP) &&
-                    (lastCurrentTile != U4_Decompiled.TILE.LADDER_DOWN))
+                if ((u4.current_tile == U4_Decompiled_AVATAR.TILE.LADDER_DOWN) &&
+                    (lastCurrentTile != U4_Decompiled_AVATAR.TILE.LADDER_UP) &&
+                    (lastCurrentTile != U4_Decompiled_AVATAR.TILE.LADDER_DOWN))
                 {
                     u4.CommandDecsend();
                 }
@@ -6427,9 +6425,9 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     Camera.main.clearFlags = CameraClearFlags.Skybox;
                 }
             }
-            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT)
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT)
             {
-                if ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
+                if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
                 {
                     AddFighters(u4.Fighters, u4.Combat1, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
                     AddCharacters(u4.Combat2, u4.Party, u4.Fighters, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
@@ -6448,7 +6446,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     skyGameObject.SetActive(false);
 
                     // check if we have the dungeon already created, create it if not
-                    DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled.LOCATIONS.DUNGEONS);
+                    DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled_AVATAR.LOCATIONS.DUNGEONS);
                     if (dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
                     {
                         Destroy(dungeon);
@@ -6456,7 +6454,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     }
                     dungeon.SetActive(true);
 
-                    for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                    for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                     {
                         CombatTerrains[i].gameObject.SetActive(false);
                     }
@@ -6488,7 +6486,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
                     int currentCombatTerrain = (int)Convert_Tile_to_Combat_Terrian(u4.current_tile);
 
-                    for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                    for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                     {
                         if (i == currentCombatTerrain)
                         {
@@ -6506,7 +6504,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     }
                 }
             }
-            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_ROOM) /* this is a dungeon room */
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT_ROOM) /* this is a dungeon room */
             {
                 AddFighters(u4.Fighters, u4.Combat1, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
                 AddCharacters(u4.Combat2, u4.Party, u4.Fighters, u4.Party._x * 11, -255 + (7 - u4.Party._y + 1) * 11 - 1);
@@ -6525,7 +6523,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 skyGameObject.SetActive(false);
 
                 // check if we have the dungeon already created, create it if not
-                DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled.LOCATIONS.DUNGEONS);
+                DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled_AVATAR.LOCATIONS.DUNGEONS);
                 if (dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
                 {
                     Destroy(dungeon);
@@ -6533,7 +6531,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 }
                 dungeon.SetActive(true);
 
-                for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                 {
                     CombatTerrains[i].gameObject.SetActive(false);
                 }
@@ -6544,7 +6542,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     Camera.main.backgroundColor = Color.black;
                 }
             }
-            else if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.DUNGEON)
             {
                 AddNPCs(u4._npc);
                 AddHits(u4.currentHits);
@@ -6562,7 +6560,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 skyGameObject.SetActive(false);
 
                 // check if we have the dungeon already created, create it if not
-                DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled.LOCATIONS.DUNGEONS);
+                DUNGEONS dun = (DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled_AVATAR.LOCATIONS.DUNGEONS);
                 if (dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
                 {
                     // not the right dungeon, create a new dungeon
@@ -6581,7 +6579,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     dungeonMonsters.SetActive(false);
                 }
 
-                for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                 {
                     CombatTerrains[i].gameObject.SetActive(false);
                 }
@@ -6592,7 +6590,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     Camera.main.backgroundColor = Color.black;
                 }
             }
-            else if (u4.current_mode == U4_Decompiled.MODE.SHRINE)
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.SHRINE)
             {
                 AddFighters(u4.Fighters, u4.Combat1);
                 AddCharacters(u4.Combat2, u4.Party, u4.Fighters);
@@ -6611,9 +6609,9 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 dungeonMonsters.SetActive(false);
                 skyGameObject.SetActive(true);
 
-                for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                 {
-                    if (i == (int)U4_Decompiled.COMBAT_TERRAIN.SHRINE)
+                    if (i == (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.SHRINE)
                     {
                         CombatTerrains[i].gameObject.SetActive(true); 
                         followWorld(CenterOfCombatTerrain);
@@ -6629,7 +6627,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     Camera.main.clearFlags = CameraClearFlags.Skybox;
                 }
             } 
-            else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT_CAMP)
             {
                 AddFighters(u4.Fighters, u4.Combat1);
                 AddCharacters(u4.Combat2, u4.Party, u4.Fighters);
@@ -6650,18 +6648,18 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
                 int currentCombatTerrain;
                 // need to special case the combat when in the inn and in combat camp mode outside or in dungeon
-                if (u4.current_tile == U4_Decompiled.TILE.BRICK_FLOOR)
+                if (u4.current_tile == U4_Decompiled_AVATAR.TILE.BRICK_FLOOR)
                 {
-                    currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.INN;
+                    currentCombatTerrain = (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.INN;
                     skyGameObject.SetActive(true);
                     if (Camera.main.clearFlags != CameraClearFlags.Skybox)
                     {
                         Camera.main.clearFlags = CameraClearFlags.Skybox;
                     }
                 }
-                else if ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
+                else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
                 {
-                    currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.CAMP_DNG;
+                    currentCombatTerrain = (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.CAMP_DNG;
                     skyGameObject.SetActive(false); 
                     if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
                     {
@@ -6669,9 +6667,9 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                         Camera.main.backgroundColor = Color.black;
                     }
                 }
-                else if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
+                else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.DUNGEON)
                 {
-                    currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.CAMP;
+                    currentCombatTerrain = (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.CAMP;
                     skyGameObject.SetActive(true);
                     if (Camera.main.clearFlags != CameraClearFlags.Skybox)
                     {
@@ -6680,7 +6678,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 }
                 else
                 {
-                    currentCombatTerrain = (int)U4_Decompiled.COMBAT_TERRAIN.CAMP;
+                    currentCombatTerrain = (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.CAMP;
                     skyGameObject.SetActive(true);
                     if (Camera.main.clearFlags != CameraClearFlags.Skybox)
                     {
@@ -6688,7 +6686,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     }
                 }
 
-                for (int i = 0; i < (int)U4_Decompiled.COMBAT_TERRAIN.MAX; i++)
+                for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                 {
                     if (i == currentCombatTerrain)
                     {
@@ -6718,7 +6716,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     party.GetComponentInChildren<Renderer>().material.mainTexture = expandedTiles[(int)u4.Party._tile];
                     party.name = u4.Party._tile.ToString();
 
-                    if ((u4.Party._tile == U4_Decompiled.TILE.BALOON) && (u4.Party.f_1dc == 1))
+                    if ((u4.Party._tile == U4_Decompiled_AVATAR.TILE.BALOON) && (u4.Party.f_1dc == 1))
                     {
                         party.transform.position = new Vector3(party.transform.position.x, 1, party.transform.position.z);
                     }
@@ -6733,15 +6731,15 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             // keep the sky game objects in sync with the game
             if (skyGameObject)
             {
-                if ((u4.current_mode == U4_Decompiled.MODE.OUTDOORS) || (u4.current_mode == U4_Decompiled.MODE.BUILDING))
+                if ((u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS) || (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING))
                 {
                     skyGameObject.transform.localPosition = new Vector3(u4.Party._x, 0, 255 - u4.Party._y);
                 }
-                else if (u4.current_mode == U4_Decompiled.MODE.COMBAT)
+                else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT)
                 {
                     skyGameObject.transform.localPosition = new Vector3(u4.currentActiveCharacter.x, 0, 255 - u4.currentActiveCharacter.y);
                 }
-                else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
+                else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT_CAMP)
                 {
                     if (u4.currentActiveCharacter.active)
                     {
@@ -6757,28 +6755,28 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             // keep the party game object in sync with the game
             if (partyGameObject)
             {
-                if ((u4.current_mode == U4_Decompiled.MODE.OUTDOORS) ||
-                    (u4.current_mode == U4_Decompiled.MODE.BUILDING) ||
-                    (u4.current_mode == U4_Decompiled.MODE.COMBAT_CAMP))
+                if ((u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS) ||
+                    (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING) ||
+                    (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT_CAMP))
                 {
                     partyGameObject.transform.localPosition = new Vector3(u4.Party._x, 255 - u4.Party._y, 0);
                     if (Camera.main.transform.eulerAngles.y != 0)
                     {
                         if (rotateTransform)
                         {
-                            if (u4.surface_party_direction == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                            if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
                             {
                                 rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
                             }
-                            else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                            else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
                             {
                                 rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
                             }
-                            else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                            else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
                             {
                                 rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
                             }
-                            else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                            else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
                             {
                                 rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
                             }
@@ -6789,9 +6787,9 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                         }
                     }
                 }
-                else if (u4.current_mode == U4_Decompiled.MODE.COMBAT)
+                else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT)
                 {
-                    if ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
+                    if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
                     {
                         //partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
                         if (Camera.main.transform.eulerAngles.y != 0)
@@ -6801,19 +6799,19 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                             // if we are going to do rotation then we need to adjust the directional controls when in combat in the dungeon also
                             if (rotateTransform)
                             {
-                                if (u4.Party._dir == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                                if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
                                 {
                                     rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
                                 }
-                                else if (u4.Party._dir == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                                else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
                                 {
                                     rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
                                 }
-                                else if (u4.Party._dir == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                                else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
                                 {
                                     rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
                                 }
-                                else if (u4.Party._dir == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                                else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
                                 {
                                     rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
                                 }
@@ -6826,19 +6824,19 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                         {
                             if (rotateTransform)
                             {
-                                if (u4.surface_party_direction == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                                if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
                                 {
                                     rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
                                 }
-                                else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                                else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
                                 {
                                     rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
                                 }
-                                else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                                else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
                                 {
                                     rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
                                 }
-                                else if (u4.surface_party_direction == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                                else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
                                 {
                                     rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
                                 }
@@ -6850,7 +6848,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                         }
                     }
                 }
-                else if (u4.current_mode == U4_Decompiled.MODE.COMBAT_ROOM)
+                else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT_ROOM)
                 {
                     //partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
                     if (Camera.main.transform.eulerAngles.y != 0)
@@ -6859,43 +6857,43 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
                         if (rotateTransform)
                         {
-                            if (u4.Party._dir == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                            if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
                             {
                                 rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
                             }
-                            else if (u4.Party._dir == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                            else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
                             {
                                 rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
                             }
-                            else if (u4.Party._dir == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                            else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
                             {
                                 rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
                             }
-                            else if (u4.Party._dir == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                            else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
                             {
                                 rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
                             }
                         }
                     }
                 }
-                else if (u4.current_mode == U4_Decompiled.MODE.DUNGEON)
+                else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.DUNGEON)
                 {
                     partyGameObject.transform.localPosition = new Vector3(u4.Party._x * 11 + 5, (7 - u4.Party._y) * 11 + 5, 0);
                     if (rotateTransform)
                     {
-                        if (u4.Party._dir == U4_Decompiled.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                        if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
                         {
                             rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
                         }
-                        else if (u4.Party._dir == U4_Decompiled.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                        else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
                         {
                             rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
                         }
-                        else if (u4.Party._dir == U4_Decompiled.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                        else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
                         {
                             rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
                         }
-                        else if (u4.Party._dir == U4_Decompiled.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                        else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
                         {
                             rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
                         }
@@ -6907,8 +6905,8 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     GameText.GetComponent<UnityEngine.UI.Text>().text = u4.gameText;
                 }
 
-                if ((u4.current_mode == U4_Decompiled.MODE.DUNGEON) ||
-                    ((u4.Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+                if ((u4.current_mode == U4_Decompiled_AVATAR.MODE.DUNGEON) ||
+                    ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
                 {
                     windDirection.GetComponent<UnityEngine.UI.Text>().text = (char)(0x10) + "Level" + (char)(0x12) + (char)(u4.Party._z + '1') + (char)(0x11);
                 }
@@ -6918,16 +6916,16 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
                     switch (u4.WindDir)
                     {
-                        case U4_Decompiled.DIRECTION.NORTH:
+                        case U4_Decompiled_AVATAR.DIRECTION.NORTH:
                             windDirection.GetComponent<UnityEngine.UI.Text>().text += "North" + (char)(0x11);
                             break;
-                        case U4_Decompiled.DIRECTION.SOUTH:
+                        case U4_Decompiled_AVATAR.DIRECTION.SOUTH:
                             windDirection.GetComponent<UnityEngine.UI.Text>().text += "South" + (char)(0x11);
                             break;
-                        case U4_Decompiled.DIRECTION.EAST:
+                        case U4_Decompiled_AVATAR.DIRECTION.EAST:
                             windDirection.GetComponent<UnityEngine.UI.Text>().text += (char)(0x12) + "East" + (char)(0x11);
                             break;
-                        case U4_Decompiled.DIRECTION.WEST:
+                        case U4_Decompiled_AVATAR.DIRECTION.WEST:
                             windDirection.GetComponent<UnityEngine.UI.Text>().text += (char)(0x12) + "West" + (char)(0x11);
                             break;
                     }
@@ -6969,10 +6967,10 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
                 string bottomStatus = "" + '\n' + ("Food:" + (int)(u4.Party._food / 100)).ToString().PadRight(12, ' ') + (char)(u4.spell_sta);
 
-                if ((u4.Party._tile == U4_Decompiled.TILE.SHIP_EAST) ||
-                    (u4.Party._tile == U4_Decompiled.TILE.SHIP_WEST) ||
-                    (u4.Party._tile == U4_Decompiled.TILE.SHIP_NORTH) ||
-                    (u4.Party._tile == U4_Decompiled.TILE.SHIP_SOUTH))
+                if ((u4.Party._tile == U4_Decompiled_AVATAR.TILE.SHIP_EAST) ||
+                    (u4.Party._tile == U4_Decompiled_AVATAR.TILE.SHIP_WEST) ||
+                    (u4.Party._tile == U4_Decompiled_AVATAR.TILE.SHIP_NORTH) ||
+                    (u4.Party._tile == U4_Decompiled_AVATAR.TILE.SHIP_SOUTH))
                 {
                     bottomStatus += ("Ship:" + u4.Party._ship).PadLeft(12, ' ');
                 }
@@ -7009,50 +7007,50 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
                 weaponsStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
                     (char)(0x10) + "Weapons" + (char)(0x11) + '\n' +
-                    "A  -Hands   Cross Bow-I" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.CROSSBOW] + '\n' +
-                    'B' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.STAFF].ToString().PadLeft(2, '0') + "-Staff Flaming Oil-J" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.FLAMING_OIL].ToString().PadLeft(2, '0') + '\n' +
-                    'C' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.DAGGER].ToString().PadLeft(2, '0') + "-Dagger    Halbert-K" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.HALBERD].ToString().PadLeft(2, '0') + '\n' +
-                    'D' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.SLING].ToString().PadLeft(2, '0') + "-Sling   Magic Axe-L" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_AXE].ToString().PadLeft(2, '0') + '\n' +
-                    'E' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MACE].ToString().PadLeft(2, '0') + "-Mace  Magic Sword-M" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_SWORD].ToString().PadLeft(2, '0') + '\n' +
-                    'F' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.AXE].ToString().PadLeft(2, '0') + "-Axe     Magic Bow-N" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_BOW].ToString().PadLeft(2, '0') + '\n' +
-                    'G' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.SWORD].ToString().PadLeft(2, '0') + "-Sword  Magic Wand-O" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MAGIC_WAND].ToString().PadLeft(2, '0') + '\n' +
-                    'H' + u4.Party._weapons[(int)U4_Decompiled.WEAPON.BOW].ToString().PadLeft(2, '0') + "-Bow  Mystic Sword-P" + u4.Party._weapons[(int)U4_Decompiled.WEAPON.MYSTIC_SWORD].ToString().PadLeft(2, '0') + '\n' +
+                    "A  -Hands   Cross Bow-I" + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.CROSSBOW] + '\n' +
+                    'B' + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.STAFF].ToString().PadLeft(2, '0') + "-Staff Flaming Oil-J" + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.FLAMING_OIL].ToString().PadLeft(2, '0') + '\n' +
+                    'C' + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.DAGGER].ToString().PadLeft(2, '0') + "-Dagger    Halbert-K" + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.HALBERD].ToString().PadLeft(2, '0') + '\n' +
+                    'D' + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.SLING].ToString().PadLeft(2, '0') + "-Sling   Magic Axe-L" + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.MAGIC_AXE].ToString().PadLeft(2, '0') + '\n' +
+                    'E' + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.MACE].ToString().PadLeft(2, '0') + "-Mace  Magic Sword-M" + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.MAGIC_SWORD].ToString().PadLeft(2, '0') + '\n' +
+                    'F' + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.AXE].ToString().PadLeft(2, '0') + "-Axe     Magic Bow-N" + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.MAGIC_BOW].ToString().PadLeft(2, '0') + '\n' +
+                    'G' + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.SWORD].ToString().PadLeft(2, '0') + "-Sword  Magic Wand-O" + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.MAGIC_WAND].ToString().PadLeft(2, '0') + '\n' +
+                    'H' + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.BOW].ToString().PadLeft(2, '0') + "-Bow  Mystic Sword-P" + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.MYSTIC_SWORD].ToString().PadLeft(2, '0') + '\n' +
                     bottomStatus;
 
                 armourStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
                     (char)(0x10) + "Armour" + (char)(0x11) + '\n' +
                     "A  " + "-No Armour".PadRight(22, ' ') + '\n' +
-                    'B' + u4.Party._armors[(int)U4_Decompiled.ARMOR.CLOTH].ToString().PadLeft(2, '0') + "-Clothing".PadRight(22, ' ') + '\n' +
-                    'C' + u4.Party._armors[(int)U4_Decompiled.ARMOR.LEATHER].ToString().PadLeft(2, '0') + "-Leather".PadRight(22, ' ') + '\n' +
-                    'D' + u4.Party._armors[(int)U4_Decompiled.ARMOR.CHAIN_MAIL].ToString().PadLeft(2, '0') + "-Chain Mail".PadRight(22, ' ') + '\n' +
-                    'E' + u4.Party._armors[(int)U4_Decompiled.ARMOR.PLATE_MAIL].ToString().PadLeft(2, '0') + "-Plate Mail".PadRight(22, ' ') + '\n' +
-                    'F' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MAGIC_CHAIN].ToString().PadLeft(2, '0') + "-Magic Chain Mail".PadRight(22, ' ') + '\n' +
-                    'G' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MAGIC_PLATE].ToString().PadLeft(2, '0') + "-Magic Plate Mail".PadRight(22, ' ') + '\n' +
-                    'H' + u4.Party._armors[(int)U4_Decompiled.ARMOR.MYSTIC_ROBE].ToString().PadLeft(2, '0') + "-Mystic Robe".PadRight(22, ' ') + '\n' +
+                    'B' + u4.Party._armors[(int)U4_Decompiled_AVATAR.ARMOR.CLOTH].ToString().PadLeft(2, '0') + "-Clothing".PadRight(22, ' ') + '\n' +
+                    'C' + u4.Party._armors[(int)U4_Decompiled_AVATAR.ARMOR.LEATHER].ToString().PadLeft(2, '0') + "-Leather".PadRight(22, ' ') + '\n' +
+                    'D' + u4.Party._armors[(int)U4_Decompiled_AVATAR.ARMOR.CHAIN_MAIL].ToString().PadLeft(2, '0') + "-Chain Mail".PadRight(22, ' ') + '\n' +
+                    'E' + u4.Party._armors[(int)U4_Decompiled_AVATAR.ARMOR.PLATE_MAIL].ToString().PadLeft(2, '0') + "-Plate Mail".PadRight(22, ' ') + '\n' +
+                    'F' + u4.Party._armors[(int)U4_Decompiled_AVATAR.ARMOR.MAGIC_CHAIN].ToString().PadLeft(2, '0') + "-Magic Chain Mail".PadRight(22, ' ') + '\n' +
+                    'G' + u4.Party._armors[(int)U4_Decompiled_AVATAR.ARMOR.MAGIC_PLATE].ToString().PadLeft(2, '0') + "-Magic Plate Mail".PadRight(22, ' ') + '\n' +
+                    'H' + u4.Party._armors[(int)U4_Decompiled_AVATAR.ARMOR.MYSTIC_ROBE].ToString().PadLeft(2, '0') + "-Mystic Robe".PadRight(22, ' ') + '\n' +
                     bottomStatus;
 
                 reagentsStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
                     (char)(0x10) + "Reagents" + (char)(0x11) + '\n' +
-                    'A' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.SULFER_ASH].ToString().PadLeft(2, '0') + "-Sulfer Ash".PadRight(22, ' ') + '\n' +
-                    'B' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.GINSENG].ToString().PadLeft(2, '0') + "-Ginseng".PadRight(22, ' ') + '\n' +
-                    'C' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.GARLIC].ToString().PadLeft(2, '0') + "-Galic".PadRight(22, ' ') + '\n' +
-                    'D' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.SPIDER_SILK].ToString().PadLeft(2, '0') + "-Spider Silk".PadRight(22, ' ') + '\n' +
-                    'E' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.BLOOD_MOSS].ToString().PadLeft(2, '0') + "-Blood Moss".PadRight(22, ' ') + '\n' +
-                    'F' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.BLACK_PEARL].ToString().PadLeft(2, '0') + "-Black Pearl".PadRight(22, ' ') + '\n' +
-                    'G' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.NIGHTSHADE].ToString().PadLeft(2, '0') + "-Nightshade".PadRight(22, ' ') + '\n' +
-                    'H' + u4.Party._reagents[(int)U4_Decompiled.REAGENT.MANDRAKE].ToString().PadLeft(2, '0') + "-Mandrake Root".PadRight(22, ' ') + '\n' +
+                    'A' + u4.Party._reagents[(int)U4_Decompiled_AVATAR.REAGENT.SULFER_ASH].ToString().PadLeft(2, '0') + "-Sulfer Ash".PadRight(22, ' ') + '\n' +
+                    'B' + u4.Party._reagents[(int)U4_Decompiled_AVATAR.REAGENT.GINSENG].ToString().PadLeft(2, '0') + "-Ginseng".PadRight(22, ' ') + '\n' +
+                    'C' + u4.Party._reagents[(int)U4_Decompiled_AVATAR.REAGENT.GARLIC].ToString().PadLeft(2, '0') + "-Galic".PadRight(22, ' ') + '\n' +
+                    'D' + u4.Party._reagents[(int)U4_Decompiled_AVATAR.REAGENT.SPIDER_SILK].ToString().PadLeft(2, '0') + "-Spider Silk".PadRight(22, ' ') + '\n' +
+                    'E' + u4.Party._reagents[(int)U4_Decompiled_AVATAR.REAGENT.BLOOD_MOSS].ToString().PadLeft(2, '0') + "-Blood Moss".PadRight(22, ' ') + '\n' +
+                    'F' + u4.Party._reagents[(int)U4_Decompiled_AVATAR.REAGENT.BLACK_PEARL].ToString().PadLeft(2, '0') + "-Black Pearl".PadRight(22, ' ') + '\n' +
+                    'G' + u4.Party._reagents[(int)U4_Decompiled_AVATAR.REAGENT.NIGHTSHADE].ToString().PadLeft(2, '0') + "-Nightshade".PadRight(22, ' ') + '\n' +
+                    'H' + u4.Party._reagents[(int)U4_Decompiled_AVATAR.REAGENT.MANDRAKE].ToString().PadLeft(2, '0') + "-Mandrake Root".PadRight(22, ' ') + '\n' +
                     bottomStatus;
 
                 mixturesStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
                     (char)(0x10) + "Mixtures" + (char)(0x11) + '\n' +
-                    "Awak-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.AWAKEN].ToString().PadLeft(2, '0') + " IceBa-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.ICEBALLS].ToString().PadLeft(2, '0') + " Quick-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.QUICKNESS].ToString().PadLeft(2, '0') + '\n' +
-                    "Blin-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.BLINK].ToString().PadLeft(2, '0') + "  Jinx-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.JINX].ToString().PadLeft(2, '0') + "  Resu-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.RESURECTION].ToString().PadLeft(2, '0') + '\n' +
-                    "Cure-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.CURE].ToString().PadLeft(2, '0') + "  Kill-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.KILL].ToString().PadLeft(2, '0') + " Sleep-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.SLEEP].ToString().PadLeft(2, '0') + '\n' +
-                    "Disp-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.DISPELL].ToString().PadLeft(2, '0') + " Light-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.LIGHT].ToString().PadLeft(2, '0') + " Tremo-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.TREMOR].ToString().PadLeft(2, '0') + '\n' +
-                    "Eneg-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.ENERGY].ToString().PadLeft(2, '0') + " Missl-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.MAGIC_MISSLE].ToString().PadLeft(2, '0') + " Undea-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.UNDEAD].ToString().PadLeft(2, '0') + '\n' +
-                    "Fire-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.FIREBALL].ToString().PadLeft(2, '0') + " Negat-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.NEGATE].ToString().PadLeft(2, '0') + "  View-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.VIEW].ToString().PadLeft(2, '0') + '\n' +
-                    "Gate-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.GATE].ToString().PadLeft(2, '0') + "  Open-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.OPEN].ToString().PadLeft(2, '0') + " Winds-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.WINDS].ToString().PadLeft(2, '0') + '\n' +
-                    "Heal-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.HEAL].ToString().PadLeft(2, '0') + " Prote-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.PROTECT].ToString().PadLeft(2, '0') + "  X-It-" + u4.Party._mixtures[(int)U4_Decompiled.MIXTURES.X_IT].ToString().PadLeft(2, '0') + '\n' +
+                    "Awak-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.AWAKEN].ToString().PadLeft(2, '0') + " IceBa-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.ICEBALLS].ToString().PadLeft(2, '0') + " Quick-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.QUICKNESS].ToString().PadLeft(2, '0') + '\n' +
+                    "Blin-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.BLINK].ToString().PadLeft(2, '0') + "  Jinx-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.JINX].ToString().PadLeft(2, '0') + "  Resu-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.RESURECTION].ToString().PadLeft(2, '0') + '\n' +
+                    "Cure-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.CURE].ToString().PadLeft(2, '0') + "  Kill-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.KILL].ToString().PadLeft(2, '0') + " Sleep-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.SLEEP].ToString().PadLeft(2, '0') + '\n' +
+                    "Disp-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.DISPELL].ToString().PadLeft(2, '0') + " Light-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.LIGHT].ToString().PadLeft(2, '0') + " Tremo-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.TREMOR].ToString().PadLeft(2, '0') + '\n' +
+                    "Eneg-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.ENERGY].ToString().PadLeft(2, '0') + " Missl-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.MAGIC_MISSLE].ToString().PadLeft(2, '0') + " Undea-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.UNDEAD].ToString().PadLeft(2, '0') + '\n' +
+                    "Fire-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.FIREBALL].ToString().PadLeft(2, '0') + " Negat-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.NEGATE].ToString().PadLeft(2, '0') + "  View-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.VIEW].ToString().PadLeft(2, '0') + '\n' +
+                    "Gate-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.GATE].ToString().PadLeft(2, '0') + "  Open-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.OPEN].ToString().PadLeft(2, '0') + " Winds-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.WINDS].ToString().PadLeft(2, '0') + '\n' +
+                    "Heal-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.HEAL].ToString().PadLeft(2, '0') + " Prote-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.PROTECT].ToString().PadLeft(2, '0') + "  X-It-" + u4.Party._mixtures[(int)U4_Decompiled_AVATAR.MIXTURES.X_IT].ToString().PadLeft(2, '0') + '\n' +
                     bottomStatus;
 
                 equipmentStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
@@ -7066,35 +7064,35 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 itemsStatus.GetComponent<UnityEngine.UI.Text>().text = "" + '\n' +
                     "Stones: ";
 
-                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.BLUE))
+                if (u4.Party.mStones.HasFlag(U4_Decompiled_AVATAR.STONES.BLUE))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=blue>Bl</color>";
                 }
-                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.YELLOW))
+                if (u4.Party.mStones.HasFlag(U4_Decompiled_AVATAR.STONES.YELLOW))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=yellow>Ye</color>";
                 }
-                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.RED))
+                if (u4.Party.mStones.HasFlag(U4_Decompiled_AVATAR.STONES.RED))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=red>Re</color>";
                 }
-                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.GREEN))
+                if (u4.Party.mStones.HasFlag(U4_Decompiled_AVATAR.STONES.GREEN))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=green>Gr</color>";
                 }
-                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.ORANGE))
+                if (u4.Party.mStones.HasFlag(U4_Decompiled_AVATAR.STONES.ORANGE))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=orange>Or</color>";
                 }
-                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.PURPLE))
+                if (u4.Party.mStones.HasFlag(U4_Decompiled_AVATAR.STONES.PURPLE))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=purple>Pu</color>";
                 }
-                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.WHITE))
+                if (u4.Party.mStones.HasFlag(U4_Decompiled_AVATAR.STONES.WHITE))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=white>Wh</color>";
                 }
-                if (u4.Party.mStones.HasFlag(U4_Decompiled.STONES.BLACK))
+                if (u4.Party.mStones.HasFlag(U4_Decompiled_AVATAR.STONES.BLACK))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=grey>Bl</color>";
                 }
@@ -7102,35 +7100,35 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
                     "Runes: ";
 
-                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.HONOR))
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled_AVATAR.RUNES.HONOR))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Honor ";
                 }
-                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.COMPASSION))
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled_AVATAR.RUNES.COMPASSION))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Compassion ";
                 }
-                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.VALOR))
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled_AVATAR.RUNES.VALOR))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Valor ";
                 }
-                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.JUSTICE))
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled_AVATAR.RUNES.JUSTICE))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Justice ";
                 }
-                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.HUMILITY))
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled_AVATAR.RUNES.HUMILITY))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Humility ";
                 }
-                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.HONESTY))
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled_AVATAR.RUNES.HONESTY))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Honesty ";
                 }
-                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.SPIRITUALITY))
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled_AVATAR.RUNES.SPIRITUALITY))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Spirituality ";
                 }
-                if (u4.Party.mRunes.HasFlag(U4_Decompiled.RUNES.SACRIFICE))
+                if (u4.Party.mRunes.HasFlag(U4_Decompiled_AVATAR.RUNES.SACRIFICE))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Sacrifice";
                 }
@@ -7138,27 +7136,27 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
                    "Items: ";
 
-                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.BELL))
+                if (u4.Party.mItems.HasFlag(U4_Decompiled_AVATAR.ITEMS.BELL))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Bell ";
                 }
-                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.BOOK))
+                if (u4.Party.mItems.HasFlag(U4_Decompiled_AVATAR.ITEMS.BOOK))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Book ";
                 }
-                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.WHEEL))
+                if (u4.Party.mItems.HasFlag(U4_Decompiled_AVATAR.ITEMS.WHEEL))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Wheel ";
                 }
-                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.HORN))
+                if (u4.Party.mItems.HasFlag(U4_Decompiled_AVATAR.ITEMS.HORN))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Horn ";
                 }
-                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.CANDLE))
+                if (u4.Party.mItems.HasFlag(U4_Decompiled_AVATAR.ITEMS.CANDLE))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Candle ";
                 }
-                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.SKULL))
+                if (u4.Party.mItems.HasFlag(U4_Decompiled_AVATAR.ITEMS.SKULL))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Skull ";
                 }
@@ -7166,15 +7164,15 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
                    "Key:";
 
-                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.LOVE_KEY))
+                if (u4.Party.mItems.HasFlag(U4_Decompiled_AVATAR.ITEMS.LOVE_KEY))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Love ";
                 }
-                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.TRUTH_KEY))
+                if (u4.Party.mItems.HasFlag(U4_Decompiled_AVATAR.ITEMS.TRUTH_KEY))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Truth ";
                 }
-                if (u4.Party.mItems.HasFlag(U4_Decompiled.ITEMS.COMPASSION_KEY))
+                if (u4.Party.mItems.HasFlag(U4_Decompiled_AVATAR.ITEMS.COMPASSION_KEY))
                 {
                     itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Compassion";
                 }
@@ -7183,7 +7181,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     (char)(0x10) + "Items" + (char)(0x11) + "\n\n\n\n\n\n\n\n\n" +
                     bottomStatus;
 
-                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.CHARACTER_OVERVIEW)
+                if (u4.zstats_mode == U4_Decompiled_AVATAR.ZSTATS_MODE.CHARACTER_OVERVIEW)
                 {
                     statsOverview.SetActive(true);
                 }
@@ -7191,7 +7189,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 {
                     statsOverview.SetActive(false);
                 }
-                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.CHARACTER_DETAIL)
+                if (u4.zstats_mode == U4_Decompiled_AVATAR.ZSTATS_MODE.CHARACTER_DETAIL)
                 {
                     for (int i = 0; i < 8; i++)
                     {
@@ -7214,7 +7212,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
 
                 }
 
-                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.WEAPONS)
+                if (u4.zstats_mode == U4_Decompiled_AVATAR.ZSTATS_MODE.WEAPONS)
                 {
                     weaponsStatus.SetActive(true);
                 }
@@ -7222,7 +7220,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                 {
                     weaponsStatus.SetActive(false);
                 }
-                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.ARMOUR)
+                if (u4.zstats_mode == U4_Decompiled_AVATAR.ZSTATS_MODE.ARMOUR)
                 {
                     armourStatus.SetActive(true);
                 }
@@ -7231,7 +7229,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     armourStatus.SetActive(false);
                 }
 
-                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.EQUIPMENT)
+                if (u4.zstats_mode == U4_Decompiled_AVATAR.ZSTATS_MODE.EQUIPMENT)
                 {
                     equipmentStatus.SetActive(true);
                 }
@@ -7240,7 +7238,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     equipmentStatus.SetActive(false);
                 }
 
-                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.ITEMS)
+                if (u4.zstats_mode == U4_Decompiled_AVATAR.ZSTATS_MODE.ITEMS)
                 {
                     itemsStatus.SetActive(true);
                 }
@@ -7249,7 +7247,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     itemsStatus.SetActive(false);
                 }
 
-                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.MIXTURES)
+                if (u4.zstats_mode == U4_Decompiled_AVATAR.ZSTATS_MODE.MIXTURES)
                 {
                     mixturesStatus.SetActive(true);
                 }
@@ -7258,7 +7256,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     mixturesStatus.SetActive(false);
                 }
 
-                if (u4.zstats_mode == U4_Decompiled.ZSTATS_MODE.REAGENTS)
+                if (u4.zstats_mode == U4_Decompiled_AVATAR.ZSTATS_MODE.REAGENTS)
                 {
                     reagentsStatus.SetActive(true);
                 }
@@ -7294,7 +7292,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
         Vector3 rot = partyGameObject.transform.eulerAngles;
         partyGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
 
-        U4_Decompiled.MODE currentMode = u4.current_mode;
+        U4_Decompiled_AVATAR.MODE currentMode = u4.current_mode;
 
         // we've moved, regenerate the raycast, TODO NPCs can also affect the raycast when moving, need to check them also or redo raycast more often
         if ((u4.Party._x != lastRaycastPlayer_posx) || // player moved
@@ -7312,7 +7310,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
             lastRaycastPlayer_f_1dc = u4.Party.f_1dc; // flying in the balloon or not or dungeon torch active
             last_door_timer = (u4.open_door_timer > 0);
 
-            if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
+            if (u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS)
             {
                 // generate a new raycast
                 raycast(ref entireMapTILEs,
@@ -7321,12 +7319,12 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     ref raycastOutdoorMap, 
                     ((u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1) ) ,
                     ((u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1) ) , 
-                    U4_Decompiled.TILE.BLANK);
+                    U4_Decompiled_AVATAR.TILE.BLANK);
                 location = new Vector3(
                     ((u4.Party._x - raycastOutdoorMap.GetLength(0) / 2) - 1) , 0, 
                     entireMapTILEs.GetLength(1) - ((u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1) ) - raycastOutdoorMap.GetLength(1));
             }
-            else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING)
             {
                 // generate a new raycast based on game engine map
                 raycast(ref u4.tMap32x32, 
@@ -7335,14 +7333,14 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     ref raycastSettlementMap, 
                     ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) ), 
                     ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) ), 
-                    U4_Decompiled.TILE.GRASS);
+                    U4_Decompiled_AVATAR.TILE.GRASS);
                 location = new Vector3(
                     ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) ) , 0,
                     entireMapTILEs.GetLength(1) - ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) )  - raycastSettlementMap.GetLength(1));
             }
 
             // create the game object children with meshes and textures
-            if (u4.current_mode == U4_Decompiled.MODE.OUTDOORS)
+            if (u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS)
             {
                 Combine.Combine3(mainTerrain, 
                     ref raycastOutdoorMap, 
@@ -7360,12 +7358,12 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
                     
                 location = Vector3.zero;
             }
-            else if (u4.current_mode == U4_Decompiled.MODE.BUILDING)
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING)
             {
                     
                 SETTLEMENT settlement;
                 // get the current settlement, need to special case BRITANNIA as the castle has two levels, use the ladder to determine which level
-                if ((u4.Party._loc == U4_Decompiled.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == U4_Decompiled.TILE.LADDER_UP))
+                if ((u4.Party._loc == U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == U4_Decompiled_AVATAR.TILE.LADDER_UP))
                 {
                     settlement = SETTLEMENT.LCB_1;
                 }
@@ -7479,7 +7477,7 @@ bool CheckTileForOpacity(U4_Decompiled.TILE tileIndex)
     public GameObject reagentsStatus;
     public GameObject mixturesStatus;
 
-    public U4_Decompiled.MODE lastMode = (U4_Decompiled.MODE )(-1);
+    public U4_Decompiled_AVATAR.MODE lastMode = (U4_Decompiled_AVATAR.MODE )(-1);
     public bool wasJustInside = false;
     public bool readyToAutomaticallyEnter = true;
 

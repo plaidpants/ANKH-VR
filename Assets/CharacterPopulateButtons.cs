@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CharacterPopulateButtons : MonoBehaviour
 {
-    public U4_Decompiled u4;
+    public U4_Decompiled_AVATAR u4;
 
     public GameObject[] CharacterButtons = new GameObject[8];
     public Text[] CharacterButtonsText = new Text[8];

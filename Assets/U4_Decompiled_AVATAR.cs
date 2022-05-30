@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using System.IO;
 using System.Text.RegularExpressions;
 
-public class U4_Decompiled : MonoBehaviour
+public class U4_Decompiled_AVATAR : MonoBehaviour
 {
     private Thread trd;
 
@@ -2221,7 +2221,7 @@ sfx_magic2:
     TALK_INDEX lastNPCTalkIndex = (TALK_INDEX)(-1);
 
     // extra surface rotation feature maintained outside of the game engine
-    public U4_Decompiled.DIRECTION surface_party_direction = DIRECTION.NORTH;
+    public U4_Decompiled_AVATAR.DIRECTION surface_party_direction = DIRECTION.NORTH;
 
     public float resetJoystick1 = 0f;
     public float resetJoystick2 = 0f;
@@ -2359,7 +2359,7 @@ sfx_magic2:
             resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
                     (((current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP))
-                    && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+                    && (Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
@@ -2454,7 +2454,7 @@ sfx_magic2:
             resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
                     (((current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP))
-                    && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+                    && (Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
@@ -2547,7 +2547,7 @@ sfx_magic2:
             resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
                     (((current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP)) 
-                    && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+                    && (Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
@@ -2644,7 +2644,7 @@ sfx_magic2:
             resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
                     (((current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP)) 
-                    && (Party._loc >= U4_Decompiled.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
+                    && (Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS)))
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
@@ -3312,13 +3312,13 @@ sfx_magic2:
                         musicSource.Stop();
 
                         // check if we are outdoors
-                        if (current_mode == U4_Decompiled.MODE.OUTDOORS)
+                        if (current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS)
                         {
                             // select the outdoor music clip
                             musicSource.clip = music[(int)MUSIC.WANDERER];
                         }
                         // check if we are in a building
-                        else if (current_mode == U4_Decompiled.MODE.BUILDING)
+                        else if (current_mode == U4_Decompiled_AVATAR.MODE.BUILDING)
                         {
                             // is the building a castle or town or village
                             if ((Party._loc == LOCATIONS.BRITANNIA) ||
@@ -3336,13 +3336,13 @@ sfx_magic2:
                             }
                         }
                         // check if we are in a dungoen
-                        else if (current_mode == U4_Decompiled.MODE.DUNGEON)
+                        else if (current_mode == U4_Decompiled_AVATAR.MODE.DUNGEON)
                         {
                             // select the dungeon music
                             musicSource.clip = music[(int)MUSIC.DUNGEON];
                         }
                         // check if we are in combat
-                        else if (current_mode == U4_Decompiled.MODE.COMBAT)
+                        else if (current_mode == U4_Decompiled_AVATAR.MODE.COMBAT)
                         {
                             // select the combat music
                             musicSource.clip = music[(int)MUSIC.COMBAT];
@@ -3350,19 +3350,19 @@ sfx_magic2:
                         // check if we are in camp
                         // TODO: the camp music seems a little off for the sleeping party unless
                         // there is an unexpected combat while sleeping
-                        else if (current_mode == U4_Decompiled.MODE.COMBAT_CAMP)
+                        else if (current_mode == U4_Decompiled_AVATAR.MODE.COMBAT_CAMP)
                         {
                             // select the combat music
                             musicSource.clip = music[(int)MUSIC.COMBAT];
                         }
                         // check if we are in combat in a dungeon room
-                        else if (current_mode == U4_Decompiled.MODE.COMBAT_ROOM)
+                        else if (current_mode == U4_Decompiled_AVATAR.MODE.COMBAT_ROOM)
                         {
                             // select the combat music
                             musicSource.clip = music[(int)MUSIC.COMBAT];
                         }
                         // check if we are in a shrine
-                        else if (current_mode == U4_Decompiled.MODE.SHRINE)
+                        else if (current_mode == U4_Decompiled_AVATAR.MODE.SHRINE)
                         {
                             // select the shrine music
                             musicSource.clip = music[(int)MUSIC.SHRINES];
@@ -3505,13 +3505,13 @@ sfx_magic2:
 #if USE_UNITY_DLL_FUNCTION
             D_96F8 = main_D_96F8();
 #else
-            D_96F8 = Native.Invoke<U4_Decompiled.TILE, main_D_96F8>(nativeLibraryPtr);
+            D_96F8 = Native.Invoke<U4_Decompiled_AVATAR.TILE, main_D_96F8>(nativeLibraryPtr);
 #endif
 
 #if USE_UNITY_DLL_FUNCTION
             D_946C = main_D_946C();
 #else
-            D_946C = Native.Invoke<U4_Decompiled.TILE, main_D_946C>(nativeLibraryPtr);
+            D_946C = Native.Invoke<U4_Decompiled_AVATAR.TILE, main_D_946C>(nativeLibraryPtr);
 #endif
 
 
@@ -3533,7 +3533,7 @@ sfx_magic2:
 #if USE_UNITY_DLL_FUNCTION
             moongate_tile = main_D_9141();
 #else
-            moongate_tile = Native.Invoke<U4_Decompiled.TILE, main_D_9141>(nativeLibraryPtr);
+            moongate_tile = Native.Invoke<U4_Decompiled_AVATAR.TILE, main_D_9141>(nativeLibraryPtr);
 #endif
 
 #if USE_UNITY_DLL_FUNCTION
@@ -3572,7 +3572,7 @@ sfx_magic2:
 #if USE_UNITY_DLL_FUNCTION
             current_tile = main_tile_cur();
 #else
-            current_tile = Native.Invoke<U4_Decompiled.TILE, main_tile_cur>(nativeLibraryPtr);
+            current_tile = Native.Invoke<U4_Decompiled_AVATAR.TILE, main_tile_cur>(nativeLibraryPtr);
 #endif
 
             // read in current hit info list, the tile draws occurr out of the main draw sequence
@@ -3644,7 +3644,7 @@ sfx_magic2:
 #if USE_UNITY_DLL_FUNCTION
             current_mode = main_CurMode();
 #else
-            current_mode = Native.Invoke<U4_Decompiled.MODE, main_CurMode>(nativeLibraryPtr);
+            current_mode = Native.Invoke<U4_Decompiled_AVATAR.MODE, main_CurMode>(nativeLibraryPtr);
 #endif
 
             if (current_mode != lastMode)

@@ -486,7 +486,7 @@ public static class Combine
     }
 
     public static void Combine3(GameObject mapGameObject,
-        ref U4_Decompiled.TILE[,] map,
+        ref U4_Decompiled_AVATAR.TILE[,] map,
         int offset_x,
         int offset_y,
         ref GameObject[,] mapGameObjects,
@@ -497,7 +497,7 @@ public static class Combine
         Material combinedLinearMaterial,
         int billboardx,
         int billboardy,
-        U4_Decompiled.DIRECTION direction)
+        U4_Decompiled_AVATAR.DIRECTION direction)
     {
         GameObject terrainGameObject;
         GameObject animatedTerrrainGameObject;
@@ -615,10 +615,10 @@ public static class Combine
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    U4_Decompiled.TILE tileIndex = map[i, j];
+                    U4_Decompiled_AVATAR.TILE tileIndex = map[i, j];
 
                     // only count them if the raycaster has copied the tile
-                    if (tileIndex != U4_Decompiled.TILE.BLANK)
+                    if (tileIndex != U4_Decompiled_AVATAR.TILE.BLANK)
                     {
                         int x;
                         int y;
@@ -635,21 +635,21 @@ public static class Combine
                             }
                         }
 
-                        if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) ||
-                            ((tileIndex >= U4_Decompiled.TILE.POISON_FIELD) && (tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD)) ||
-                            (tileIndex == U4_Decompiled.TILE.LAVA))
+                        if ((tileIndex <= U4_Decompiled_AVATAR.TILE.SHALLOW_WATER) ||
+                            ((tileIndex >= U4_Decompiled_AVATAR.TILE.POISON_FIELD) && (tileIndex <= U4_Decompiled_AVATAR.TILE.SLEEP_FIELD)) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.LAVA))
                         {
                             // increment the count
                             countAnimatedTerrrain++;
                         }
-                        else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
-                            (tileIndex == U4_Decompiled.TILE.TOWN) ||
-                            (tileIndex == U4_Decompiled.TILE.VILLAGE) ||
-                            (tileIndex == U4_Decompiled.TILE.ANKH) ||
-                            (tileIndex == U4_Decompiled.TILE.LADDER_UP) ||
-                            (tileIndex == U4_Decompiled.TILE.LADDER_DOWN) ||
-                            (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
-                            (tileIndex == U4_Decompiled.TILE.CASTLE))
+                        else if ((tileIndex == U4_Decompiled_AVATAR.TILE.FOREST) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.TOWN) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.VILLAGE) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.ANKH) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_UP) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_DOWN) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.COOKING_FIRE) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.CASTLE))
                         {
                             countBillboardTerrrain++;
                         }
@@ -676,10 +676,10 @@ public static class Combine
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    U4_Decompiled.TILE tileIndex = map[i, j];
+                    U4_Decompiled_AVATAR.TILE tileIndex = map[i, j];
 
                     // only add them if the raycaster has copied the tile
-                    if (tileIndex != U4_Decompiled.TILE.BLANK)
+                    if (tileIndex != U4_Decompiled_AVATAR.TILE.BLANK)
                     {
                         int x;
                         int y;
@@ -704,9 +704,9 @@ public static class Combine
                             mapGameObjects[x, y].transform.localPosition = new Vector3(x, mapGameObjects.GetLength(1) - 1 - y, mapGameObjects[x, y].transform.localPosition.z);
                         }
 
-                        if ((tileIndex <= U4_Decompiled.TILE.SHALLOW_WATER) ||
-                            ((tileIndex >= U4_Decompiled.TILE.POISON_FIELD) && (tileIndex <= U4_Decompiled.TILE.SLEEP_FIELD)) ||
-                            (tileIndex == U4_Decompiled.TILE.LAVA))
+                        if ((tileIndex <= U4_Decompiled_AVATAR.TILE.SHALLOW_WATER) ||
+                            ((tileIndex >= U4_Decompiled_AVATAR.TILE.POISON_FIELD) && (tileIndex <= U4_Decompiled_AVATAR.TILE.SLEEP_FIELD)) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.LAVA))
                         {
                             // add the game object mesh to the list we want to combine
                             animatedTerrrainCombine[countAnimatedTerrrain].mesh = mapGameObjects[x, y].GetComponent<MeshFilter>().mesh;
@@ -717,14 +717,14 @@ public static class Combine
                             // increment the count
                             countAnimatedTerrrain++;
                         }
-                        else if ((tileIndex == U4_Decompiled.TILE.FOREST) ||
-                            (tileIndex == U4_Decompiled.TILE.TOWN) ||
-                            (tileIndex == U4_Decompiled.TILE.ANKH) ||
-                            (tileIndex == U4_Decompiled.TILE.VILLAGE) ||
-                            (tileIndex == U4_Decompiled.TILE.LADDER_UP) ||
-                            (tileIndex == U4_Decompiled.TILE.LADDER_DOWN) ||
-                            (tileIndex == U4_Decompiled.TILE.COOKING_FIRE) ||
-                            (tileIndex == U4_Decompiled.TILE.CASTLE))
+                        else if ((tileIndex == U4_Decompiled_AVATAR.TILE.FOREST) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.TOWN) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.ANKH) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.VILLAGE) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_UP) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_DOWN) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.COOKING_FIRE) ||
+                            (tileIndex == U4_Decompiled_AVATAR.TILE.CASTLE))
                         {
                             GameObject mapTile = mapGameObjects[x, y];
                             Vector3 saveLocalPosition = mapTile.transform.localPosition;
@@ -738,19 +738,19 @@ public static class Combine
                             // TODO hook this up to the actual camera position
                             //look = new Vector3(Camera.main.transform.position.x - saveLocalPosition.x, 0.0f, 255 - Camera.main.transform.position.z - saveLocalPosition.y);
 
-                            if (direction == U4_Decompiled.DIRECTION.NORTH)
+                            if (direction == U4_Decompiled_AVATAR.DIRECTION.NORTH)
                             {
                                 look = new Vector3(billboardx - saveLocalPosition.x, 0.0f, 255 - (billboardy + 10) - saveLocalPosition.y);
                             }
-                            else if(direction == U4_Decompiled.DIRECTION.SOUTH)
+                            else if(direction == U4_Decompiled_AVATAR.DIRECTION.SOUTH)
                             {
                                 look = new Vector3(billboardx - saveLocalPosition.x, 0.0f, 255 - (billboardy - 10) - saveLocalPosition.y);
                             }
-                            else if (direction == U4_Decompiled.DIRECTION.EAST)
+                            else if (direction == U4_Decompiled_AVATAR.DIRECTION.EAST)
                             {
                                 look = new Vector3((billboardx - 10) - saveLocalPosition.x, 0.0f, 255 - billboardy - saveLocalPosition.y);
                             }
-                            else if (direction == U4_Decompiled.DIRECTION.WEST)
+                            else if (direction == U4_Decompiled_AVATAR.DIRECTION.WEST)
                             {
                                 look = new Vector3((billboardx + 10) - saveLocalPosition.x, 0.0f, 255 - billboardy - saveLocalPosition.y);
                             }

@@ -5,8 +5,8 @@ using UnityEngine;
 public class Animate3 : MonoBehaviour
 {
     public World world;
-    public U4_Decompiled.TILE npcTile;
-    public U4_Decompiled.TILE[] animationFrameIndexes;
+    public U4_Decompiled_AVATAR.TILE npcTile;
+    public U4_Decompiled_AVATAR.TILE[] animationFrameIndexes;
     int frame = 0;
     float timer = 0.0f;
     float timerExpired = 0.0f;
@@ -18,7 +18,7 @@ public class Animate3 : MonoBehaviour
     {
     }
 
-    public void SetNPCTile(U4_Decompiled.TILE tile)
+    public void SetNPCTile(U4_Decompiled_AVATAR.TILE tile)
     {
         // check if this npc tile is already set correctly
         if (npcTile == tile)
@@ -42,11 +42,11 @@ public class Animate3 : MonoBehaviour
             // set the other frames based on the intial frame
             if (((int)npcTile % 2) == 0)
             {
-                animationFrameIndexes = new U4_Decompiled.TILE[2] { npcTile, npcTile + 1 }; 
+                animationFrameIndexes = new U4_Decompiled_AVATAR.TILE[2] { npcTile, npcTile + 1 }; 
             }
             else
             {
-                animationFrameIndexes = new U4_Decompiled.TILE[2] { npcTile, npcTile - 1 };
+                animationFrameIndexes = new U4_Decompiled_AVATAR.TILE[2] { npcTile, npcTile - 1 };
             }
         }
         // the npc has four animation tiles in this tile range
@@ -59,24 +59,24 @@ public class Animate3 : MonoBehaviour
             // set the other frames based on the intial frame
             if      (((int)npcTile % 4) == 0)
             {
-                animationFrameIndexes = new U4_Decompiled.TILE[4] { npcTile, npcTile + 1, npcTile + 2, npcTile + 3 };
+                animationFrameIndexes = new U4_Decompiled_AVATAR.TILE[4] { npcTile, npcTile + 1, npcTile + 2, npcTile + 3 };
             }
             else if (((int)npcTile % 4) == 1)
             {
-                animationFrameIndexes = new U4_Decompiled.TILE[4] { npcTile, npcTile + 1, npcTile + 2, npcTile - 1 };
+                animationFrameIndexes = new U4_Decompiled_AVATAR.TILE[4] { npcTile, npcTile + 1, npcTile + 2, npcTile - 1 };
             }
             else if (((int)npcTile % 4) == 2)
             {
-                animationFrameIndexes = new U4_Decompiled.TILE[4] { npcTile, npcTile + 1, npcTile - 2, npcTile - 1 };
+                animationFrameIndexes = new U4_Decompiled_AVATAR.TILE[4] { npcTile, npcTile + 1, npcTile - 2, npcTile - 1 };
             }
             else if (((int)npcTile % 4) == 3)
             {
-                animationFrameIndexes = new U4_Decompiled.TILE[4] { npcTile, npcTile -3, npcTile - 2, npcTile - 1 };
+                animationFrameIndexes = new U4_Decompiled_AVATAR.TILE[4] { npcTile, npcTile -3, npcTile - 2, npcTile - 1 };
             }
             else
             {
                 // should never get here
-                animationFrameIndexes = new U4_Decompiled.TILE[4] { npcTile, npcTile + 1, npcTile + 2, npcTile + 3 };
+                animationFrameIndexes = new U4_Decompiled_AVATAR.TILE[4] { npcTile, npcTile + 1, npcTile + 2, npcTile + 3 };
             }
         }
         // npc does not have any animation tiles
@@ -86,7 +86,7 @@ public class Animate3 : MonoBehaviour
             ObjectRenderer.material.mainTexture = world.originalTiles[(int)npcTile];
 
             // add only one frame to the animation
-            animationFrameIndexes = new U4_Decompiled.TILE[1] { npcTile };
+            animationFrameIndexes = new U4_Decompiled_AVATAR.TILE[1] { npcTile };
         }
 
         // check if this one is disabled

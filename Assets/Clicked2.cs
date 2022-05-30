@@ -24,7 +24,7 @@ public class Clicked2 : MonoBehaviour
 
     public void OnClicked()
     {
-        U4_Decompiled.clickedButtonName = transform.gameObject.name;
+        U4_Decompiled_AVATAR.clickedButtonName = transform.gameObject.name;
         if (engine)
         {
             if (mode == MODE.BUTTON)
