@@ -1953,11 +1953,11 @@ catch
 
     public enum SOUND_EFFECT
     {
-        FOOTSTEP = 0,
-        BLOCKED = 1,
-        WHAT = 2,
-        CANNON = 3,
-        PLAYER_ATTACK = 4,
+        FOOTSTEP = 0, // small pulse
+        BLOCKED = 1, // one short low tone, 8 pulses 0.078s 102.564 fequency
+        WHAT = 2, // two short tones (high then low) 23.5 pulses 0.084s 273.809 fequency, 8 pulses 0.078s 102.564 fequency
+        CANNON = 3, // frequency decrease from 1000Hz to 200Hz over 0.27s, not linear frequency
+        PLAYER_ATTACK = 4, // frequency increase from 250Hz to 500Hz over 0.2s, not linear frequency
         FOE_ATTACK = 5,
         PLAYER_HITS = 6,
         FOE_HITS = 7,
@@ -2047,6 +2047,7 @@ sfx_magic1:
         float[] data;
         float phase = 0;
         float sampleCount = 0f;
+        int next = 0;
 
         // make some random frequencies and calc total samples based on those frequencies
         for (int i = 0; i < length; i++)
@@ -2058,6 +2059,8 @@ sfx_magic1:
 
         // allocate total clip size based on above
         data = new float[(int)sampleCount * 2];
+
+        frequency = fequencies[next++];
 
         // create the samples
         for (int i = 0; i < data.Length; i += channels)
@@ -2085,7 +2088,8 @@ sfx_magic1:
             if (count > cycles)
             {
                 count = 0;
-                frequency = Random.Range(min, max);
+                //frequency = Random.Range(min, max);
+                frequency = fequencies[next++];
             }
         }
 
@@ -2152,6 +2156,8 @@ sfx_magic2:
     // used to tune the magic effect tone
     public float adjustSound = 94f;
 
+
+
     AudioClip CreateMagicEffectsSpecialEffectSound(int length)
     {
         float sampleRate = 44100;
@@ -2212,6 +2218,695 @@ sfx_magic2:
         // return the audio clip
         return soundEffect;
     }
+
+    /*
+sfx_error2:
+ ldy #$32
+@delay:
+ pha
+ pla
+ dex
+ bne @delay
+ bit hw_SPEAKER
+ dey
+ bne @delay
+ rts
+    */
+
+    AudioClip CreateBlockedSound()
+    {
+        float sampleRate = 44100;
+        int channels = 2;
+        int count = 0;
+        float[] data;
+        float phase = 0;
+        float sampleCount = 0f;
+
+        float frequency = 102.564f;
+
+        sampleCount += (float)8 * sampleRate / frequency;
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            phase += 2 * Mathf.PI * frequency / sampleRate;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // square wave
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.5f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase >= 2 * Mathf.PI)
+            {
+                phase -= 2 * Mathf.PI;
+                count++;
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("blocked", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
+
+    /*
+sfx_ship_fire:
+	ldx #$00
+	stx zp_sfx_freq
+@delay:
+	inx
+	bne @delay
+	bit hw_SPEAKER
+	dec zp_sfx_freq
+	ldx zp_sfx_freq
+	bne @delay
+	rts
+*/
+
+    AudioClip CreateCannonSound()
+    {
+        float sampleRate = 44100;
+        int channels = 2;
+        int count = 0;
+        float frequency = 0;
+        float[] data;
+        float phase = 0;
+        float sampleCount = 0f;
+        float phaseDelta;
+
+        sampleCount = 0.27f * sampleRate;
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            frequency = 980f - 0.13f * i/2f + 0.000005555556f * i * i/4f;
+
+            phaseDelta = 2 * Mathf.PI * frequency / sampleRate;
+
+            phase += phaseDelta;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // sine wave
+                //data[i + j] = Mathf.Sin(phase);
+
+                // square wave
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.0f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase >= 2 * Mathf.PI)
+            {
+                phase -= 2 * Mathf.PI;
+                count++;
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("cannon", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
+
+    /*
+sfx_error1:
+ldy #$32
+@delay:
+nop
+nop
+dex
+bne @delay
+bit hw_SPEAKER
+dey
+bne @delay
+jmp sfx_error2
+*/
+    AudioClip CreateWhatSound()
+    {
+        float sampleRate = 44100;
+        int channels = 2;
+        int count = 0;
+        float frequency = 0;
+        float[] fequencies = new float[2];
+        float[] data;
+        float phase = 0;
+        float sampleCount = 0f;
+
+        fequencies[0] = 273.809f;
+        fequencies[1] = 102.564f;
+        frequency = fequencies[0];
+
+        sampleCount += (float)23 * sampleRate / fequencies[0];
+        sampleCount += (float)8 * sampleRate / fequencies[1];
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            phase += 2 * Mathf.PI * frequency / sampleRate;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // square wave
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.5f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase >= 2 * Mathf.PI)
+            {
+                phase -= 2 * Mathf.PI;
+                count++;
+            }
+
+            // switch to a new frequency after so many cycles
+            if (count > 23)
+            {
+                count = 0;
+                frequency = fequencies[1];
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("what", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
+    /*
+     * ; VALUES for A when calling j_playsfx
+
+sound_footstep = $00
+sound_blocked = $01
+sound_what = $02
+sound_cannon = $03
+sound_player_attack = $04
+sound_foe_attack = $05
+sound_damage = $06
+sound_firewalk = $07
+sound_alert = $08
+sound_spell_effect = $09
+sound_cast = $0a
+sound_drown = $0b
+sound_twister = $0c
+
+    sfxtab:
+	.addr sfx_walk-1
+	.addr sfx_error2-1
+	.addr sfx_error1-1
+	.addr sfx_ship_fire-1
+	.addr sfx_attack-1
+	.addr sfx_unknown-1
+	.addr sfx_player_hits-1
+	.addr sfx_monster_hits-1
+	.addr sfx_flee-1
+	.addr sfx_magic2-1
+	.addr sfx_magic1-1
+	.addr sfx_whirlpool-1
+	.addr sfx_storm-1
+    */
+
+    /*
+sfx_walk:
+	ldy #$06
+@repeat:
+	jsr rand
+	and #$3f
+	ora #$20
+	tax
+@delay:
+	dex
+	bne @delay
+	bit hw_SPEAKER
+	dey
+	bne @repeat
+	rts
+    */
+    AudioClip CreateFootStepSpecialEffectSound(float length, int pulse)
+    {
+        float sampleRate = 44100;
+        float sampleCount;
+        int channels = 2;
+        float[] data;
+
+        sampleCount = length * sampleRate;
+
+        // allocate total clip size based on above one pulse
+        data = new float[(int)sampleCount * channels];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            float value;
+            // TODO add small ramp up and ramp down? 4 steps?
+            if ((i > (data.Length / 2) - (sampleCount / pulse / 2)) && (i < (data.Length / 2) + (sampleCount / pulse / 2)))
+            {
+                value = 0.20f;
+            }
+            else
+            {
+                value = -0.20f;
+            }
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                data[i + j] = value;
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("footstep", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
+
+    /*
+sfx_attack:
+	lda #$ff
+	tax
+	tay
+@delay:
+	dex
+	bne @delay
+	bit hw_SPEAKER
+	dey
+	tya
+	tax
+	bmi @delay
+	rts
+    */
+    AudioClip CreatePlayerAttachSound()
+    {
+        float sampleRate = 44100;
+        int channels = 2;
+        int count = 0;
+        float frequency = 0;
+        float[] data;
+        float phase = 0;
+        float sampleCount = 0f;
+        float phaseDelta;
+
+        sampleCount = 0.185f * sampleRate;
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            frequency = 250f + 250f*((float)i / (float)data.Length);
+
+            phaseDelta = 2 * Mathf.PI * frequency / sampleRate;
+
+            phase += phaseDelta;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // sine wave
+                //data[i + j] = Mathf.Sin(phase);
+
+                // square wave
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.0f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase >= 2 * Mathf.PI)
+            {
+                phase -= 2 * Mathf.PI;
+                count++;
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("player attack", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
+
+    /*
+sfx_unknown:
+	lda #$80
+	tax
+	tay
+@delay:
+	dex
+	bne @delay
+	bit hw_SPEAKER
+	iny
+	tya
+	tax
+	bmi @delay
+	rts
+    */
+    AudioClip CreateMonsterAttachSound()
+    {
+        float sampleRate = 44100;
+        int channels = 2;
+        int count = 0;
+        float frequency = 0;
+        float[] data;
+        float phase = 0;
+        float sampleCount = 0f;
+        float phaseDelta;
+
+        sampleCount = 0.3f * sampleRate;
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            frequency = 315f - 150f * ((float)i / (float)data.Length);
+
+            phaseDelta = 2 * Mathf.PI * frequency / sampleRate;
+
+            phase += phaseDelta;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // sine wave
+                //data[i + j] = Mathf.Sin(phase);
+
+                // square wave
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.0f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase >= 2 * Mathf.PI)
+            {
+                phase -= 2 * Mathf.PI;
+                count++;
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("monster attack", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
+
+    /*
+sfx_player_hits:
+	ldy #$ff
+@repeat:
+	jsr rand
+	and #$7f
+	tax
+@delay:
+	dex
+	bne @delay
+	bit hw_SPEAKER
+	dey
+	bne @repeat
+	rts
+    */
+
+    AudioClip CreatePlayerHitSound(float length)
+    {
+        float sampleRate = 44100;
+        float max = 1000f;
+        float min = 400f;
+        int channels = 2;
+        int cycles = 0;
+        int count = 0;
+        float frequency;
+        float[] data;
+        float phase = 0;
+        float sampleCount;
+
+        sampleCount = length * sampleRate;
+
+        frequency = Random.Range(min, max);
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            phase += 2 * Mathf.PI * frequency / sampleRate;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // sine wave
+                //data[i + j] = Mathf.Sin(phase);
+
+                // square wave
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.5f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase >= 2 * Mathf.PI)
+            {
+                phase -= 2 * Mathf.PI;
+                count++;
+            }
+
+            // switch to a new frequency after so many cycles
+            if (count > cycles)
+            {
+                count = 0;
+                frequency = Random.Range(min, max);
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("player hit", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
+
+    /*
+sfx_monster_hits:
+	ldy #$ff
+@repeat:
+	jsr rand
+	ora #$80
+	tax
+@delay:
+	dex
+	bne @delay
+	bit hw_SPEAKER
+	dey
+	bne @repeat
+	rts
+    */
+
+    AudioClip CreateMonsterHitSound(float length)
+    {
+        float sampleRate = 44100;
+        float max = 800f;
+        float min = 200f;
+        int channels = 2;
+        int cycles = 0;
+        int count = 0;
+        float frequency;
+        float[] data;
+        float phase = 0;
+        float sampleCount;
+
+        sampleCount = length * sampleRate;
+
+        frequency = Random.Range(min, max);
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            phase += 2 * Mathf.PI * frequency / sampleRate;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // sine wave
+                //data[i + j] = Mathf.Sin(phase);
+
+                // square wave
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.5f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase >= 2 * Mathf.PI)
+            {
+                phase -= 2 * Mathf.PI;
+                count++;
+            }
+
+            // switch to a new frequency after so many cycles
+            if (count > cycles)
+            {
+                count = 0;
+                frequency = Random.Range(min, max);
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("player hit", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
+
+    /*
+sfx_flee:
+	ldx #$7f
+	stx zp_sfx_freq
+@delay:
+	dex
+	bne @delay
+	bit hw_SPEAKER
+	dec zp_sfx_freq
+	ldx zp_sfx_freq
+	bne @delay
+	rts
+    */
+    AudioClip CreateFleeSound()
+    {
+        float sampleRate = 44100;
+        int channels = 2;
+        int count = 0;
+        float frequency = 0;
+        float[] data;
+        float phase = 0;
+        float sampleCount = 0f;
+        float phaseDelta;
+
+        sampleCount = 0.07f * sampleRate;
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            //frequency = 500f + 1000f * ((float)i / (float)data.Length);
+            frequency = 537.5f - 0.04375f * i + 0.000046875f * i * i; 
+            //frequency = 435f - 0.0075f * i + 0.00004375f * i * i;
+
+            phaseDelta = 2 * Mathf.PI * frequency / sampleRate;
+
+            phase += phaseDelta;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // sine wave
+                //data[i + j] = Mathf.Sin(phase);
+
+                // square wave
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.0f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase >= 2 * Mathf.PI)
+            {
+                phase -= 2 * Mathf.PI;
+                count++;
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("player attack", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
+
+    /*
+    sfx_whirlpool:
+	lda #$40
+@1:
+	ldy #$20
+@2:
+	tax
+@3:
+	pha
+	pla
+	dex
+	bne @3
+	bit hw_SPEAKER
+	dey
+	bne @2
+	clc
+	adc #$01
+	cmp #$c0
+	bcc @1
+	rts
+    */
+
+    /*
+sfx_storm:
+	lda #$c0
+@1:
+	ldy #$20
+@2:
+	tax
+@3:
+	pha
+	pla
+	dex
+	bne @3
+	bit hw_SPEAKER
+	dey
+	bne @2
+	sec
+	sbc #$01
+	cmp #$40
+	bcs @1
+	rts
+    */
 
     // used to detect game mode changes and change the music
     MODE lastModeForMusic = (MODE)(-1);
@@ -3152,6 +3847,51 @@ sfx_magic2:
                         AudioClip clip = CreateMagicEffectsSpecialEffectSound(length);
                         specialEffectAudioSource.PlayOneShot(clip);
                     }
+                    else if (sound == (int)SOUND_EFFECT.FOOTSTEP)
+                    {
+                        AudioClip clip = CreateFootStepSpecialEffectSound(0.005f, 20);
+                        specialEffectAudioSource.PlayOneShot(clip);
+                    }
+                    else if (sound == (int)SOUND_EFFECT.BLOCKED)
+                    {
+                        AudioClip clip = CreateBlockedSound();
+                        specialEffectAudioSource.PlayOneShot(clip);
+                    }
+                    else if (sound == (int)SOUND_EFFECT.WHAT)
+                    {
+                        AudioClip clip = CreateWhatSound();
+                        specialEffectAudioSource.PlayOneShot(clip);
+                    }
+                    else if (sound == (int)SOUND_EFFECT.CANNON)
+                    {
+                        AudioClip clip = CreateCannonSound();
+                        specialEffectAudioSource.PlayOneShot(clip);
+                    }
+                    else if (sound == (int)SOUND_EFFECT.PLAYER_ATTACK)
+                    {
+                        AudioClip clip = CreatePlayerAttachSound();
+                        specialEffectAudioSource.PlayOneShot(clip);
+                    }
+                    else if (sound == (int)SOUND_EFFECT.FOE_ATTACK)
+                    {
+                        AudioClip clip = CreateMonsterAttachSound();
+                        specialEffectAudioSource.PlayOneShot(clip);
+                    }
+                    else if (sound == (int)SOUND_EFFECT.FLEE)
+                    {
+                        AudioClip clip = CreateFleeSound();
+                        specialEffectAudioSource.PlayOneShot(clip);
+                    }
+                    else if (sound == (int)SOUND_EFFECT.PLAYER_HITS)
+                    {
+                        AudioClip clip = CreatePlayerHitSound(0.1f);
+                        specialEffectAudioSource.PlayOneShot(clip);
+                    }
+                    else if (sound == (int)SOUND_EFFECT.FOE_HITS)
+                    {
+                        AudioClip clip = CreateMonsterHitSound(0.233f);
+                        specialEffectAudioSource.PlayOneShot(clip);
+                    }
                     else
                     {
                         specialEffectAudioSource.PlayOneShot(soundEffects[sound]);
@@ -3489,7 +4229,7 @@ sfx_magic2:
 
                     //int npcIndex = buffer[i * 500];
                     //partyText.text = partyText.text + npcIndex + " : " + /* Settlements[(int)Party._loc].GetComponent<Settlement>().npcStrings[_npc[npcIndex]._tlkidx - 1][0] + " says : " + */
-                    string npcTalk = enc.GetString(buffer, i * 500 + 1, 500);
+    string npcTalk = enc.GetString(buffer, i * 500 + 1, 500);
 
                     int firstNull = npcTalk.IndexOf('\0');
                     npcTalk = npcTalk.Substring(0, firstNull);
