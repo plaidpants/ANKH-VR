@@ -2674,8 +2674,8 @@ sfx_player_hits:
     AudioClip CreatePlayerHitSound(float length)
     {
         float sampleRate = 44100;
-        float max = 1000f;
-        float min = 400f;
+        float max = 3675f;
+        float min = 919f;
         int channels = 2;
         int cycles = 0;
         int count = 0;
@@ -2750,8 +2750,8 @@ sfx_monster_hits:
     AudioClip CreateMonsterHitSound(float length)
     {
         float sampleRate = 44100;
-        float max = 800f;
-        float min = 200f;
+        float max = 760f;
+        float min = 416f;
         int channels = 2;
         int cycles = 0;
         int count = 0;
@@ -2903,7 +2903,65 @@ sfx_flee:
 	bcc @1
 	rts
     */
+    /*
+     * count	freq
+        0	    216
+        175164	290
+        350328	618
+    */
 
+    AudioClip CreateWhirlpoolSound()
+    {
+        float sampleRate = 44100;
+        int channels = 2;
+        int count = 0;
+        float frequency = 0;
+        float[] data;
+        float phase = 0;
+        float sampleCount = 0f;
+        float phaseDelta;
+
+        sampleCount = 3.97f * sampleRate;
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            frequency = 4E-09f*i*i - 0.0026f* i + 618f;
+
+            phaseDelta = 2 * Mathf.PI * frequency / sampleRate;
+
+            phase += phaseDelta;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // sine wave
+                //data[i + j] = Mathf.Sin(phase);
+
+                // square wave
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.0f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase >= 2 * Mathf.PI)
+            {
+                phase -= 2 * Mathf.PI;
+                count++;
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("player attack", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
     /*
 sfx_storm:
 	lda #$c0
@@ -2925,6 +2983,59 @@ sfx_storm:
 	bcs @1
 	rts
     */
+
+    AudioClip CreateTwisterSound()
+    {
+        float sampleRate = 44100;
+        int channels = 2;
+        int count = 0;
+        float frequency = 0;
+        float[] data;
+        float phase = 0;
+        float sampleCount = 0f;
+        float phaseDelta;
+
+        sampleCount = 3.97f * sampleRate;
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            frequency = 4E-09f * i * i - 0.0003f * i + 216f;
+
+            phaseDelta = 2 * Mathf.PI * frequency / sampleRate;
+
+            phase += phaseDelta;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // sine wave
+                //data[i + j] = Mathf.Sin(phase);
+
+                // square wave
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.0f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase >= 2 * Mathf.PI)
+            {
+                phase -= 2 * Mathf.PI;
+                count++;
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("player attack", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
 
     // used to detect game mode changes and change the music
     MODE lastModeForMusic = (MODE)(-1);
@@ -3870,6 +3981,7 @@ sfx_storm:
                         AudioClip clip = CreateFootStepSpecialEffectSound(0.005f, 20);
                         specialEffectAudioSource.PlayOneShot(clip);
                     }
+                    // TODO: cache the non=random/dynamic sounds below
                     else if (sound == (int)SOUND_EFFECT.BLOCKED)
                     {
                         AudioClip clip = CreateBlockedSound();
@@ -3902,12 +4014,22 @@ sfx_storm:
                     }
                     else if (sound == (int)SOUND_EFFECT.PLAYER_HITS)
                     {
-                        AudioClip clip = CreatePlayerHitSound(0.1f);
+                        AudioClip clip = CreatePlayerHitSound(0.094f);
                         specialEffectAudioSource.PlayOneShot(clip);
                     }
                     else if (sound == (int)SOUND_EFFECT.FOE_HITS)
                     {
                         AudioClip clip = CreateMonsterHitSound(0.233f);
+                        specialEffectAudioSource.PlayOneShot(clip);
+                    }
+                    else if (sound == (int)SOUND_EFFECT.WHIRL_POOL)
+                    {
+                        AudioClip clip = CreateWhirlpoolSound();
+                        specialEffectAudioSource.PlayOneShot(clip);
+                    }
+                    else if (sound == (int)SOUND_EFFECT.TWISTER)
+                    {
+                        AudioClip clip = CreateTwisterSound();
                         specialEffectAudioSource.PlayOneShot(clip);
                     }
                     else
