@@ -8366,7 +8366,7 @@ MonoBehaviour:
   surface_party_direction: 1
   resetJoystick1: 0
   resetJoystick2: 0
-  joystickResetTime: 0.1
+  joystickResetTime: 0.5
   open_door_x: 0
   open_door_y: 0
   open_door_timer: 0

@@ -7007,7 +7007,7 @@ bool CheckTileForOpacity(U4_Decompiled_AVATAR.TILE tileIndex)
 
                 weaponsStatus.GetComponent<UnityEngine.UI.Text>().text = "" +
                     (char)(0x10) + "Weapons" + (char)(0x11) + '\n' +
-                    "A  -Hands   Cross Bow-I" + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.CROSSBOW] + '\n' +
+                    "A  -Hands   Cross Bow-I" + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.CROSSBOW].ToString().PadLeft(2, '0') + '\n' +
                     'B' + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.STAFF].ToString().PadLeft(2, '0') + "-Staff Flaming Oil-J" + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.FLAMING_OIL].ToString().PadLeft(2, '0') + '\n' +
                     'C' + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.DAGGER].ToString().PadLeft(2, '0') + "-Dagger    Halbert-K" + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.HALBERD].ToString().PadLeft(2, '0') + '\n' +
                     'D' + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.SLING].ToString().PadLeft(2, '0') + "-Sling   Magic Axe-L" + u4.Party._weapons[(int)U4_Decompiled_AVATAR.WEAPON.MAGIC_AXE].ToString().PadLeft(2, '0') + '\n' +

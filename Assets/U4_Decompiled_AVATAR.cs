@@ -2156,8 +2156,6 @@ sfx_magic2:
     // used to tune the magic effect tone
     public float adjustSound = 94f;
 
-
-
     AudioClip CreateMagicEffectsSpecialEffectSound(int length)
     {
         float sampleRate = 44100;
@@ -2242,7 +2240,7 @@ sfx_error2:
         float phase = 0;
         float sampleCount = 0f;
 
-        float frequency = 102.564f;
+        float frequency = 104f;
 
         sampleCount += (float)8 * sampleRate / frequency;
 
@@ -2293,6 +2291,19 @@ sfx_ship_fire:
 	rts
 */
 
+    /*
+     * sample	frequency
+        352	    2450
+        826	    1392.631579
+        2976.75	681.9587629
+        5953.5	481.0909091
+        11907	338.3631714
+        17860.5	277.9411765
+        23814	250
+
+    ln(counts) vs ln(frequency) is a linear function so ln(frequency) = -0.5392*ln(sample) + 10.896, solve for frequency = 53960.1/sample^0.5392
+    */
+
     AudioClip CreateCannonSound()
     {
         float sampleRate = 44100;
@@ -2312,7 +2323,7 @@ sfx_ship_fire:
         // create the samples
         for (int i = 0; i < data.Length; i += channels)
         {
-            frequency = 980f - 0.13f * i/2f + 0.000005555556f * i * i/4f;
+            frequency = 53960.1f / Mathf.Pow(i + 1 , 0.5392f); // i + 1 to avoid infinity at sample zero
 
             phaseDelta = 2 * Mathf.PI * frequency / sampleRate;
 
@@ -2325,7 +2336,7 @@ sfx_ship_fire:
                 //data[i + j] = Mathf.Sin(phase);
 
                 // square wave
-                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.0f;
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.5f;
             }
 
             // reset the phase so the numbers don't get too big
@@ -2365,17 +2376,17 @@ jmp sfx_error2
         int channels = 2;
         int count = 0;
         float frequency = 0;
-        float[] fequencies = new float[2];
+        float[] frequencies = new float[2];
         float[] data;
         float phase = 0;
         float sampleCount = 0f;
 
-        fequencies[0] = 273.809f;
-        fequencies[1] = 102.564f;
-        frequency = fequencies[0];
+        frequencies[0] = 278f;
+        frequencies[1] = 104f;
+        frequency = frequencies[0];
 
-        sampleCount += (float)23 * sampleRate / fequencies[0];
-        sampleCount += (float)8 * sampleRate / fequencies[1];
+        sampleCount += (float)23 * sampleRate / frequencies[0];
+        sampleCount += (float)8 * sampleRate / frequencies[1];
 
         // allocate total clip size based on above
         data = new float[(int)sampleCount * 2];
@@ -2403,7 +2414,7 @@ jmp sfx_error2
             if (count > 23)
             {
                 count = 0;
-                frequency = fequencies[1];
+                frequency = frequencies[1];
             }
         }
 
@@ -2809,6 +2820,15 @@ sfx_flee:
 	bne @delay
 	rts
     */
+
+    /*
+     * counts   frequncy
+     * 179*2        474
+     * 1374*2       639
+     * 2070*2       832
+     * 2987*2       1575
+     * expontial best fit frequency = 398.3*e^(0.0002*counts)
+     */
     AudioClip CreateFleeSound()
     {
         float sampleRate = 44100;
@@ -2828,9 +2848,7 @@ sfx_flee:
         // create the samples
         for (int i = 0; i < data.Length; i += channels)
         {
-            //frequency = 500f + 1000f * ((float)i / (float)data.Length);
-            frequency = 537.5f - 0.04375f * i + 0.000046875f * i * i; 
-            //frequency = 435f - 0.0075f * i + 0.00004375f * i * i;
+            frequency = 398.3f * Mathf.Exp(0.0002f * i);
 
             phaseDelta = 2 * Mathf.PI * frequency / sampleRate;
 
@@ -2920,7 +2938,7 @@ sfx_storm:
 
     public float resetJoystick1 = 0f;
     public float resetJoystick2 = 0f;
-    public float joystickResetTime = 0.1f;
+    public float joystickResetTime = 0.5f;
 
     // Update is called once per frame
     void Update()
