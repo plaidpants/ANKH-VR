@@ -2492,14 +2492,14 @@ sfx_walk:
         for (int i = 0; i < data.Length; i += channels)
         {
             float value;
-            // TODO add small ramp up and ramp down? 4 steps?
+            // TODO add small ramp up and ramp down? 4 steps? random pusle width
             if ((i > (data.Length / 2) - (sampleCount / pulse / 2)) && (i < (data.Length / 2) + (sampleCount / pulse / 2)))
             {
-                value = 0.20f;
+                value = 0.5f;
             }
             else
             {
-                value = -0.20f;
+                value = -0.5f;
             }
 
             // output on all available channels
@@ -2534,7 +2534,7 @@ sfx_attack:
 	bmi @delay
 	rts
     */
-    AudioClip CreatePlayerAttachSound()
+    AudioClip CreatePlayerAttackSound()
     {
         float sampleRate = 44100;
         int channels = 2;
@@ -2602,7 +2602,7 @@ sfx_unknown:
 	bmi @delay
 	rts
     */
-    AudioClip CreateMonsterAttachSound()
+    AudioClip CreateMonsterAttackSound()
     {
         float sampleRate = 44100;
         int channels = 2;
@@ -3049,7 +3049,7 @@ sfx_storm:
 
     public float resetJoystick1 = 0f;
     public float resetJoystick2 = 0f;
-    public float joystickResetTime = 0.5f;
+    public float joystickResetTime = 0.25f;
 
     // Update is called once per frame
     void Update()
@@ -3978,7 +3978,7 @@ sfx_storm:
                     }
                     else if (sound == (int)SOUND_EFFECT.FOOTSTEP)
                     {
-                        AudioClip clip = CreateFootStepSpecialEffectSound(0.005f, 20);
+                        AudioClip clip = CreateFootStepSpecialEffectSound(0.005f, Random.Range(15,25));
                         specialEffectAudioSource.PlayOneShot(clip);
                     }
                     // TODO: cache the non=random/dynamic sounds below
@@ -3999,12 +3999,12 @@ sfx_storm:
                     }
                     else if (sound == (int)SOUND_EFFECT.PLAYER_ATTACK)
                     {
-                        AudioClip clip = CreatePlayerAttachSound();
+                        AudioClip clip = CreatePlayerAttackSound();
                         specialEffectAudioSource.PlayOneShot(clip);
                     }
                     else if (sound == (int)SOUND_EFFECT.FOE_ATTACK)
                     {
-                        AudioClip clip = CreateMonsterAttachSound();
+                        AudioClip clip = CreateMonsterAttackSound();
                         specialEffectAudioSource.PlayOneShot(clip);
                     }
                     else if (sound == (int)SOUND_EFFECT.FLEE)

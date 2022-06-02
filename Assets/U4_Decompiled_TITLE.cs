@@ -964,6 +964,250 @@ catch
         music[(int)index] = www.GetAudioClip(false, false);
     }
 
+
+    AudioClip CreateBlockedSound()
+    {
+        float sampleRate = 44100;
+        int channels = 2;
+        int count = 0;
+        float[] data;
+        float phase = 0;
+        float sampleCount = 0f;
+
+        float frequency = 104f;
+
+        sampleCount += (float)8 * sampleRate / frequency;
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            phase += 2 * Mathf.PI * frequency / sampleRate;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // square wave
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.5f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase >= 2 * Mathf.PI)
+            {
+                phase -= 2 * Mathf.PI;
+                count++;
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("blocked", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
+
+    /*
+     * draw_ultima_logo:
+	lda #$ff     ;mode random
+	sta blit_mode
+	lda #$00
+	sta blit_progress
+@next_progress:
+	lda #$05
+	sta src_column
+	sta dst_column
+	lda #$22
+	sta src_row
+	sta dst_row
+	bit hw_KEYBOARD
+	bpl :+
+	lda #$38
+	sta blit_progress
+:	ldx #$1e     ;width of logo, in bytes
+	ldy #$2d     ;height of logo, in pixels
+	jsr blit_image
+	lda blit_progress
+	clc
+	adc #$01
+	sta blit_progress
+	cmp #$39
+	bcc @next_progress
+	rts
+
+blit_image:
+	stx blit_width
+	sty num_rows
+@do_row:
+	lda blit_width
+	sta num_columns
+	ldy src_row
+	lda bmplineaddr_lo,y
+	sta ptr1_bitmap
+	lda bmplineaddr_hi,y
+	clc
+	adc #$5a     ;ptr1 = BGND
+	sta ptr1_bitmap + 1
+	ldy dst_row
+	lda bmplineaddr_lo,y
+	sta ptr2_bitmap
+	lda bmplineaddr_hi,y
+	sta ptr2_bitmap + 1
+	ldy dst_column
+@do_column:
+	lda (ptr1_bitmap),y
+	and #$7f
+	beq @next_column
+	bit blit_mode
+	beq @write_byte
+	pha
+	lda mask_rand1
+	adc #$1d
+	tax
+	adc mask_rand2
+	sta mask_rand1
+	stx mask_rand2
+	pha
+	and #$07
+	sta rand_8
+	pla
+	clc
+	adc blit_progress
+	bcc :+
+	bit hw_SPEAKER
+:	lda blit_progress
+	clc
+	adc rand_8
+	tax
+	lda blit_mask_table,x
+	sta blit_mask
+	pla
+	and blit_mask
+	ora #$80
+@write_byte:
+	sta (ptr2_bitmap),y
+@next_column:
+	iny
+	dec num_columns
+	bne @do_column
+	inc src_row
+	inc dst_row
+	dec num_rows
+	bne @do_row
+	rts
+
+mask_rand1:
+	.byte $35
+mask_rand2:
+	.byte $9b
+blit_width:
+	.byte $dc
+blit_mode:
+	.byte $20
+blit_progress:
+	.byte $24
+rand_8:
+	.byte $31
+blit_mask:
+	.byte $45
+blit_mask_table:
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$01,$02,$04,$08,$12,$20,$21
+	.byte $10,$18,$40,$24,$42,$25,$14,$1a
+	.byte $48,$29,$14,$52,$54,$55,$4a,$59
+	.byte $45,$5a,$2a,$6c,$36,$37,$6a,$67
+	.byte $4d,$5e,$39,$6d,$3b,$6f,$57,$7d
+	.byte $5d,$7e,$6b,$7b,$77,$ff,$5f,$3f
+	.byte $7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f
+     * 
+     */
+
+    /*
+        max1 = 108f;
+        min1 = 17f;
+
+        max2 = 5000f;
+        min2 = 445f;
+
+        max3 = 7000f;
+        min3 = 700f;
+     */
+
+    AudioClip CreateStartupSound(float length)
+    {
+        float sampleRate = 44100;
+
+        int channels = 2;
+        int cycles = 0;
+        int count = 0;
+        float frequencyMin;
+        float frequencyMax;
+        float frequency;
+        float[] data;
+        float phase = 0;
+        float sampleCount;
+
+        sampleCount = length * sampleRate;
+
+        // allocate total clip size based on above
+        data = new float[(int)sampleCount * 2];
+
+        frequencyMin = 16.995f;
+        frequencyMax = 99.936f;
+
+        frequency = Random.Range(frequencyMin, frequencyMax);
+
+        // create the samples
+        for (int i = 0; i < data.Length; i += channels)
+        {
+            phase += 2 * Mathf.PI * frequency / sampleRate;
+
+            // output on all available channels
+            for (int j = 0; j < channels; j++)
+            {
+                // sine wave
+                //data[i + j] = Mathf.Sin(phase);
+
+                // square wave
+                data[i + j] = Mathf.Sin(phase) > 0 ? 0.5f : -0.5f;
+            }
+
+            // reset the phase so the numbers don't get too big
+            if (phase >= 2 * Mathf.PI)
+            {
+                phase -= 2 * Mathf.PI;
+                count++;
+            }
+
+            // switch to a new frequency after so many cycles
+            if (count > cycles)
+            {
+                count = 0;
+
+                frequencyMin = 6E-09f * i * i + 0.0004f * i + 10f;
+                frequencyMax = 3E-08f * i * i + 0.001f * i + 100f;
+
+                //frequencyMin = -9E-09f * i * i + 0.0052f * i + 16.995f;
+                //frequencyMax = -1E-07f * i * i + 0.0641f * i + 99.936f;
+
+                frequency = Random.Range(frequencyMin, frequencyMax);
+            }
+        }
+
+        // create the audio clip
+        AudioClip soundEffect = AudioClip.Create("player hit", data.Length, 2, (int)sampleRate, false);
+
+        // set the sample data
+        soundEffect.SetData(data, 0);
+
+        // return the audio clip
+        return soundEffect;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -1403,7 +1647,20 @@ catch
             // see if the sound effect from the game engine is valid
             if (sound != -1)
             {
-                specialEffectAudioSource.PlayOneShot(soundEffects[sound]);
+                if (sound == (int)SOUND_EFFECT.BLOCKED)
+                {
+                    AudioClip clip = CreateBlockedSound();
+                    specialEffectAudioSource.PlayOneShot(clip);
+                }
+                else if (sound == (int)SOUND_EFFECT.STARTUP)
+                {
+                    AudioClip clip = CreateStartupSound(4f);
+                    specialEffectAudioSource.PlayOneShot(clip);
+                }
+                else
+                {
+                    specialEffectAudioSource.PlayOneShot(soundEffects[sound]);
+                }
 
                 started_playing_sound_effect = true;
             }
@@ -1469,10 +1726,17 @@ catch
                     if (started_playing_sound_effect == false)
                     {
                         playStartupSoundOnlyOnce = true;
-                        specialEffectAudioSource.PlayOneShot(soundEffects[(int)SOUND_EFFECT.STARTUP]);
+
+                        AudioClip startupSound = CreateStartupSound(4f);
+                        specialEffectAudioSource.PlayOneShot(startupSound);
 
                         started_playing_sound_effect = true;
                     }
+                }
+
+                if ((screenCopyFrame.random_stuff == -1) && (playStartupSoundOnlyOnce == true))
+                {
+                    specialEffectAudioSource.Stop();
                 }
 
                 screenCopyFrameQueue.Enqueue(screenCopyFrame);

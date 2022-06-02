@@ -38,7 +38,8 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2006084672}
-  m_IndirectSpecularColor: {r: 0.030493796, g: 0.06184578, b: 0.12612419, a: 1}
+  m_IndirectSpecularColor: {r: 0.00009216195, g: 0.00009216195, b: 0.00009216195,
+    a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8366,7 +8367,7 @@ MonoBehaviour:
   surface_party_direction: 1
   resetJoystick1: 0
   resetJoystick2: 0
-  joystickResetTime: 0.5
+  joystickResetTime: 0.25
   open_door_x: 0
   open_door_y: 0
   open_door_timer: 0
@@ -12493,7 +12494,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
