@@ -37,7 +37,7 @@ public class Animate3 : MonoBehaviour
         if (((int)npcTile >= 32 && (int)npcTile <= 47) || ((int)npcTile >= 80 && (int)npcTile <= 95) || ((int)npcTile >= 132 && (int)npcTile <= 143))
         {
             // update to the initial animation texture frame
-            ObjectRenderer.material.mainTexture = world.originalTiles[(int)npcTile];
+            ObjectRenderer.material.mainTexture = Tile.originalTiles[(int)npcTile];
 
             // set the other frames based on the intial frame
             if (((int)npcTile % 2) == 0)
@@ -53,7 +53,7 @@ public class Animate3 : MonoBehaviour
         else if ((int)npcTile >= 144 && (int)npcTile <= 255)
         {
             // update to the initial animation texture frame
-            ObjectRenderer.material.mainTexture = world.originalTiles[(int)npcTile];
+            ObjectRenderer.material.mainTexture = Tile.originalTiles[(int)npcTile];
             transform.gameObject.name = npcTile.ToString();
 
             // set the other frames based on the intial frame
@@ -83,7 +83,7 @@ public class Animate3 : MonoBehaviour
         else
         {
             // update to the animation texture frame
-            ObjectRenderer.material.mainTexture = world.originalTiles[(int)npcTile];
+            ObjectRenderer.material.mainTexture = Tile.originalTiles[(int)npcTile];
 
             // add only one frame to the animation
             animationFrameIndexes = new U4_Decompiled_AVATAR.TILE[1] { npcTile };
@@ -115,10 +115,10 @@ public class Animate3 : MonoBehaviour
         if (world == null)
             return;
 
-        if (world.originalTiles == null)
+        if (Tile.originalTiles == null)
             return;
 
-        if (world.originalTiles.Length == 0)
+        if (Tile.originalTiles.Length == 0)
             return;
 
         timer += Time.deltaTime;
@@ -131,7 +131,7 @@ public class Animate3 : MonoBehaviour
                 frame = 0;
             }
 
-            ObjectRenderer.material.mainTexture = world.originalTiles[(int)animationFrameIndexes[frame]];
+            ObjectRenderer.material.mainTexture = Tile.originalTiles[(int)animationFrameIndexes[frame]];
 
             timer -= timerExpired;
             timerExpired = Random.Range(0.01f, 1.0f);
