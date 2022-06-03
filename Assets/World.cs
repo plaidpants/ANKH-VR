@@ -38,10 +38,6 @@ public class World : MonoBehaviour
 
     public List<string> talkWordList = new List<string>();
 
-    public string tileApple2Filepath1 = "/u4/SHP0.B"; 
-    public string tileApple2Filepath2 = "/u4/SHP1.B";
-    public string tileEGAFilepath = "/u4/SHAPES.EGA";
-    public string tileCGAFilepath = "/u4/SHAPES.CGA";
     public string worldMapFilepath = "/u4/WORLD.MAP";
 
     public Text keyword1ButtonText;

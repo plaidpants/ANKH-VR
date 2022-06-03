@@ -14,8 +14,6 @@ public class Title : MonoBehaviour
     public GameObject animatedTerrrain;
     public GameObject billboardTerrrain;
 
-    public string worldMapFilepath = "/u4/WORLD.MAP";
-
     public GameObject InputPanel;
     public GameObject MainMainLoop;
     public GameObject Keyboard;
@@ -30,16 +28,7 @@ public class Title : MonoBehaviour
     // reference to game engine
     public U4_Decompiled_TITLE u4_TITLE;
 
-    public double bpm = 140.0F;
-    public float gain = 0.5F;
-    public int signatureHi = 4;
-    public int signatureLo = 4;
-
-
-
     GameObject[,] entireMapGameObjects = new GameObject[32 * 8, 32 * 8];
-
-
 
     public struct tHeader
     {//size 0x11
