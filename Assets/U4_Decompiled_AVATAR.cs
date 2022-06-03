@@ -137,396 +137,9 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     }
 
     // tiles
-    public enum TILE
-    {
-        /*deep water*/
-        DEEP_WATER = 0x00,
-        /*medium water*/
-        MEDIUM_WATER = 0x01,
-        /*shallow water*/
-        SHALLOW_WATER = 0x02,
-        /*swamp*/
-        SWAMP = 0x03,
-        /*grass*/
-        GRASS = 0x04,
-        /*scrub*/
-        BRUSH = 0x05,
-        /*forest*/
-        FOREST = 0x06,
-        /*hills*/
-        HILLS = 0x07,
-        /*mountains*/
-        MOUNTAINS = 0x08,
-        /*dungeon*/
-        DUNGEON = 0x09,
-        /*town*/
-        TOWN = 0x0A,
-        /*castle*/
-        CASTLE = 0x0B,
-        /*village*/
-        VILLAGE = 0x0C,
-        /*LB castle left wing*/
-        CASTLE_LEFT = 0x0D,
-        /*LB castle entrance*/
-        CASTLE_ENTRANCE = 0x0E,
-        /*LB castle right wing*/
-        CASTLE_RIGHT = 0x0F,
+    
 
-        /*ship W N E S*/
-        SHIP = 0x10,
-        SHIP_WEST = 0x10,
-        SHIP_NORTH = 0x11,
-        SHIP_EAST = 0x12,
-        SHIP_SOUTH = 0x13,
-
-        /*horse W/E*/
-        HORSE = 0x14,
-        HORSE_WEST = 0x14,
-        HORSE_EAST = 0x15,
-
-        /*tiled floor*/
-        TILED_FLOOR = 0x16,
-        /*bridge*/
-        BRIDGE = 0x17,
-        /*balloon*/
-        BALOON = 0x18,
-        /* bridge upper */
-        BRIDGE_TOP = 0x19,
-        /* bridge lower */
-        BRIDGE_BOTTOM = 0x1A,
-        /*ladder up*/
-        LADDER_UP = 0x1B,
-        /*ladder down*/
-        LADDER_DOWN = 0x1C,
-        /*ruins*/
-        RUINS = 0x1D,
-        /*shrine*/
-        SHRINE = 0x1E,
-        /*on foot party*/
-        PARTY = 0x1F,
-
-        /* 2-tile animation character */
-        MAGE = 0x20,
-        MAGE2 = 0x21,
-
-        BARD = 0x22,
-        BARD2 = 0x21,
-
-        FIGHTER = 0x24,
-        FIGHTER2 = 0x25,
-
-        DRUID = 0x26,
-        DRUID2 = 0x27,
-
-        TINKER = 0x28,
-        TINKER2 = 0x29,
-
-        PALADIN = 0x2A,
-        PALADIN2 = 0x2B,
-
-        RANGER = 0x2C,
-        RANGER2 = 0x2D,
-
-        SHEPHERD = 0x2E,
-        SHEPHERD2 = 0x2F,
-
-        /* architecture/misc tiles */
-        BRICK_FLOOR_COLUMN = 0x30,
-        DIAGONAL_WATER_ARCHITECTURE1 = 0x31,
-        DIAGONAL_WATER_ARCHITECTURE2 = 0x32,
-        DIAGONAL_WATER_ARCHITECTURE3 = 0x33,
-        DIAGONAL_WATER_ARCHITECTURE4 = 0x34,
-        SHIP_MAST = 0x35,
-        SHIP_WHEEL = 0x36,
-        SMALL_ROCKS = 0x37,
-
-        /*sleep*/
-        SLEEP = 0x38,
-        /* large rocks */
-        LARGE_ROCKS = 0x39,
-        /*locked door*/
-        LOCKED_DOOR = 0x3A,
-        /*door*/
-        DOOR = 0x3B,
-        /*chest*/
-        CHEST = 0x3C,
-        /*ankh*/
-        ANKH = 0x3D,
-        /*brick floor*/
-        BRICK_FLOOR = 0x3E,
-        /*wood floor*/
-        WOOD_FLOOR = 0x3F,
-
-        /*moongate 4 phases*/
-        MOONGATE = 0x40,
-        MOONGATE1 = 0x40,
-        MOONGATE2 = 0x41,
-        MOONGATE3 = 0x42,
-        MOONGATE4 = 0x43,
-
-        /*poison field*/
-        POISON_FIELD = 0x44,
-        /*energy field*/
-        ENERGY_FIELD = 0x45,
-        /*fire field*/
-        FIRE_FIELD = 0x46,
-        /*sleep field*/
-        SLEEP_FIELD = 0x47,
-
-        /* used for boats and building features */
-        ARCHITECTURE = 0x48,
-        /* Secret brick wall */
-        SECRET_BRICK_WALL = 0x49,
-        /* Altar */
-        ALTAR = 0x4A,
-        /* cooking/camp fire */
-        COOKING_FIRE = 0x4B,
-        /* lava */
-        LAVA = 0x4C,
-
-        /* missiles */
-        MISSLE_ATTACK_SMALL = 0x4D,
-        MISSLE_ATTACK_BLUE = 0x4E,
-        MISSLE_ATTACK_RED = 0x4F,
-
-        /* 2-tile animation NPCs */
-        GUARD = 0x50,
-        GUARD2 = 0x51,
-
-        MERCHANT = 0x52,
-        MERCHANT2 = 0x53,
-
-        BARD_NPC = 0x54,
-        BARD_NPC2 = 0x55,
-
-        JESTER = 0x56,
-        JESTER2 = 0x57,
-
-        BEGGAR = 0x58,
-        BEGGAR2 = 0x59,
-
-        CHILD = 0x5A,
-        CHILD2 = 0x5B,
-
-        BULL = 0x5C,
-        BULL2 = 0x5D,
-
-        LORD_BRITISH = 0x5E,
-        LORD_BRITISH2 = 0x5F,
-
-        /* Letters */
-        A = 0x60,
-        B = 0x61,
-        C = 0x62,
-        D = 0x63,
-        E = 0x64,
-        F = 0x65,
-        G = 0x66,
-        H = 0x67,
-        I = 0x68,
-        J = 0x69,
-        K = 0x6A,
-        L = 0x6B,
-        M = 0x6C,
-        N = 0x6D,
-        O = 0x6E,
-        P = 0x6F,
-        Q = 0x70,
-        R = 0x71,
-        S = 0x72,
-        T = 0x73,
-        U = 0x74,
-        V = 0x75,
-        W = 0x76,
-        X = 0x77,
-        Y = 0x78,
-        Z = 0x79,
-
-        /* <space> */
-        SPACE = 0x7A,
-
-        /* brackets */
-        BRACKET_RIGHT = 0x7B,
-        BRACKET_LEFT = 0x7C,
-        BRACKET_SQUARE = 0x7D,
-
-        /* blank */
-        BLANK = 0x7E,
-
-        /* brick wall */
-        BRICK_WALL = 0x7F,
-
-        /*pirate W N E S*/
-        PIRATE = 0x80,
-        PIRATE_WEST = 0x80,
-        PIRATE_NORTH = 0x81,
-        PIRATE_EAST = 0x82,
-        PIRATE_SOUTH = 0x83,
-
-        /* 2-tile monsters */
-        NIXIE = 0x84,
-        NIXIE2 = 0x85,
-
-        SQUID = 0x86,
-        SQUID2 = 0x87,
-
-        SERPENT = 0x88,
-        SERPENT2 = 0x89,
-
-        SEAHORSE = 0x8A,
-        SEAHORSE2 = 0x8B,
-
-        WHIRLPOOL = 0x8C,
-        WHIRLPOOL2 = 0x8D,
-
-        WATER_SPOUT = 0x8E,
-        WATER_SPOUT2 = 0x8F,
-
-        /* 4-tile monsters */
-        RAT = 0x90,
-        RAT2 = 0x91,
-        RAT3 = 0x92,
-        RAT4 = 0x93,
-
-        BAT = 0x94,
-        BAT2 = 0x95,
-        BAT3 = 0x96,
-        BAT4 = 0x97,
-
-        SPIDER = 0x98,
-        SPIDER2 = 0x99,
-        SPIDER3 = 0x9a,
-        SPIDER4 = 0x9b,
-
-        GHOST = 0x9C,
-        GHOST2 = 0x9D,
-        GHOST3 = 0x9E,
-        GHOST4 = 0x9F,
-
-        SLIME = 0xA0,
-        SLIME2 = 0xA1,
-        SLIME3 = 0xA2,
-        SLIME4 = 0xA3,
-
-        TROLL = 0xA4,
-        TROLL2 = 0xA5,
-        TROLL3 = 0xA6,
-        TROLL4 = 0xA7,
-
-        GREMLIN = 0xA8,
-        GREMLIN2 = 0xA9,
-        GREMLIN3 = 0xAa,
-        GREMLIN4 = 0xAb,
-
-        MIMIC = 0xAC,
-        MIMIC2 = 0xAd,
-        MIMIC3 = 0xAe,
-        MIMIC4 = 0xAf,
-
-        REAPER = 0xB0,
-        REAPER2 = 0xB1,
-        REAPER3 = 0xB2,
-        REAPER4 = 0xB3,
-
-        INSECTS = 0xB4,
-        INSECTS2 = 0xB5,
-        INSECTS3 = 0xB6,
-        INSECTS4 = 0xB7,
-
-        GAZER = 0xB8,
-        GAZER2 = 0xB9,
-        GAZER3 = 0xBa,
-        GAZER4 = 0xBb,
-
-        PHANTOM = 0xBC,
-        PHANTOM2 = 0xBD,
-        PHANTOM3 = 0xBE,
-        PHANTOM4 = 0xBF,
-
-        ORC = 0xC0,
-        ORC2 = 0xC1,
-        ORC3 = 0xC2,
-        ORC4 = 0xC3,
-
-        SKELETON = 0xC4,
-        SKELETON2 = 0xC5,
-        SKELETON3 = 0xC6,
-        SKELETON4 = 0xC7,
-
-        ROGUE = 0xC8,
-        ROGUE2 = 0xC9,
-        ROGUE3 = 0xCa,
-        ROGUE4 = 0xCb,
-
-        PYTHON = 0xCC,
-        PYTHON2 = 0xCd,
-        PYTHON3 = 0xCe,
-        PYTHON4 = 0xCf,
-
-        ETTIN = 0xD0,
-        ETTIN2 = 0xD1,
-        ETTIN3 = 0xD2,
-        ETTIN4 = 0xD3,
-
-        HEADLESS = 0xD4,
-        HEADLESS2 = 0xD5,
-        HEADLESS3 = 0xD6,
-        HEADLESS4 = 0xD7,
-
-        CYCLOPS = 0xD8,
-        CYCLOPS2 = 0xD9,
-        CYCLOPS3 = 0xDa,
-        CYCLOPS4 = 0xDb,
-
-        WISP = 0xDC,
-        WISP2 = 0xDD,
-        WISP3 = 0xDE,
-        WISP4 = 0xDF,
-
-        MAGE_NPC = 0xE0,
-        MAGE_NPC2 = 0xE1,
-        MAGE_NPC3 = 0xE2,
-        MAGE_NPC4 = 0xE3,
-
-        LYCHE = 0xE4,
-        LYCHE2 = 0xE5,
-        LYCHE3 = 0xE6,
-        LYCHE4 = 0xE7,
-
-        LAVA_LIZARD = 0xE8,
-        LAVA_LIZARD2 = 0xE9,
-        LAVA_LIZARD3 = 0xEa,
-        LAVA_LIZARD4 = 0xEb,
-
-        ZORN = 0xEC,
-        ZORN2 = 0xEd,
-        ZORN3 = 0xEe,
-        ZORN4 = 0xEf,
-
-        DAEMON = 0xF0,
-        DAEMON2 = 0xF1,
-        DAEMON3 = 0xF2,
-        DAEMON4 = 0xF3,
-
-        HYDRA = 0xF4,
-        HYDRA2 = 0xF5,
-        HYDRA3 = 0xF6,
-        HYDRA4 = 0xF7,
-
-        DRAGON = 0xF8,
-        DRAGON2 = 0xF9,
-        DRAGON3 = 0xFa,
-        DRAGON4 = 0xFb,
-
-        BALRON = 0xFC,
-        BALRON2 = 0xFd,
-        BALRON3 = 0xFe,
-        BALRON4 = 0xFf,
-
-        MAX = 0x100
-    };
-
-    public TILE current_tile;
+    public Tile.TILE current_tile;
 
     public enum DIRECTION
     {
@@ -719,8 +332,8 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
 #if !USE_UNITY_DLL_FUNCTION
     delegate void main();
     delegate MODE main_CurMode();
-    delegate TILE main_D_96F8();
-    delegate TILE main_D_946C();
+    delegate Tile.TILE main_D_96F8();
+    delegate Tile.TILE main_D_946C();
     delegate int main_D_95A5_x();
     delegate int main_D_95A5_y();
     delegate void main_keyboardHit(char key);
@@ -731,13 +344,13 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     delegate void main_Party(byte[] buffer, int length);
     delegate void main_Hit(byte[] buffer, int length);
     delegate void main_ActiveChar(byte[] buffer, int length);
-    delegate TILE main_tile_cur();
+    delegate Tile.TILE main_tile_cur();
     delegate DIRECTION main_WindDir();
     delegate int main_spell_sta();
     delegate int main_Text(byte[] buffer, int length);
     delegate int main_D_9445(); // moongate x
     delegate int main_D_9448(); // moongate y
-    delegate TILE main_D_9141(); // moongate tile
+    delegate Tile.TILE main_D_9141(); // moongate tile
     delegate int main_NPC_Text(byte[] buffer, int length);
     delegate int main_D_17FA();
     delegate int main_D_17FC();
@@ -822,9 +435,9 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     [DllImport("AVATAR")]
     public static extern MODE main_CurMode();
     [DllImport("AVATAR")]
-    public static extern TILE main_D_96F8();
+    public static extern Tile.TILE main_D_96F8();
     [DllImport("AVATAR")]
-    public static extern TILE main_D_946C();
+    public static extern Tile.TILE main_D_946C();
     [DllImport("AVATAR")]
     public static extern int main_D_95A5_x();
     [DllImport("AVATAR")]
@@ -846,7 +459,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     [DllImport("AVATAR")]
     public static extern void main_ActiveChar(byte[] buffer, int length);
     [DllImport("AVATAR")]
-    public static extern TILE main_tile_cur();
+    public static extern Tile.TILE main_tile_cur();
     [DllImport("AVATAR")]
     public static extern DIRECTION main_WindDir();
     [DllImport("AVATAR")]
@@ -858,7 +471,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     [DllImport("AVATAR")]
     public static extern int main_D_9448(); // moongate y
     [DllImport("AVATAR")]
-    public static extern TILE main_D_9141(); // moongate tile
+    public static extern Tile.TILE main_D_9141(); // moongate tile
     [DllImport("AVATAR")]
     public static extern int main_NPC_Text(byte[] buffer, int length);
     [DllImport("AVATAR")]
@@ -898,9 +511,9 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     [DllImport("AVATAR.DLL")]
     public static extern MODE main_CurMode();
     [DllImport("AVATAR.DLL")]
-    public static extern TILE main_D_96F8();
+    public static extern Tile.TILE main_D_96F8();
     [DllImport("AVATAR.DLL")]
-    public static extern TILE main_D_946C();
+    public static extern Tile.TILE main_D_946C();
     [DllImport("AVATAR.DLL")]
     public static extern int main_D_95A5_x();
     [DllImport("AVATAR.DLL")]
@@ -922,7 +535,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     [DllImport("AVATAR.DLL")]
     public static extern void main_ActiveChar(byte[] buffer, int length);
     [DllImport("AVATAR.DLL")]
-    public static extern TILE main_tile_cur();
+    public static extern Tile.TILE main_tile_cur();
     [DllImport("AVATAR.DLL")]
     public static extern DIRECTION main_WindDir();
     [DllImport("AVATAR.DLL")]
@@ -934,7 +547,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     [DllImport("AVATAR.DLL")]
     public static extern int main_D_9448(); // moongate y
     [DllImport("AVATAR.DLL")]
-    public static extern TILE  main_D_9141(); // moongate tile
+    public static extern Tile.TILE  main_D_9141(); // moongate tile
     [DllImport("AVATAR.DLL")]
     public static extern int main_NPC_Text(byte[] buffer, int length);
     [DllImport("AVATAR.DLL")]
@@ -974,14 +587,14 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     byte[] buffer = new byte[10000];
 
     // game engine map buffers
-    public TILE[,] tMap32x32 = new TILE[32, 32];
+    public Tile.TILE[,] tMap32x32 = new Tile.TILE[32, 32];
     public byte[,,] tMap8x8x8 = new byte[8, 8, 8];
 
     // game engine game mode
     public MODE current_mode;
 
     // game engine active moongate infomation
-    public TILE moongate_tile;
+    public Tile.TILE moongate_tile;
     public int moongate_x; 
     public int moongate_y;
 
@@ -1006,11 +619,11 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     public struct tNPC /*size:0x100*/
     {
         /*_00*/
-        public TILE _gtile;
+        public Tile.TILE _gtile;
         /*_20*/
         public byte _x, _y;
         /*_60*/
-        public TILE _tile;
+        public Tile.TILE _tile;
         /*_80*/
         public byte _old_x, _old_y;
         /*_c0*/
@@ -1127,7 +740,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         /*+1d8*/
         public ushort f_1d8;/*characters #*/
         /*+1da*/
-        public TILE _tile;
+        public Tile.TILE _tile;
         /*+1dc*/
         public ushort f_1dc;/*isFlying or light[dungeon]*/
         /*+1de/+1e0*/
@@ -1164,16 +777,16 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         /*020*/
         public byte _HP;
         /*030*/
-        public TILE _tile, _gtile;
+        public Tile.TILE _tile, _gtile;
         /*050*/
         public byte _sleeping;
         /*060*/
-        public TILE _chtile;
+        public Tile.TILE _chtile;
     }
 
     public t_68[] Fighters = new t_68[16];
 
-    public TILE[,] displayTileMap = new TILE[11, 11];
+    public Tile.TILE[,] displayTileMap = new Tile.TILE[11, 11];
     public enum COMBAT_TERRAIN
     {
         // this order and numbering is important up to at least CAMP
@@ -1909,15 +1522,15 @@ catch
 
     public struct hit
     {
-        public TILE tile;
+        public Tile.TILE tile;
         public byte x;
         public byte y;
         public float hit_expire_time;
     }
 
     public List<hit> currentHits = new List<hit>() { };
-    public TILE D_96F8; // tile under attacker tile (used when pirate attack to determine combat map to use)
-    public TILE D_946C; // attacker tile (used when pirate attack to determine combat map to use)
+    public Tile.TILE D_96F8; // tile under attacker tile (used when pirate attack to determine combat map to use)
+    public Tile.TILE D_946C; // attacker tile (used when pirate attack to determine combat map to use)
 
     public struct mapPosition
     {
@@ -4385,13 +3998,13 @@ sfx_storm:
 #if USE_UNITY_DLL_FUNCTION
             D_96F8 = main_D_96F8();
 #else
-            D_96F8 = Native.Invoke<U4_Decompiled_AVATAR.TILE, main_D_96F8>(nativeLibraryPtr);
+            D_96F8 = Native.Invoke<Tile.TILE, main_D_96F8>(nativeLibraryPtr);
 #endif
 
 #if USE_UNITY_DLL_FUNCTION
             D_946C = main_D_946C();
 #else
-            D_946C = Native.Invoke<U4_Decompiled_AVATAR.TILE, main_D_946C>(nativeLibraryPtr);
+            D_946C = Native.Invoke<Tile.TILE, main_D_946C>(nativeLibraryPtr);
 #endif
 
 
@@ -4413,7 +4026,7 @@ sfx_storm:
 #if USE_UNITY_DLL_FUNCTION
             moongate_tile = main_D_9141();
 #else
-            moongate_tile = Native.Invoke<U4_Decompiled_AVATAR.TILE, main_D_9141>(nativeLibraryPtr);
+            moongate_tile = Native.Invoke<Tile.TILE, main_D_9141>(nativeLibraryPtr);
 #endif
 
 #if USE_UNITY_DLL_FUNCTION
@@ -4452,7 +4065,7 @@ sfx_storm:
 #if USE_UNITY_DLL_FUNCTION
             current_tile = main_tile_cur();
 #else
-            current_tile = Native.Invoke<U4_Decompiled_AVATAR.TILE, main_tile_cur>(nativeLibraryPtr);
+            current_tile = Native.Invoke<Tile.TILE, main_tile_cur>(nativeLibraryPtr);
 #endif
 
             // read in current hit info list, the tile draws occurr out of the main draw sequence
@@ -4472,7 +4085,7 @@ sfx_storm:
             {
                 hit addHit;
 
-                addHit.tile = (TILE)buffer[1 + i * 3];
+                addHit.tile = (Tile.TILE)buffer[1 + i * 3];
 
                 if (addHit.tile != 0)
                 {
@@ -4541,7 +4154,7 @@ sfx_storm:
                 {
                     for (int x = 0; x < 32; x++)
                     {
-                        tMap32x32[x, y] = (TILE)buffer[buffer_index++];
+                        tMap32x32[x, y] = (Tile.TILE)buffer[buffer_index++];
                     }
                 }
             }
@@ -4564,10 +4177,10 @@ sfx_storm:
             buffer_index = 1024;
             for (int i = 0; i < 32; i++)
             {
-                _npc[i]._gtile = (TILE)buffer[buffer_index + 0x00];
+                _npc[i]._gtile = (Tile.TILE)buffer[buffer_index + 0x00];
                 _npc[i]._x = buffer[buffer_index + 0x20];
                 _npc[i]._y = buffer[buffer_index + 0x40];
-                _npc[i]._tile = (TILE)buffer[buffer_index + 0x60];
+                _npc[i]._tile = (Tile.TILE)buffer[buffer_index + 0x60];
                 _npc[i]._old_x = buffer[buffer_index + 0x80];
                 _npc[i]._old_y = buffer[buffer_index + 0xa0];
                 _npc[i]._var = buffer[buffer_index + 0xc0]; /*_agressivity (or _z in dungeon)*/
@@ -4656,7 +4269,7 @@ sfx_storm:
             Party.mStones = (STONES)buffer[0x1d6];
             Party.mRunes = (RUNES)buffer[0x1d7];
             Party.f_1d8 = System.BitConverter.ToUInt16(buffer, 0x1d8); // number in party
-            Party._tile = (TILE)System.BitConverter.ToUInt16(buffer, 0x1da);
+            Party._tile = (Tile.TILE)System.BitConverter.ToUInt16(buffer, 0x1da);
             Party.f_1dc = System.BitConverter.ToUInt16(buffer, 0x1dc);
             Party._trammel = System.BitConverter.ToUInt16(buffer, 0x1de);
             Party._felucca = System.BitConverter.ToUInt16(buffer, 0x1e0);
@@ -4714,10 +4327,10 @@ sfx_storm:
                 Fighters[i]._x = buffer[0x00 + i];
                 Fighters[i]._y = buffer[0x10 + i];
                 Fighters[i]._HP = buffer[0x20 + i];
-                Fighters[i]._tile = (TILE)buffer[0x30 + i];
-                Fighters[i]._gtile = (TILE)buffer[0x40 + i];
+                Fighters[i]._tile = (Tile.TILE)buffer[0x30 + i];
+                Fighters[i]._gtile = (Tile.TILE)buffer[0x40 + i];
                 Fighters[i]._sleeping = buffer[0x50 + i];
-                Fighters[i]._chtile = (TILE)buffer[0x60 + i];
+                Fighters[i]._chtile = (Tile.TILE)buffer[0x60 + i];
             }
 
             // read in the main_D_96F9 global
@@ -4733,7 +4346,7 @@ sfx_storm:
             {
                 for (int x = 0; x < 11; x++)
                 {
-                    displayTileMap[x, y] = (TILE)buffer[buffer_index++];
+                    displayTileMap[x, y] = (Tile.TILE)buffer[buffer_index++];
                 }
             }
 

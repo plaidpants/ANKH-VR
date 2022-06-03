@@ -486,7 +486,7 @@ public static class Combine
     }
 
     public static void Combine3(GameObject mapGameObject,
-        ref U4_Decompiled_AVATAR.TILE[,] map,
+        ref Tile.TILE[,] map,
         int offset_x,
         int offset_y,
         ref GameObject[,] mapGameObjects,
@@ -615,10 +615,10 @@ public static class Combine
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    U4_Decompiled_AVATAR.TILE tileIndex = map[i, j];
+                    Tile.TILE tileIndex = map[i, j];
 
                     // only count them if the raycaster has copied the tile
-                    if (tileIndex != U4_Decompiled_AVATAR.TILE.BLANK)
+                    if (tileIndex != Tile.TILE.BLANK)
                     {
                         int x;
                         int y;
@@ -635,21 +635,21 @@ public static class Combine
                             }
                         }
 
-                        if ((tileIndex <= U4_Decompiled_AVATAR.TILE.SHALLOW_WATER) ||
-                            ((tileIndex >= U4_Decompiled_AVATAR.TILE.POISON_FIELD) && (tileIndex <= U4_Decompiled_AVATAR.TILE.SLEEP_FIELD)) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.LAVA))
+                        if ((tileIndex <= Tile.TILE.SHALLOW_WATER) ||
+                            ((tileIndex >= Tile.TILE.POISON_FIELD) && (tileIndex <= Tile.TILE.SLEEP_FIELD)) ||
+                            (tileIndex == Tile.TILE.LAVA))
                         {
                             // increment the count
                             countAnimatedTerrrain++;
                         }
-                        else if ((tileIndex == U4_Decompiled_AVATAR.TILE.FOREST) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.TOWN) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.VILLAGE) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.ANKH) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_UP) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_DOWN) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.COOKING_FIRE) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.CASTLE))
+                        else if ((tileIndex == Tile.TILE.FOREST) ||
+                            (tileIndex == Tile.TILE.TOWN) ||
+                            (tileIndex == Tile.TILE.VILLAGE) ||
+                            (tileIndex == Tile.TILE.ANKH) ||
+                            (tileIndex == Tile.TILE.LADDER_UP) ||
+                            (tileIndex == Tile.TILE.LADDER_DOWN) ||
+                            (tileIndex == Tile.TILE.COOKING_FIRE) ||
+                            (tileIndex == Tile.TILE.CASTLE))
                         {
                             countBillboardTerrrain++;
                         }
@@ -676,10 +676,10 @@ public static class Combine
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    U4_Decompiled_AVATAR.TILE tileIndex = map[i, j];
+                    Tile.TILE tileIndex = map[i, j];
 
                     // only add them if the raycaster has copied the tile
-                    if (tileIndex != U4_Decompiled_AVATAR.TILE.BLANK)
+                    if (tileIndex != Tile.TILE.BLANK)
                     {
                         int x;
                         int y;
@@ -704,9 +704,9 @@ public static class Combine
                             mapGameObjects[x, y].transform.localPosition = new Vector3(x, mapGameObjects.GetLength(1) - 1 - y, mapGameObjects[x, y].transform.localPosition.z);
                         }
 
-                        if ((tileIndex <= U4_Decompiled_AVATAR.TILE.SHALLOW_WATER) ||
-                            ((tileIndex >= U4_Decompiled_AVATAR.TILE.POISON_FIELD) && (tileIndex <= U4_Decompiled_AVATAR.TILE.SLEEP_FIELD)) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.LAVA))
+                        if ((tileIndex <= Tile.TILE.SHALLOW_WATER) ||
+                            ((tileIndex >= Tile.TILE.POISON_FIELD) && (tileIndex <= Tile.TILE.SLEEP_FIELD)) ||
+                            (tileIndex == Tile.TILE.LAVA))
                         {
                             // add the game object mesh to the list we want to combine
                             animatedTerrrainCombine[countAnimatedTerrrain].mesh = mapGameObjects[x, y].GetComponent<MeshFilter>().mesh;
@@ -717,14 +717,14 @@ public static class Combine
                             // increment the count
                             countAnimatedTerrrain++;
                         }
-                        else if ((tileIndex == U4_Decompiled_AVATAR.TILE.FOREST) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.TOWN) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.ANKH) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.VILLAGE) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_UP) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.LADDER_DOWN) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.COOKING_FIRE) ||
-                            (tileIndex == U4_Decompiled_AVATAR.TILE.CASTLE))
+                        else if ((tileIndex == Tile.TILE.FOREST) ||
+                            (tileIndex == Tile.TILE.TOWN) ||
+                            (tileIndex == Tile.TILE.ANKH) ||
+                            (tileIndex == Tile.TILE.VILLAGE) ||
+                            (tileIndex == Tile.TILE.LADDER_UP) ||
+                            (tileIndex == Tile.TILE.LADDER_DOWN) ||
+                            (tileIndex == Tile.TILE.COOKING_FIRE) ||
+                            (tileIndex == Tile.TILE.CASTLE))
                         {
                             GameObject mapTile = mapGameObjects[x, y];
                             Vector3 saveLocalPosition = mapTile.transform.localPosition;

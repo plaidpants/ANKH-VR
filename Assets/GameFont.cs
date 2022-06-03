@@ -450,4 +450,31 @@ public class GameFont
         myTransparentFont.characterInfo = charInfosTransparent;
 #endif
     }
+
+    // The font is setup so if the high bit is set it will use the inverse highlighted text
+    // this function will set the high bit on all the characters in a string so when displayed with the font
+    // it will be highlighted
+    public static string highlight(string s)
+    {
+        string temp = "";
+        for (int j = 0; j < s.Length; j++)
+        {
+            char c = s[j];
+
+            if (c == '\n')
+            {
+                temp += '\n';
+            }
+            else if (c == ' ')
+            {
+                temp += (char)(0x12 + 0x80);
+            }
+            else
+            {
+                temp += (char)(s[j] + 0x80);
+            }
+        }
+
+        return temp;
+    }
 }
