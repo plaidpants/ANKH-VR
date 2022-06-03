@@ -23063,57 +23063,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40d52f818c82e7141ad510369b6d4730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CGAColorPalette: []
-  EGAColorPalette: []
-  originalTiles: []
-  expandedTiles: []
+  myFont: {fileID: 12800000, guid: 6a1639c5fcbb6ab42953975a5166d0e4, type: 2}
+  myTransparentFont: {fileID: 12800000, guid: b8e211fb837b63846a3ffdd669460e95, type: 2}
   mainTerrain: {fileID: 0}
   terrain: {fileID: 0}
   animatedTerrrain: {fileID: 0}
   billboardTerrrain: {fileID: 0}
-  tileApple2Filepath1: /u4/SHP0.B
-  tileApple2Filepath2: /u4/SHP1.B
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  worldMapFilepath: /u4/WORLD.MAP
   InputPanel: {fileID: 720628942877266218}
   MainMainLoop: {fileID: 1930791380}
   Keyboard: {fileID: 1351502197}
   KeyboardUpper: {fileID: 527985327}
   KeyboardLower: {fileID: 1441666784}
   GameText: {fileID: 1632083495}
-  Picture: {fileID: 672103301}
+  PictureGameObject: {fileID: 672103301}
   TalkChoice: {fileID: 720628943297383881}
   TalkContinue: {fileID: 720628944195230083}
   TalkMF: {fileID: 779994244}
   u4_TITLE: {fileID: 999847451}
-  bpm: 140
-  gain: 0.5
-  signatureHi: 4
-  signatureLo: 4
-  Apple2ColorPalette: []
-  PNGAtlas: {fileID: 0}
-  PNGFilepath: 
-  combinedTexture: {fileID: 0}
-  combinedMaterial: {fileID: 0}
-  textureAtlasPowerOf2: 0
-  combinedLinearTexture: {fileID: 0}
-  combinedLinearMaterial: {fileID: 0}
-  combinedExpandedTexture: {fileID: 0}
-  combinedExpandedMaterial: {fileID: 0}
-  textureExpandedAtlasPowerOf2: 0
   picture: {fileID: 2115965915}
   pictureTexture: {fileID: 0}
   lastPictureFilename: 
   lastPictureDest: 0
   timerPeriod: 0.02
   flagTimerPeriod: 0.1
-  fontAtlas: {fileID: 0}
-  fontTransparentAtlas: {fileID: 0}
-  myFont: {fileID: 12800000, guid: 6a1639c5fcbb6ab42953975a5166d0e4, type: 2}
-  myTransparentFont: {fileID: 12800000, guid: b8e211fb837b63846a3ffdd669460e95, type: 2}
-  charsetEGAFilepath: /u4/CHARSET.EGA
-  charsetCGAFilepath: /u4/CHARSET.CGA
 --- !u!4 &1753957574
 Transform:
   m_ObjectHideFlags: 0
