@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,20 +16,22 @@ public class Title : MonoBehaviour
     public GameObject TalkContinue;
     public GameObject TalkMF;
 
+    // input panel UI picture image object, needs to be set from the unity editor
+    public Image picture;
+
+    // this is dynamically created at start and is used to diplay the pictures in the UI panel and is attached to the UI picture object above
+    Texture2D pictureTexture;
+
     // reference to game engine, needs to be set from the unity editor
     public U4_Decompiled_TITLE u4_TITLE;
 
-    // dynamically created fonts for buttons and text
+    // dynamically modified fonts for buttons and text, needs to be set from the unity editor as we cannot complete dynamically create these ourselve at runtime
     public Font myFont;
     public Font myTransparentFont;
 
-    // input panel UI picture image object and texture object
-    public Image picture;
-    public Texture2D pictureTexture;
-
-    // used to create a sort of database of picture textures as the game engine loads and manipulates/copies portions of them
-    public Hashtable pictureTextureAtlas = new Hashtable();
-    public Hashtable pictureRawAtlas = new Hashtable();
+    // used to create a sort of database of picture textures with destination pointers used as indexes as the game engine loads and manipulates/copies portions of them
+    Hashtable pictureTextureAtlas = new Hashtable();
+    Hashtable pictureRawAtlas = new Hashtable();
 
     // Used to limit Update processing as it is called once per frame
     float timer = 0.0f;
@@ -45,6 +46,7 @@ public class Title : MonoBehaviour
     // Used to store the last input mode for some input state handling
     U4_Decompiled_TITLE.INPUT_MODE lastInputMode = 0;
 
+    // Start is called before Update()
     private void Start()
     {
         // initialize the palette 
@@ -115,7 +117,7 @@ public class Title : MonoBehaviour
         u4_TITLE.StartThread();
     }
 
-    // used to update the input panel state to mantch the game engine current input mode
+    // used to update the input panel state to match the game engine current input mode
     void UpdateInputPanelState()
     {
         // check if the game engine is initialized and the Game Text object is set
@@ -413,7 +415,7 @@ public class Title : MonoBehaviour
             }
         }
 
-        // update the timer
+        // update the update timer
         timer += Time.deltaTime;
 
         // only update periodically
@@ -432,14 +434,17 @@ public class Title : MonoBehaviour
             // apply any picture updates from above, do this only once per frame at the end to speed things up
             pictureTexture.Apply(); 
 
-            // TODO this is slower than other methods as it always recreates the map from scratch every frame
+            // check if the title map has changed
             if (u4_TITLE.mapChanged)
             {
+                // reset the changed flag
                 u4_TITLE.mapChanged = false;
+
+                // TODO this is slower than other map display methods as it always recreates the map from scratch every time
                 Map.CreateMap(gameObject, u4_TITLE.map);
             }
 
-            // check if we have reached the end of the title input modes
+            // check if we have reached the end of the title input modes and are ready to launch the game
             if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.LAUNCH_GAME)
             {
                 // launch the game
