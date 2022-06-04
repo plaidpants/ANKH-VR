@@ -1107,7 +1107,7 @@ public class World : MonoBehaviour
     public GameObject CreateDungeonRoom(ref DUNGEON_ROOM dungeonRoom)
     {
         GameObject mapGameObject = new GameObject();
-        Map.CreateMap(mapGameObject, dungeonRoom.dungeonRoomMap, false);
+        Map.CreateMap(mapGameObject, dungeonRoom.dungeonRoomMap);
         mapGameObject.transform.position = Vector3.zero;
         mapGameObject.transform.localEulerAngles = Vector3.zero;
         AddMonsters(mapGameObject, ref dungeonRoom);

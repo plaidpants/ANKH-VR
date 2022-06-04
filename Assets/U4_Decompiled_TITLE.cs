@@ -1469,6 +1469,22 @@ blit_mask_table:
             }
         }
 
+        // TODO: only need to do this once as the map is static
+#if USE_UNITY_DLL_FUNCTION
+        main_D_3A24(buffer, buffer.Length);
+#else
+        Native.Invoke<main_D_3683>(nativeLibraryPtr2, bytebuffer, bytebuffer.Length);
+#endif
+        buffer_index = 0;
+        for (int y = 0; y < 5; y++)
+        {
+            for (int x = 0; x < 19; x++)
+            {
+                Tile.TILE tile = (Tile.TILE)bytebuffer[buffer_index++];
+                baseMap[x, y] = tile;
+            }
+        }
+
 #if USE_UNITY_DLL_FUNCTION
         main_D_3A24(buffer, buffer.Length);
 #else
@@ -1499,7 +1515,8 @@ blit_mask_table:
     }
 
     bool playStartupSoundOnlyOnce = false;
-    public Tile.TILE[,] map = new Tile.TILE[19,5];
+    public Tile.TILE[,] map = new Tile.TILE[19, 5];
+    public Tile.TILE[,] baseMap = new Tile.TILE[19, 5];
     public bool mapChanged = false;
     public Tile.TILE[,] initialMap = new Tile.TILE[19, 5];
 }

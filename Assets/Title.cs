@@ -2,6 +2,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+// This class monitors the game engine title and diplays the proper input panels, pictures, and the demo map view
+// it should be attached to a game object in the scene and populated with references to other editor game objects
 public class Title : MonoBehaviour
 {
     // input panel game objects, need to set from the unity editor
@@ -17,7 +19,7 @@ public class Title : MonoBehaviour
     public GameObject TalkMF;
 
     // input panel UI picture image object, needs to be set from the unity editor
-    public Image picture;
+    public Image PanelPicture;
 
     // this is dynamically created at start and is used to diplay the pictures in the UI panel and is attached to the UI picture object above
     Texture2D pictureTexture;
@@ -41,10 +43,18 @@ public class Title : MonoBehaviour
     // Used for a flag animation timer
     float flagTimer = 0.0f;
     float flagTimerExpired = 0.0f;
-    public float flagTimerPeriod = 0.10f; // adjust as needed from the unity editor
+    public float flagTimerPeriod = 0.10f; // adjust as needed from the unity editor, should be not as fast as the Update or game engine timer
 
     // Used to store the last input mode for some input state handling
     U4_Decompiled_TITLE.INPUT_MODE lastInputMode = 0;
+
+    // game object to store the animated fighter under, needs to be set from the unity editor
+    public GameObject fighters;
+
+    // flag to create the base map once
+    bool createMapFlag = true;
+
+    public GameObject lookAtObject;
 
     // Start is called before Update()
     private void Start()
@@ -109,9 +119,9 @@ public class Title : MonoBehaviour
         Picture.ClearTexture(pictureTexture, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
 
         // set the onscreen texture to the sprite
-        picture.sprite = Sprite.Create(pictureTexture, new Rect(0, 0, pictureTexture.width, pictureTexture.height), new Vector2(0.5f, 0.5f));
+        PanelPicture.sprite = Sprite.Create(pictureTexture, new Rect(0, 0, pictureTexture.width, pictureTexture.height), new Vector2(0.5f, 0.5f));
         // set the texture to full color with no color tint
-        picture.color = Color.white;
+        PanelPicture.color = Color.white;
 
         // everything I need it now loaded, start the game engine thread
         u4_TITLE.StartThread();
@@ -355,7 +365,7 @@ public class Title : MonoBehaviour
                 // we have this destination in our database
                 else
                 {
-                    // update existing texture and raw at that destination point index with new picture from file
+                    // update existing texture and raw at that destination pointer index with new picture from file
                     byte[] destRaw = Picture.LoadTITLEEGAPictureFile(loadPicture.filename.ToLower().Replace(".pic", ".ega"));
 
                     // convert the raw into a texture and store in the database
@@ -394,6 +404,108 @@ public class Title : MonoBehaviour
         }
     }
 
+    // need at least 5 to do the title animation
+    const int NUMBER_OF_FIGHTERS = 5;
+
+    public void AddFighters(GameObject lookAtObject)
+    {
+        // need to create fighter game objects if none are present
+        if (fighters.transform.childCount != NUMBER_OF_FIGHTERS)
+        {
+            // create a pool of fighter game objects
+            for (int i = 0; i < NUMBER_OF_FIGHTERS; i++)
+            {
+                // a child object for each fighters entry in the table
+                GameObject fighterGameObject = Primitive.CreateQuad();
+
+                // get the renderer
+                MeshRenderer renderer = fighterGameObject.GetComponent<MeshRenderer>();
+
+                // intially the texture is null
+                renderer.material.mainTexture = null;
+
+                // set the shader
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+
+                // rotate the fighters game object into position after creating
+                Vector3 fightersLocation = new Vector3(0, 255, 0);
+                fighterGameObject.transform.localPosition = fightersLocation;
+                fighterGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+                // set this as a parent of the fighters game object
+                fighterGameObject.transform.SetParent(fighters.transform);
+
+                // set as intially disabled
+                fighterGameObject.SetActive(false);
+            }
+
+            // rotate characters into place
+            fighters.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+        }
+
+        // check if the title map has changed
+        if (u4_TITLE.mapChanged)
+        {
+            // reset the changed flag
+            u4_TITLE.mapChanged = false;
+
+            // reset the fighter game object index
+            int fighterIndex = 0;
+
+            // go through the map
+            for (int y = 0; y < 5; y++)
+            {
+                for (int x = 0; x < 19; x++)
+                {
+                    // get the current map tile
+                    Tile.TILE tile = u4_TITLE.map[x, y];
+
+                    // check if it has been initialized
+                    if (tile != Tile.TILE.DEEP_WATER)
+                    {
+                        // check if it is different than the initial map indicating we have an animated fighter at this location we need to add/update
+                        if (tile != u4_TITLE.initialMap[x, y])
+                        {
+                            // get the corresponding fighters game object from the pool
+                            Transform childoffighters = fighters.transform.GetChild(fighterIndex++);
+
+                            // active the fighter game object
+                            childoffighters.gameObject.SetActive(true);
+
+                            // update to the animation texture frame
+                            Renderer renderer = childoffighters.GetComponent<MeshRenderer>();
+                            renderer.material.mainTexture = Tile.expandedTiles[(int)tile];
+
+                            // update the position and rotation
+                            childoffighters.localPosition = new Vector3(x, -y, 0);
+                            childoffighters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+                            if (lookAtObject)
+                            {
+                                // make it billboard
+                                Transform look = lookAtObject.transform;
+                                look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+                                childoffighters.transform.LookAt(look.transform);
+                                Vector3 rot = childoffighters.transform.eulerAngles;
+                                childoffighters.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // turn the rest of the fighter game objects in the pool off
+            for (int i = fighterIndex; i < NUMBER_OF_FIGHTERS; i++)
+            {
+                // get the corresponding fighters game object
+                Transform childoffighters = fighters.transform.GetChild(fighterIndex++);
+
+                // turn it off
+                childoffighters.gameObject.SetActive(false);
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -427,22 +539,24 @@ public class Title : MonoBehaviour
 
             // handle all input panel updates
             UpdateInputPanelState();
-            ProcessScreenCopyQueue();
+            ProcessScreenCopyQueue(); // NOTE: this needs to come before ProcessScreenLoadQueue() so updates work correctly
             ProcessScreenLoadQueue();
             ProcessScreenDotQueue();
 
             // apply any picture updates from above, do this only once per frame at the end to speed things up
-            pictureTexture.Apply(); 
+            pictureTexture.Apply();
 
-            // check if the title map has changed
-            if (u4_TITLE.mapChanged)
+            // check if we have already created the map or not
+            if (createMapFlag)
             {
-                // reset the changed flag
-                u4_TITLE.mapChanged = false;
+                // the map is static so we only need to create it once
+                createMapFlag = false;
 
-                // TODO this is slower than other map display methods as it always recreates the map from scratch every time
-                Map.CreateMap(gameObject, u4_TITLE.map);
+                Map.CreateMap(gameObject, u4_TITLE.baseMap, lookAtObject);
             }
+
+            // add and update the animated fighters to the title scene
+            AddFighters(lookAtObject);
 
             // check if we have reached the end of the title input modes and are ready to launch the game
             if (u4_TITLE.inputMode == U4_Decompiled_TITLE.INPUT_MODE.LAUNCH_GAME)
