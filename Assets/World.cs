@@ -30,8 +30,6 @@ public class World : MonoBehaviour
     public GameObject skyGameObject;
 
     //public GameObject[] Settlements;
-    public GameObject[] CombatTerrains;
-    public GameObject CenterOfCombatTerrain;
 
     public List<string> talkWordList = new List<string>();
 
@@ -82,6 +80,30 @@ public class World : MonoBehaviour
     public GameObject TalkDirection;
     public GameObject TalkEndGame;
 
+    public string lastVisionFilename;
+
+    public GameObject statsOverview;
+    public GameObject windDirection;
+    public GameObject moons;
+    public GameObject trammelLight;
+    public GameObject feluccaLight;
+    public GameObject sunLight;
+
+    public GameObject[] characterStatus = new GameObject[8];
+    public GameObject weaponsStatus;
+    public GameObject armourStatus;
+    public GameObject equipmentStatus;
+    public GameObject itemsStatus;
+    public GameObject itemsStatusHeading;
+    public GameObject reagentsStatus;
+    public GameObject mixturesStatus;
+
+    public U4_Decompiled_AVATAR.MODE lastMode = (U4_Decompiled_AVATAR.MODE)(-1);
+    public bool wasJustInside = false;
+    public bool readyToAutomaticallyEnter = true;
+
+    public Transform rotateTransform;
+    //public GameObject convertMe;
 
     // reference to game engine
     public U4_Decompiled_AVATAR u4;
@@ -91,252 +113,41 @@ public class World : MonoBehaviour
 
     // this array size can be adjusted to display more or less of the map at runtime
     Tile.TILE[,] raycastOutdoorMap = new Tile.TILE[128, 128];
- //   U4_Decompiled.TILE[,] raycastOutdoorMap = new U4_Decompiled.TILE[256, 256];
+    //   U4_Decompiled.TILE[,] raycastOutdoorMap = new U4_Decompiled.TILE[256, 256];
 
-   
-
-    // unfortuantly the game engine never saves this information after loading the combat terrain in function C_7C65()
-    // the code is not re-entrant so I cannot just expose and call the function directly so I need to re-implement the 
-    // logic here so I can on the fly determine the combat terrain to display by exposing the interal variables used in the
-    // original function. The INN or shop or camp case is handled elsewhere (e.g. In the middle of the night, while out for a stroll...)
-
-    public U4_Decompiled_AVATAR.COMBAT_TERRAIN Convert_Tile_to_Combat_Terrian(Tile.TILE tile)
-    {
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN combat_terrain;
-
-
-        if (u4.Party._tile <= Tile.TILE.SHIP_SOUTH || (Tile.TILE)((byte)u4.current_tile & ~3) == Tile.TILE.SHIP_WEST)
-        {
-            if (u4.D_96F8 == Tile.TILE.PIRATE_WEST)
-            {
-                combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.SHIPSHIP;
-            }
-            else if (u4.D_946C <= Tile.TILE.SHALLOW_WATER)
-            {
-                combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.SHIPSEA;
-            }
-            else
-            {
-                combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.SHIPSHOR;
-            }
-        }
-        else
-        {
-            if (u4.D_96F8 == Tile.TILE.PIRATE_WEST)
-            {
-                combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.SHORSHIP;
-            }
-            else if (u4.D_946C <= Tile.TILE.SHALLOW_WATER)
-            {
-                combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.SHORE;
-            }
-            else
-            {
-                switch (tile)
-                {
-                    case Tile.TILE.SWAMP:
-                        {
-                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.MARSH;
-                            break;
-                        }
-                    case Tile.TILE.BRUSH:
-                        {
-                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.BRUSH;
-                            break;
-                        }
-                    case Tile.TILE.FOREST:
-                        {
-                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.FOREST;
-                            break;
-                        }
-                    case Tile.TILE.HILLS:
-                        {
-                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.HILL;
-                            break;
-                        }
-                    case Tile.TILE.DUNGEON:
-                        {
-                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.DUNGEON;
-                            break;
-                        }
-                    case Tile.TILE.BRICK_FLOOR:
-                        {
-                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.BRICK;
-                            break;
-                        }
-                    case Tile.TILE.BRIDGE:
-                    case Tile.TILE.BRIDGE_TOP:
-                    case Tile.TILE.BRIDGE_BOTTOM:
-                    case Tile.TILE.WOOD_FLOOR:
-                        {
-                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.BRIDGE;
-                            break;
-                        }
-                    default:
-                        {
-                            combat_terrain = U4_Decompiled_AVATAR.COMBAT_TERRAIN.GRASS;
-                            break;
-                        }
-                }
-            }
-        }
-
-        return combat_terrain;
-    }
-
-    public struct CombatMonsterStartPositions
-    {
-        public int start_x;
-        public int start_y;
-    }
-
-    public struct CombatPartyStartPositions
-    {
-        public int start_x;
-        public int start_y;
-    }
-    void LoadCombatMap(string combatMapFilepath, 
-        ref Tile.TILE[,] combatMap, 
-        ref CombatMonsterStartPositions [] monsterStartPositions, 
-        ref CombatPartyStartPositions [] partyStartPositions)
-    {
-        /*
-        These files contain the 11x11 battleground maps shown when combat starts. It has the map itself plus starting positions for up to 16 monsters and 8 party members.
-        Offset 	Length (in bytes) 	Purpose
-        0x0 	16 	start_x for monsters 0-15
-        0x10 	16 	start_y for monsters 0-15
-        0x20 	8 	start_x for party members 0-7
-        0x28 	8 	start_y for party members 0-7
-        0x30 	16 	Purpose unknown; seems to be a constant: 08 AD 83 C0 AD 83 C0 AD 83 C0 A0 00 B9 A6 08 F0
-        0x40 	121 	11x11 Map Matrix
-        0xB9 	7 	Purpose unknown; seems to be a constant: 8D 00 00 00 00 47 09 
-        */
-
-        if (!System.IO.File.Exists(Application.persistentDataPath + combatMapFilepath))
-        {
-            Debug.Log("Could not find combat map file " + Application.persistentDataPath + combatMapFilepath);
-            return;
-        }
-
-        // read the file
-        byte[] combatMapFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + combatMapFilepath);
-
-        if (combatMapFileData.Length != 0xc0)
-        {
-            Debug.Log("Combat map file incorrect length " + combatMapFileData.Length);
-            return;
-        }
-
-        int fileIndex = 0;
-
-        // the shrine does not have any start positions and omits those and goes right to the map,
-        // the file size appear to be the same though
-        if (combatMapFilepath != "/u4/SHRINE.CON")
-        {
-            for (int i = 0; i < 16; i++)
-            {
-                monsterStartPositions[i].start_x = combatMapFileData[fileIndex++];
-            }
-
-            for (int i = 0; i < 16; i++)
-            {
-                monsterStartPositions[i].start_y = combatMapFileData[fileIndex++];
-            }
-
-            for (int i = 0; i < 8; i++)
-            {
-                partyStartPositions[i].start_x = combatMapFileData[fileIndex++];
-            }
-
-            for (int i = 0; i < 8; i++)
-            {
-                partyStartPositions[i].start_y = combatMapFileData[fileIndex++];
-            }
-
-            // skip over
-            fileIndex += 16;
-        }
-
-        // read in the tile map
-        for (int y = 0; y < 11; y++)
-        {
-            for (int x = 0; x < 11; x++)
-            {
-                combatMap[x, y] = (Tile.TILE)combatMapFileData[fileIndex++];
-            }
-        }
-    }
-
-    void CreateCombatTerrains()
-    { 
-        // create a game object to store the combat terrain game objects, this should be at the top with no parent same as the world
-        GameObject combatTerrainsObject = new GameObject();
-        combatTerrainsObject.name = "Combat Terrains";
-
-        CombatTerrains = new GameObject[(int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX];
-
-        // go through all the combat terrains and load their maps and create a game object to hold them
-        // as a child of the above combat terrains game object
-        for (int i = 0; i<(int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
-        {
-            // allocate space for the individual map
-            combatMaps[i] = new Tile.TILE[11, 11];
-            // allocate space for the monster and party starting positions
-            combatMonsterStartPositions[i] = new CombatMonsterStartPositions[16];
-            combatPartyStartPositions[i] = new CombatPartyStartPositions[8];
-
-            if (i == (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.CAMP_DNG)
-            {
-                // this one has a different name format
-                LoadCombatMap("/u4/CAMP.DNG",
-                    ref combatMaps[i],
-                    ref combatMonsterStartPositions[i],
-                    ref combatPartyStartPositions[i]);
-            }
-            else
-            {
-                // load the combat map from the original files
-                LoadCombatMap("/u4/" + ((U4_Decompiled_AVATAR.COMBAT_TERRAIN)i).ToString() + ".CON",
-                    ref combatMaps[i],
-                    ref combatMonsterStartPositions[i],
-                    ref combatPartyStartPositions[i]);
-            }
-
-            // create a game object to hold it and set it as a child of the combat terrains game object
-            GameObject gameObject = new GameObject();
-            gameObject.transform.SetParent(combatTerrainsObject.transform);
-
-            // set it's name to match the combat terrain being created
-            gameObject.name = ((U4_Decompiled_AVATAR.COMBAT_TERRAIN) i).ToString();
-
-            // create the combat terrain based on the loaded map
-            Map.CreateMap(gameObject, combatMaps[i]);
-
-            // Disable it initially
-            gameObject.SetActive(false);
-
-            // Position the combat map in place
-            gameObject.transform.position = new Vector3(0, 0, entireMapTILEs.GetLength(1) - combatMaps[i].GetLength(1)); ;
-
-            // rotate map into place
-            gameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
-
-            // save the game object in the array
-            CombatTerrains[i] = gameObject;
-        }
-
-        CenterOfCombatTerrain = new GameObject();
-        CenterOfCombatTerrain.transform.position = new Vector3(5f, 0, 250f);
-        CenterOfCombatTerrain.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
-        CenterOfCombatTerrain.transform.SetParent(combatTerrainsObject.transform);
-    }
-
-    [SerializeField]
     Tile.TILE[,] entireMapTILEs = new Tile.TILE[32 * 8, 32 * 8];
 
-    [SerializeField]
     GameObject[,] entireMapGameObjects = new GameObject[32 * 8, 32 * 8];
-    GameObject[][,] settlementsMapGameObjects = new GameObject[(int)SETTLEMENT.MAX][,];
+
+    public GameObject GameText;
+
+    // changes in these require redrawing the map
+    int lastRaycastPlayer_posx = -1;
+    int lastRaycastPlayer_posy = -1;
+    int lastRaycastPlayer_f_1dc = -1;
+    U4_Decompiled_AVATAR.DIRECTION lastRaycastP_surface_party_direction = (U4_Decompiled_AVATAR.DIRECTION)(-1);
+    bool last_door_timer = false;
+
+    public Image vision;
+    Texture2D visionTexture;
+
+    //public Texture2D[] picture1;
+    //public Texture2D[] picture2;
+    //public Texture2D[] picture3;
+    //public Texture2D[] picture4;
+
+    // Update is called once per frame
+    float timer = 0.0f;
+    float timerExpired = 0.0f;
+    public float timerPeriod = 0.02f;
+
+    // used for a flag animation timer
+    float flagTimer = 0.0f;
+    float flagTimerExpired = 0.0f;
+    public float flagTimerPeriod = 0.10f;
+
+    GameObject hiddenWorldMapGameObject;
+
 
     void LoadWorldMap()
     {
@@ -388,259 +199,6 @@ public class World : MonoBehaviour
         }
     }
 
-    public enum NPC_MOVEMENT_MODE
-    {
-        FIXED = 0x00,
-        WANDER = 0x01,
-        FOLLOW = 0x80,
-        ATTACK = 0xff
-    };
-
-    public enum NPC_STRING_INDEX
-    {
-        NAME = 0,
-        PRONOUN = 1, //  (He, She or It)
-        LOOK_DESCRIPTION = 2,
-        JOB_RESPONSE = 3,
-        HEALTH_RESPONSE = 4,
-        KEYWORD1_RESPONSE = 5,
-        KEYWORD2_RESPONSE = 6,
-        QUESTION = 7,
-        QUESTION_YES_RESPONSE = 8,
-        QUESTION_NO_RESPONSE = 9,
-        KEYWORD1 = 10,
-        KEYWORD2 = 11,
-        MAX = 12
-    };
-
-    // these need to line up with U4_Decompiled.LOCATIONS so we can convert from Party._loc to this enum and the LOCATIONS enum, LBC_1 is a special case
-    public enum SETTLEMENT
-    {
-        // Castles
-        LCB_1 = 0,
-        LCB_2 = 1,
-        LYCAEUM = 2,
-        EMPATH = 3,
-        SERPENT = 4,
-
-        // Townes
-        MOONGLOW = 5,
-        BRITAIN = 6,
-        JHELOM = 7,
-        YEW = 8,
-        MINOC = 9,
-        TRINSIC = 10,
-        SKARA = 11,
-        MAGINCIA = 12,
-
-        // Villages
-        PAWS = 13,
-        DEN = 14,
-        VESPER = 15,
-        COVE = 16,
-        MAX = 17
-    }
-
-    public struct npc
-    {
-        public Tile.TILE tile;
-        public byte pos_x;
-        public byte pos_y;
-        public NPC_MOVEMENT_MODE movement;
-        public int conversationIndex;
-        public List<string> strings;
-        public int probabilityOfTurningAway;
-        public bool questionAffectHumility;
-        public int questionTriggerIndex;
-    };
-
-    public npc[][] settlementNPCs = new npc[(int)SETTLEMENT.MAX][]; //32
-    public int[][] npcQuestionTriggerIndex = new int[(int)SETTLEMENT.MAX][]; //16
-    public bool[][] npcQuestionAffectHumility = new bool[(int)SETTLEMENT.MAX][]; //16
-    public int[][] npcProbabilityOfTurningAway = new int[(int)SETTLEMENT.MAX][]; //16
-    public List<string>[][] npcStrings = new List<string>[(int)SETTLEMENT.MAX][]; //16
-    public Tile.TILE[][,] settlementMap = new Tile.TILE[(int)SETTLEMENT.MAX][,]; //32,32
-
-    void LoadSettlements()
-    {
-        /* 
-           Offset 	Length (in bytes) 	Purpose
-           0x0 	    1024 	32x32 town map matrix
-           0x400 	32 	    Tile for NPCs 0-31
-           0x420 	32 	    Start_x for NPCs 0-31
-           0x440 	32 	    Start_y for NPCs 0-31
-           0x460 	32 	    Repetition of 0x400-0x41F
-           0x480 	32 	    Repetition of 0x420-0x43F
-           0x4A0 	32 	    Repetition of 0x440-0x45F
-           0x4C0 	32 	    Movement_behavior for NPCs 0-31 (0x0-fixed, 0x1-wander, 0x80-follow, 0xFF-attack)
-           0x4E0 	32 	    Conversion index (tlk file) for NPCs 0-31 
-        */
-
-        for (int settlement = 0; settlement < (int)SETTLEMENT.MAX; settlement++)
-        {
-            settlementNPCs[settlement] = new npc[32];
-            npcQuestionTriggerIndex[settlement] = new int[16];
-            npcQuestionAffectHumility[settlement] = new bool[16];
-            npcProbabilityOfTurningAway[settlement] = new int[16];
-            npcStrings[settlement] = new List<string>[16];
-            settlementMap[settlement] = new Tile.TILE[32,32];
-
-            if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + ((SETTLEMENT)settlement).ToString() + ".ULT"))
-            {
-                Debug.Log("Could not find settlement file " + Application.persistentDataPath + "/u4/" + ((SETTLEMENT)settlement).ToString() + ".ULT");
-                continue;
-            }
-
-            // read the file
-            byte[] settlementFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + "/u4/" + ((SETTLEMENT)settlement).ToString() + ".ULT");
-
-            if (settlementFileData.Length != 1280)
-            {
-                Debug.Log("Settlement file incorrect length " + settlementFileData.Length);
-                continue;
-            }
-
-            /*
-                Offset 	Length (in bytes) 	Purpose
-                0x0 	1 	Question Flag (3=JOB, 4=HEALTH, 5=KEYWORD1, 6=KEYWORD2)
-                0x1 	1 	Does Response Affect Humility? (0=No, 1=Yes)
-                0x2 	1 	Probability of Turning Away (out of 256)
-                0x3 	Varies 	Name
-                Varies 	Varies 	Pronoun (He, She or It)
-                Varies 	Varies 	LOOK Description
-                Varies 	Varies 	JOB Response
-                Varies 	Varies 	HEALTH Response
-                Varies 	Varies 	KEYWORD 1 Response
-                Varies 	Varies 	KEYWORD 2 Response
-                Varies 	Varies 	Yes/No Question
-                Varies 	Varies 	YES Response
-                Varies 	Varies 	NO Response
-                Varies 	Varies 	KEYWORD 1
-                Varies 	Varies 	KEYWORD 2
-                Varies-0x119 	Varies 	00000....  
-            */
-
-            if (settlement == (int)SETTLEMENT.LCB_1 || settlement == (int)SETTLEMENT.LCB_2)
-            {
-                if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + "LCB" + ".TLK"))
-                {
-                    Debug.Log("Could not find settlement talk file " + Application.persistentDataPath + "/u4/" + "LCB" + ".TLK");
-                    continue;
-                }
-            }
-            else
-            {
-                if (!System.IO.File.Exists(Application.persistentDataPath + "/u4/" + (SETTLEMENT)settlement + ".TLK"))
-                {
-                    Debug.Log("Could not find settlement talk file " + Application.persistentDataPath + "/u4/" + (SETTLEMENT)settlement + ".TLK");
-                    continue;
-                }
-            }
-
-            byte[] talkFileData;
-
-            if (settlement == (int)SETTLEMENT.LCB_1 || settlement == (int)SETTLEMENT.LCB_2)
-            {
-                // read the file
-                talkFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + "/u4/" + "LCB" + ".TLK");
-            }
-            else
-            {
-                // read the file
-                talkFileData = System.IO.File.ReadAllBytes(Application.persistentDataPath + "/u4/" + (SETTLEMENT)settlement + ".TLK");
-            }
-
-            if (talkFileData.Length != 4608)
-            {
-                Debug.Log("Settlement talk file incorrect length " + talkFileData.Length);
-                continue;
-            }
-
-            for (int talkIndex = 0; talkIndex < 16; talkIndex++)
-            {
-                npcStrings[settlement][talkIndex] = new List<string>();
-
-                npcQuestionTriggerIndex[settlement][talkIndex] = talkFileData[talkIndex * 288];
-                if (talkFileData[(talkIndex * 288) + 1] != 0)
-                {
-                    npcQuestionAffectHumility[settlement][talkIndex] = true;
-                }
-                else
-                {
-                    npcQuestionAffectHumility[settlement][talkIndex] = false;
-                }
-                npcProbabilityOfTurningAway[settlement][talkIndex] = talkFileData[talkIndex * 288 + 2];
-
-                string s;
-                int stringBufferIndex = 3;
-
-                // search for strings in the .TLK file
-                for (int stringIndex = 0; stringIndex < (int)NPC_STRING_INDEX.MAX; stringIndex++)
-                {
-                    // reset string
-                    s = "";
-
-                    // manually construct the string because C# doesn't work with null terminated C strings well
-                    for (int i = 0; (i < 100) && (talkFileData[talkIndex * 288 + stringBufferIndex] != 0); i++)
-                    {
-                        s += (char)talkFileData[talkIndex * 288 + stringBufferIndex++];
-                    }
-
-                    // add it to the list even if it is empty
-                    npcStrings[settlement][talkIndex].Add(s);
-
-                    // skip over null terminator to go to the next string
-                    stringBufferIndex++;
-                }
-            }
-
-            // load settlement map data
-            int bufferIndex = 0;
-
-            for (int height = 0; height < 32; height++)
-            {
-                for (int width = 0; width < 32; width++)
-                {
-                    Tile.TILE tileIndex = (Tile.TILE)settlementFileData[bufferIndex++];
-                    settlementMap[settlement][width, height] = tileIndex;
-                }
-            }
-
-            // load npc data from the map data
-            for (int npcIndex = 0; npcIndex < 32; npcIndex++)
-            {
-                Tile.TILE npcTile = (Tile.TILE)settlementFileData[0x400 + npcIndex];
-                settlementNPCs[settlement][npcIndex].tile = npcTile;
-
-                // zero indicates unused
-                if (npcTile != 0)
-                {
-                    settlementNPCs[settlement][npcIndex].pos_x = settlementFileData[0x420 + npcIndex];
-                    settlementNPCs[settlement][npcIndex].pos_y = settlementFileData[0x440 + npcIndex];
-                    settlementNPCs[settlement][npcIndex].movement = (NPC_MOVEMENT_MODE)settlementFileData[0x4C0 + npcIndex];
-                    int conversationIndex = settlementFileData[0x4E0 + npcIndex];
-                    settlementNPCs[settlement][npcIndex].conversationIndex = conversationIndex;
-                    // grab the talk data and add it to this structure
-                    // zero indicates unused
-                    if (conversationIndex != 0)
-                    {
-                        // this can be 128 for one vendor in Vincent, not sure why? TODO need to check this after I fix the npx talk loader
-                        if ((conversationIndex - 1) < npcStrings.Length)
-                        {
-                            settlementNPCs[settlement][npcIndex].strings = npcStrings[settlement][conversationIndex - 1];
-                            settlementNPCs[settlement][npcIndex].questionAffectHumility = npcQuestionAffectHumility[settlement][conversationIndex - 1];
-                            settlementNPCs[settlement][npcIndex].probabilityOfTurningAway = npcProbabilityOfTurningAway[settlement][conversationIndex - 1];
-                            settlementNPCs[settlement][npcIndex].questionTriggerIndex = npcQuestionTriggerIndex[settlement][conversationIndex - 1];
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    public GameObject GameText;
-
     void CreateParty()
     {
         // create player/party object to display texture
@@ -677,8 +235,6 @@ public class World : MonoBehaviour
         bubblePrefab.transform.localEulerAngles = new Vector3(-90.0f, 0.0f, 0.0f);
         */
     }
-
-
 
     public void followWorld(GameObject follow)
     {
@@ -1014,16 +570,16 @@ public class World : MonoBehaviour
                 // inside buildings we need to check extra stuff
                 if (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING)
                 {
-                    SETTLEMENT settlement;
+                    Settlement.SETTLEMENT settlement;
 
                     // get the current settlement, need to special case BRITANNIA as the castle has two levels, use the ladder to determine which level
                     if ((u4.Party._loc == U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == Tile.TILE.LADDER_UP))
                     {
-                        settlement = SETTLEMENT.LCB_1;
+                        settlement = Settlement.SETTLEMENT.LCB_1;
                     }
                     else
                     {
-                        settlement = (SETTLEMENT)u4.Party._loc;
+                        settlement = (Settlement.SETTLEMENT)u4.Party._loc;
                     }
 
                     // set the name of the game object to match the npc
@@ -1033,7 +589,7 @@ public class World : MonoBehaviour
                     }
                     else
                     {
-                        childofnpcs.name = npcStrings[(int)settlement][currentNpcs[npcIndex]._tlkidx - 1][(int)NPC_STRING_INDEX.NAME];
+                        childofnpcs.name = Settlement.npcStrings[(int)settlement][currentNpcs[npcIndex]._tlkidx - 1][(int)Settlement.NPC_STRING_INDEX.NAME];
                     }
 
                     // adjust position based on the offset of the raycastSettlementMap due to the player position
@@ -1202,27 +758,6 @@ public class World : MonoBehaviour
  
     }
 
-
-    // changes in these require redrawing the map
-    int lastRaycastPlayer_posx = -1;
-    int lastRaycastPlayer_posy = -1;
-    int lastRaycastPlayer_f_1dc = -1;
-    U4_Decompiled_AVATAR.DIRECTION lastRaycastP_surface_party_direction = (U4_Decompiled_AVATAR.DIRECTION )(-1);
-    bool last_door_timer = false;
-
-    // create a temp TILE map array to hold the combat terrains as we load them
-    Tile.TILE[][,] combatMaps = new Tile.TILE[(int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX][,];
-    CombatMonsterStartPositions[][] combatMonsterStartPositions = new CombatMonsterStartPositions[(int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX][];
-    CombatPartyStartPositions[][] combatPartyStartPositions = new CombatPartyStartPositions[(int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX][];
-
-    public Image vision;
-    Texture2D visionTexture;
-
-    //public Texture2D[] picture1;
-    //public Texture2D[] picture2;
-    //public Texture2D[] picture3;
-    //public Texture2D[] picture4;
-   
     private void Start()
     {
         // this object needs to move around so it needs to be above the other which are based on the whole world map
@@ -1337,7 +872,7 @@ public class World : MonoBehaviour
         LoadWorldMap();
 
         //load all settlements
-        LoadSettlements();
+        Settlement.LoadSettlements();
 
         // load all dungeons
         Dungeon.LoadDungeons();
@@ -1346,7 +881,7 @@ public class World : MonoBehaviour
         CreateParty();
 
         // Create the combat terrains
-        CreateCombatTerrains();
+        Combat.CreateCombatTerrains(entireMapTILEs.GetLength(1));
 
         // get a reference to the game engine
         u4 = FindObjectOfType<U4_Decompiled_AVATAR>();
@@ -1356,12 +891,12 @@ public class World : MonoBehaviour
         Map.CreateMapSubsetPass2(hiddenWorldMapGameObject, ref entireMapTILEs, ref entireMapGameObjects);
 
         GameObject hiddenSettlementsMaps = new GameObject("Hidden Settlements Maps");
-        for (int i = 0; i < (int)SETTLEMENT.MAX; i++)
+        for (int i = 0; i < (int)Settlement.SETTLEMENT.MAX; i++)
         {
-            GameObject settlementGameObject = new GameObject(((SETTLEMENT)i).ToString());
+            GameObject settlementGameObject = new GameObject(((Settlement.SETTLEMENT)i).ToString());
             settlementGameObject.transform.SetParent(hiddenSettlementsMaps.transform);
-            settlementsMapGameObjects[i] = new GameObject[32, 32];
-            Map.CreateMapSubsetPass2(settlementGameObject, ref settlementMap[i], ref settlementsMapGameObjects[i], true);
+            Settlement.settlementsMapGameObjects[i] = new GameObject[32, 32];
+            Map.CreateMapSubsetPass2(settlementGameObject, ref Settlement.settlementMap[i], ref Settlement.settlementsMapGameObjects[i], true);
             //CreateMapLabels(settlementGameObject, ref settlementMap[i]);
         }
 
@@ -1465,18 +1000,6 @@ public class World : MonoBehaviour
     }
 
     // Update is called once per frame
-    float timer = 0.0f;
-    float timerExpired = 0.0f;
-    public float timerPeriod = 0.02f;
-
-    // used for a flag animation timer
-    float flagTimer = 0.0f;
-    float flagTimerExpired = 0.0f;
-    public float flagTimerPeriod = 0.10f;
-
-    GameObject hiddenWorldMapGameObject;
-
-    // Update is called once per frame
     void Update()
     {
         // update the timer
@@ -1514,14 +1037,14 @@ public class World : MonoBehaviour
                 bool keyword1found = false;
                 bool keyword2found = false;
 
-                SETTLEMENT settlement;
+                Settlement.SETTLEMENT settlement;
                 if ((u4.Party._loc == U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == Tile.TILE.LADDER_UP))
                 {
-                    settlement = SETTLEMENT.LCB_1;
+                    settlement = Settlement.SETTLEMENT.LCB_1;
                 }
                 else
                 {
-                    settlement = (SETTLEMENT)u4.Party._loc;
+                    settlement = (Settlement.SETTLEMENT)u4.Party._loc;
                 }
 
                 foreach (string word in u4.wordList)
@@ -1536,7 +1059,7 @@ public class World : MonoBehaviour
                         string sub = lower.Substring(0, 4);
                         //Debug.Log(sub);
                         if (sub ==
-                            settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)NPC_STRING_INDEX.KEYWORD1].ToLower().Substring(0, 4))
+                            Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD1].ToLower().Substring(0, 4))
                         {
                             u4.keyword1 = lower;
                             lower = char.ToUpper(lower[0]) + lower.Substring(1, lower.Length - 1);
@@ -1545,7 +1068,7 @@ public class World : MonoBehaviour
                             keyword1Button.SetActive(true);
                         }
                         if (sub ==
-                            settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)NPC_STRING_INDEX.KEYWORD2].ToLower().Substring(0, 4))
+                            Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD2].ToLower().Substring(0, 4))
                         {
                             u4.keyword2 = lower;
                             lower = char.ToUpper(lower[0]) + lower.Substring(1, lower.Length - 1);
@@ -2112,7 +1635,7 @@ public class World : MonoBehaviour
 
                 for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                 {
-                    CombatTerrains[i].gameObject.SetActive(false);
+                    Combat.CombatTerrains[i].gameObject.SetActive(false);
                 }
 
                 // automatically enter things when you are on an enterable tile unless just left somewhere or you are flying in the balloon
@@ -2192,7 +1715,7 @@ public class World : MonoBehaviour
 
                 for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                 {
-                    CombatTerrains[i].gameObject.SetActive(false);
+                    Combat.CombatTerrains[i].gameObject.SetActive(false);
                 }
 
                 // automatic Klimb and Descend ladders
@@ -2244,13 +1767,13 @@ public class World : MonoBehaviour
                     if (Dungeon.dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
                     {
                         Destroy(Dungeon.dungeon);
-                        Dungeon.dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, combatMaps);
+                        Dungeon.dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, Combat.combatMaps);
                     }
                     Dungeon.dungeon.SetActive(true);
 
                     for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                     {
-                        CombatTerrains[i].gameObject.SetActive(false);
+                        Combat.CombatTerrains[i].gameObject.SetActive(false);
                     }
 
                     if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
@@ -2278,17 +1801,17 @@ public class World : MonoBehaviour
                     Dungeon.dungeonMonsters.SetActive(false);
                     skyGameObject.SetActive(true);
 
-                    int currentCombatTerrain = (int)Convert_Tile_to_Combat_Terrian(u4.current_tile);
+                    int currentCombatTerrain = (int)Combat.Convert_Tile_to_Combat_Terrian(u4.current_tile, u4.Party._tile, u4.D_96F8, u4.D_946C);
 
                     for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                     {
                         if (i == currentCombatTerrain)
                         {
-                            CombatTerrains[i].gameObject.SetActive(true);
+                            Combat.CombatTerrains[i].gameObject.SetActive(true);
                         }
                         else
                         {
-                            CombatTerrains[i].gameObject.SetActive(false);
+                            Combat.CombatTerrains[i].gameObject.SetActive(false);
                         }
                     }
 
@@ -2321,13 +1844,13 @@ public class World : MonoBehaviour
                 if (Dungeon.dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
                 {
                     Destroy(Dungeon.dungeon);
-                    Dungeon.dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, combatMaps);
+                    Dungeon.dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, Combat.combatMaps);
                 }
                 Dungeon.dungeon.SetActive(true);
 
                 for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                 {
-                    CombatTerrains[i].gameObject.SetActive(false);
+                    Combat.CombatTerrains[i].gameObject.SetActive(false);
                 }
 
                 if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
@@ -2359,7 +1882,7 @@ public class World : MonoBehaviour
                 {
                     // not the right dungeon, create a new dungeon
                     Destroy(Dungeon.dungeon);
-                    Dungeon.dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, combatMaps);
+                    Dungeon.dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, Combat.combatMaps);
                 }
 
                 if (u4.Party.f_1dc > 0) // torch active
@@ -2375,7 +1898,7 @@ public class World : MonoBehaviour
 
                 for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                 {
-                    CombatTerrains[i].gameObject.SetActive(false);
+                    Combat.CombatTerrains[i].gameObject.SetActive(false);
                 }
 
                 if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
@@ -2407,12 +1930,12 @@ public class World : MonoBehaviour
                 {
                     if (i == (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.SHRINE)
                     {
-                        CombatTerrains[i].gameObject.SetActive(true); 
-                        followWorld(CenterOfCombatTerrain);
+                        Combat.CombatTerrains[i].gameObject.SetActive(true); 
+                        followWorld(Combat.CenterOfCombatTerrain);
                     }
                     else
                     {
-                        CombatTerrains[i].gameObject.SetActive(false);
+                        Combat.CombatTerrains[i].gameObject.SetActive(false);
                     }
                 }
 
@@ -2484,19 +2007,19 @@ public class World : MonoBehaviour
                 {
                     if (i == currentCombatTerrain)
                     {
-                        CombatTerrains[i].gameObject.SetActive(true);
+                        Combat.CombatTerrains[i].gameObject.SetActive(true);
                         if (u4.currentActiveCharacter.active)
                         {
                             followWorld(activeCharacter);
                         }
                         else
                         {
-                            followWorld(CenterOfCombatTerrain);
+                            followWorld(Combat.CenterOfCombatTerrain);
                         }
                     }
                     else
                     {
-                        CombatTerrains[i].gameObject.SetActive(false);
+                        Combat.CombatTerrains[i].gameObject.SetActive(false);
                     }
                 }
             }
@@ -2541,7 +2064,7 @@ public class World : MonoBehaviour
                     }
                     else
                     {
-                        skyGameObject.transform.localPosition = CenterOfCombatTerrain.transform.localPosition;
+                        skyGameObject.transform.localPosition = Combat.CenterOfCombatTerrain.transform.localPosition;
                     }
                 }
             }
@@ -3154,23 +2677,23 @@ public class World : MonoBehaviour
             }
             else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING)
             {
-                    
-                SETTLEMENT settlement;
+
+                Settlement.SETTLEMENT settlement;
                 // get the current settlement, need to special case BRITANNIA as the castle has two levels, use the ladder to determine which level
                 if ((u4.Party._loc == U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == Tile.TILE.LADDER_UP))
                 {
-                    settlement = SETTLEMENT.LCB_1;
+                    settlement = Settlement.SETTLEMENT.LCB_1;
                 }
                 else
                 {
-                    settlement = (SETTLEMENT)u4.Party._loc;
+                    settlement = (Settlement.SETTLEMENT)u4.Party._loc;
                 }
 
                 Combine.Combine3(mainTerrain, 
                     ref raycastSettlementMap, 
                     u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1, 
                     u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1, 
-                    ref settlementsMapGameObjects[(int)settlement],
+                    ref Settlement.settlementsMapGameObjects[(int)settlement],
                     false,
                     TextureFormat.RGBA32,
                     false,
@@ -3225,29 +2748,4 @@ public class World : MonoBehaviour
             */
         }
     }
-
-    public string lastVisionFilename;
-
-    public GameObject statsOverview;
-    public GameObject windDirection;
-    public GameObject moons;
-    public GameObject trammelLight;
-    public GameObject feluccaLight;
-    public GameObject sunLight;
-
-    public GameObject[] characterStatus = new GameObject[8];
-    public GameObject weaponsStatus;
-    public GameObject armourStatus;
-    public GameObject equipmentStatus;
-    public GameObject itemsStatus;
-    public GameObject itemsStatusHeading;
-    public GameObject reagentsStatus;
-    public GameObject mixturesStatus;
-
-    public U4_Decompiled_AVATAR.MODE lastMode = (U4_Decompiled_AVATAR.MODE )(-1);
-    public bool wasJustInside = false;
-    public bool readyToAutomaticallyEnter = true;
-
-    public Transform rotateTransform;
-    //public GameObject convertMe;
 }

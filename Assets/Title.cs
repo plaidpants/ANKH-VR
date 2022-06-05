@@ -475,6 +475,7 @@ public class Title : MonoBehaviour
                             // update to the animation texture frame
                             Renderer renderer = childoffighters.GetComponent<MeshRenderer>();
                             renderer.material.mainTexture = Tile.expandedTiles[(int)tile];
+                            childoffighters.name = tile.ToString();
 
                             // update the position and rotation
                             childoffighters.localPosition = new Vector3(x, -y, 0);
