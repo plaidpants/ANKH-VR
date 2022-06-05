@@ -19,7 +19,6 @@ public class World : MonoBehaviour
 
     // these are fixed in space 
     public GameObject npcs;
-    //public GameObject bubblePrefab;
     public GameObject party;
     public GameObject fighters;
     public GameObject characters;
@@ -28,8 +27,8 @@ public class World : MonoBehaviour
     public GameObject moongate;
     public GameObject partyGameObject;
     public GameObject skyGameObject;
-
-    //public GameObject[] Settlements;
+    public GameObject dungeon;
+    public GameObject dungeonMonsters;
 
     public List<string> talkWordList = new List<string>();
 
@@ -147,7 +146,6 @@ public class World : MonoBehaviour
     public float flagTimerPeriod = 0.10f;
 
     GameObject hiddenWorldMapGameObject;
-
 
     void LoadWorldMap()
     {
@@ -640,6 +638,7 @@ public class World : MonoBehaviour
             }
         }
     }
+
     public void AddHits(List<U4_Decompiled_AVATAR.hit> currentHitList, int offsetx = 0, int offsety = 0)
     {
         // have we finished creating the world
@@ -752,6 +751,185 @@ public class World : MonoBehaviour
         }
     }
 
+    public static void AddDungeonRoomMonsters(GameObject dungeonRoomGameObject, ref Dungeon.DUNGEON_ROOM dungeonRoom)
+    {
+        GameObject monstersGameObject = new GameObject("Monsters");
+        monstersGameObject.transform.SetParent(dungeonRoomGameObject.transform);
+
+        // add all the monsters
+        for (int i = 0; i < Dungeon.MAX_DUNGEON_ROOM_MONSTERS; i++)
+        {
+            Tile.TILE monsterTile = dungeonRoom.monsters[i].monster;
+
+            if (monsterTile != 0)
+            {
+                GameObject monsterGameObject = Primitive.CreateQuad();
+                monsterGameObject.name = monsterTile.ToString();
+
+                // get the renderer
+                MeshRenderer renderer = monsterGameObject.GetComponent<MeshRenderer>();
+
+                // intially the texture is null
+                renderer.material.mainTexture = null;
+
+                // set the shader
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+
+                // there is at least one case where the dungeon monster tile refers to an energy field.
+                // TODO: see if these are actually monsters or just static objects in the actual game,
+                // for now billboard them like actual monsters.
+                if ((monsterTile >= Tile.TILE.POISON_FIELD) && (monsterTile <= Tile.TILE.SLEEP_FIELD))
+                {
+                    renderer.material.mainTexture = Tile.combinedLinearTexture;
+                    renderer.material.mainTextureOffset = new Vector2((float)((int)monsterTile * Tile.originalTileWidth) / (float)renderer.material.mainTexture.width, 0.0f);
+                    renderer.material.mainTextureScale = new Vector2((float)Tile.originalTileWidth / (float)renderer.material.mainTexture.width, 1.0f);
+
+                    Animate1 animate = monsterGameObject.AddComponent<Animate1>();
+                }
+                else
+                {
+                    // add our little animator script and set the tile
+                    Animate3 animate = monsterGameObject.AddComponent<Animate3>();
+                    animate.npcTile = 0;
+                    animate.ObjectRenderer = renderer;
+
+                    animate.SetNPCTile(monsterTile);
+                }
+
+                // rotate the monster game object into position after creating
+                monsterGameObject.transform.position = new Vector3(dungeonRoom.monsters[i].x, 10 - dungeonRoom.monsters[i].y, 0);
+                monsterGameObject.transform.eulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+                // make it billboard
+                //Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
+                //look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+                //monsterGameObject.transform.LookAt(look.transform);
+                //Vector3 rot = monsterGameObject.transform.eulerAngles;
+                //monsterGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
+
+                // set this as a parent of the monsters game object
+                monsterGameObject.transform.SetParent(monstersGameObject.transform);
+            }
+        }
+    }
+
+    public void AddDungeonMapMonsters(U4_Decompiled_AVATAR u4)
+    {
+        // have we finished creating the world
+        if (dungeonMonsters == null)
+        {
+            return;
+        }
+
+        // need to create npc game objects if none are present
+        if (dungeonMonsters.transform.childCount != Dungeon.MAX_DUNGEON_MONSTERS)
+        {
+            for (int i = 0; i < Dungeon.MAX_DUNGEON_MONSTERS; i++)
+            {
+                // a child object for each dungeon monster entry in the table
+                GameObject dungeonMonsterGameObject = Primitive.CreateQuad();
+
+                // get the renderer
+                MeshRenderer renderer = dungeonMonsterGameObject.GetComponent<MeshRenderer>();
+
+                // intially the texture is null
+                renderer.material.mainTexture = null;
+
+                // set the shader
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+
+                // add our little animator script and set the tile to zero
+                Animate3 animate = dungeonMonsterGameObject.AddComponent<Animate3>();
+                animate.npcTile = 0;
+                animate.ObjectRenderer = renderer;
+
+                // rotate the fighters game object into position after creating
+                Vector3 fightersLocation = new Vector3(0, 255, 0);
+                dungeonMonsterGameObject.transform.localPosition = fightersLocation;
+                dungeonMonsterGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+                // set this as a parent of the fighters game object
+                dungeonMonsterGameObject.transform.SetParent(dungeonMonsters.transform);
+
+                // set as intially disabled
+                dungeonMonsterGameObject.SetActive(false);
+            }
+
+            // rotate characters into place
+            dungeonMonsters.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+        }
+
+        int monsterIndex = 0;
+
+        // add all the monsters found in the dungeon map
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                // get a dungeonTile in the dungeon map
+                Dungeon.DUNGEON_TILE dungeonTile = (Dungeon.DUNGEON_TILE)u4.tMap8x8x8[u4.Party._z, y, x];
+
+                // check upper nibble to see if there is anything to render
+                int checkDungeonTile = (int)dungeonTile & 0xf0;
+
+                if (checkDungeonTile == (int)Dungeon.DUNGEON_TILE.TRAP ||
+                    checkDungeonTile == (int)Dungeon.DUNGEON_TILE.FOUNTAIN ||
+                    checkDungeonTile == (int)Dungeon.DUNGEON_TILE.FIELD ||
+                    checkDungeonTile == (int)Dungeon.DUNGEON_TILE.ALTAR || // extra because I don't render these as dungeon monster sprites like the original game
+                    checkDungeonTile == (int)Dungeon.DUNGEON_TILE.MAGIC_ORB || // extra because I don't render these as dungeon monster sprites like the original game
+                    checkDungeonTile >= (int)Dungeon.DUNGEON_TILE.DUNGEON_ROOM)
+                {
+                    continue;
+                }
+
+                // dungeon monster is stored in the low nibble of the dungeon tile
+                // TODO DUNGEONTILE does not account for this.
+                checkDungeonTile = (int)dungeonTile & 0x0f;
+
+                // zero means no monster at that dungeon location
+                if (checkDungeonTile == 0)
+                {
+                    continue;
+                }
+
+                // convert the monster nibble into a map tile
+                Tile.TILE monsterTile = (Tile.TILE)((checkDungeonTile << 2) - 4 + Tile.TILE.RAT);
+
+                // did we create enough monster child game objects
+                if (monsterIndex < dungeonMonsters.transform.childCount)
+                {
+                    // get the corresponding monster game object
+                    Transform childofmonsters = dungeonMonsters.transform.GetChild(monsterIndex++);
+
+                    // set it active
+                    childofmonsters.gameObject.SetActive(true);
+
+                    // update the tile of the game object
+                    childofmonsters.GetComponent<Animate3>().SetNPCTile(monsterTile);
+
+                    // update the position
+                    childofmonsters.localPosition = new Vector3(x * 11 + 5, (7 - y) * 11 + 5, 0);
+                    childofmonsters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+                    // make it billboard
+                    Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
+                    look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+                    childofmonsters.transform.LookAt(look.transform);
+                    Vector3 rot = childofmonsters.transform.eulerAngles;
+                    childofmonsters.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
+                }
+            }
+        }
+
+        // set any remaining monsters to not active
+        for (; monsterIndex < dungeonMonsters.transform.childCount; monsterIndex++)
+        {
+            // get the corresponding monster game object
+            Transform childofmonsters = dungeonMonsters.transform.GetChild(monsterIndex);
+            childofmonsters.gameObject.SetActive(false);
+        }
+    }
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -801,14 +979,14 @@ public class World : MonoBehaviour
         moongate.transform.SetParent(transform);
         moongate.transform.localPosition = Vector3.zero;
         moongate.transform.localRotation = Quaternion.identity;
-        Dungeon.dungeon = new GameObject("dungeon");
-        Dungeon.dungeon.transform.SetParent(transform);
-        Dungeon.dungeon.transform.localPosition = Vector3.zero;
-        Dungeon.dungeon.transform.localRotation = Quaternion.identity;
-        Dungeon.dungeonMonsters = new GameObject("dungeon monsters");
-        Dungeon.dungeonMonsters.transform.SetParent(transform);
-        Dungeon.dungeonMonsters.transform.localPosition = Vector3.zero;
-        Dungeon.dungeonMonsters.transform.localRotation = Quaternion.identity;
+        dungeon = new GameObject("dungeon");
+        dungeon.transform.SetParent(transform);
+        dungeon.transform.localPosition = Vector3.zero;
+        dungeon.transform.localRotation = Quaternion.identity;
+        dungeonMonsters = new GameObject("dungeon monsters");
+        dungeonMonsters.transform.SetParent(transform);
+        dungeonMonsters.transform.localPosition = Vector3.zero;
+        dungeonMonsters.transform.localRotation = Quaternion.identity;
 
         // initialize the palette and load the tiles
         Palette.InitializeEGAPalette();
@@ -910,93 +1088,6 @@ public class World : MonoBehaviour
 
         // everything I need it now loaded, start the game engine thread
         u4.StartThread();
-
-        //GameObject dungeonExpandedLevelGameObject = CreateDungeonExpandedLevel(DUNGEONS.HYTHLOTH, 4);
-
-        // Some test stuff, can commented out as needed
-
-        /*
-        picture1 = new Texture2D[(int)PICTURE.MAX];
-        picture2 = new Texture2D[(int)PICTURE.MAX];
-
-        picture3 = new Texture2D[(int)PICTURE2.MAX];
-        picture4 = new Texture2D[(int)PICTURE2.MAX];
-
-
-        for (int i = 0; i < (int)PICTURE.MAX; i++)
-        {
-            picture1[i] = new Texture2D(320, 200);
-            Picture.ClearTexture(picture1[i], Palette.CGAColorPalette[(int)Palette.CGA_COLOR.BLACK]);
-            Picture.LoadAVATARPicFile(((PICTURE)i).ToString() + ".PIC", picture1[i]);
-            picture2[i] = new Texture2D(320, 200);
-            Picture.ClearTexture(picture2[i], Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
-            Picture.LoadAVATAREGAFile(((PICTURE)i).ToString() + ".EGA", picture2[i]);
-        }
-
-        for (int i = (int)PICTURE.TRUTH; i <= (int)PICTURE.HUMILITY; i++)
-        {
-            Picture.LoadAVATARPicFile(((PICTURE)i).ToString() + ".PIC", picture1[(int)PICTURE.TRUTH]);
-        }
-
-        for (int i = (int)PICTURE.TRUTH; i <= (int)PICTURE.HUMILITY; i++)
-        {
-            Picture.LoadAVATAREGAFile(((PICTURE)i).ToString() + ".EGA", picture2[(int)PICTURE.TRUTH]);
-        }
-
-        for (int i = 0; i < (int)PICTURE2.MAX; i++)
-        {
-            picture3[i] = new Texture2D(320, 200);
-            Picture.ClearTexture(picture3[i], Palette.CGAColorPalette[(int)Palette.CGA_COLOR.BLACK]);
-            Picture.LoadTITLEPicPictureFile(((PICTURE2)i).ToString() + ".PIC", picture3[i]);
-            picture4[i] = new Texture2D(320, 200);
-            Picture.ClearTexture(picture4[i], Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
-            Picture.LoadTITLEEGAPictureFile(((PICTURE2)i).ToString() + ".EGA", picture4[i]);
-        }
-        */
-
-        //GameObject dungeonsRoomsGameObject = new GameObject("Dungeon Rooms");
-        //CreateDungeonRooms(dungeonsRoomsGameObject);
-
-        /*
-        //GameObject dungeonsGameObject = new GameObject("Dungeons");
-        //CreateDungeons(dungeonsGameObject);
-        */
-
-        // create all the dungeons and all the levels, this will take a while so be prepared to wait, but it is cool and worth the wait
-        /*
-        for (int dungeon = 0; dungeon < (int)DUNGEONS.MAX; dungeon++)
-        {
-            for (int level = 0; level < 8; level++)
-            {
-                GameObject dungeonExpandedLevelGameObject = CreateDungeonExpandedLevel((DUNGEONS)dungeon, level);
-                dungeonExpandedLevelGameObject.transform.position = new Vector3(dungeon * 100, -level * 10, 0);
-            }
-        }
-        */
-
-        //GameObject dungeonExpandedLevelGameObject = CreateDungeonExpandedLevel(DUNGEONS.DESPISE, 0);
-
-        //GameObject dr = CreateDungeonRoom(ref dungeons[(int)DUNGEONS.WRONG].dungeonRooms[5]);
-
-        /*
-        GameObject wedge = CreateWedge();
-        Renderer renderer = wedge.GetComponent<Renderer>();
-        renderer.material.mainTexture = expandedTiles[(int)U4_Decompiled.TILE.DIAGONAL_WATER_ARCHITECTURE4];
-        renderer.material.mainTextureOffset = new Vector2((float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
-        renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
-
-        GameObject wedge2 = CreateWedge();
-        renderer = wedge2.GetComponent<Renderer>();
-        renderer.material.mainTexture = expandedTiles[(int)U4_Decompiled.TILE.DIAGONAL_WATER_ARCHITECTURE1];
-        renderer.material.mainTextureOffset = new Vector2((float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
-        renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
-        
-        GameObject wedge3 = CreateWedge();
-        renderer = wedge3.GetComponent<Renderer>();
-        renderer.material.mainTexture = expandedTiles[(int)U4_Decompiled.TILE.WOOD_FLOOR];
-        renderer.material.mainTextureOffset = new Vector2((float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
-        renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
-    */
     }
 
     // Update is called once per frame
@@ -1239,8 +1330,6 @@ public class World : MonoBehaviour
                 TalkPartyCharacter.SetActive(false);
             }
 
-
-
             if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.PUB_WORD)
             {
                 /* TODO search for these words
@@ -1380,7 +1469,6 @@ public class World : MonoBehaviour
                 TalkEndGame.SetActive(false);
             }
             
-
             if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.USE_ITEM_WORD)
             {
                 /*
@@ -1629,8 +1717,8 @@ public class World : MonoBehaviour
                 npcs.SetActive(true);
                 party.SetActive(true);
                 moongate.SetActive(true);
-                Dungeon.dungeon.SetActive(false);
-                Dungeon.dungeonMonsters.SetActive(false);
+                dungeon.SetActive(false);
+                dungeonMonsters.SetActive(false);
                 skyGameObject.SetActive(true);
 
                 for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
@@ -1709,8 +1797,8 @@ public class World : MonoBehaviour
                 npcs.SetActive(true);
                 party.SetActive(true);
                 moongate.SetActive(false);
-                Dungeon.dungeon.SetActive(false);
-                Dungeon.dungeonMonsters.SetActive(false);
+                dungeon.SetActive(false);
+                dungeonMonsters.SetActive(false);
                 skyGameObject.SetActive(true);
 
                 for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
@@ -1759,17 +1847,17 @@ public class World : MonoBehaviour
                     npcs.SetActive(false);
                     party.SetActive(false);
                     moongate.SetActive(false);
-                    Dungeon.dungeonMonsters.SetActive(false);
+                    dungeonMonsters.SetActive(false);
                     skyGameObject.SetActive(false);
 
                     // check if we have the dungeon already created, create it if not
                     Dungeon.DUNGEONS dun = (Dungeon.DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled_AVATAR.LOCATIONS.DUNGEONS);
-                    if (Dungeon.dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
+                    if (dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
                     {
-                        Destroy(Dungeon.dungeon);
-                        Dungeon.dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, Combat.combatMaps);
+                        Destroy(dungeon);
+                        dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, Combat.combatMaps);
                     }
-                    Dungeon.dungeon.SetActive(true);
+                    dungeon.SetActive(true);
 
                     for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                     {
@@ -1797,8 +1885,8 @@ public class World : MonoBehaviour
                     npcs.SetActive(false);
                     party.SetActive(false);
                     moongate.SetActive(false);
-                    Dungeon.dungeon.SetActive(false);
-                    Dungeon.dungeonMonsters.SetActive(false);
+                    dungeon.SetActive(false);
+                    dungeonMonsters.SetActive(false);
                     skyGameObject.SetActive(true);
 
                     int currentCombatTerrain = (int)Combat.Convert_Tile_to_Combat_Terrian(u4.current_tile, u4.Party._tile, u4.D_96F8, u4.D_946C);
@@ -1836,17 +1924,17 @@ public class World : MonoBehaviour
                 npcs.SetActive(false);
                 party.SetActive(false);
                 moongate.SetActive(false);
-                Dungeon.dungeonMonsters.SetActive(false);
+                dungeonMonsters.SetActive(false);
                 skyGameObject.SetActive(false);
 
                 // check if we have the dungeon already created, create it if not
                 Dungeon.DUNGEONS dun = (Dungeon.DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled_AVATAR.LOCATIONS.DUNGEONS);
-                if (Dungeon.dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
+                if (dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
                 {
-                    Destroy(Dungeon.dungeon);
-                    Dungeon.dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, Combat.combatMaps);
+                    Destroy(dungeon);
+                    dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, Combat.combatMaps);
                 }
-                Dungeon.dungeon.SetActive(true);
+                dungeon.SetActive(true);
 
                 for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
                 {
@@ -1864,7 +1952,7 @@ public class World : MonoBehaviour
                 AddNPCs(u4._npc);
                 AddHits(u4.currentHits);
                 AddActiveCharacter(u4.currentActiveCharacter);
-                Dungeon.AddDungeonMapMonsters(u4);
+                AddDungeonMapMonsters(u4);
                 followWorld(partyGameObject);
                 terrain.SetActive(false);
                 animatedTerrrain.SetActive(false);
@@ -1878,22 +1966,22 @@ public class World : MonoBehaviour
 
                 // check if we have the dungeon already created, create it if not
                 Dungeon.DUNGEONS dun = (Dungeon.DUNGEONS)((int)u4.Party._loc - (int)U4_Decompiled_AVATAR.LOCATIONS.DUNGEONS);
-                if (Dungeon.dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
+                if (dungeon.name != dun.ToString() + " Level #" + u4.Party._z)
                 {
                     // not the right dungeon, create a new dungeon
-                    Destroy(Dungeon.dungeon);
-                    Dungeon.dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, Combat.combatMaps);
+                    Destroy(dungeon);
+                    dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, Combat.combatMaps);
                 }
 
                 if (u4.Party.f_1dc > 0) // torch active
                 {
-                    Dungeon.dungeon.SetActive(true);
-                    Dungeon.dungeonMonsters.SetActive(true);
+                    dungeon.SetActive(true);
+                    dungeonMonsters.SetActive(true);
                 }
                 else
                 {
-                    Dungeon.dungeon.SetActive(false);
-                    Dungeon.dungeonMonsters.SetActive(false);
+                    dungeon.SetActive(false);
+                    dungeonMonsters.SetActive(false);
                 }
 
                 for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
@@ -1922,8 +2010,8 @@ public class World : MonoBehaviour
                 npcs.SetActive(false);
                 party.SetActive(false);
                 moongate.SetActive(false);
-                Dungeon.dungeon.SetActive(false);
-                Dungeon.dungeonMonsters.SetActive(false);
+                dungeon.SetActive(false);
+                dungeonMonsters.SetActive(false);
                 skyGameObject.SetActive(true);
 
                 for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
@@ -1959,8 +2047,8 @@ public class World : MonoBehaviour
                 npcs.SetActive(false);
                 party.SetActive(false);
                 moongate.SetActive(false);
-                Dungeon.dungeon.SetActive(false);
-                Dungeon.dungeonMonsters.SetActive(false);
+                dungeon.SetActive(false);
+                dungeonMonsters.SetActive(false);
                 followWorld(activeCharacter);
 
                 int currentCombatTerrain;
@@ -2526,7 +2614,6 @@ public class World : MonoBehaviour
                     {
                         characterStatus[i].SetActive(false);
                     }
-
                 }
 
                 if (u4.zstats_mode == U4_Decompiled_AVATAR.ZSTATS_MODE.WEAPONS)

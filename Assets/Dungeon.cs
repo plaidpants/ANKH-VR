@@ -8,10 +8,6 @@ public static class Dungeon
     public const int MAX_DUNGEON_MONSTERS = 16;
     public const int MAX_DUNGEON_ROOM_MONSTERS = 16;
 
-    public static GameObject dungeon;
-
-    public static GameObject dungeonMonsters;
-
     public static DUNGEON[] dungeons = new DUNGEON[(int)DUNGEONS.MAX];
 
     // only the upper nibble defines the dungeon tile, the lower nibble is used for active dungeon monsters
@@ -292,184 +288,6 @@ public static class Dungeon
         }
     }
 
-    public static void AddDungeonRoomMonsters(GameObject dungeonRoomGameObject, ref Dungeon.DUNGEON_ROOM dungeonRoom)
-    {
-        GameObject monstersGameObject = new GameObject("Monsters");
-        monstersGameObject.transform.SetParent(dungeonRoomGameObject.transform);
-
-        // add all the monsters
-        for (int i = 0; i < MAX_DUNGEON_ROOM_MONSTERS; i++)
-        {
-            Tile.TILE monsterTile = dungeonRoom.monsters[i].monster;
-
-            if (monsterTile != 0)
-            {
-                GameObject monsterGameObject = Primitive.CreateQuad();
-                monsterGameObject.name = monsterTile.ToString();
-
-                // get the renderer
-                MeshRenderer renderer = monsterGameObject.GetComponent<MeshRenderer>();
-
-                // intially the texture is null
-                renderer.material.mainTexture = null;
-
-                // set the shader
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
-
-                // there is at least one case where the dungeon monster tile refers to an energy field.
-                // TODO: see if these are actually monsters or just static objects in the actual game,
-                // for now billboard them like actual monsters.
-                if ((monsterTile >= Tile.TILE.POISON_FIELD) && (monsterTile <= Tile.TILE.SLEEP_FIELD))
-                {
-                    renderer.material.mainTexture = Tile.combinedLinearTexture;
-                    renderer.material.mainTextureOffset = new Vector2((float)((int)monsterTile * Tile.originalTileWidth) / (float)renderer.material.mainTexture.width, 0.0f);
-                    renderer.material.mainTextureScale = new Vector2((float)Tile.originalTileWidth / (float)renderer.material.mainTexture.width, 1.0f);
-
-                    Animate1 animate = monsterGameObject.AddComponent<Animate1>();
-                }
-                else
-                {
-                    // add our little animator script and set the tile
-                    Animate3 animate = monsterGameObject.AddComponent<Animate3>();
-                    animate.npcTile = 0;
-                    animate.ObjectRenderer = renderer;
-
-                    animate.SetNPCTile(monsterTile);
-                }
-
-                // rotate the monster game object into position after creating
-                monsterGameObject.transform.position = new Vector3(dungeonRoom.monsters[i].x, 10 - dungeonRoom.monsters[i].y, 0);
-                monsterGameObject.transform.eulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
-
-                // make it billboard
-                //Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
-                //look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-                //monsterGameObject.transform.LookAt(look.transform);
-                //Vector3 rot = monsterGameObject.transform.eulerAngles;
-                //monsterGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
-
-                // set this as a parent of the monsters game object
-                monsterGameObject.transform.SetParent(monstersGameObject.transform);
-            }
-        }
-    }
-
-    public static void AddDungeonMapMonsters(U4_Decompiled_AVATAR u4)
-    {
-        // have we finished creating the world
-        if (dungeonMonsters == null)
-        {
-            return;
-        }
-
-        // need to create npc game objects if none are present
-        if (dungeonMonsters.transform.childCount != MAX_DUNGEON_MONSTERS)
-        {
-            for (int i = 0; i < MAX_DUNGEON_MONSTERS; i++) 
-            {
-                // a child object for each dungeon monster entry in the table
-                GameObject dungeonMonsterGameObject = Primitive.CreateQuad();
-
-                // get the renderer
-                MeshRenderer renderer = dungeonMonsterGameObject.GetComponent<MeshRenderer>();
-
-                // intially the texture is null
-                renderer.material.mainTexture = null;
-
-                // set the shader
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
-
-                // add our little animator script and set the tile to zero
-                Animate3 animate = dungeonMonsterGameObject.AddComponent<Animate3>();
-                animate.npcTile = 0;
-                animate.ObjectRenderer = renderer;
-
-                // rotate the fighters game object into position after creating
-                Vector3 fightersLocation = new Vector3(0, 255, 0);
-                dungeonMonsterGameObject.transform.localPosition = fightersLocation;
-                dungeonMonsterGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
-
-                // set this as a parent of the fighters game object
-                dungeonMonsterGameObject.transform.SetParent(dungeonMonsters.transform);
-
-                // set as intially disabled
-                dungeonMonsterGameObject.SetActive(false);
-            }
-
-            // rotate characters into place
-            dungeonMonsters.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
-        }
-
-        int monsterIndex = 0;
-
-        // add all the monsters found in the dungeon map
-        for (int y = 0; y < 8; y++)
-        {
-            for (int x = 0; x < 8; x++)
-            {
-                // get a dungeonTile in the dungeon map
-                DUNGEON_TILE dungeonTile = (DUNGEON_TILE)u4.tMap8x8x8[u4.Party._z, y, x];
-
-                // check upper nibble to see if there is anything to render
-                int checkDungeonTile = (int)dungeonTile & 0xf0;
-
-                if (checkDungeonTile == (int)DUNGEON_TILE.TRAP ||
-                    checkDungeonTile == (int)DUNGEON_TILE.FOUNTAIN ||
-                    checkDungeonTile == (int)DUNGEON_TILE.FIELD ||
-                    checkDungeonTile == (int)DUNGEON_TILE.ALTAR || // extra because I don't render these as dungeon monster sprites like the original game
-                    checkDungeonTile == (int)DUNGEON_TILE.MAGIC_ORB || // extra because I don't render these as dungeon monster sprites like the original game
-                    checkDungeonTile >= (int)DUNGEON_TILE.DUNGEON_ROOM)
-                {
-                    continue;
-                }
-
-                // dungeon monster is stored in the low nibble of the dungeon tile
-                // TODO DUNGEONTILE does not account for this.
-                checkDungeonTile = (int)dungeonTile & 0x0f;
-
-                // zero means no monster at that dungeon location
-                if (checkDungeonTile == 0)
-                {
-                    continue;
-                }
-
-                // convert the monster nibble into a map tile
-                Tile.TILE monsterTile = (Tile.TILE)((checkDungeonTile << 2) - 4 + Tile.TILE.RAT);
-
-                // did we create enough monster child game objects
-                if (monsterIndex < dungeonMonsters.transform.childCount)
-                {
-                    // get the corresponding monster game object
-                    Transform childofmonsters = dungeonMonsters.transform.GetChild(monsterIndex++);
-
-                    // set it active
-                    childofmonsters.gameObject.SetActive(true);
-
-                    // update the tile of the game object
-                    childofmonsters.GetComponent<Animate3>().SetNPCTile(monsterTile);
-
-                    // update the position
-                    childofmonsters.localPosition = new Vector3(x * 11 + 5, (7 - y) * 11 + 5, 0);
-                    childofmonsters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
-
-                    // make it billboard
-                    Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
-                    look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-                    childofmonsters.transform.LookAt(look.transform);
-                    Vector3 rot = childofmonsters.transform.eulerAngles;
-                    childofmonsters.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
-                }
-            }
-        }
-
-        // set any remaining monsters to not active
-        for (; monsterIndex < dungeonMonsters.transform.childCount; monsterIndex++)
-        {
-            // get the corresponding monster game object
-            Transform childofmonsters = dungeonMonsters.transform.GetChild(monsterIndex);
-            childofmonsters.gameObject.SetActive(false);
-        }
-    }
 
     public static GameObject CreateDungeonRoom(ref DUNGEON_ROOM dungeonRoom)
     {
@@ -477,7 +295,7 @@ public static class Dungeon
         Map.CreateMap(mapGameObject, dungeonRoom.dungeonRoomMap);
         mapGameObject.transform.position = Vector3.zero;
         mapGameObject.transform.localEulerAngles = Vector3.zero;
-        AddDungeonRoomMonsters(mapGameObject, ref dungeonRoom);
+        //AddDungeonRoomMonsters(mapGameObject, ref dungeonRoom);
         return mapGameObject;
     }
 

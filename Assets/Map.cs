@@ -4,7 +4,9 @@ using UnityEngine;
 
 public static class Map
 {
-    public static GameObject[,] entireMapGameObjects = new GameObject[32 * 8, 32 * 8];
+    //public static GameObject[,] entireMapGameObjects = new GameObject[32 * 8, 32 * 8];
+
+    public static GameObject[] allMapTilesGameObjects = null;
 
     public static bool CheckTileForOpacity(Tile.TILE tileIndex)
     {
@@ -396,7 +398,7 @@ public static class Map
         mapGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
     }
 
-    public static void CreateMapSubset(GameObject mapGameObject, Tile.TILE[,] map)
+    public static void CreateMapSubset(GameObject mapGameObject, Tile.TILE[,] map, ref GameObject[,] mapGameObjects)
     {
         for (int y = 0; y < map.GetLength(1); y++)
         {
@@ -546,7 +548,7 @@ public static class Map
                 renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
 
                 // stash the object mesh, transform & texture information
-                entireMapGameObjects[x, y] = mapTile;
+                mapGameObjects[x, y] = mapTile;
             }
         }
     }
@@ -886,8 +888,6 @@ public static class Map
 
         return mapTile;
     }
-
-    public static GameObject[] allMapTilesGameObjects = null;
 
     public static GameObject GetCachedTileGameObject(GameObject terrainGameObject, GameObject billboardTerrrainGameObject, GameObject animatedTerrrainGameObject, Tile.TILE tileIndex, ref Tile.TILE[,] map, int x, int y, bool allWalls)
     {
