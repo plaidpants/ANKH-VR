@@ -183,6 +183,28 @@ public static class Combat
         }
     }
 
+    public static void UpdateBillboardCombatTerrains(GameObject lookAtObject, int offset_z, U4_Decompiled_AVATAR.COMBAT_TERRAIN combatTerrainIndex = (U4_Decompiled_AVATAR.COMBAT_TERRAIN )(-1))
+    {
+        if (combatTerrainIndex == (U4_Decompiled_AVATAR.COMBAT_TERRAIN)(-1))
+        {
+            for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
+            {
+                // create the combat terrain based on the loaded map
+                Map.UpdateExistingBillboardsMap(CombatTerrains[i], combatMaps[i], new Vector3(0, 0, offset_z - combatMaps[i].GetLength(1)), new Vector3(90.0f, 0.0f, 0.0f), lookAtObject);
+
+                // Position the combat map in place
+                //CombatTerrains[i].transform.position = new Vector3(0, 0, offset_z - combatMaps[i].GetLength(1));
+
+                // rotate map into place
+                //CombatTerrains[i].transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+            }
+        }
+        else
+        {
+            Map.UpdateExistingBillboardsMap(CombatTerrains[(int)combatTerrainIndex], combatMaps[(int)combatTerrainIndex], new Vector3(0, 0, offset_z - combatMaps[(int)combatTerrainIndex].GetLength(1)), new Vector3(90.0f, 0.0f, 0.0f), lookAtObject);
+        }
+    }
+
     public static void CreateCombatTerrains(int offset_z)
     {
         // create a game object to store the combat terrain game objects, this should be at the top with no parent same as the world
@@ -226,16 +248,16 @@ public static class Combat
             gameObject.name = ((U4_Decompiled_AVATAR.COMBAT_TERRAIN)i).ToString();
 
             // create the combat terrain based on the loaded map
-            Map.CreateMap(gameObject, combatMaps[i]);
+            Map.CreateMap(gameObject, combatMaps[i], new Vector3(0, 0, offset_z - combatMaps[i].GetLength(1)), new Vector3(90.0f, 0.0f, 0.0f));
 
             // Disable it initially
             gameObject.SetActive(false);
 
             // Position the combat map in place
-            gameObject.transform.position = new Vector3(0, 0, offset_z - combatMaps[i].GetLength(1));
+            //gameObject.transform.position = new Vector3(0, 0, offset_z - combatMaps[i].GetLength(1));
 
             // rotate map into place
-            gameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+            //gameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
 
             // save the game object in the array
             CombatTerrains[i] = gameObject;

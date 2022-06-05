@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class World : MonoBehaviour
 {
     // used for automatic klimb and decsend ladders
-    public Tile.TILE lastCurrentTile;
+    public Tile.TILE lastCurrentTile = (Tile.TILE)(-1);
 
     public Font myFont;
     public Font myTransparentFont;
@@ -161,16 +161,6 @@ public class World : MonoBehaviour
 
         // add so speech works
         partyGameObject.AddComponent<UnityEngine.UI.Text>();
-
-        /*
-        // create the bubble text
-        GameObject BubbleText = Instantiate(bubblePrefab);
-        BubbleText.transform.SetParent(party.transform);
-        bubblePrefab.GetComponent<Canvas>().worldCamera = Camera.main;
-        bubblePrefab.transform.localPosition = Vector3.zero;
-        bubblePrefab.GetComponent<RectTransform>().localPosition = new Vector3(-2.0f, 0.5f, -2.0f);
-        bubblePrefab.transform.localEulerAngles = new Vector3(-90.0f, 0.0f, 0.0f);
-        */
     }
 
     public void followWorld(GameObject follow)
@@ -1791,17 +1781,18 @@ public class World : MonoBehaviour
             dungeonMonsters.SetActive(false);
             skyGameObject.SetActive(true);
 
-            int currentCombatTerrain = (int)Combat.Convert_Tile_to_Combat_Terrian(u4.current_tile, u4.Party._tile, u4.D_96F8, u4.D_946C);
+            U4_Decompiled_AVATAR.COMBAT_TERRAIN currentCombatTerrain = Combat.Convert_Tile_to_Combat_Terrian(u4.current_tile, u4.Party._tile, u4.D_96F8, u4.D_946C);
 
             for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
             {
-                if (i == currentCombatTerrain)
+                if (i == (int)currentCombatTerrain)
                 {
-                    Combat.CombatTerrains[i].gameObject.SetActive(true);
+                    Combat.CombatTerrains[i].SetActive(true);
+                    Combat.UpdateBillboardCombatTerrains(Camera.main.transform.gameObject, Outdoor.outdoorMap.GetLength(1), currentCombatTerrain);
                 }
                 else
                 {
-                    Combat.CombatTerrains[i].gameObject.SetActive(false);
+                    Combat.CombatTerrains[i].SetActive(false);
                 }
             }
 
@@ -2020,7 +2011,6 @@ public class World : MonoBehaviour
 
     void UpdatePanelsText()
     {
-
         if (u4.gameText != null && GameText != null)
         {
             GameText.GetComponent<UnityEngine.UI.Text>().text = u4.gameText;
@@ -2172,8 +2162,7 @@ public class World : MonoBehaviour
             'D' + u4.Party._sextants.ToString().PadLeft(2, '0') + "-Sextants".PadRight(22, ' ') + "\n\n\n\n\n" +
             bottomStatus;
 
-        itemsStatus.GetComponent<UnityEngine.UI.Text>().text = "" + '\n' +
-            "Stones: ";
+        itemsStatus.GetComponent<UnityEngine.UI.Text>().text = "" + '\n' + "Stones: ";
 
         if (u4.Party.mStones.HasFlag(U4_Decompiled_AVATAR.STONES.BLUE))
         {
@@ -2208,8 +2197,7 @@ public class World : MonoBehaviour
             itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "<color=grey>Bl</color>";
         }
 
-        itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
-            "Runes: ";
+        itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' + "Runes: ";
 
         if (u4.Party.mRunes.HasFlag(U4_Decompiled_AVATAR.RUNES.HONOR))
         {
@@ -2244,8 +2232,7 @@ public class World : MonoBehaviour
             itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Sacrifice";
         }
 
-        itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
-           "Items: ";
+        itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +  "Items: ";
 
         if (u4.Party.mItems.HasFlag(U4_Decompiled_AVATAR.ITEMS.BELL))
         {
@@ -2272,8 +2259,7 @@ public class World : MonoBehaviour
             itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "Skull ";
         }
 
-        itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' +
-           "Key:";
+        itemsStatus.GetComponent<UnityEngine.UI.Text>().text += "" + '\n' + "Key:";
 
         if (u4.Party.mItems.HasFlag(U4_Decompiled_AVATAR.ITEMS.LOVE_KEY))
         {
@@ -2425,6 +2411,7 @@ public class World : MonoBehaviour
 
             // handle all input panel state updates
             UpdateInputPanelState();
+            UpdatePanelsText();
 
             // did we just change modes, used by UpdateOutdoors() for automatic enter
             if (lastMode != u4.current_mode)
@@ -2525,26 +2512,24 @@ public class World : MonoBehaviour
                     {
                         if (rotateTransform)
                         {
-                            if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                            if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.WEST && rotateTransform.transform.eulerAngles.y != 270)
                             {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                                rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 270, rotateTransform.transform.eulerAngles.z);
+                                //rotateTransform.GetComponent<MySmoothFollow>().LateUpdate();
+                                //Combat.UpdateBillboardCombatTerrains(Camera.main.transform.gameObject, Outdoor.outdoorMap.GetLength(1));
                             }
-                            else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                            else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.NORTH && rotateTransform.transform.eulerAngles.y != 0)
                             {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                                rotateTransform.eulerAngles = new Vector3(rotateTransform.eulerAngles.x, 0, rotateTransform.transform.eulerAngles.z);
                             }
-                            else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                            else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.EAST && rotateTransform.transform.eulerAngles.y != 90)
                             {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                                rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 90, rotateTransform.transform.eulerAngles.z);
                             }
-                            else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                            else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.SOUTH && rotateTransform.transform.eulerAngles.y != 180)
                             {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                                rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 180, rotateTransform.transform.eulerAngles.z);
                             }
-                        }
-                        else
-                        {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
                         }
                     }
                 }
@@ -2552,88 +2537,70 @@ public class World : MonoBehaviour
                 {
                     if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
                     {
-                        //partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
-                        if (Camera.main.transform.eulerAngles.y != 0)
+                        // if we are going to do rotation then we need to adjust the directional controls when in combat in the dungeon also
+                        if (rotateTransform)
                         {
-                            //rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-
-                            // if we are going to do rotation then we need to adjust the directional controls when in combat in the dungeon also
-                            if (rotateTransform)
+                            if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.WEST && rotateTransform.transform.eulerAngles.y != 270)
                             {
-                                if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
-                                {
-                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
-                                }
-                                else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
-                                {
-                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                                }
-                                else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
-                                {
-                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
-                                }
-                                else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
-                                {
-                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
-                                }
+                                rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 270, rotateTransform.transform.eulerAngles.z);
+                            }
+                            else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.NORTH && rotateTransform.transform.eulerAngles.y != 0)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 0, rotateTransform.transform.eulerAngles.z);
+                            }
+                            else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.EAST && rotateTransform.transform.eulerAngles.y != 90)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 90, rotateTransform.transform.eulerAngles.z);
+                            }
+                            else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.SOUTH && rotateTransform.transform.eulerAngles.y != 180)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 180, rotateTransform.transform.eulerAngles.z);
+
                             }
                         }
                     }
                     else
                     {
-                        if (Camera.main.transform.eulerAngles.y != 0)
+                        if (rotateTransform)
                         {
-                            if (rotateTransform)
+                            if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.WEST && rotateTransform.transform.eulerAngles.y != 270)
                             {
-                                if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
-                                {
-                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
-                                }
-                                else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
-                                {
-                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                                }
-                                else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
-                                {
-                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
-                                }
-                                else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
-                                {
-                                    rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
-                                }
+                                rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 270, rotateTransform.transform.eulerAngles.z);
                             }
-                            else
+                            else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.NORTH && rotateTransform.transform.eulerAngles.y != 0)
                             {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                                rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 0, rotateTransform.transform.eulerAngles.z);
+                            }
+                            else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.EAST && rotateTransform.transform.eulerAngles.y != 90)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 90, rotateTransform.transform.eulerAngles.z);
+                            }
+                            else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.SOUTH && rotateTransform.transform.eulerAngles.y != 180)
+                            {
+                                rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 180, rotateTransform.transform.eulerAngles.z);
                             }
                         }
                     }
                 }
                 else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT_ROOM)
                 {
-                    //partyGameObject.transform.localPosition = new Vector3(Party._x * 11 + 5, (7 - Party._y) * 11 + 5, 0);
-                    if (Camera.main.transform.eulerAngles.y != 0)
+                    if (rotateTransform)
                     {
-                        //rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-
-                        if (rotateTransform)
+                        if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.WEST && rotateTransform.transform.eulerAngles.y != 270)
                         {
-                            if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
-                            }
-                            else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
-                            }
-                            else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
-                            }
-                            else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
-                            {
-                                rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
-                            }
+                            rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 270, rotateTransform.transform.eulerAngles.z);
+                        }
+                        else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.NORTH && rotateTransform.transform.eulerAngles.y != 0)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 0, rotateTransform.transform.eulerAngles.z);
+                        }
+                        else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.EAST && rotateTransform.transform.eulerAngles.y != 90)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 90, rotateTransform.transform.eulerAngles.z);
+                        }
+                        else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.SOUTH && rotateTransform.transform.eulerAngles.y != 180)
+                        {
+                            rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 180, rotateTransform.transform.eulerAngles.z);
                         }
                     }
                 }
@@ -2642,21 +2609,21 @@ public class World : MonoBehaviour
                     partyGameObject.transform.localPosition = new Vector3(u4.Party._x * 11 + 5, (7 - u4.Party._y) * 11 + 5, 0);
                     if (rotateTransform)
                     {
-                        if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.WEST && Camera.main.transform.eulerAngles.y != 270)
+                        if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.WEST && rotateTransform.transform.eulerAngles.y != 270)
                         {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 270, Camera.main.transform.eulerAngles.z);
+                            rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 270, rotateTransform.transform.eulerAngles.z);
                         }
-                        else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.NORTH && Camera.main.transform.eulerAngles.y != 0)
+                        else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.NORTH && rotateTransform.transform.eulerAngles.y != 0)
                         {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 0, Camera.main.transform.eulerAngles.z);
+                            rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 0, rotateTransform.transform.eulerAngles.z);
                         }
-                        else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.EAST && Camera.main.transform.eulerAngles.y != 90)
+                        else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.EAST && rotateTransform.transform.eulerAngles.y != 90)
                         {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 90, Camera.main.transform.eulerAngles.z);
+                            rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 90, rotateTransform.transform.eulerAngles.z);
                         }
-                        else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.SOUTH && Camera.main.transform.eulerAngles.y != 180)
+                        else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.SOUTH && rotateTransform.transform.eulerAngles.y != 180)
                         {
-                            rotateTransform.eulerAngles = new Vector3(Camera.main.transform.eulerAngles.x, 180, Camera.main.transform.eulerAngles.z);
+                            rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 180, rotateTransform.transform.eulerAngles.z);
                         }
                     }
                 }
@@ -2665,8 +2632,6 @@ public class World : MonoBehaviour
             // update moons
             trammelLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, Mathf.LerpAngle(trammelLight.GetComponent<Light>().transform.eulerAngles.y, 180f - (float)u4.D_1665 * (360f / 256f), Time.deltaTime), 0f);
             feluccaLight.GetComponent<Light>().transform.eulerAngles = new Vector3(0f, Mathf.LerpAngle(feluccaLight.GetComponent<Light>().transform.eulerAngles.y, 180f - (float)u4.D_1666 * (360f / 256f), Time.deltaTime), 0f);
-
-            UpdatePanelsText();
         }
 
         // make party a billboard
@@ -2676,14 +2641,12 @@ public class World : MonoBehaviour
         Vector3 rot = partyGameObject.transform.eulerAngles;
         partyGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
 
-        U4_Decompiled_AVATAR.MODE currentMode = u4.current_mode;
-
         // we've moved, regenerate the raycast, TODO NPCs can also affect the raycast when moving, need to check them also or redo raycast more often
         if ((u4.Party._x != lastRaycastPlayer_posx) || // player moved
             (u4.Party._y != lastRaycastPlayer_posy) || // player moved
             (u4.Party.f_1dc != lastRaycastPlayer_f_1dc) || // balloon flying or grounded or dungeon torch active
             ((u4.open_door_timer > 0) != last_door_timer) || // door has opened or closed
-           (u4.surface_party_direction != lastRaycastP_surface_party_direction)) // have we rotated the camera
+            (u4.surface_party_direction != lastRaycastP_surface_party_direction)) // have we rotated the camera
         {
             Vector3 location = Vector3.zero;
 
@@ -2692,7 +2655,7 @@ public class World : MonoBehaviour
             lastRaycastPlayer_posy = u4.Party._y;
             lastRaycastP_surface_party_direction = u4.surface_party_direction;
             lastRaycastPlayer_f_1dc = u4.Party.f_1dc; // flying in the balloon or not or dungeon torch active
-            last_door_timer = (u4.open_door_timer > 0);
+            last_door_timer = u4.open_door_timer > 0;
 
             if (u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS)
             {

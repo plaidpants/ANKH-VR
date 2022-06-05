@@ -22,18 +22,18 @@ public static class Map
     }
 
 
-    public static void CreateMap(GameObject mapGameObject, Tile.TILE[,] map, GameObject lookAtObject = null)
+    public static void CreateMap(GameObject mapGameObject, Tile.TILE[,] map, Vector3 finalPosition, Vector3 finalRotation, GameObject lookAtObject = null)
     {
         GameObject terrainGameObject;
         GameObject animatedTerrrainGameObject;
         GameObject billboardTerrrainGameObject;
         bool useExpandedTile;
 
-        // Position the settlement in place
-        mapGameObject.transform.position = new Vector3(-5, 0, 7);
+        // Position the map in place
+        mapGameObject.transform.position = finalPosition; //  new Vector3(-5, 0, 7);
 
-        // rotate settlement into place
-        mapGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+        // rotate map into place
+        mapGameObject.transform.eulerAngles = finalRotation; // new Vector3(90.0f, 0.0f, 0.0f);
 
         // create the terrain child object if it does not exist
         Transform terrainTransform = mapGameObject.transform.Find("terrain");
@@ -381,7 +381,8 @@ public static class Map
         // this takes about 150ms for the 64x64 outside grid.
         Combine.Combine1(terrainGameObject);
         Combine.Combine2(animatedTerrrainGameObject);
-        Combine.Combine1(billboardTerrrainGameObject); // combine separately from terrain above as we need to point these towards the player
+        // don't combine these as we need to rotate them to keep the bill board effect, cost much more time to recreate with a combine mesh than the leave them separate
+        //Combine.Combine1(billboardTerrrainGameObject); // combine separately from terrain above as we need to point these towards the player
 
         // add our little water animator script
         // adding a script component in the editor is a significant performance hit, avoid adding if already present
@@ -390,12 +391,44 @@ public static class Map
         {
             animatedTerrrainGameObject.AddComponent<Animate1>();
         }
+    }
 
-        // Position the settlement in place
-        mapGameObject.transform.position = new Vector3(-5, 0, 7);
 
-        // rotate settlement into place
-        mapGameObject.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+    public static void UpdateExistingBillboardsMap(GameObject mapGameObject, Tile.TILE[,] map, Vector3 finalPosition, Vector3 finalRotation, GameObject lookAtObject = null)
+    {
+        GameObject billboardTerrrainGameObject;
+        //bool useExpandedTile;
+
+        // Position the map in place
+        //mapGameObject.transform.position = finalPosition; //  new Vector3(-5, 0, 7);
+
+        // rotate map into place
+        //mapGameObject.transform.eulerAngles = finalRotation; // new Vector3(90.0f, 0.0f, 0.0f);
+
+        // create the billboard child object if it does not exist
+        Transform billboardTransform = mapGameObject.transform.Find("billboard");
+        if (billboardTransform == null)
+        {
+            billboardTerrrainGameObject = new GameObject("billboard");
+            billboardTerrrainGameObject.transform.SetParent(mapGameObject.transform);
+            billboardTerrrainGameObject.transform.localPosition = Vector3.zero;
+            billboardTerrrainGameObject.transform.localRotation = Quaternion.identity;
+        }
+        else
+        {
+            billboardTerrrainGameObject = billboardTransform.gameObject;
+        }
+
+        // update any children
+        foreach (Transform child in billboardTerrrainGameObject.transform)
+        {
+            // make it billboard
+            Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
+            look.position = new Vector3(look.position.x, 0.0f, look.position.z);
+            child.transform.LookAt(look.transform);
+            Vector3 rot = child.transform.eulerAngles;
+            child.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
+        }
     }
 
     public static void CreateMapSubset(GameObject mapGameObject, Tile.TILE[,] map, ref GameObject[,] mapGameObjects)

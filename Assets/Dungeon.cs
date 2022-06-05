@@ -292,9 +292,7 @@ public static class Dungeon
     public static GameObject CreateDungeonRoom(ref DUNGEON_ROOM dungeonRoom)
     {
         GameObject mapGameObject = new GameObject();
-        Map.CreateMap(mapGameObject, dungeonRoom.dungeonRoomMap);
-        mapGameObject.transform.position = Vector3.zero;
-        mapGameObject.transform.localEulerAngles = Vector3.zero;
+        Map.CreateMap(mapGameObject, dungeonRoom.dungeonRoomMap, Vector3.zero, Vector3.zero);
         //AddDungeonRoomMonsters(mapGameObject, ref dungeonRoom);
         return mapGameObject;
     }
@@ -754,7 +752,7 @@ public static class Dungeon
                         x, y, level, Tile.TILE.TILED_FLOOR);
 
                     dungeonBlockGameObject = new GameObject();
-                    Map.CreateMap(dungeonBlockGameObject, map);
+                    Map.CreateMap(dungeonBlockGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
 
                     dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     dungeonBlockGameObject.SetActive(true);
@@ -774,7 +772,7 @@ public static class Dungeon
                         x, y, level, Tile.TILE.SHALLOW_WATER);
 
                     dungeonBlockGameObject = new GameObject();
-                    Map.CreateMap(dungeonBlockGameObject, map);
+                    Map.CreateMap(dungeonBlockGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
 
                     dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     dungeonBlockGameObject.SetActive(true);
@@ -789,7 +787,7 @@ public static class Dungeon
                         x, y, level, Tile.TILE.ENERGY_FIELD);
 
                     dungeonBlockGameObject = new GameObject();
-                    Map.CreateMap(dungeonBlockGameObject, map);
+                    Map.CreateMap(dungeonBlockGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
 
                     dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     dungeonBlockGameObject.SetActive(true);
@@ -804,7 +802,7 @@ public static class Dungeon
                         x, y, level, Tile.TILE.FIRE_FIELD);
 
                     dungeonBlockGameObject = new GameObject();
-                    Map.CreateMap(dungeonBlockGameObject, map);
+                    Map.CreateMap(dungeonBlockGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
 
                     dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     dungeonBlockGameObject.SetActive(true);
@@ -819,7 +817,7 @@ public static class Dungeon
                         x, y, level, Tile.TILE.POISON_FIELD);
 
                     dungeonBlockGameObject = new GameObject();
-                    Map.CreateMap(dungeonBlockGameObject, map);
+                    Map.CreateMap(dungeonBlockGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
 
                     dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     dungeonBlockGameObject.SetActive(true);
@@ -835,7 +833,7 @@ public static class Dungeon
                         x, y, level, Tile.TILE.SLEEP_FIELD);
 
                     dungeonBlockGameObject = new GameObject();
-                    Map.CreateMap(dungeonBlockGameObject, map);
+                    Map.CreateMap(dungeonBlockGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
 
                     dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     dungeonBlockGameObject.SetActive(true);
@@ -850,7 +848,7 @@ public static class Dungeon
                         x, y, level, Tile.TILE.CHEST);
 
                     dungeonBlockGameObject = new GameObject();
-                    Map.CreateMap(dungeonBlockGameObject, map);
+                    Map.CreateMap(dungeonBlockGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
 
                     dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     dungeonBlockGameObject.SetActive(true);
@@ -866,7 +864,7 @@ public static class Dungeon
                         x, y, level, Tile.TILE.MISSLE_ATTACK_BLUE);
 
                     dungeonBlockGameObject = new GameObject();
-                    Map.CreateMap(dungeonBlockGameObject, map);
+                    Map.CreateMap(dungeonBlockGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
 
                     dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     dungeonBlockGameObject.SetActive(true);
@@ -882,7 +880,7 @@ public static class Dungeon
                         x, y, level, Tile.TILE.ALTAR);
 
                     dungeonBlockGameObject = new GameObject();
-                    Map.CreateMap(dungeonBlockGameObject, map);
+                    Map.CreateMap(dungeonBlockGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
 
                     dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     dungeonBlockGameObject.SetActive(true);
@@ -986,7 +984,7 @@ public static class Dungeon
                     }
 
                     dungeonBlockGameObject = new GameObject();
-                    Map.CreateMap(dungeonBlockGameObject, map);
+                    Map.CreateMap(dungeonBlockGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
                     dungeonBlockGameObject.name = "Combat map hallway " + ((U4_Decompiled_AVATAR.COMBAT_TERRAIN)combat).ToString();
 
                     dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
