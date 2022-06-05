@@ -965,7 +965,6 @@ public class World : MonoBehaviour
                     // add our little animator script and set the tile
                     Animate3 animate = monsterGameObject.AddComponent<Animate3>();
                     animate.npcTile = 0;
-                    animate.world = this;
                     animate.ObjectRenderer = renderer;
 
                     animate.SetNPCTile(monsterTile);
@@ -1015,7 +1014,6 @@ public class World : MonoBehaviour
                 // add our little animator script and set the tile to zero
                 Animate3 animate = dungeonMonsterGameObject.AddComponent<Animate3>();
                 animate.npcTile = 0;
-                animate.world = this;
                 animate.ObjectRenderer = renderer;
 
                 // rotate the fighters game object into position after creating
@@ -1902,7 +1900,6 @@ public class World : MonoBehaviour
                 // add our little animator script and set the tile
                 Animate3 animate = fighterGameObject.AddComponent<Animate3>();
                 animate.npcTile = 0;
-                animate.world = this;
                 animate.ObjectRenderer = renderer;
 
                 // rotate the fighters game object into position after creating
@@ -1992,7 +1989,6 @@ public class World : MonoBehaviour
                 // add our little animator script and set the tile
                 Animate3 animate = characterGameObject.AddComponent<Animate3>();
                 animate.npcTile = 0;
-                animate.world = this;
                 animate.ObjectRenderer = renderer;
 
                 // rotate the character game object into position after creating
@@ -2155,7 +2151,6 @@ public class World : MonoBehaviour
                 // add our little animator script and set the tile
                 Animate3 animate = npcGameObject.AddComponent<Animate3>();
                 animate.npcTile = 0;
-                animate.world = this;
                 animate.ObjectRenderer = renderer;
 
                 // rotate the npc game object into position after creating

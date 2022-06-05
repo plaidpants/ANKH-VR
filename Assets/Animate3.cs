@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Animate3 : MonoBehaviour
 {
-    public World world;
     public Tile.TILE npcTile;
     public Tile.TILE[] animationFrameIndexes;
     int frame = 0;
@@ -110,9 +109,6 @@ public class Animate3 : MonoBehaviour
     {
         // check a bit before using these
         if (animationFrameIndexes == null)
-            return;
-
-        if (world == null)
             return;
 
         if (Tile.originalTiles == null)

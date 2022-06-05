@@ -1469,13 +1469,13 @@ catch
 #endif
 
         lastKeyboardHit = (char)KEYS.VK_ESCAPE;
-
+#if UNITY_EDITOR
         // wait for the game engine thread to complete/return
         while (trd.IsAlive == true)
         {
             ;
         }
-
+#endif
         // It is now safe to unload the DLL
         if (nativeLibraryPtr != System.IntPtr.Zero)
         {

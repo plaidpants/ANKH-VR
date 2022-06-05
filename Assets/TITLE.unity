@@ -23107,7 +23107,7 @@ MonoBehaviour:
   u4_TITLE: {fileID: 999847451}
   myFont: {fileID: 12800000, guid: 6a1639c5fcbb6ab42953975a5166d0e4, type: 2}
   myTransparentFont: {fileID: 12800000, guid: b8e211fb837b63846a3ffdd669460e95, type: 2}
-  timerPeriod: 0.02
+  timerPeriod: 0.01
   flagTimerPeriod: 0.1
   fighters: {fileID: 1542339420}
   lookAtObject: {fileID: 2041363149}

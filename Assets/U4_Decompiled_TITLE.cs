@@ -480,12 +480,13 @@ catch
 
         if (trd != null)
         {
+#if UNITY_EDITOR
             // wait for the game engine thread to complete/return
             while (trd.IsAlive == true)
             {
                 ;
             }
-
+#endif
             // It is now safe to unload the DLL
             if (U4_Decompiled_TITLE.nativeLibraryPtr2 != System.IntPtr.Zero)
             {
@@ -1488,19 +1489,23 @@ blit_mask_table:
 #if USE_UNITY_DLL_FUNCTION
         main_D_3A24(buffer, buffer.Length);
 #else
-        Native.Invoke<main_D_3A24>(nativeLibraryPtr2, bytebuffer, bytebuffer.Length);
+        int ret = Native.Invoke<int, main_D_3A24>(nativeLibraryPtr2, bytebuffer, bytebuffer.Length);
 #endif
         bool pendingMapChanged = false;
-        buffer_index = 0;
-        for (int y = 0; y < 5; y++)
+
+        if (ret != 0)
         {
-            for (int x = 0; x < 19; x++)
+            buffer_index = 0;
+            for (int y = 0; y < 5; y++)
             {
-                Tile.TILE tile = (Tile.TILE)bytebuffer[buffer_index++];
-                if (tile != map[x, y])
+                for (int x = 0; x < 19; x++)
                 {
-                    map[x, y] = tile;
-                    pendingMapChanged = true;
+                    Tile.TILE tile = (Tile.TILE)bytebuffer[buffer_index++];
+                    if (tile != map[x, y])
+                    {
+                        map[x, y] = tile;
+                        pendingMapChanged = true;
+                    }
                 }
             }
         }
