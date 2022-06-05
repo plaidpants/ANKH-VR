@@ -38,8 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2006084672}
-  m_IndirectSpecularColor: {r: 0.00009216195, g: 0.00009216195, b: 0.00009216195,
-    a: 1}
+  m_IndirectSpecularColor: {r: 0.030493796, g: 0.06184578, b: 0.12612419, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -13183,8 +13182,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lastCurrentTile: 0
-  originalTiles: []
-  expandedTiles: []
   myFont: {fileID: 12800000, guid: 6a1639c5fcbb6ab42953975a5166d0e4, type: 2}
   myTransparentFont: {fileID: 12800000, guid: b8e211fb837b63846a3ffdd669460e95, type: 2}
   mainTerrain: {fileID: 0}
@@ -13198,18 +13195,11 @@ MonoBehaviour:
   activeCharacter: {fileID: 0}
   hits: {fileID: 0}
   moongate: {fileID: 0}
-  dungeon: {fileID: 0}
-  dungeonMonsters: {fileID: 0}
   partyGameObject: {fileID: 0}
   skyGameObject: {fileID: 862716393}
-  CombatTerrains: []
-  CenterOfCombatTerrain: {fileID: 0}
+  dungeon: {fileID: 0}
+  dungeonMonsters: {fileID: 0}
   talkWordList: []
-  tileApple2Filepath1: /u4/SHP0.B
-  tileApple2Filepath2: /u4/SHP1.B
-  tileEGAFilepath: /u4/SHAPES.EGA
-  tileCGAFilepath: /u4/SHAPES.CGA
-  worldMapFilepath: /u4/WORLD.MAP
   keyword1ButtonText: {fileID: 614336522}
   keyword2ButtonText: {fileID: 1438280028}
   keyword1Button: {fileID: 1833785971}
@@ -13217,11 +13207,11 @@ MonoBehaviour:
   InputPanel: {fileID: 1611383152}
   StatsPanel: {fileID: 8708751031312621670}
   TextPanel: {fileID: 5510408783203706120}
-  Talk: {fileID: 450558600}
-  Action: {fileID: 1131267913}
-  ActionMainLoop: {fileID: 1716875115350400504}
-  ActionDungeonLoop: {fileID: 7878401099464846622}
-  ActionCombatLoop: {fileID: 7878401099093439800}
+  TalkLabel: {fileID: 450558600}
+  ActionLabel: {fileID: 1131267913}
+  ActionMainLoopInputPanel: {fileID: 1716875115350400504}
+  ActionDungeonLoopInputPanel: {fileID: 7878401099464846622}
+  ActionCombatLoopInputPanel: {fileID: 7878401099093439800}
   TalkCitizen: {fileID: 731487077}
   TalkHealer: {fileID: 1044144498}
   TalkContinue: {fileID: 1962505774}
@@ -13252,26 +13242,6 @@ MonoBehaviour:
   TalkVirtue: {fileID: 135315089}
   TalkDirection: {fileID: 170383736}
   TalkEndGame: {fileID: 851848903}
-  u4: {fileID: 999847451}
-  PNGAtlas: {fileID: 0}
-  PNGFilepath: /u4/shapes.png
-  convertDungeonTileToCombat: 10000000110000001200000013000000140000001000000010000000100000001000000010000000100000001000000015000000100000001000000010000000
-  GameText: {fileID: 2101250206}
-  combinedTexture: {fileID: 0}
-  combinedMaterial: {fileID: 0}
-  textureAtlasPowerOf2: 0
-  combinedLinearTexture: {fileID: 0}
-  combinedLinearMaterial: {fileID: 0}
-  combinedExpandedTexture: {fileID: 0}
-  combinedExpandedMaterial: {fileID: 0}
-  textureExpandedAtlasPowerOf2: 0
-  vision: {fileID: 1030935699}
-  picture1: []
-  picture2: []
-  picture3: []
-  picture4: []
-  timerPeriod: 0.02
-  flagTimerPeriod: 0.1
   lastVisionFilename: 
   statsOverview: {fileID: 166323141}
   windDirection: {fileID: 221184094}
@@ -13299,6 +13269,11 @@ MonoBehaviour:
   wasJustInside: 0
   readyToAutomaticallyEnter: 1
   rotateTransform: {fileID: 572009426}
+  u4: {fileID: 999847451}
+  GameText: {fileID: 2101250206}
+  vision: {fileID: 1030935699}
+  timerPeriod: 0.02
+  flagTimerPeriod: 0.1
 --- !u!4 &1753957574
 Transform:
   m_ObjectHideFlags: 0
