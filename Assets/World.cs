@@ -121,6 +121,7 @@ public class World : MonoBehaviour
     int lastRaycastPlayer_posy = -1;
     int lastRaycastPlayer_f_1dc = -1;
     U4_Decompiled_AVATAR.DIRECTION lastRaycastP_surface_party_direction = (U4_Decompiled_AVATAR.DIRECTION)(-1);
+    U4_Decompiled_AVATAR.DIRECTION lastPartyDirection = (U4_Decompiled_AVATAR.DIRECTION)(-1);
     bool last_door_timer = false;
 
     public Image vision;
@@ -1840,6 +1841,12 @@ public class World : MonoBehaviour
             Camera.main.clearFlags = CameraClearFlags.SolidColor;
             Camera.main.backgroundColor = Color.black;
         }
+
+        foreach (Transform child in dungeon.transform)
+        {
+            Map.UpdateExistingBillboardsMap(child.gameObject);
+            child.Find("Monsters").gameObject.SetActive(false);
+        }
     }
 
     void UpdateDungeon()
@@ -1888,6 +1895,13 @@ public class World : MonoBehaviour
         {
             Camera.main.clearFlags = CameraClearFlags.SolidColor;
             Camera.main.backgroundColor = Color.black;
+        }
+
+        foreach (Transform child in dungeon.transform)
+        {
+            Map.UpdateExistingBillboardsMap(child.gameObject);
+            Dungeon.UpdateExistingBillboardsDungeonRoomMonster(child.gameObject);
+            child.Find("Monsters").gameObject.SetActive(true);
         }
     }
 
@@ -2646,7 +2660,8 @@ public class World : MonoBehaviour
             (u4.Party._y != lastRaycastPlayer_posy) || // player moved
             (u4.Party.f_1dc != lastRaycastPlayer_f_1dc) || // balloon flying or grounded or dungeon torch active
             ((u4.open_door_timer > 0) != last_door_timer) || // door has opened or closed
-            (u4.surface_party_direction != lastRaycastP_surface_party_direction)) // have we rotated the camera
+            (u4.surface_party_direction != lastRaycastP_surface_party_direction) || // have we rotated the camera
+            (u4.Party._dir != lastPartyDirection)) // have we rotated in the dungeopm
         {
             Vector3 location = Vector3.zero;
 
@@ -2656,6 +2671,7 @@ public class World : MonoBehaviour
             lastRaycastP_surface_party_direction = u4.surface_party_direction;
             lastRaycastPlayer_f_1dc = u4.Party.f_1dc; // flying in the balloon or not or dungeon torch active
             last_door_timer = u4.open_door_timer > 0;
+            lastPartyDirection = u4.Party._dir;
 
             if (u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS)
             {
@@ -2743,9 +2759,13 @@ public class World : MonoBehaviour
                     entireMapTILEs.GetLength(1) - ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) )  - raycastSettlementMap.GetLength(1));
                 */
             }
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.DUNGEON)
+            {
+
+            }
 
             // Position the map in place
-            mainTerrain.transform.position = location;
+                mainTerrain.transform.position = location;
 
             // rotate map into place
             mainTerrain.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);

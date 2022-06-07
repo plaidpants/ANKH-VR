@@ -394,7 +394,7 @@ public static class Map
     }
 
 
-    public static void UpdateExistingBillboardsMap(GameObject mapGameObject, Tile.TILE[,] map, Vector3 finalPosition, Vector3 finalRotation, GameObject lookAtObject = null)
+    public static void UpdateExistingBillboardsMap(GameObject mapGameObject)
     {
         GameObject billboardTerrrainGameObject;
         //bool useExpandedTile;

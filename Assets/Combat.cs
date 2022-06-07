@@ -190,7 +190,7 @@ public static class Combat
             for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
             {
                 // create the combat terrain based on the loaded map
-                Map.UpdateExistingBillboardsMap(CombatTerrains[i], combatMaps[i], new Vector3(0, 0, offset_z - combatMaps[i].GetLength(1)), new Vector3(90.0f, 0.0f, 0.0f), lookAtObject);
+                Map.UpdateExistingBillboardsMap(CombatTerrains[i]);
 
                 // Position the combat map in place
                 //CombatTerrains[i].transform.position = new Vector3(0, 0, offset_z - combatMaps[i].GetLength(1));
@@ -201,7 +201,7 @@ public static class Combat
         }
         else
         {
-            Map.UpdateExistingBillboardsMap(CombatTerrains[(int)combatTerrainIndex], combatMaps[(int)combatTerrainIndex], new Vector3(0, 0, offset_z - combatMaps[(int)combatTerrainIndex].GetLength(1)), new Vector3(90.0f, 0.0f, 0.0f), lookAtObject);
+            Map.UpdateExistingBillboardsMap(CombatTerrains[(int)combatTerrainIndex]);
         }
     }
 
