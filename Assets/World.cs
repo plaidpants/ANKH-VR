@@ -1612,7 +1612,7 @@ public class World : MonoBehaviour
         dungeonMonsters.SetActive(false);
         skyGameObject.SetActive(true);
 
-        for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
+        for (int i = 0; i < (int)Combat.COMBAT_TERRAIN.MAX; i++)
         {
             Combat.CombatTerrains[i].gameObject.SetActive(false);
         }
@@ -1693,7 +1693,7 @@ public class World : MonoBehaviour
         dungeonMonsters.SetActive(false);
         skyGameObject.SetActive(true);
 
-        for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
+        for (int i = 0; i < (int)Combat.COMBAT_TERRAIN.MAX; i++)
         {
             Combat.CombatTerrains[i].gameObject.SetActive(false);
         }
@@ -1722,6 +1722,8 @@ public class World : MonoBehaviour
             Camera.main.clearFlags = CameraClearFlags.Skybox;
         }
     }
+
+    public GameObject debug;
 
     void UpdateCombat()
     {
@@ -1752,7 +1754,7 @@ public class World : MonoBehaviour
             }
             dungeon.SetActive(true);
 
-            for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
+            for (int i = 0; i < (int)Combat.COMBAT_TERRAIN.MAX; i++)
             {
                 Combat.CombatTerrains[i].gameObject.SetActive(false);
             }
@@ -1761,6 +1763,65 @@ public class World : MonoBehaviour
             {
                 Camera.main.clearFlags = CameraClearFlags.SolidColor;
                 Camera.main.backgroundColor = Color.black;
+            }
+
+            // need to check and see if the map dungeon block we created for the level
+            // matches what the game engine is using, we adjust halways and other dungeon
+            // block features so the dungeon fit together nicely, if it does not match we
+            // to to dynamically alter the game engine dungeon block map to match so monsters/fighters
+            // do not try to walk through walls
+            bool map_updated = false;
+            Dungeon.DungeonBlockLevel level = Dungeon.currentDungeonBlockLevel[u4.Party._x, 7 - u4.Party._y];
+            for (int y = 0; y < 11; y++)
+            {
+                for (int x = 0; x < 11; x++)
+                {
+                    // is the map different because we modified it?
+                    if (u4.Combat_map[x, y] != level.dungeonBlockMap[y, x])
+                    {
+                        // update the map
+                        u4.Combat_map[x, y] = level.dungeonBlockMap[y, x];
+
+                        // flag that we made an update
+                        map_updated = true;
+                    }
+                }
+            }
+
+            // check if dungeon block map needed to be updated
+            if (map_updated)
+            {
+                // need to see if all the monsters/fighters are inside playable
+                // space in the dungeon block and move or kill them if they are not
+                // check the fighters
+                for (int i = 0; i < 16; i++)
+                {
+                    // is the fighter real
+                    if (u4.Fighters[i]._tile != Tile.TILE.DEEP_WATER)
+                    {
+                        // get the tile under the fighter
+                        Tile.TILE fighterTile = u4.Combat_map[u4.Fighters[i]._y, u4.Fighters[i]._x];
+
+                        // is it blank or a brick wall
+                        if ((fighterTile == Tile.TILE.BRICK_WALL) || (fighterTile == Tile.TILE.BLANK))
+                        {
+                            // delete/erase/kill this fighter/monster because it is outside of playable space
+                            //u4.Fighters[i]._tile = Tile.TILE.DEEP_WATER;
+
+                            // move it to the center
+                            u4.Fighters[i]._x = 5;
+                            u4.Fighters[i]._y = 5;
+                        }
+                    }
+                }
+
+                // TODO need to make sure all 8 players characters will also fit and move them
+
+                // update the game engine map with our modifications
+                u4.SetCombat();
+
+                // reset the flag
+                map_updated = false;
             }
         }
         else
@@ -1782,9 +1843,9 @@ public class World : MonoBehaviour
             dungeonMonsters.SetActive(false);
             skyGameObject.SetActive(true);
 
-            U4_Decompiled_AVATAR.COMBAT_TERRAIN currentCombatTerrain = Combat.Convert_Tile_to_Combat_Terrian(u4.current_tile, u4.Party._tile, u4.D_96F8, u4.D_946C);
+            Combat.COMBAT_TERRAIN currentCombatTerrain = Combat.Convert_Tile_to_Combat_Terrian(u4.current_tile, u4.Party._tile, u4.D_96F8, u4.D_946C);
 
-            for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
+            for (int i = 0; i < (int)Combat.COMBAT_TERRAIN.MAX; i++)
             {
                 if (i == (int)currentCombatTerrain)
                 {
@@ -1831,7 +1892,7 @@ public class World : MonoBehaviour
         }
         dungeon.SetActive(true);
 
-        for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
+        for (int i = 0; i < (int)Combat.COMBAT_TERRAIN.MAX; i++)
         {
             Combat.CombatTerrains[i].gameObject.SetActive(false);
         }
@@ -1886,7 +1947,7 @@ public class World : MonoBehaviour
             dungeonMonsters.SetActive(false);
         }
 
-        for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
+        for (int i = 0; i < (int)Combat.COMBAT_TERRAIN.MAX; i++)
         {
             Combat.CombatTerrains[i].gameObject.SetActive(false);
         }
@@ -1924,9 +1985,9 @@ public class World : MonoBehaviour
         dungeonMonsters.SetActive(false);
         skyGameObject.SetActive(true);
 
-        for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
+        for (int i = 0; i < (int)Combat.COMBAT_TERRAIN.MAX; i++)
         {
-            if (i == (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.SHRINE)
+            if (i == (int)Combat.COMBAT_TERRAIN.SHRINE)
             {
                 Combat.CombatTerrains[i].gameObject.SetActive(true);
                 followWorld(Combat.CenterOfCombatTerrain);
@@ -1966,7 +2027,7 @@ public class World : MonoBehaviour
         // need to special case the combat when in the inn and in combat camp mode outside or in dungeon
         if (u4.current_tile == Tile.TILE.BRICK_FLOOR)
         {
-            currentCombatTerrain = (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.INN;
+            currentCombatTerrain = (int)Combat.COMBAT_TERRAIN.INN;
             skyGameObject.SetActive(true);
             if (Camera.main.clearFlags != CameraClearFlags.Skybox)
             {
@@ -1975,7 +2036,7 @@ public class World : MonoBehaviour
         }
         else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
         {
-            currentCombatTerrain = (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.CAMP_DNG;
+            currentCombatTerrain = (int)Combat.COMBAT_TERRAIN.CAMP_DNG;
             skyGameObject.SetActive(false);
             if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
             {
@@ -1985,7 +2046,7 @@ public class World : MonoBehaviour
         }
         else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.DUNGEON)
         {
-            currentCombatTerrain = (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.CAMP;
+            currentCombatTerrain = (int)Combat.COMBAT_TERRAIN.CAMP;
             skyGameObject.SetActive(true);
             if (Camera.main.clearFlags != CameraClearFlags.Skybox)
             {
@@ -1994,7 +2055,7 @@ public class World : MonoBehaviour
         }
         else
         {
-            currentCombatTerrain = (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.CAMP;
+            currentCombatTerrain = (int)Combat.COMBAT_TERRAIN.CAMP;
             skyGameObject.SetActive(true);
             if (Camera.main.clearFlags != CameraClearFlags.Skybox)
             {
@@ -2002,7 +2063,7 @@ public class World : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < (int)U4_Decompiled_AVATAR.COMBAT_TERRAIN.MAX; i++)
+        for (int i = 0; i < (int)Combat.COMBAT_TERRAIN.MAX; i++)
         {
             if (i == currentCombatTerrain)
             {
@@ -2705,20 +2766,20 @@ public class World : MonoBehaviour
             // create the game object children with meshes and textures
             if (u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS)
             {
-                Combine.Combine3(mainTerrain, 
-                    ref raycastOutdoorMap, 
-                    u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1, 
-                    u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1, 
+                Combine.Combine3(mainTerrain,
+                    ref raycastOutdoorMap,
+                    u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1,
+                    u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1,
                     ref entireMapGameObjects,
-                    false, 
-                    TextureFormat.RGBA32, 
+                    false,
+                    TextureFormat.RGBA32,
                     true,
                     Tile.combinedExpandedMaterial,
                     Tile.combinedLinearMaterial,
                     u4.Party._x,
                     u4.Party._y,
                     u4.surface_party_direction);
-                    
+
                 location = Vector3.zero;
             }
             else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING)
@@ -2734,10 +2795,10 @@ public class World : MonoBehaviour
                     settlement = (Settlement.SETTLEMENT)u4.Party._loc;
                 }
 
-                Combine.Combine3(mainTerrain, 
-                    ref raycastSettlementMap, 
-                    u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1, 
-                    u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1, 
+                Combine.Combine3(mainTerrain,
+                    ref raycastSettlementMap,
+                    u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1,
+                    u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1,
                     ref Settlement.settlementsMapGameObjects[(int)settlement],
                     false,
                     TextureFormat.RGBA32,
@@ -2751,7 +2812,7 @@ public class World : MonoBehaviour
                 //CreateMapLabels(mainTerrain, ref raycastSettlementMap);
 
                 location = new Vector3(0, 0, 224);
-                    
+
                 /*
                 CreateMap(mainTerrain, raycastSettlementMap);
                 location = new Vector3(
@@ -2763,9 +2824,22 @@ public class World : MonoBehaviour
             {
 
             }
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT)
+            {
+                /*
+                if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
+                {
+                    if (Dungeon.currentDungeonBlockLevel[u4.Party._x, u4.Party._y].dungeonBlockMap != null && debug != null)
+                    {
+                        Map.CreateMap(debug, Dungeon.currentDungeonBlockLevel[u4.Party._x, 7 - u4.Party._y].dungeonBlockMap, Vector3.zero, Vector3.zero);
+                        debug.transform.localPosition = new Vector3(0, 0, 10);
+                    }
+                }
+                */
+            }
 
             // Position the map in place
-                mainTerrain.transform.position = location;
+            mainTerrain.transform.position = location;
 
             // rotate map into place
             mainTerrain.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);

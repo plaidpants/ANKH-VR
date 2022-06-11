@@ -10,25 +10,32 @@ public static class Dungeon
 
     public static DUNGEON[] dungeons = new DUNGEON[(int)DUNGEONS.MAX];
 
-    // only the upper nibble defines the dungeon tile, the lower nibble is used for active dungeon monsters
-    public static U4_Decompiled_AVATAR.COMBAT_TERRAIN[] convertDungeonTileToCombat =
+    public static DungeonBlockLevel[,] currentDungeonBlockLevel = new DungeonBlockLevel[8, 8];
+
+    public struct DungeonBlockLevel
     {
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // HALLWAY -> hallway
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG1, // LADDER_UP -> ladder up
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG2, // LADDER_DOWN -> ladder down
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG3, // LADDER_UP_AND_DOWN -> ladder up and down
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG4, // TREASURE_CHEST -> chest
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // CEILING_HOLE -> hallway
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // FLOOR_HOLE -> hallway
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // MAGIC_ORB -> hallway
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // TRAP -> hallway
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // FOUNTAIN -> hallway
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // FIELD -> hallway
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // ALTAR -> hallway
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG5, // DOOR -> doorway 
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // DUNGEON_ROOM -> hallway
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0, // DOOR_SECRECT -> secret doorway  /* DNG6 make secret door just regular hallway as we do the secret door/wall on the ajacent room/hallway */
-        U4_Decompiled_AVATAR.COMBAT_TERRAIN.DNG0  // WALL -> hallway, just in case
+        public Tile.TILE[,] dungeonBlockMap;
+    }
+
+    // only the upper nibble defines the dungeon tile, the lower nibble is used for active dungeon monsters
+    public static Combat.COMBAT_TERRAIN[] convertDungeonTileToCombat =
+    {
+        Combat.COMBAT_TERRAIN.DNG0, // HALLWAY -> hallway
+        Combat.COMBAT_TERRAIN.DNG1, // LADDER_UP -> ladder up
+        Combat.COMBAT_TERRAIN.DNG2, // LADDER_DOWN -> ladder down
+        Combat.COMBAT_TERRAIN.DNG3, // LADDER_UP_AND_DOWN -> ladder up and down
+        Combat.COMBAT_TERRAIN.DNG4, // TREASURE_CHEST -> chest
+        Combat.COMBAT_TERRAIN.DNG0, // CEILING_HOLE -> hallway
+        Combat.COMBAT_TERRAIN.DNG0, // FLOOR_HOLE -> hallway
+        Combat.COMBAT_TERRAIN.DNG0, // MAGIC_ORB -> hallway
+        Combat.COMBAT_TERRAIN.DNG0, // TRAP -> hallway
+        Combat.COMBAT_TERRAIN.DNG0, // FOUNTAIN -> hallway
+        Combat.COMBAT_TERRAIN.DNG0, // FIELD -> hallway
+        Combat.COMBAT_TERRAIN.DNG0, // ALTAR -> hallway
+        Combat.COMBAT_TERRAIN.DNG5, // DOOR -> doorway 
+        Combat.COMBAT_TERRAIN.DNG0, // DUNGEON_ROOM -> hallway
+        Combat.COMBAT_TERRAIN.DNG0, // DOOR_SECRECT -> secret doorway  /* DNG6 make secret door just regular hallway as we do the secret door/wall on the ajacent room/hallway */
+        Combat.COMBAT_TERRAIN.DNG0  // WALL -> hallway, just in case
     };
 
 
@@ -804,6 +811,7 @@ public static class Dungeon
         GameObject dungeonLevel = new GameObject();
         dungeonLevel.name = dungeon.ToString() + " Level #" + level;
 
+
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++)
@@ -816,10 +824,13 @@ public static class Dungeon
                 DUNGEON_TILE leftDungeonTile = dungeons[(int)dungeon].dungeonTILEs[level][(x - 1 + 8) % 8, y];
                 DUNGEON_TILE rightDungeonTile = dungeons[(int)dungeon].dungeonTILEs[level][(x + 1) % 8, y];
 
+                Tile.TILE[,] map = null; // new Tile.TILE[11, 11];
+
                 if (dungeonTile == DUNGEON_TILE.WALL)
                 {
                     //dungeonBlockGameObject = CreateDungeonBlock(U4_Decompiled.TILE.BRICK_WALL);
                     //dungeonBlockGameObject.name = dungeonTile.ToString();
+                    //currentDungeonBlockLevel[x, y].dungeonBlockMap = combatMaps[(int)Combat.COMBAT_TERRAIN.DUNGEON];
                     continue;
                 }
                 else if ((dungeonTile >= DUNGEON_TILE.DUNGEON_ROOM_0) &&
@@ -837,6 +848,8 @@ public static class Dungeon
                     }
                     dungeonBlockGameObject = CreateDungeonRoom(ref dungeons[(int)dungeon].dungeonRooms[room]);
                     dungeonBlockGameObject.name = "Room #" + room;
+
+                    map = dungeons[(int)dungeon].dungeonRooms[room].dungeonRoomMap;
                 }
                 else if ((dungeonTile == DUNGEON_TILE.HALLWAY)
                         || (dungeonTile == DUNGEON_TILE.TRAP_FALLING_ROCKS)
@@ -845,7 +858,7 @@ public static class Dungeon
                         )
                 {
                     // TODO figure out what to do with these traps
-                    Tile.TILE[,] map = CreateDungeonHallway(
+                    map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
                         x, y, level, Tile.TILE.TILED_FLOOR);
@@ -865,7 +878,7 @@ public static class Dungeon
                         || (dungeonTile == DUNGEON_TILE.FOUNTAIN_POISIN))
                 {
                     // TODO make a pretty fountain
-                    Tile.TILE[,] map = CreateDungeonHallway(
+                    map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
                         x, y, level, Tile.TILE.SHALLOW_WATER);
@@ -880,7 +893,7 @@ public static class Dungeon
                 }
                 else if (dungeonTile == DUNGEON_TILE.FIELD_ENERGY)
                 {
-                    Tile.TILE[,] map = CreateDungeonHallway(
+                    map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
                         x, y, level, Tile.TILE.ENERGY_FIELD);
@@ -895,7 +908,7 @@ public static class Dungeon
                 }
                 else if (dungeonTile == DUNGEON_TILE.FIELD_FIRE)
                 {
-                    Tile.TILE[,] map = CreateDungeonHallway(
+                    map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
                         x, y, level, Tile.TILE.FIRE_FIELD);
@@ -910,7 +923,7 @@ public static class Dungeon
                 }
                 else if (dungeonTile == DUNGEON_TILE.FIELD_POISON)
                 {
-                    Tile.TILE[,] map = CreateDungeonHallway(
+                    map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
                         x, y, level, Tile.TILE.POISON_FIELD);
@@ -926,7 +939,7 @@ public static class Dungeon
                 else if (dungeonTile == DUNGEON_TILE.FIELD_SLEEP)
                 {
                     // TODO make a pretty fountain
-                    Tile.TILE[,] map = CreateDungeonHallway(
+                    map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
                         x, y, level, Tile.TILE.SLEEP_FIELD);
@@ -941,7 +954,7 @@ public static class Dungeon
                 }
                 else if (dungeonTile == DUNGEON_TILE.TREASURE_CHEST)
                 {
-                    Tile.TILE[,] map = CreateDungeonHallway(
+                    map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
                         x, y, level, Tile.TILE.CHEST);
@@ -957,7 +970,7 @@ public static class Dungeon
                 else if (dungeonTile == DUNGEON_TILE.MAGIC_ORB)
                 {
                     // TODO make orb into a billboard
-                    Tile.TILE[,] map = CreateDungeonHallway(
+                    map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
                         x, y, level, Tile.TILE.MISSLE_ATTACK_BLUE);
@@ -974,7 +987,7 @@ public static class Dungeon
                 else if (dungeonTile == DUNGEON_TILE.ALTAR)
                 {
                     // TODO make altar into a billboard
-                    Tile.TILE[,] map = CreateDungeonHallway(ref dungeons[(int)dungeon].dungeonTILEs[level],
+                    map = CreateDungeonHallway(ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
                         x, y, level, Tile.TILE.ALTAR);
 
@@ -992,7 +1005,7 @@ public static class Dungeon
                     int combat = (int)convertDungeonTileToCombat[(int)dungeons[(int)dungeon].dungeonTILEs[level][x, y] >> 4];
 
                     // get a halway that fits
-                    Tile.TILE[,] map = CreateDungeonHallway(ref dungeons[(int)dungeon].dungeonTILEs[level], ref dungeons[(int)dungeon].dungeonRooms, x, y, level);
+                    map = CreateDungeonHallway(ref dungeons[(int)dungeon].dungeonTILEs[level], ref dungeons[(int)dungeon].dungeonRooms, x, y, level);
 
                     // check if we need to flip the door map
                     if ((dungeonTile == DUNGEON_TILE.DOOR) &&
@@ -1084,18 +1097,15 @@ public static class Dungeon
 
                     dungeonBlockGameObject = new GameObject();
                     Map.CreateMap(dungeonBlockGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
-                    dungeonBlockGameObject.name = "Combat map hallway " + ((U4_Decompiled_AVATAR.COMBAT_TERRAIN)combat).ToString();
+                    dungeonBlockGameObject.name = "Combat map hallway " + ((Combat.COMBAT_TERRAIN)combat).ToString();
 
                     dungeonBlockGameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, 0.0f);
                     dungeonBlockGameObject.SetActive(true);
                 }
-                //else
-                //{
-                //    dungeonBlockGameObject = CreateDungeonBlock(U4_Decompiled.TILE.TILED_FLOOR);
-                //}
 
                 dungeonBlockGameObject.transform.SetParent(dungeonLevel.transform);
                 dungeonBlockGameObject.transform.localPosition = new Vector3(x * 11, y * 11, 0);
+                currentDungeonBlockLevel[x, y].dungeonBlockMap = map;
             }
         }
 

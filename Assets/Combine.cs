@@ -810,7 +810,7 @@ public static class Combine
                     animatedTerrrainGameObject.AddComponent<Animate1>();
                 }
             }
-
+            
             if (countBillboardTerrrain > 0)
             {
                 //billboardFilter.mesh = new Mesh();
@@ -820,7 +820,7 @@ public static class Combine
                 billboardRenderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
                 billboardRenderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
             }
-
+            
             // cleanup any unused resources now
             Resources.UnloadUnusedAssets(); // this can take a really long time if you have a lot of objects, keep the object count down and use only when nessesary
         }

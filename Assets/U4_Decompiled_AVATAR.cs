@@ -370,6 +370,8 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     delegate ZSTATS_MODE main_zstats_character();
     delegate void main_set_dir(DIRECTION direction);
     delegate void main_GetVision(byte[] buffer, int length);
+    delegate void main_Set_Combat(byte[] buffer, int length);
+    delegate void main_Set_Fighters(byte[] buffer, int length);
 #endif
 
     void Awake()
@@ -613,7 +615,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     // allocate storage for Combat global
     public tCombat1[] Combat1 = new tCombat1[16];
     public tCombat2[] Combat2 = new tCombat2[8];
-    public byte[,] Combat_map = new byte[11, 11]; //11 * 11 /*_040 D_94B0*/
+    public Tile.TILE [,] Combat_map = new Tile.TILE[11, 11]; //11 * 11 /*_040 D_94B0*/
 
     [System.Serializable]
     public struct tNPC /*size:0x100*/
@@ -787,38 +789,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     public t_68[] Fighters = new t_68[16];
 
     public Tile.TILE[,] displayTileMap = new Tile.TILE[11, 11];
-    public enum COMBAT_TERRAIN
-    {
-        // this order and numbering is important up to at least CAMP
-        // the names are also important as they are used to load the filenames from the original game
-        GRASS = 0,
-        BRIDGE = 1,
-        BRICK = 2,
-        DUNGEON = 3, // just all tiles, used outside when on dungeon entrance, not inside a dungeon
-        HILL = 4,
-        FOREST = 5,
-        BRUSH = 6,
-        MARSH = 7,
-        SHIPSEA = 8,
-        SHIPSHOR = 9,
-        SHORE = 10,
-        SHIPSHIP = 11,
-        SHORSHIP = 12,
-        CAMP = 13,
-
-        INN = 14,
-        SHRINE = 15,
-        DNG0 = 16, // hallway
-        DNG1 = 17, // ladder up
-        DNG2 = 18, // ladder down
-        DNG3 = 19, // ladder up and down
-        DNG4 = 20, // chest
-        DNG5 = 21, // doorway
-        DNG6 = 22, // secret doorway
-        CAMP_DNG = 23, // dungeon camp combat map named CAMP.DNG
-        MAX = 24
-    };
-
+    
     // Separate thread to run the game, we could attempt to make the data gathering function thread safe but for now this will do
     private void ThreadTask()
     {
@@ -2650,6 +2621,57 @@ sfx_storm:
         return soundEffect;
     }
 
+    public void SetCombat()
+    {
+        // write the npc positions
+        for (int i = 0; i < 16; i++)
+        {
+            buffer[0x00 + i] = Combat1[i]._npcX;
+            buffer[0x10 + i] = Combat1[i]._npcY;
+        }
+        // write the character positions
+        for (int i = 0; i < 8; i++)
+        {
+            buffer[0x20 + i] = Combat2[i]._charaX;
+            buffer[0x28 + i] = Combat2[i]._charaY;
+        }
+        // write the combat map
+        int buffer_index = 0x40;
+        for (int i = 0; i < 11; i++)
+        {
+            for (int j = 0; j < 11; j++)
+            {
+                buffer[buffer_index++] = (byte)Combat_map[i, j];
+            }
+        }
+
+        // write the Combat global
+#if USE_UNITY_DLL_FUNCTION
+            main_Set_Combat(buffer, buffer.Length);
+#else
+        Native.Invoke<main_Set_Combat>(nativeLibraryPtr, buffer, buffer.Length);
+#endif
+
+        // write the fighter data
+        for (int i = 0; i < 16; i++)
+        {
+            buffer[0x00 + i] = Fighters[i]._x;
+            buffer[0x10 + i] = Fighters[i]._y;
+            buffer[0x20 + i] = Fighters[i]._HP;
+            buffer[0x30 + i] = (byte)Fighters[i]._tile;
+            buffer[0x40 + i] = (byte)Fighters[i]._gtile;
+            buffer[0x50 + i] = Fighters[i]._sleeping;
+            buffer[0x60 + i] = (byte)Fighters[i]._chtile;
+        }
+
+        // write the Fighters global
+#if USE_UNITY_DLL_FUNCTION
+        main_Set_Fighters(buffer, buffer.Length);
+#else
+        Native.Invoke<main_Set_Fighters>(nativeLibraryPtr, buffer, buffer.Length);
+#endif
+    }
+
     // used to detect game mode changes and change the music
     MODE lastModeForMusic = (MODE)(-1);
     // checked just after getting the mode from the game engine
@@ -4310,7 +4332,7 @@ sfx_storm:
             {
                 for (int j = 0; j < 11; j++)
                 {
-                    Combat_map[i, j] = buffer[buffer_index++];
+                    Combat_map[i, j] = (Tile.TILE)buffer[buffer_index++];
                 }
             }
 
