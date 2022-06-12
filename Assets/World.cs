@@ -1767,7 +1767,7 @@ public class World : MonoBehaviour
 
             // need to check and see if the map dungeon block we created for the level
             // matches what the game engine is using, we adjust halways and other dungeon
-            // block features so the dungeon fit together nicely, if it does not match we
+            // block features so the dungeon fit together nicely, if it does not match we nned
             // to to dynamically alter the game engine dungeon block map to match so monsters/fighters
             // do not try to walk through walls
             bool map_updated = false;
@@ -1815,7 +1815,7 @@ public class World : MonoBehaviour
                     }
                 }
 
-                // TODO need to make sure all 8 players characters will also fit and move them
+                // TODO need to make sure all 8 players characters will also fit and move them if needed
 
                 // update the game engine map with our modifications
                 u4.SetCombat();
@@ -1907,6 +1907,37 @@ public class World : MonoBehaviour
         {
             Map.UpdateExistingBillboardsMap(child.gameObject);
             child.Find("Monsters").gameObject.SetActive(false);
+        }
+
+        // the game engine will dynamically alter dungeon rooms in combat using tigger tiles or dispell magic
+        // we need to update the unity engine game dungeon tiles maps to match as these tiles are changed
+        Dungeon.DungeonBlockLevel level = Dungeon.currentDungeonBlockLevel[u4.Party._x, 7 - u4.Party._y];
+        bool map_updated = false;
+        for (int y = 0; y < 11; y++)
+        {
+            for (int x = 0; x < 11; x++)
+            {
+                // is the map different because the game engine modified it?
+                if (level.dungeonBlockMap[y, x] != u4.Combat_map[x, y])
+                {
+                    // update the unity based map
+                    level.dungeonBlockMap[y, x] = u4.Combat_map[x, y];
+
+                    // flag that we made an update
+                    map_updated = true;
+                }
+            }
+        }
+
+        // check if the map needed updating
+        if (map_updated)
+        {
+            // re-create the game object using the new map
+            Map.CreateMap(level.dungeonGameObject, level.dungeonBlockMap, Vector3.zero, Vector3.zero);
+
+            // put the new map in place
+            level.dungeonGameObject.transform.localPosition = new Vector3(u4.Party._x * 11, (7 - u4.Party._y) * 11, 0);
+            level.dungeonGameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
         }
     }
 

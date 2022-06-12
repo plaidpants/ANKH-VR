@@ -15,6 +15,7 @@ public static class Dungeon
     public struct DungeonBlockLevel
     {
         public Tile.TILE[,] dungeonBlockMap;
+        public GameObject dungeonGameObject;
     }
 
     // only the upper nibble defines the dungeon tile, the lower nibble is used for active dungeon monsters
@@ -634,7 +635,21 @@ public static class Dungeon
                     }
 
                     Tile.TILE roomTileIndex = dungeonRooms[room].dungeonRoomMap[x, 10];
-                    if ((roomTileIndex == Tile.TILE.TILED_FLOOR) || (roomTileIndex == Tile.TILE.BRICK_FLOOR))
+                    if ((roomTileIndex == Tile.TILE.TILED_FLOOR) ||
+                        (roomTileIndex == Tile.TILE.BRICK_FLOOR) ||
+                        (roomTileIndex == Tile.TILE.WOOD_FLOOR) ||
+                        (roomTileIndex == Tile.TILE.SLEEP_FIELD) ||
+                        (roomTileIndex == Tile.TILE.FIRE_FIELD) ||
+                        (roomTileIndex == Tile.TILE.POISON_FIELD) ||
+                        (roomTileIndex == Tile.TILE.ENERGY_FIELD) ||
+                        (roomTileIndex == Tile.TILE.GRASS) ||
+                        (roomTileIndex == Tile.TILE.FOREST) ||
+                        (roomTileIndex == Tile.TILE.HILLS) ||
+                        (roomTileIndex == Tile.TILE.SWAMP) ||
+                        (roomTileIndex == Tile.TILE.BRUSH) ||
+                        (roomTileIndex == Tile.TILE.BRIDGE) ||
+                        (roomTileIndex == Tile.TILE.BRIDGE_BOTTOM) ||
+                        (roomTileIndex == Tile.TILE.BRIDGE_TOP))
                     {
                         tileIndex = Tile.TILE.TILED_FLOOR;
                     }
@@ -653,7 +668,21 @@ public static class Dungeon
                     }
 
                     Tile.TILE roomTileIndex = dungeonRooms[room].dungeonRoomMap[10, y];
-                    if ((roomTileIndex == Tile.TILE.TILED_FLOOR) || (roomTileIndex == Tile.TILE.BRICK_FLOOR))
+                    if ((roomTileIndex == Tile.TILE.TILED_FLOOR) ||
+                        (roomTileIndex == Tile.TILE.BRICK_FLOOR) ||
+                        (roomTileIndex == Tile.TILE.WOOD_FLOOR) ||
+                        (roomTileIndex == Tile.TILE.SLEEP_FIELD) ||
+                        (roomTileIndex == Tile.TILE.FIRE_FIELD) ||
+                        (roomTileIndex == Tile.TILE.POISON_FIELD) ||
+                        (roomTileIndex == Tile.TILE.ENERGY_FIELD) ||
+                        (roomTileIndex == Tile.TILE.GRASS) ||
+                        (roomTileIndex == Tile.TILE.FOREST) ||
+                        (roomTileIndex == Tile.TILE.HILLS) ||
+                        (roomTileIndex == Tile.TILE.SWAMP) ||
+                        (roomTileIndex == Tile.TILE.BRUSH) ||
+                        (roomTileIndex == Tile.TILE.BRIDGE) ||
+                        (roomTileIndex == Tile.TILE.BRIDGE_BOTTOM) ||
+                        (roomTileIndex == Tile.TILE.BRIDGE_TOP))
                     {
                         tileIndex = Tile.TILE.TILED_FLOOR;
                     }
@@ -674,7 +703,21 @@ public static class Dungeon
                     }
 
                     Tile.TILE roomTileIndex = dungeonRooms[room].dungeonRoomMap[0, y];
-                    if ((roomTileIndex == Tile.TILE.TILED_FLOOR) || (roomTileIndex == Tile.TILE.BRICK_FLOOR))
+                    if ((roomTileIndex == Tile.TILE.TILED_FLOOR) ||
+                        (roomTileIndex == Tile.TILE.BRICK_FLOOR) ||
+                        (roomTileIndex == Tile.TILE.WOOD_FLOOR) ||
+                        (roomTileIndex == Tile.TILE.SLEEP_FIELD) ||
+                        (roomTileIndex == Tile.TILE.FIRE_FIELD) ||
+                        (roomTileIndex == Tile.TILE.POISON_FIELD) ||
+                        (roomTileIndex == Tile.TILE.ENERGY_FIELD) ||
+                        (roomTileIndex == Tile.TILE.GRASS) ||
+                        (roomTileIndex == Tile.TILE.FOREST) ||
+                        (roomTileIndex == Tile.TILE.HILLS) ||
+                        (roomTileIndex == Tile.TILE.SWAMP) ||
+                        (roomTileIndex == Tile.TILE.BRUSH) ||
+                        (roomTileIndex == Tile.TILE.BRIDGE) ||
+                        (roomTileIndex == Tile.TILE.BRIDGE_BOTTOM) ||
+                        (roomTileIndex == Tile.TILE.BRIDGE_TOP))
                     {
                         tileIndex = Tile.TILE.TILED_FLOOR;
                     }
@@ -695,7 +738,21 @@ public static class Dungeon
                     }
 
                     Tile.TILE roomTileIndex = dungeonRooms[room].dungeonRoomMap[x, 0];
-                    if ((roomTileIndex == Tile.TILE.TILED_FLOOR) || (roomTileIndex == Tile.TILE.BRICK_FLOOR))
+                    if ((roomTileIndex == Tile.TILE.TILED_FLOOR) ||
+                        (roomTileIndex == Tile.TILE.BRICK_FLOOR) ||
+                        (roomTileIndex == Tile.TILE.WOOD_FLOOR) ||
+                        (roomTileIndex == Tile.TILE.SLEEP_FIELD) ||
+                        (roomTileIndex == Tile.TILE.FIRE_FIELD) ||
+                        (roomTileIndex == Tile.TILE.POISON_FIELD) ||
+                        (roomTileIndex == Tile.TILE.ENERGY_FIELD) ||
+                        (roomTileIndex == Tile.TILE.GRASS) ||
+                        (roomTileIndex == Tile.TILE.FOREST) ||
+                        (roomTileIndex == Tile.TILE.HILLS) ||
+                        (roomTileIndex == Tile.TILE.SWAMP) ||
+                        (roomTileIndex == Tile.TILE.BRUSH) ||
+                        (roomTileIndex == Tile.TILE.BRIDGE) ||
+                        (roomTileIndex == Tile.TILE.BRIDGE_BOTTOM) ||
+                        (roomTileIndex == Tile.TILE.BRIDGE_TOP))
                     {
                         tileIndex = Tile.TILE.TILED_FLOOR;
                     }
@@ -824,13 +881,11 @@ public static class Dungeon
                 DUNGEON_TILE leftDungeonTile = dungeons[(int)dungeon].dungeonTILEs[level][(x - 1 + 8) % 8, y];
                 DUNGEON_TILE rightDungeonTile = dungeons[(int)dungeon].dungeonTILEs[level][(x + 1) % 8, y];
 
-                Tile.TILE[,] map = null; // new Tile.TILE[11, 11];
+                Tile.TILE[,] map = null;
 
                 if (dungeonTile == DUNGEON_TILE.WALL)
                 {
-                    //dungeonBlockGameObject = CreateDungeonBlock(U4_Decompiled.TILE.BRICK_WALL);
-                    //dungeonBlockGameObject.name = dungeonTile.ToString();
-                    //currentDungeonBlockLevel[x, y].dungeonBlockMap = combatMaps[(int)Combat.COMBAT_TERRAIN.DUNGEON];
+                    // we won't bother creating anything for walls as hallways already are complete
                     continue;
                 }
                 else if ((dungeonTile >= DUNGEON_TILE.DUNGEON_ROOM_0) &&
@@ -893,6 +948,7 @@ public static class Dungeon
                 }
                 else if (dungeonTile == DUNGEON_TILE.FIELD_ENERGY)
                 {
+                    // TODO make some kind of field in the room
                     map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
@@ -908,8 +964,9 @@ public static class Dungeon
                 }
                 else if (dungeonTile == DUNGEON_TILE.FIELD_FIRE)
                 {
+                    // TODO make some kind of field in the room
                     map = CreateDungeonHallway(
-                        ref dungeons[(int)dungeon].dungeonTILEs[level],
+                    ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
                         x, y, level, Tile.TILE.FIRE_FIELD);
 
@@ -923,6 +980,7 @@ public static class Dungeon
                 }
                 else if (dungeonTile == DUNGEON_TILE.FIELD_POISON)
                 {
+                    // TODO make some kind of field in the room
                     map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
@@ -954,6 +1012,7 @@ public static class Dungeon
                 }
                 else if (dungeonTile == DUNGEON_TILE.TREASURE_CHEST)
                 {
+                    // TODO this needs to be dynamic as after hallway combat monsters will leave a chest
                     map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
@@ -969,7 +1028,7 @@ public static class Dungeon
                 }
                 else if (dungeonTile == DUNGEON_TILE.MAGIC_ORB)
                 {
-                    // TODO make orb into a billboard
+                    // TODO make orb into a billboard and make some kind of structure
                     map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
@@ -1106,6 +1165,7 @@ public static class Dungeon
                 dungeonBlockGameObject.transform.SetParent(dungeonLevel.transform);
                 dungeonBlockGameObject.transform.localPosition = new Vector3(x * 11, y * 11, 0);
                 currentDungeonBlockLevel[x, y].dungeonBlockMap = map;
+                currentDungeonBlockLevel[x, y].dungeonGameObject = dungeonBlockGameObject;
             }
         }
 
