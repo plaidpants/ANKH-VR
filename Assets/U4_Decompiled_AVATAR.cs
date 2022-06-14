@@ -590,7 +590,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
 
     // game engine map buffers
     public Tile.TILE[,] tMap32x32 = new Tile.TILE[32, 32];
-    public byte[,,] tMap8x8x8 = new byte[8, 8, 8];
+    public Dungeon.DUNGEON_TILE[][,] tMap8x8x8 = new Dungeon.DUNGEON_TILE[8][,];
 
     // game engine game mode
     public MODE current_mode;
@@ -815,15 +815,20 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         Party._weapons = new ushort[16];
         Party._reagents = new ushort[8];
         Party._mixtures = new ushort[26];
+
+        for (int i = 0; i < 8; i++)
+        {
+            tMap8x8x8[i] = new Dungeon.DUNGEON_TILE[11, 11];
+        }
     }
 
    public void StartThread()
-    {
+   {
         // start a thread with the DLL main task
         trd = new Thread(new ThreadStart(this.ThreadTask));
         trd.IsBackground = true;
         trd.Start();
-    }
+   }
 
 
     public void CommandAttack()
@@ -4189,7 +4194,7 @@ sfx_storm:
                     {
                         for (int k = 0; k < 8; k++)
                         {
-                            tMap8x8x8[i, j, k] = buffer[buffer_index++];
+                            tMap8x8x8[i][j, k] = (Dungeon.DUNGEON_TILE)buffer[buffer_index++];
                         }
                     }
                 }

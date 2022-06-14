@@ -797,7 +797,7 @@ public class World : MonoBehaviour
             for (int x = 0; x < 8; x++)
             {
                 // get a dungeonTile in the dungeon map
-                Dungeon.DUNGEON_TILE dungeonTile = (Dungeon.DUNGEON_TILE)u4.tMap8x8x8[u4.Party._z, y, x];
+                Dungeon.DUNGEON_TILE dungeonTile = (Dungeon.DUNGEON_TILE)u4.tMap8x8x8[u4.Party._z][y, x];
 
                 // check upper nibble to see if there is anything to render
                 int checkDungeonTile = (int)dungeonTile & 0xf0;
@@ -1909,7 +1909,7 @@ public class World : MonoBehaviour
             child.Find("Monsters").gameObject.SetActive(false);
         }
 
-        // the game engine will dynamically alter dungeon rooms in combat using tigger tiles or dispell magic
+        // the game engine will dynamically alter dungeon rooms during combat using tigger tiles or dispell magic
         // we need to update the unity engine game dungeon tiles maps to match as these tiles are changed
         Dungeon.DungeonBlockLevel level = Dungeon.currentDungeonBlockLevel[u4.Party._x, 7 - u4.Party._y];
         bool map_updated = false;
@@ -1938,6 +1938,8 @@ public class World : MonoBehaviour
             // put the new map in place
             level.dungeonGameObject.transform.localPosition = new Vector3(u4.Party._x * 11, (7 - u4.Party._y) * 11, 0);
             level.dungeonGameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+
+            // TODO need to update adjacent hallways as an opening could now exist
         }
     }
 
@@ -1995,8 +1997,114 @@ public class World : MonoBehaviour
             Dungeon.UpdateExistingBillboardsDungeonRoomMonster(child.gameObject);
             child.Find("Monsters").gameObject.SetActive(true);
         }
-    }
 
+        /*
+        // The dungeon can be changed due to monster dropping chests or dispell magic
+        // need to update dungeon map hallway blocks as needed
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                Dungeon.DungeonBlockLevel level = Dungeon.currentDungeonBlockLevel[y, 7 - x];
+
+                Dungeon.DUNGEON_TILE dungeonTile = (Dungeon.DUNGEON_TILE)((int)(u4.tMap8x8x8[u4.Party._z][y, x]) & 0xf0);
+                if (dungeonTile != level.dungeonTile)
+                {
+                    level.dungeonTile = dungeonTile;
+
+                    Tile.TILE tileIndex;
+
+                    if (dungeonTile == Dungeon.DUNGEON_TILE.WALL)
+                    {
+                        tileIndex = Tile.TILE.BRICK_WALL;
+                    }
+                    else if (dungeonTile == Dungeon.DUNGEON_TILE.HALLWAY)
+                    {
+                        tileIndex = Tile.TILE.TILED_FLOOR;
+                    }
+                    else if (dungeonTile == Dungeon.DUNGEON_TILE.LADDER_UP)
+                    {
+                        tileIndex = Tile.TILE.LADDER_UP;
+                    }
+                    else if (dungeonTile == Dungeon.DUNGEON_TILE.LADDER_DOWN)
+                    {
+                        tileIndex = Tile.TILE.LADDER_DOWN;
+                    }
+                    else if (dungeonTile == Dungeon.DUNGEON_TILE.LADDER_UP_AND_DOWN)
+                    {
+                        tileIndex = Tile.TILE.LADDER_DOWN;
+                    }
+                    else if (dungeonTile == Dungeon.DUNGEON_TILE.TREASURE_CHEST)
+                    {
+                        tileIndex = Tile.TILE.CHEST;
+                    }
+                    else if ((dungeonTile == Dungeon.DUNGEON_TILE.FOUNTAIN) ||
+                            (dungeonTile == Dungeon.DUNGEON_TILE.FOUNTAIN_CURE) ||
+                            (dungeonTile == Dungeon.DUNGEON_TILE.FOUNTAIN_HEALING) ||
+                            (dungeonTile == Dungeon.DUNGEON_TILE.FOUNTAIN_POISIN) ||
+                            (dungeonTile == Dungeon.DUNGEON_TILE.FOUNTAIN_ACID))
+                    {
+                        tileIndex = Tile.TILE.SHALLOW_WATER;
+                    }
+                    else if (dungeonTile == Dungeon.DUNGEON_TILE.FIELD_ENERGY)
+                    {
+                        tileIndex = Tile.TILE.ENERGY_FIELD;
+                    }
+                    else if (dungeonTile == Dungeon.DUNGEON_TILE.FIELD_FIRE)
+                    {
+                        tileIndex = Tile.TILE.FIRE_FIELD;
+                    }
+                    else if (dungeonTile == Dungeon.DUNGEON_TILE.FIELD_POISON)
+                    {
+                        tileIndex = Tile.TILE.POISON_FIELD;
+                    }
+                    else if (dungeonTile == Dungeon.DUNGEON_TILE.FIELD_SLEEP)
+                    {
+                        tileIndex = Tile.TILE.SLEEP_FIELD;
+                    }
+                    else if (dungeonTile == Dungeon.DUNGEON_TILE.DOOR)
+                    {
+                        tileIndex = Tile.TILE.DOOR;
+                    }
+                    else if (dungeonTile == Dungeon.DUNGEON_TILE.DOOR_SECRECT)
+                    {
+                        tileIndex = Tile.TILE.SECRET_BRICK_WALL;
+                    }
+                    else if (dungeonTile == Dungeon.DUNGEON_TILE.ALTAR)
+                    {
+                        tileIndex = Tile.TILE.ALTAR;
+                    }
+                    else if (dungeonTile == Dungeon.DUNGEON_TILE.MAGIC_ORB)
+                    {
+                        tileIndex = Tile.TILE.MISSLE_ATTACK_BLUE;
+                    }
+                    else if ((dungeonTile == Dungeon.DUNGEON_TILE.TRAP_FALLING_ROCKS) ||
+                        (dungeonTile == Dungeon.DUNGEON_TILE.TRAP_WIND_DARKNESS) ||
+                        (dungeonTile == Dungeon.DUNGEON_TILE.TRAP_PIT))
+                    {
+                        tileIndex = Tile.TILE.TILED_FLOOR;
+                    }
+                    else
+                    {
+                        tileIndex = Tile.TILE.TILED_FLOOR;
+                    }
+
+                    Tile.TILE[,] map = Dungeon.CreateDungeonHallway(
+                        ref u4.tMap8x8x8[u4.Party._z],
+                        ref Dungeon.dungeons[(int)dun].dungeonRooms,
+                        u4.Party._x, u4.Party._y, u4.Party._z,
+                        tileIndex);
+
+                    Map.CreateMap(level.dungeonGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
+
+                    // put the new map in place
+                    level.dungeonGameObject.transform.localPosition = new Vector3(u4.Party._x * 11, (7 - u4.Party._y) * 11, 0);
+                    level.dungeonGameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+                }
+            }
+        }
+        */
+    }
     void UpdateShrine()
     {
         AddFighters(u4.Fighters, u4.Combat1);

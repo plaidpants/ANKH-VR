@@ -16,6 +16,7 @@ public static class Dungeon
     {
         public Tile.TILE[,] dungeonBlockMap;
         public GameObject dungeonGameObject;
+        public Dungeon.DUNGEON_TILE dungeonTile;
     }
 
     // only the upper nibble defines the dungeon tile, the lower nibble is used for active dungeon monsters
@@ -551,15 +552,20 @@ public static class Dungeon
     public static Tile.TILE[,] CreateDungeonHallway(ref DUNGEON_TILE[,] dungeonTileMap, ref DUNGEON_ROOM[] dungeonRooms, int posx, int posy, int posz,
         Tile.TILE centerTile = Tile.TILE.TILED_FLOOR)
     {
-        DUNGEON_TILE left = dungeonTileMap[posx, (posy + 1) % 8]; //  0,-1
-        DUNGEON_TILE above = dungeonTileMap[(posx + 8 - 1) % 8, posy]; // -1, 0
-        DUNGEON_TILE right = dungeonTileMap[(posx + 1) % 8, posy];     //  1, 0
-        DUNGEON_TILE below = dungeonTileMap[posx, (posy + 8 - 1) % 8];     //  0, 1
+        DUNGEON_TILE leftUncleared = dungeonTileMap[posx, (posy + 1) % 8]; //  0,-1
+        DUNGEON_TILE aboveUncleared = dungeonTileMap[(posx + 8 - 1) % 8, posy]; // -1, 0
+        DUNGEON_TILE rightUncleared = dungeonTileMap[(posx + 1) % 8, posy];     //  1, 0
+        DUNGEON_TILE belowUncleared = dungeonTileMap[posx, (posy + 8 - 1) % 8];     //  0, 1
 
-        DUNGEON_TILE diagonalLeftBelow = dungeonTileMap[(posx + 8 - 1) % 8, (posy + 8 - 1) % 8];  //  0,-1 ->  -1, 1
-        DUNGEON_TILE diagonalRightBelow = dungeonTileMap[(posx + 1) % 8, (posy + 8 - 1) % 8];  // -1, 0 ->   1, 1
-        DUNGEON_TILE diagonalRightAbove = dungeonTileMap[(posx + 1) % 8, (posy + 1) % 8];      //  1, 0 ->   1,-1
-        DUNGEON_TILE diagonalLeftAbove = dungeonTileMap[(posx + 8 - 1) % 8, (posy + 1) % 8];   //  0, 1 ->  -1,-1
+        DUNGEON_TILE left = (DUNGEON_TILE)((int)leftUncleared & 0xf0); //  0,-1
+        DUNGEON_TILE above = (DUNGEON_TILE)((int)aboveUncleared & 0xf0); // -1, 0
+        DUNGEON_TILE right = (DUNGEON_TILE)((int)rightUncleared & 0xf0);     //  1, 0
+        DUNGEON_TILE below = (DUNGEON_TILE)((int)belowUncleared & 0xf0);     //  0, 1
+
+        DUNGEON_TILE diagonalLeftBelow = (DUNGEON_TILE)((int)dungeonTileMap[(posx + 8 - 1) % 8, (posy + 8 - 1) % 8] & 0xf0);  //  0,-1 ->  -1, 1
+        DUNGEON_TILE diagonalRightBelow = (DUNGEON_TILE)((int)dungeonTileMap[(posx + 1) % 8, (posy + 8 - 1) % 8] & 0xf0);  // -1, 0 ->   1, 1
+        DUNGEON_TILE diagonalRightAbove = (DUNGEON_TILE)((int)dungeonTileMap[(posx + 1) % 8, (posy + 1) % 8] & 0xf0);      //  1, 0 ->   1,-1
+        DUNGEON_TILE diagonalLeftAbove = (DUNGEON_TILE)((int)dungeonTileMap[(posx + 8 - 1) % 8, (posy + 1) % 8] & 0xf0);   //  0, 1 ->  -1,-1
 
         Tile.TILE tileIndex;
 
@@ -624,11 +630,10 @@ public static class Dungeon
                 }
 
                 // rooms
-                if (((left >= DUNGEON_TILE.DUNGEON_ROOM_0) && (left <= DUNGEON_TILE.DUNGEON_ROOM_15)) && (y == 0))
+                if ((left == DUNGEON_TILE.DUNGEON_ROOM_0) && (y == 0))
                 {
-
                     // create brick walls on the other side of the room if it is not a tiled floor
-                    int room = (int)left - (int)DUNGEON_TILE.DUNGEON_ROOM_0;
+                    int room = (int)leftUncleared - (int)DUNGEON_TILE.DUNGEON_ROOM_0;
                     if (dungeonRooms.Length == 64)
                     {
                         room += (posz >> 1) * 16;
@@ -658,10 +663,10 @@ public static class Dungeon
                         tileIndex = Tile.TILE.BRICK_WALL;
                     }
                 }
-                if (((above >= DUNGEON_TILE.DUNGEON_ROOM_0) && (above <= DUNGEON_TILE.DUNGEON_ROOM_15)) && (x == 0))
+                if ((above == DUNGEON_TILE.DUNGEON_ROOM) && (x == 0))
                 {
                     // create brick walls on the other side of the room if it is not a tiled floor
-                    int room = (int)above - (int)DUNGEON_TILE.DUNGEON_ROOM_0;
+                    int room = (int)aboveUncleared - (int)DUNGEON_TILE.DUNGEON_ROOM_0;
                     if (dungeonRooms.Length == 64)
                     {
                         room += (posz >> 1) * 16;
@@ -690,13 +695,11 @@ public static class Dungeon
                     {
                         tileIndex = Tile.TILE.BRICK_WALL;
                     }
-
-                    //tileIndex = U4_Decompiled.TILE.BRICK_WALL;
                 }
-                if (((right >= DUNGEON_TILE.DUNGEON_ROOM_0) && (right <= DUNGEON_TILE.DUNGEON_ROOM_15)) && (x == 10))
+                if ((right == DUNGEON_TILE.DUNGEON_ROOM) && (x == 10))
                 {
                     // create brick walls on the other side of the room if it is not a tiled floor
-                    int room = (int)right - (int)DUNGEON_TILE.DUNGEON_ROOM_0;
+                    int room = (int)rightUncleared - (int)DUNGEON_TILE.DUNGEON_ROOM_0;
                     if (dungeonRooms.Length == 64)
                     {
                         room += (posz >> 1) * 16;
@@ -725,13 +728,11 @@ public static class Dungeon
                     {
                         tileIndex = Tile.TILE.BRICK_WALL;
                     }
-
-                    // tileIndex = U4_Decompiled.TILE.BRICK_WALL;
                 }
-                if (((below >= DUNGEON_TILE.DUNGEON_ROOM_0) && (below <= DUNGEON_TILE.DUNGEON_ROOM_15)) && (y == 10))
+                if ((below == DUNGEON_TILE.DUNGEON_ROOM) && (y == 10))
                 {
                     // create brick walls on the other side of the room if it is not a tiled floor
-                    int room = (int)below - (int)DUNGEON_TILE.DUNGEON_ROOM_0;
+                    int room = (int)belowUncleared - (int)DUNGEON_TILE.DUNGEON_ROOM_0;
                     if (dungeonRooms.Length == 64)
                     {
                         room += (posz >> 1) * 16;
@@ -760,7 +761,9 @@ public static class Dungeon
                     {
                         tileIndex = Tile.TILE.BRICK_WALL;
                     }
-                    // tileIndex = U4_Decompiled.TILE.BRICK_WALL;
+
+                    // TODO Dungeon Rooms need at least one openning, add secret wall if none exist?
+                    // or do we wait for player to trigger the openning?
                 }
 
                 //corners
@@ -966,7 +969,7 @@ public static class Dungeon
                 {
                     // TODO make some kind of field in the room
                     map = CreateDungeonHallway(
-                    ref dungeons[(int)dungeon].dungeonTILEs[level],
+                        ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
                         x, y, level, Tile.TILE.FIRE_FIELD);
 
@@ -1046,7 +1049,8 @@ public static class Dungeon
                 else if (dungeonTile == DUNGEON_TILE.ALTAR)
                 {
                     // TODO make altar into a billboard
-                    map = CreateDungeonHallway(ref dungeons[(int)dungeon].dungeonTILEs[level],
+                    map = CreateDungeonHallway(
+                        ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
                         x, y, level, Tile.TILE.ALTAR);
 
@@ -1064,7 +1068,10 @@ public static class Dungeon
                     int combat = (int)convertDungeonTileToCombat[(int)dungeons[(int)dungeon].dungeonTILEs[level][x, y] >> 4];
 
                     // get a halway that fits
-                    map = CreateDungeonHallway(ref dungeons[(int)dungeon].dungeonTILEs[level], ref dungeons[(int)dungeon].dungeonRooms, x, y, level);
+                    map = CreateDungeonHallway(
+                        ref dungeons[(int)dungeon].dungeonTILEs[level], 
+                        ref dungeons[(int)dungeon].dungeonRooms,
+                        x, y, level);
 
                     // check if we need to flip the door map
                     if ((dungeonTile == DUNGEON_TILE.DOOR) &&
@@ -1166,6 +1173,7 @@ public static class Dungeon
                 dungeonBlockGameObject.transform.localPosition = new Vector3(x * 11, y * 11, 0);
                 currentDungeonBlockLevel[x, y].dungeonBlockMap = map;
                 currentDungeonBlockLevel[x, y].dungeonGameObject = dungeonBlockGameObject;
+                currentDungeonBlockLevel[x, y].dungeonTile = dungeonTile;
             }
         }
 
