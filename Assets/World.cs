@@ -797,7 +797,7 @@ public class World : MonoBehaviour
             for (int x = 0; x < 8; x++)
             {
                 // get a dungeonTile in the dungeon map
-                Dungeon.DUNGEON_TILE dungeonTile = (Dungeon.DUNGEON_TILE)u4.tMap8x8x8[u4.Party._z][y, x];
+                Dungeon.DUNGEON_TILE dungeonTile = (Dungeon.DUNGEON_TILE)u4.tMap8x8x8[u4.Party._z][x, 7 - y];
 
                 // check upper nibble to see if there is anything to render
                 int checkDungeonTile = (int)dungeonTile & 0xf0;
@@ -1721,6 +1721,8 @@ public class World : MonoBehaviour
         {
             Camera.main.clearFlags = CameraClearFlags.Skybox;
         }
+
+        // TODO update open doors here
     }
 
     public GameObject debug;
@@ -1800,22 +1802,40 @@ public class World : MonoBehaviour
                     if (u4.Fighters[i]._tile != Tile.TILE.DEEP_WATER)
                     {
                         // get the tile under the fighter
-                        Tile.TILE fighterTile = u4.Combat_map[u4.Fighters[i]._y, u4.Fighters[i]._x];
+                        Tile.TILE fighterTile = u4.Combat_map[u4.Combat1[i]._npcY, u4.Combat1[i]._npcX];
 
                         // is it blank or a brick wall
                         if ((fighterTile == Tile.TILE.BRICK_WALL) || (fighterTile == Tile.TILE.BLANK))
                         {
                             // delete/erase/kill this fighter/monster because it is outside of playable space
                             //u4.Fighters[i]._tile = Tile.TILE.DEEP_WATER;
+                            //u4.Fighters[i]._gtile = Tile.TILE.DEEP_WATER;
 
-                            // move it to the center
-                            u4.Fighters[i]._x = 5;
-                            u4.Fighters[i]._y = 5;
+                            // Move this fighter/monster because it is outside of playable space
+                            u4.Combat1[i]._npcX = 5;
+                            u4.Combat1[i]._npcY = 5;
                         }
                     }
                 }
 
-                // TODO need to make sure all 8 players characters will also fit and move them if needed
+                // need to make sure all 8 players characters will also fit and move them if needed
+                for (int i = 0; i < u4.Party.f_1d8; i++)
+                {
+                    // is the character real
+                    if (u4.Fighters[i]._chtile != Tile.TILE.DEEP_WATER)
+                    {
+                        // get the tile under the character
+                        Tile.TILE fighterTile = u4.Combat_map[u4.Combat2[i]._charaY, u4.Combat2[i]._charaX];
+
+                        // is it blank or a brick wall
+                        if ((fighterTile == Tile.TILE.BRICK_WALL) || (fighterTile == Tile.TILE.BLANK))
+                        {
+                            // Move this character because it is outside of playable space
+                            u4.Combat2[i]._charaX = 5;
+                            u4.Combat2[i]._charaY = 5;
+                        }
+                    }
+                }
 
                 // update the game engine map with our modifications
                 u4.SetCombat();
@@ -1998,19 +2018,16 @@ public class World : MonoBehaviour
             child.Find("Monsters").gameObject.SetActive(true);
         }
 
-        /*
         // The dungeon can be changed due to monster dropping chests or dispell magic
         // need to update dungeon map hallway blocks as needed
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++)
             {
-                Dungeon.DungeonBlockLevel level = Dungeon.currentDungeonBlockLevel[y, 7 - x];
-
-                Dungeon.DUNGEON_TILE dungeonTile = (Dungeon.DUNGEON_TILE)((int)(u4.tMap8x8x8[u4.Party._z][y, x]) & 0xf0);
-                if (dungeonTile != level.dungeonTile)
+                Dungeon.DUNGEON_TILE dungeonTile = (Dungeon.DUNGEON_TILE)((int)(u4.tMap8x8x8[u4.Party._z][x, 7-y]) & 0xf0);
+                if (dungeonTile != (Dungeon.DUNGEON_TILE)((int)(Dungeon.currentDungeonBlockLevel[x, 7 - y].dungeonTile) & 0xf0))
                 {
-                    level.dungeonTile = dungeonTile;
+                    Dungeon.currentDungeonBlockLevel[x, 7 - y].dungeonTile = dungeonTile;
 
                     Tile.TILE tileIndex;
 
@@ -2092,18 +2109,20 @@ public class World : MonoBehaviour
                     Tile.TILE[,] map = Dungeon.CreateDungeonHallway(
                         ref u4.tMap8x8x8[u4.Party._z],
                         ref Dungeon.dungeons[(int)dun].dungeonRooms,
-                        u4.Party._x, u4.Party._y, u4.Party._z,
+                        x, 7 - y, u4.Party._z,
                         tileIndex);
-
-                    Map.CreateMap(level.dungeonGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
+                    foreach (Transform child in Dungeon.currentDungeonBlockLevel[x, 7 - y].dungeonGameObject.transform)
+                    {
+                        Object.DestroyImmediate(child.gameObject);
+                    }
+                    Map.CreateMap(Dungeon.currentDungeonBlockLevel[x, 7 - y].dungeonGameObject, map, new Vector3(x * 11, y * 11, 0), new Vector3(90.0f, 0.0f, 0.0f));
 
                     // put the new map in place
-                    level.dungeonGameObject.transform.localPosition = new Vector3(u4.Party._x * 11, (7 - u4.Party._y) * 11, 0);
-                    level.dungeonGameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    Dungeon.currentDungeonBlockLevel[x, 7 - y].dungeonGameObject.transform.localPosition = new Vector3(x * 11, (7 - y) * 11, 0);
+                    Dungeon.currentDungeonBlockLevel[x, 7 - y].dungeonGameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
                 }
             }
         }
-        */
     }
     void UpdateShrine()
     {

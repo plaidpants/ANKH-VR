@@ -818,7 +818,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
 
         for (int i = 0; i < 8; i++)
         {
-            tMap8x8x8[i] = new Dungeon.DUNGEON_TILE[11, 11];
+            tMap8x8x8[i] = new Dungeon.DUNGEON_TILE[8, 8];
         }
     }
 
@@ -4188,13 +4188,13 @@ sfx_storm:
             else if (current_mode == MODE.DUNGEON)
             {
                 buffer_index = 0;
-                for (int i = 0; i < 8; i++)
+                for (int z = 0; z < 8; z++)
                 {
-                    for (int j = 0; j < 8; j++)
+                    for (int y = 0; y < 8; y++)
                     {
-                        for (int k = 0; k < 8; k++)
+                        for (int x = 0; x < 8; x++)
                         {
-                            tMap8x8x8[i][j, k] = (Dungeon.DUNGEON_TILE)buffer[buffer_index++];
+                            tMap8x8x8[z][x, 7 - y] = (Dungeon.DUNGEON_TILE)buffer[buffer_index++];
                         }
                     }
                 }

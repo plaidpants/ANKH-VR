@@ -888,6 +888,9 @@ public static class Dungeon
 
                 if (dungeonTile == DUNGEON_TILE.WALL)
                 {
+                    // need to set this otherwise it shows hallway
+                    currentDungeonBlockLevel[x, y].dungeonTile = dungeonTile;
+
                     // we won't bother creating anything for walls as hallways already are complete
                     continue;
                 }
