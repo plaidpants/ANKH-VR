@@ -813,7 +813,6 @@ public class World : MonoBehaviour
                 }
 
                 // dungeon monster is stored in the low nibble of the dungeon tile
-                // TODO DUNGEONTILE does not account for this.
                 checkDungeonTile = (int)dungeonTile & 0x0f;
 
                 // zero means no monster at that dungeon location
@@ -1814,6 +1813,7 @@ public class World : MonoBehaviour
                             u4.Combat1[i]._npcY = 5;
 
                             // TODO: find a better spot to put them so they aren't overlapping, random?
+                            // Note: some dungeon rooms will put all the players in one spot so the game engine is designed to handle this case
                         }
                     }
                 }
@@ -1835,6 +1835,7 @@ public class World : MonoBehaviour
                             u4.Combat2[i]._charaY = 5;
 
                             // TODO: find a better spot to put them so they aren't overlapping, random?
+                            // Note: some dungeon rooms will put all the players in one spot so the game engine is designed to handle this case
                         }
                     }
                 }

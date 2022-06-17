@@ -3583,7 +3583,6 @@ sfx_storm:
         }
 
         // TODO move this out of the game engine interface
-        // TODO programatically create all the sounds instead of relying on sampled sounds
         // TODO cache sounds already created
         // TODO pre-create basic sfx at startup
         // TODO get source information of sound to better position it for 3D sound, monster, moongate, player, etc. e.g. currently moongate plays at old moongate position not at new position

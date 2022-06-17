@@ -630,6 +630,10 @@ public static class Dungeon
                 }
 
                 // rooms
+                // NOTE: rooms may not have a visible entrance so put a secret door on the wall in the middle
+                // NOTE: not so sure how this works if the passage is on one side of the wall,
+                // or do we wait for player to trigger the openning?
+                // TODO: maybe need to remember if there is a passage or not before putting int he secret wall
                 if ((left == DUNGEON_TILE.DUNGEON_ROOM_0) && (y == 0))
                 {
                     // create brick walls on the other side of the room if it is not a tiled floor
@@ -660,7 +664,14 @@ public static class Dungeon
                     }
                     else
                     {
-                        tileIndex = Tile.TILE.BRICK_WALL;
+                        if (x == 5)
+                        {
+                            tileIndex = Tile.TILE.SECRET_BRICK_WALL;
+                        }
+                        else
+                        {
+                            tileIndex = Tile.TILE.BRICK_WALL;
+                        }
                     }
                 }
                 if ((above == DUNGEON_TILE.DUNGEON_ROOM) && (x == 0))
@@ -693,7 +704,14 @@ public static class Dungeon
                     }
                     else
                     {
-                        tileIndex = Tile.TILE.BRICK_WALL;
+                        if (y == 5)
+                        {
+                            tileIndex = Tile.TILE.SECRET_BRICK_WALL;
+                        }
+                        else
+                        {
+                            tileIndex = Tile.TILE.BRICK_WALL;
+                        }
                     }
                 }
                 if ((right == DUNGEON_TILE.DUNGEON_ROOM) && (x == 10))
@@ -726,7 +744,14 @@ public static class Dungeon
                     }
                     else
                     {
-                        tileIndex = Tile.TILE.BRICK_WALL;
+                        if (y == 5)
+                        {
+                            tileIndex = Tile.TILE.SECRET_BRICK_WALL;
+                        }
+                        else
+                        {
+                            tileIndex = Tile.TILE.BRICK_WALL;
+                        }
                     }
                 }
                 if ((below == DUNGEON_TILE.DUNGEON_ROOM) && (y == 10))
@@ -759,11 +784,15 @@ public static class Dungeon
                     }
                     else
                     {
-                        tileIndex = Tile.TILE.BRICK_WALL;
+                        if (x == 5)
+                        {
+                            tileIndex = Tile.TILE.SECRET_BRICK_WALL;
+                        }
+                        else
+                        {
+                            tileIndex = Tile.TILE.BRICK_WALL;
+                        }
                     }
-
-                    // TODO Dungeon Rooms need at least one openning, add secret wall if none exist?
-                    // or do we wait for player to trigger the openning?
                 }
 
                 //corners
@@ -918,7 +947,6 @@ public static class Dungeon
                         || (dungeonTile == DUNGEON_TILE.TRAP_WIND_DARKNESS)
                         )
                 {
-                    // TODO figure out what to do with these traps
                     map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
@@ -1018,7 +1046,6 @@ public static class Dungeon
                 }
                 else if (dungeonTile == DUNGEON_TILE.TREASURE_CHEST)
                 {
-                    // TODO this needs to be dynamic as after hallway combat monsters will leave a chest
                     map = CreateDungeonHallway(
                         ref dungeons[(int)dungeon].dungeonTILEs[level],
                         ref dungeons[(int)dungeon].dungeonRooms,
