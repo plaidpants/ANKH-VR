@@ -629,11 +629,11 @@ public static class Dungeon
                     }
                 }
 
-                // rooms
+                // Dungeon Rooms
                 // NOTE: rooms may not have a visible entrance so put a secret door on the wall in the middle
                 // NOTE: not so sure how this works if the passage is on one side of the wall,
                 // or do we wait for player to trigger the openning?
-                // TODO: maybe need to remember if there is a passage or not before putting int he secret wall
+                // TODO: maybe need to remember if there is a passage or not before putting in the secret wall
                 if ((left == DUNGEON_TILE.DUNGEON_ROOM_0) && (y == 0))
                 {
                     // create brick walls on the other side of the room if it is not a tiled floor

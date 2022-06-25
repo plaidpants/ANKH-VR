@@ -153,7 +153,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     {
         VISION = 0,
         OUTDOORS = 1,
-        BUILDING = 2,
+        SETTLEMENT = 2,
         DUNGEON = 3,
         COMBAT = 4,
         COMBAT_CAMP = 5,
@@ -2863,7 +2863,7 @@ sfx_storm:
                     lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
             }
-            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING) || (current_mode == MODE.COMBAT_CAMP) || (current_mode == MODE.COMBAT))
+            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.SETTLEMENT) || (current_mode == MODE.COMBAT_CAMP) || (current_mode == MODE.COMBAT))
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
@@ -2957,7 +2957,7 @@ sfx_storm:
                     lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
             }
-            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING) || (current_mode == MODE.COMBAT_CAMP) || (current_mode == MODE.COMBAT))
+            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.SETTLEMENT) || (current_mode == MODE.COMBAT_CAMP) || (current_mode == MODE.COMBAT))
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
@@ -3050,7 +3050,7 @@ sfx_storm:
                     lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
             }
-            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING) || (current_mode == MODE.COMBAT_CAMP) || (current_mode == MODE.COMBAT))
+            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.SETTLEMENT) || (current_mode == MODE.COMBAT_CAMP) || (current_mode == MODE.COMBAT))
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
@@ -3147,7 +3147,7 @@ sfx_storm:
                     lastKeyboardHit = (char)KEYS.VK_UP;
                 }
             }
-            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING) || (current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP))
+            else if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.SETTLEMENT) || (current_mode == MODE.COMBAT) || (current_mode == MODE.COMBAT_CAMP))
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
@@ -3837,7 +3837,7 @@ sfx_storm:
                             musicSource.clip = music[(int)MUSIC.WANDERER];
                         }
                         // check if we are in a building
-                        else if (current_mode == U4_Decompiled_AVATAR.MODE.BUILDING)
+                        else if (current_mode == U4_Decompiled_AVATAR.MODE.SETTLEMENT)
                         {
                             // is the building a castle or town or village
                             if ((Party._loc == LOCATIONS.BRITANNIA) ||
@@ -4173,7 +4173,7 @@ sfx_storm:
             // extract the map data depending on the game mode
             // in the game engine this memory is overlaped with the dungeon map below
             // but we can keep them separate here as we have pleanty of memory
-            if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.BUILDING))
+            if ((current_mode == MODE.OUTDOORS) || (current_mode == MODE.SETTLEMENT))
             {
                 buffer_index = 0;
                 for (int y = 0; y < 32; y++)

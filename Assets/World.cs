@@ -495,8 +495,8 @@ public class World : MonoBehaviour
                 int posx = currentNpcs[npcIndex]._x;
                 int posy = currentNpcs[npcIndex]._y;
 
-                // inside buildings we need to check extra stuff
-                if (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING)
+                // inside settlements we need to check extra stuff
+                if (u4.current_mode == U4_Decompiled_AVATAR.MODE.SETTLEMENT)
                 {
                     Settlement.SETTLEMENT settlement;
 
@@ -1673,7 +1673,7 @@ public class World : MonoBehaviour
         }
     }
 
-    void UpdateBuilding()
+    void UpdateSettlement()
     {
         AddNPCs(u4._npc);
         AddMoongate();
@@ -2695,9 +2695,9 @@ public class World : MonoBehaviour
             {
                 UpdateOutdoors();
             }
-            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING)
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.SETTLEMENT)
             {
-                UpdateBuilding();
+                UpdateSettlement();
             }
             else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT)
             {
@@ -2723,7 +2723,7 @@ public class World : MonoBehaviour
             // keep the sky game objects in sync with the game
             if (skyGameObject)
             {
-                if ((u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS) || (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING))
+                if ((u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS) || (u4.current_mode == U4_Decompiled_AVATAR.MODE.SETTLEMENT))
                 {
                     skyGameObject.transform.localPosition = new Vector3(u4.Party._x, 0, 255 - u4.Party._y);
                 }
@@ -2768,7 +2768,7 @@ public class World : MonoBehaviour
             if (partyGameObject)
             {
                 if ((u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS) ||
-                    (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING) ||
+                    (u4.current_mode == U4_Decompiled_AVATAR.MODE.SETTLEMENT) ||
                     (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT_CAMP))
                 {
                     partyGameObject.transform.localPosition = new Vector3(u4.Party._x, 255 - u4.Party._y, 0);
@@ -2779,8 +2779,6 @@ public class World : MonoBehaviour
                             if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.WEST && rotateTransform.transform.eulerAngles.y != 270)
                             {
                                 rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 270, rotateTransform.transform.eulerAngles.z);
-                                //rotateTransform.GetComponent<MySmoothFollow>().LateUpdate();
-                                //Combat.UpdateBillboardCombatTerrains(Camera.main.transform.gameObject, Outdoor.outdoorMap.GetLength(1));
                             }
                             else if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.NORTH && rotateTransform.transform.eulerAngles.y != 0)
                             {
@@ -2819,7 +2817,6 @@ public class World : MonoBehaviour
                             else if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.SOUTH && rotateTransform.transform.eulerAngles.y != 180)
                             {
                                 rotateTransform.eulerAngles = new Vector3(rotateTransform.transform.eulerAngles.x, 180, rotateTransform.transform.eulerAngles.z);
-
                             }
                         }
                     }
@@ -2936,8 +2933,26 @@ public class World : MonoBehaviour
                 location = new Vector3(
                     ((u4.Party._x - raycastOutdoorMap.GetLength(0) / 2) - 1) , 0,
                     Outdoor.outdoorMap.GetLength(1) - ((u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1) ) - raycastOutdoorMap.GetLength(1));
+
+                Combine.Combine3(mainTerrain,
+                    ref raycastOutdoorMap,
+                    u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1,
+                    u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1,
+                    ref entireMapGameObjects,
+                    false,
+                    TextureFormat.RGBA32,
+                    true,
+                    Tile.combinedExpandedMaterial,
+                    Tile.combinedLinearMaterial,
+                    u4.Party._x,
+                    255 - u4.Party._y,
+                    u4.surface_party_direction);
+
+                location = Vector3.zero;
+
+
             }
-            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING)
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.SETTLEMENT)
             {
                 // generate a new raycast based on game engine map
                 Map.raycast(ref u4.tMap32x32, 
@@ -2950,30 +2965,9 @@ public class World : MonoBehaviour
                 location = new Vector3(
                     ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) ) , 0,
                     Outdoor.outdoorMap.GetLength(1) - ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) )  - raycastSettlementMap.GetLength(1));
-            }
 
-            // create the game object children with meshes and textures
-            if (u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS)
-            {
-                Combine.Combine3(mainTerrain,
-                    ref raycastOutdoorMap,
-                    u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1,
-                    u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1,
-                    ref entireMapGameObjects,
-                    false,
-                    TextureFormat.RGBA32,
-                    true,
-                    Tile.combinedExpandedMaterial,
-                    Tile.combinedLinearMaterial,
-                    u4.Party._x,
-                    u4.Party._y,
-                    u4.surface_party_direction);
-
-                location = Vector3.zero;
-            }
-            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.BUILDING)
-            {
                 Settlement.SETTLEMENT settlement;
+
                 // get the current settlement, need to special case BRITANNIA as the castle has two levels, use the ladder to determine which level
                 if ((u4.Party._loc == U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == Tile.TILE.LADDER_UP))
                 {
@@ -2995,7 +2989,7 @@ public class World : MonoBehaviour
                     Tile.combinedExpandedMaterial,
                     Tile.combinedLinearMaterial,
                     u4.Party._x,
-                    u4.Party._y,
+                    31 - u4.Party._y,
                     u4.surface_party_direction);
 
                 //CreateMapLabels(mainTerrain, ref raycastSettlementMap);
@@ -3007,23 +3001,6 @@ public class World : MonoBehaviour
                 location = new Vector3(
                     ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) ) , 0,
                     entireMapTILEs.GetLength(1) - ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) )  - raycastSettlementMap.GetLength(1));
-                */
-            }
-            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.DUNGEON)
-            {
-
-            }
-            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT)
-            {
-                /*
-                if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
-                {
-                    if (Dungeon.currentDungeonBlockLevel[u4.Party._x, u4.Party._y].dungeonBlockMap != null && debug != null)
-                    {
-                        Map.CreateMap(debug, Dungeon.currentDungeonBlockLevel[u4.Party._x, 7 - u4.Party._y].dungeonBlockMap, Vector3.zero, Vector3.zero);
-                        debug.transform.localPosition = new Vector3(0, 0, 10);
-                    }
-                }
                 */
             }
 

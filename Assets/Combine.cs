@@ -740,19 +740,19 @@ public static class Combine
 
                             if (direction == U4_Decompiled_AVATAR.DIRECTION.NORTH)
                             {
-                                look = new Vector3(billboardx - saveLocalPosition.x, 0.0f, 255 - (billboardy + 10) - saveLocalPosition.y);
+                                look = new Vector3(billboardx - saveLocalPosition.x, 0.0f, billboardy - 10 - saveLocalPosition.y);
                             }
                             else if(direction == U4_Decompiled_AVATAR.DIRECTION.SOUTH)
                             {
-                                look = new Vector3(billboardx - saveLocalPosition.x, 0.0f, 255 - (billboardy - 10) - saveLocalPosition.y);
+                                look = new Vector3(billboardx - saveLocalPosition.x, 0.0f, billboardy + 10 - saveLocalPosition.y);
                             }
                             else if (direction == U4_Decompiled_AVATAR.DIRECTION.EAST)
                             {
-                                look = new Vector3((billboardx - 10) - saveLocalPosition.x, 0.0f, 255 - billboardy - saveLocalPosition.y);
+                                look = new Vector3((billboardx - 10) - saveLocalPosition.x, 0.0f, billboardy - saveLocalPosition.y);
                             }
                             else if (direction == U4_Decompiled_AVATAR.DIRECTION.WEST)
                             {
-                                look = new Vector3((billboardx + 10) - saveLocalPosition.x, 0.0f, 255 - billboardy - saveLocalPosition.y);
+                                look = new Vector3((billboardx + 10) - saveLocalPosition.x, 0.0f, billboardy - saveLocalPosition.y);
                             }
                             Quaternion rotation1 = Quaternion.LookRotation(look);
                             mapTile.transform.rotation = rotation1;
