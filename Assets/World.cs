@@ -3000,6 +3000,16 @@ public class World : MonoBehaviour
                     settlement = (Settlement.SETTLEMENT)u4.Party._loc;
                 }
 
+                // open any doors on the map
+                if (u4.tMap32x32[u4.open_door_x, u4.open_door_y] == Tile.TILE.DOOR)
+                {
+                    Settlement.settlementsMapGameObjects[(int)settlement][u4.open_door_x, u4.open_door_y] = Map.allMapTilesGameObjects[(int)Tile.TILE.DOOR];
+                }
+                else if (u4.tMap32x32[u4.open_door_x, u4.open_door_y] == Tile.TILE.BRICK_FLOOR)
+                {
+                    Settlement.settlementsMapGameObjects[(int)settlement][u4.open_door_x, u4.open_door_y] = Map.allMapTilesGameObjects[(int)Tile.TILE.BRICK_FLOOR];
+                }
+
                 Combine.Combine3(mainTerrain,
                     ref raycastSettlementMap,
                     offset_x,

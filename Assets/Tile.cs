@@ -726,7 +726,6 @@ public static class Tile
             int offset_x = ((int)tileIndex % textureExpandedAtlasPowerOf2) * expandedTileWidth + TILE_BORDER_SIZE;
             int offset_y = ((int)tileIndex / textureExpandedAtlasPowerOf2) * expandedTileHeight + TILE_BORDER_SIZE;
 
-
             Color alpha = new Color(0, 0, 0, 0);
             //Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK];
 
@@ -750,6 +749,41 @@ public static class Tile
             }
             combinedExpandedTexture.Apply();
         }
+
+        // TODO Dungeons use the expanded tile and include some cooking fires but they create their own tile map for each
+        // dungeon map block, will probbaly need to be a special case for the cooking fire in the dungeon
+        // or switch to the Combine3() method used in the outdoors and settlements which is animated in the code above
+        /*
+        {
+            const int x1 = 3;
+            const int x2 = 9;
+            const int y1 = 9;
+            const int y2 = 16;
+            Tile.TILE tileIndex = Tile.TILE.COOKING_FIRE;
+
+            Color alpha = new Color(0, 0, 0, 0);
+
+            for (int y = y1; y <= y2; y++)
+            {
+                for (int x = x1; x <= x2; x++)
+                {
+                    Color color = expandedTiles[(int)tileIndex].GetPixel(x, expandedTileHeight - 1 - y);
+                    if ((color == Palette.EGAColorPalette[(int)Palette.EGA_COLOR.RED]) || (color == alpha))
+                    {
+                        if (Random.Range(0, 100) <= 50)
+                        {
+                            combinedExpandedTexture.SetPixel(x, expandedTileHeight - 1 - y, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.RED]);
+                        }
+                        else
+                        {
+                            combinedExpandedTexture.SetPixel(x, expandedTileHeight - 1 - y, alpha);
+                        }
+                    }
+                }
+            }
+            expandedTiles[(int)tileIndex].Apply();
+        }
+        */
     }
 
     // TODO fix horse tile also
