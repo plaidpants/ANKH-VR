@@ -2922,22 +2922,36 @@ public class World : MonoBehaviour
 
             if (u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS)
             {
-                // generate a new raycast
-                Map.raycast(ref Outdoor.outdoorMap,
-                    u4.Party._x, 
-                    u4.Party._y,
-                    ref raycastOutdoorMap, 
-                    ((u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1) ) ,
-                    ((u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1) ) , 
-                    Tile.TILE.BLANK);
-                location = new Vector3(
-                    ((u4.Party._x - raycastOutdoorMap.GetLength(0) / 2) - 1) , 0,
-                    Outdoor.outdoorMap.GetLength(1) - ((u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1) ) - raycastOutdoorMap.GetLength(1));
+                int offset_x = u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1;
+                int offset_y = u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1;
+
+                if (u4.Party.f_1dc == 0)
+                {
+                    // generate a new raycast
+                    Map.raycast(ref Outdoor.outdoorMap,
+                        u4.Party._x,
+                        u4.Party._y,
+                        ref raycastOutdoorMap,
+                        offset_x,
+                        offset_y,
+                        Tile.TILE.BLANK);
+                }
+                else
+                {
+                    // copy the entire map so it is visible when you are flying in the balloon
+                    for (int y = 0; y < raycastOutdoorMap.GetLength(1); y++)
+                    {
+                        for (int x = 0; x < raycastOutdoorMap.GetLength(0); x++)
+                        {
+                            raycastOutdoorMap[x, y] = Outdoor.outdoorMap[x + offset_x, y + offset_y];
+                        }
+                    }
+                }
 
                 Combine.Combine3(mainTerrain,
                     ref raycastOutdoorMap,
-                    u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1,
-                    u4.Party._y - raycastOutdoorMap.GetLength(1) / 2 - 1,
+                    offset_x,
+                    offset_y,
                     ref entireMapGameObjects,
                     false,
                     TextureFormat.RGBA32,
@@ -2949,22 +2963,20 @@ public class World : MonoBehaviour
                     u4.surface_party_direction);
 
                 location = Vector3.zero;
-
-
             }
             else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.SETTLEMENT)
             {
+                int offset_x = u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1;
+                int offset_y = u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1;
+
                 // generate a new raycast based on game engine map
                 Map.raycast(ref u4.tMap32x32, 
                     u4.Party._x, 
                     u4.Party._y, 
-                    ref raycastSettlementMap, 
-                    ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) ), 
-                    ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) ), 
+                    ref raycastSettlementMap,
+                    offset_x,
+                    offset_y, 
                     Tile.TILE.GRASS);
-                location = new Vector3(
-                    ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) ) , 0,
-                    Outdoor.outdoorMap.GetLength(1) - ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) )  - raycastSettlementMap.GetLength(1));
 
                 Settlement.SETTLEMENT settlement;
 
@@ -2980,8 +2992,8 @@ public class World : MonoBehaviour
 
                 Combine.Combine3(mainTerrain,
                     ref raycastSettlementMap,
-                    u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1,
-                    u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1,
+                    offset_x,
+                    offset_y,
                     ref Settlement.settlementsMapGameObjects[(int)settlement],
                     false,
                     TextureFormat.RGBA32,
@@ -2992,12 +3004,13 @@ public class World : MonoBehaviour
                     31 - u4.Party._y,
                     u4.surface_party_direction);
 
-                //CreateMapLabels(mainTerrain, ref raycastSettlementMap);
-
                 location = new Vector3(0, 0, 224);
 
                 /*
+                CreateMapLabels(mainTerrain, ref raycastSettlementMap);
+
                 CreateMap(mainTerrain, raycastSettlementMap);
+
                 location = new Vector3(
                     ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) ) , 0,
                     entireMapTILEs.GetLength(1) - ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) )  - raycastSettlementMap.GetLength(1));
