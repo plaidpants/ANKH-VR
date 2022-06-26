@@ -877,9 +877,9 @@ public static class Map
         }
         else
         {
-            renderer.material.mainTexture = Tile.originalTiles[(int)tileIndex];
-            renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
-            renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
+            //renderer.material.mainTexture = Tile.originalTiles[(int)tileIndex];
+            //renderer.material.mainTextureOffset = new Vector2(0.0f, 0.0f);
+            //renderer.material.mainTextureScale = new Vector2(1.0f, 1.0f);
         }
 
         Mesh mesh = mapTile.GetComponent<MeshFilter>().mesh;

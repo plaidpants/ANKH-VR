@@ -36,7 +36,10 @@ public class Animate3 : MonoBehaviour
         if (((int)npcTile >= 32 && (int)npcTile <= 47) || ((int)npcTile >= 80 && (int)npcTile <= 95) || ((int)npcTile >= 132 && (int)npcTile <= 143))
         {
             // update to the initial animation texture frame
-            ObjectRenderer.material.mainTexture = Tile.originalTiles[(int)npcTile];
+            //ObjectRenderer.material.mainTexture = Tile.originalTiles[(int)npcTile];
+            ObjectRenderer.material.mainTexture = Tile.expandedTiles[(int)npcTile];
+            ObjectRenderer.material.mainTextureOffset = new Vector2((float)Tile.TILE_BORDER_SIZE / (float)ObjectRenderer.material.mainTexture.width, (float)Tile.TILE_BORDER_SIZE / (float)ObjectRenderer.material.mainTexture.height);
+            ObjectRenderer.material.mainTextureScale = new Vector2((float)(ObjectRenderer.material.mainTexture.width - (2 * Tile.TILE_BORDER_SIZE)) / (float)ObjectRenderer.material.mainTexture.width, (float)(ObjectRenderer.material.mainTexture.height - (2 * Tile.TILE_BORDER_SIZE)) / (float)ObjectRenderer.material.mainTexture.height);
 
             // set the other frames based on the intial frame
             if (((int)npcTile % 2) == 0)
@@ -52,7 +55,10 @@ public class Animate3 : MonoBehaviour
         else if ((int)npcTile >= 144 && (int)npcTile <= 255)
         {
             // update to the initial animation texture frame
-            ObjectRenderer.material.mainTexture = Tile.originalTiles[(int)npcTile];
+            //ObjectRenderer.material.mainTexture = Tile.originalTiles[(int)npcTile];
+            ObjectRenderer.material.mainTexture = Tile.expandedTiles[(int)npcTile];
+            ObjectRenderer.material.mainTextureOffset = new Vector2((float)Tile.TILE_BORDER_SIZE / (float)ObjectRenderer.material.mainTexture.width, (float)Tile.TILE_BORDER_SIZE / (float)ObjectRenderer.material.mainTexture.height);
+            ObjectRenderer.material.mainTextureScale = new Vector2((float)(ObjectRenderer.material.mainTexture.width - (2 * Tile.TILE_BORDER_SIZE)) / (float)ObjectRenderer.material.mainTexture.width, (float)(ObjectRenderer.material.mainTexture.height - (2 * Tile.TILE_BORDER_SIZE)) / (float)ObjectRenderer.material.mainTexture.height);
             transform.gameObject.name = npcTile.ToString();
 
             // set the other frames based on the intial frame
@@ -82,7 +88,10 @@ public class Animate3 : MonoBehaviour
         else
         {
             // update to the animation texture frame
-            ObjectRenderer.material.mainTexture = Tile.originalTiles[(int)npcTile];
+            //ObjectRenderer.material.mainTexture = Tile.originalTiles[(int)npcTile];
+            ObjectRenderer.material.mainTexture = Tile.expandedTiles[(int)npcTile];
+            ObjectRenderer.material.mainTextureOffset = new Vector2((float)Tile.TILE_BORDER_SIZE / (float)ObjectRenderer.material.mainTexture.width, (float)Tile.TILE_BORDER_SIZE / (float)ObjectRenderer.material.mainTexture.height);
+            ObjectRenderer.material.mainTextureScale = new Vector2((float)(ObjectRenderer.material.mainTexture.width - (2 * Tile.TILE_BORDER_SIZE)) / (float)ObjectRenderer.material.mainTexture.width, (float)(ObjectRenderer.material.mainTexture.height - (2 * Tile.TILE_BORDER_SIZE)) / (float)ObjectRenderer.material.mainTexture.height);
 
             // add only one frame to the animation
             animationFrameIndexes = new Tile.TILE[1] { npcTile };
@@ -111,10 +120,12 @@ public class Animate3 : MonoBehaviour
         if (animationFrameIndexes == null)
             return;
 
-        if (Tile.originalTiles == null)
+        //if (Tile.originalTiles == null)
+        if (Tile.expandedTiles == null)
             return;
 
-        if (Tile.originalTiles.Length == 0)
+        //if (Tile.originalTiles.Length == 0)
+        if (Tile.expandedTiles.Length == 0)
             return;
 
         timer += Time.deltaTime;
@@ -127,7 +138,10 @@ public class Animate3 : MonoBehaviour
                 frame = 0;
             }
 
-            ObjectRenderer.material.mainTexture = Tile.originalTiles[(int)animationFrameIndexes[frame]];
+            //ObjectRenderer.material.mainTexture = Tile.originalTiles[(int)animationFrameIndexes[frame]];
+            ObjectRenderer.material.mainTexture = Tile.expandedTiles[(int)animationFrameIndexes[frame]];
+            ObjectRenderer.material.mainTextureOffset = new Vector2((float)Tile.TILE_BORDER_SIZE / (float)ObjectRenderer.material.mainTexture.width, (float)Tile.TILE_BORDER_SIZE / (float)ObjectRenderer.material.mainTexture.height);
+            ObjectRenderer.material.mainTextureScale = new Vector2((float)(ObjectRenderer.material.mainTexture.width - (2 * Tile.TILE_BORDER_SIZE)) / (float)ObjectRenderer.material.mainTexture.width, (float)(ObjectRenderer.material.mainTexture.height - (2 * Tile.TILE_BORDER_SIZE)) / (float)ObjectRenderer.material.mainTexture.height);
 
             timer -= timerExpired;
             timerExpired = Random.Range(0.01f, 1.0f);

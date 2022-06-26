@@ -399,7 +399,10 @@ public class World : MonoBehaviour
 
         renderer = childofmoongate.GetComponent<MeshRenderer>();
 
-        renderer.material.mainTexture = Tile.originalTiles[(int)u4.moongate_tile];
+        //renderer.material.mainTexture = Tile.originalTiles[(int)u4.moongate_tile];
+        renderer.material.mainTexture = Tile.expandedTiles[(int)u4.moongate_tile];
+        renderer.material.mainTextureOffset = new Vector2((float)Tile.TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)Tile.TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
+        renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * Tile.TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * Tile.TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
 
         // get adjusted position based on the offset of the raycastOutdoorMap due to the player position
         int posx = u4.moongate_x - (lastRaycastPlayer_posx - raycastOutdoorMap.GetLength(0) / 2 - 1);
@@ -624,7 +627,11 @@ public class World : MonoBehaviour
                 Tile.TILE hitTile = currentHitList[hitIndex].tile;
 
                 // update the tile of the game object
-                childofhits.GetComponent<Renderer>().material.mainTexture = Tile.originalTiles[(int)hitTile];
+                Renderer renderer = childofhits.GetComponent<Renderer>();
+                //renderer.material.mainTexture = Tile.originalTiles[(int)hitTile];
+                renderer.material.mainTexture = Tile.expandedTiles[(int)hitTile];
+                renderer.material.mainTextureOffset = new Vector2((float)Tile.TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)Tile.TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
+                renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * Tile.TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * Tile.TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
 
                 // update the position
                 childofhits.localPosition = new Vector3(currentHitList[hitIndex].x + offsetx, 255 - currentHitList[hitIndex].y - 0.01f + offsety, 0); // move it slightly in from of the characters and fighters so we can see it.
@@ -2750,7 +2757,10 @@ public class World : MonoBehaviour
                 Renderer renderer = party.GetComponentInChildren<Renderer>();
                 if (renderer)
                 {
-                    party.GetComponentInChildren<Renderer>().material.mainTexture = Tile.expandedTiles[(int)u4.Party._tile];
+                    renderer.material.mainTexture = Tile.expandedTiles[(int)u4.Party._tile];
+                    renderer.material.mainTextureOffset = new Vector2((float)Tile.TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)Tile.TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
+                    renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * Tile.TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * Tile.TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
+
                     party.name = u4.Party._tile.ToString();
 
                     if ((u4.Party._tile == Tile.TILE.BALOON) && (u4.Party.f_1dc == 1))
