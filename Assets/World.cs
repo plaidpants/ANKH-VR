@@ -2918,7 +2918,7 @@ public class World : MonoBehaviour
             (u4.Party.f_1dc != lastRaycastPlayer_f_1dc) || // balloon flying or grounded or dungeon torch active
             ((u4.open_door_timer > 0) != last_door_timer) || // door has opened or closed
             (u4.surface_party_direction != lastRaycastP_surface_party_direction) || // have we rotated the camera
-            (u4.Party._dir != lastPartyDirection)) // have we rotated in the dungeopm
+            (u4.Party._dir != lastPartyDirection)) // have we rotated in the dungeon
         {
             Vector3 location = Vector3.zero;
 
@@ -3000,7 +3000,9 @@ public class World : MonoBehaviour
                     settlement = (Settlement.SETTLEMENT)u4.Party._loc;
                 }
 
+                /*
                 // open any doors on the map
+                // TODO: how to deal with recently locked but now unlocked doors after using the Jimmy Lock action, probably need to scan the whole map for this, ugh!
                 if (u4.tMap32x32[u4.open_door_x, u4.open_door_y] == Tile.TILE.DOOR)
                 {
                     Settlement.settlementsMapGameObjects[(int)settlement][u4.open_door_x, u4.open_door_y] = Map.allMapTilesGameObjects[(int)Tile.TILE.DOOR];
@@ -3008,6 +3010,26 @@ public class World : MonoBehaviour
                 else if (u4.tMap32x32[u4.open_door_x, u4.open_door_y] == Tile.TILE.BRICK_FLOOR)
                 {
                     Settlement.settlementsMapGameObjects[(int)settlement][u4.open_door_x, u4.open_door_y] = Map.allMapTilesGameObjects[(int)Tile.TILE.BRICK_FLOOR];
+                }
+                */
+
+                // check for any changes in the entire map, this could be because the player has jimmy'd a lock, opened a door or dispelled a field in a settlement
+                // dispelling a field will copy current tile under the player to the map, so if you dispell from a tree tile it will replace the field with a tree
+                // TODO: need to force an update when a lock is jimmy'd or a field is dispelled as we don't have a trigger like for an open door, probably need to
+                // move this outside the move/change check
+                for (int y = 0; y < 32; y++)
+                {
+                    for (int x = 0; x < 32; x++)
+                    {
+                        // get the current tile from the game engine
+                        Tile.TILE currentTileIndex = u4.tMap32x32[x, y];
+                        // check if it is different than what we read from the map file at startup
+                        if (currentTileIndex != Settlement.settlementMap[(int)settlement][x, y])
+                        {
+                            // update the tile game object to match the current map tile
+                            Settlement.settlementsMapGameObjects[(int)settlement][x, y] = Map.allMapTilesGameObjects[(int)currentTileIndex];
+                        }
+                    }
                 }
 
                 Combine.Combine3(mainTerrain,
