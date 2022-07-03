@@ -900,7 +900,6 @@ public static class Dungeon
         GameObject dungeonLevel = new GameObject();
         dungeonLevel.name = dungeon.ToString() + " Level #" + level;
 
-
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++)

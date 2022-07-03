@@ -2063,11 +2063,32 @@ public class World : MonoBehaviour
                 }
             }
         }
+
+        // wrap dungeon
+        for (int j = 0; j < 8; j++)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                int offset_x = u4.Party._x - Dungeon.currentDungeonBlockLevel.GetLength(0) / 2;
+                int offset_y = Dungeon.currentDungeonBlockLevel.GetLength(1) - (u4.Party._y - Dungeon.currentDungeonBlockLevel.GetLength(1) / 2);
+
+                int x = (i + offset_x + Dungeon.currentDungeonBlockLevel.GetLength(0)) % Dungeon.currentDungeonBlockLevel.GetLength(0);
+                int y = (j + offset_y + Dungeon.currentDungeonBlockLevel.GetLength(1)) % Dungeon.currentDungeonBlockLevel.GetLength(1);
+
+                if (Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject)
+                {
+                    // need to adjust the position for wrapping
+                    Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.localPosition = new Vector3((i + offset_x) * 11, (j + offset_y - Dungeon.currentDungeonBlockLevel.GetLength(1)) * 11, 0);
+                    Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+
+                    Renderer renderer = Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.GetComponent<MeshRenderer>();
+                }
+            }
+        }
     }
 
     void UpdateDungeonHallway(Dungeon.DUNGEON_TILE dungeonTile, int x, int y, Dungeon.DUNGEONS dun)
     {
-
         Dungeon.currentDungeonBlockLevel[x, 7 - y].dungeonTile = dungeonTile;
 
         Tile.TILE tileIndex;
@@ -2918,28 +2939,31 @@ public class World : MonoBehaviour
             settlement = (Settlement.SETTLEMENT)u4.Party._loc;
         }
 
+        // assume no settlement map changes
         bool settlementMapChanged = false;
 
+        // check if we are in a settlement
         if (u4.current_mode == U4_Decompiled_AVATAR.MODE.SETTLEMENT)
         {
-            // check for any changes in the entire map, this could be because the player has jimmy'd a lock, opened a door or dispelled a field in a settlement
+            // check for any changes in the entire settlement map, this could be because the player has jimmy'd a lock, opened a door or dispelled a field in a settlement
             // dispelling a field will copy current tile under the player to the map, so if you dispell from a tree tile it will replace the field with a tree
-            // TODO: need to force an update when a lock is jimmy'd or a field is dispelled as we don't have a trigger like for an open door, probably need to
-            // move this outside the move/change check
-            // TODO: also check for settlement change as the LBC level 1 and 2 don't trigger an update unless we move
             for (int y = 0; y < 32; y++)
             {
                 for (int x = 0; x < 32; x++)
                 {
                     // get the current tile from the game engine
                     Tile.TILE currentTileIndex = u4.tMap32x32[x, y];
+
                     // check if it is different than what we read from the map file at startup
                     if (currentTileIndex != Settlement.settlementMap[(int)settlement][x, y])
                     {
+                        // check if we have already seen this change
                         if (Settlement.settlementsMapGameObjects[(int)settlement][x, y] != Map.allMapTilesGameObjects[(int)currentTileIndex])
                         {
                             // update the tile game object to match the current map tile
                             Settlement.settlementsMapGameObjects[(int)settlement][x, y] = Map.allMapTilesGameObjects[(int)currentTileIndex];
+
+                            // indicate below that we need to redo the raycast
                             settlementMapChanged = true;
                         }
                     }
@@ -2962,21 +2986,19 @@ public class World : MonoBehaviour
             (u4.surface_party_direction != lastRaycastP_surface_party_direction) || // have we rotated the camera
             (u4.Party._dir != lastPartyDirection) ||  // have we rotated in the dungeon
             (settlement != lastSettlement) || // did we change settlements
-            settlementMapChanged) // did the settlement map change
+            settlementMapChanged) // did the settlement map change (going from LCB1 to LCB2)
         {
             Vector3 location = Vector3.zero;
 
-            // update the settlement if it changed
-            lastSettlement = settlement;
-
-            // update the last raycast position
-            lastRaycastPlayer_posx = u4.Party._x;
+            lastSettlement = settlement; // update the settlement if it changed
+            lastRaycastPlayer_posx = u4.Party._x; // update the last raycast position
             lastRaycastPlayer_posy = u4.Party._y;
-            lastRaycastP_surface_party_direction = u4.surface_party_direction;
+            lastRaycastP_surface_party_direction = u4.surface_party_direction; // update the direction
             lastRaycastPlayer_f_1dc = u4.Party.f_1dc; // flying in the balloon or not or dungeon torch active
-            last_door_timer = u4.open_door_timer > 0;
-            lastPartyDirection = u4.Party._dir;
+            last_door_timer = u4.open_door_timer > 0; // update the door timer
+            lastPartyDirection = u4.Party._dir; // update the direction
 
+            // check if we are outdoors
             if (u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS)
             {
                 int offset_x = u4.Party._x - raycastOutdoorMap.GetLength(0) / 2 - 1;
@@ -2995,7 +3017,7 @@ public class World : MonoBehaviour
                 }
                 else
                 {
-                    // copy the entire map so it is visible when you are flying in the balloon
+                    // just copy the entire map (no raycast) so it is visible when you are flying in the balloon
                     for (int y = 0; y < raycastOutdoorMap.GetLength(1); y++)
                     {
                         for (int x = 0; x < raycastOutdoorMap.GetLength(0); x++)
@@ -3005,6 +3027,7 @@ public class World : MonoBehaviour
                     }
                 }
 
+                // recreate the gameobjects and meshes
                 Combine.Combine3(mainTerrain,
                     ref raycastOutdoorMap,
                     offset_x,
@@ -3021,6 +3044,7 @@ public class World : MonoBehaviour
 
                 location = Vector3.zero;
             }
+            // check if we are in a settlement
             else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.SETTLEMENT)
             {
                 int offset_x = u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1;
@@ -3035,8 +3059,7 @@ public class World : MonoBehaviour
                     offset_y, 
                     Tile.TILE.GRASS);
 
-
-
+                // recreate the gameobjects and meshes
                 Combine.Combine3(mainTerrain,
                     ref raycastSettlementMap,
                     offset_x,
@@ -3053,6 +3076,7 @@ public class World : MonoBehaviour
 
                 location = new Vector3(0, 0, 224);
 
+                // TODO: implement label, so they appear upright and in letter/word order when you move around the settlement map
                 /*
                 CreateMapLabels(mainTerrain, ref raycastSettlementMap);
 
