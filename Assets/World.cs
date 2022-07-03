@@ -2041,23 +2041,36 @@ public class World : MonoBehaviour
                 int x = (i + offset_x + Dungeon.currentDungeonBlockLevel.GetLength(0)) % Dungeon.currentDungeonBlockLevel.GetLength(0);
                 int y = (j + offset_y + Dungeon.currentDungeonBlockLevel.GetLength(1)) % Dungeon.currentDungeonBlockLevel.GetLength(1);
 
-                if (Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject)
+                Dungeon.DungeonBlockLevel dungeonBlock = Dungeon.currentDungeonBlockLevel[x, y];
+
+                // check if the dungeon block exist for this coord, (walls do not get generated into dungeon blocks)
+                if (dungeonBlock.dungeonGameObject)
                 {
                     // adjust the position for wrapping
-                    Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.localPosition = new Vector3((i + offset_x) * 11, (j + offset_y - Dungeon.currentDungeonBlockLevel.GetLength(1)) * 11, 0);
-                    Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    dungeonBlock.dungeonGameObject.transform.localPosition = new Vector3((i + offset_x) * 11, (j + offset_y - Dungeon.currentDungeonBlockLevel.GetLength(1)) * 11, 0);
+                    
+                    // get a value for distance
+                    float value = ((5f * 11f) - Vector3.Distance(dungeonBlock.dungeonGameObject.transform.position, new Vector3(u4.Party._x * 11, 0, (7 - u4.Party._y) * 11))) / (5f * 11f);
 
-                    Transform terrainTransform = Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.Find("terrain");
-
-                    Renderer renderer = terrainTransform.GetComponent<Renderer>();
-
-                    float value = ((5f * 11f) - Vector3.Distance(Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.position, new Vector3(u4.Party._x * 11, 0, (7 - u4.Party._y) * 11) /*partyGameObject.transform.position - new Vector3(5,0,5) */)) / (5f * 11f); 
-                    if (value > 0.85f)
+                    // apply this as a color tint to all children of the dungeon block
+                    // TODO: we could also apply this lighting color tint based on a raytrace or some other algorithm
+                    foreach (Transform child in dungeonBlock.dungeonGameObject.transform)
                     {
+                        Renderer renderer = child.GetComponent<Renderer>();
+                        if (renderer)
+                        {
+                            renderer.material.color = new Color(value, value, value, 1);
+                        }
 
-                        Debug.Log("test");
+                        foreach (Transform childofchild in child)
+                        {
+                            renderer = childofchild.GetComponent<Renderer>();
+                            if (renderer)
+                            {
+                                renderer.material.color = new Color(value, value, value, 1);
+                            }
+                        }
                     }
-                    renderer.material.color = new Color (value, value, value, 1);
                 }
             }
         }
