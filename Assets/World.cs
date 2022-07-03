@@ -844,38 +844,37 @@ public class World : MonoBehaviour
                     // update the tile of the game object
                     childofmonsters.GetComponent<Animate3>().SetNPCTile(monsterTile);
 
+                    // wrap the position
+                    int xx = x;
+                    int yy = y;
+
+                    if (yy - u4.Party._y > 3)
+                    {
+                        yy -= 8;
+                    } 
+                    else if (yy - u4.Party._y < -4)
+                    {
+                        yy += 8;
+                    }
+
+                    if (xx - u4.Party._x > 3)
+                    {
+                        xx -= 8;
+                    }
+                    else if (xx - u4.Party._x < -4)
+                    {
+                        xx += 8;
+                    }
+
                     // update the position
-                    childofmonsters.localPosition = new Vector3(x * 11 + 5, (7 - y) * 11 + 5, 0);
+                    childofmonsters.localPosition = new Vector3(xx * 11 + 5, (7 - yy) * 11 + 5, 0);
                     childofmonsters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
 
-
-                    /*
-                             // put the new map in place
-        Dungeon.currentDungeonBlockLevel[x, 7 - y].dungeonGameObject.transform.localPosition = new Vector3(x * 11, (7 - y) * 11, 0);
-        Dungeon.currentDungeonBlockLevel[x, 7 - y].dungeonGameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
-
-        for (int j = 0; j < 8; j++)
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                int offset_x = u4.Party._x - Dungeon.currentDungeonBlockLevel.GetLength(0) / 2;
-                int offset_y = Dungeon.currentDungeonBlockLevel.GetLength(1) - (u4.Party._y - Dungeon.currentDungeonBlockLevel.GetLength(1) / 2);
-
-                int x = (i + offset_x + Dungeon.currentDungeonBlockLevel.GetLength(0)) % Dungeon.currentDungeonBlockLevel.GetLength(0);
-                int y = (j + offset_y + Dungeon.currentDungeonBlockLevel.GetLength(1)) % Dungeon.currentDungeonBlockLevel.GetLength(1);
-
-                if (Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject)
-                {
-                    // adjust the position for wrapping
-                    Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.localPosition = new Vector3((i + offset_x) * 11, (j + offset_y - Dungeon.currentDungeonBlockLevel.GetLength(1)) * 11, 0);
-                    Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
-                }
-            }
-        }
-                     */
-
-
-
+                    // simple lighting
+                    Renderer renderer = childofmonsters.GetComponent<Renderer>();
+                    renderer.material.color = Color.white;
+                    float value = ((5f * 11f) - Vector3.Distance(childofmonsters.transform.position, new Vector3(u4.Party._x * 11, 0, (7 - u4.Party._y) * 11))) / (5f * 11f);
+                    renderer.material.color = new Color(value, value, value, 1);
 
                     // make it billboard
                     Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
