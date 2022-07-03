@@ -320,7 +320,7 @@ public static class Dungeon
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
                 // there is at least one case where the dungeon monster tile refers to an energy field.
                 // TODO: see if these are actually monsters or just static objects in the actual game,
@@ -536,7 +536,7 @@ public static class Dungeon
                         mapTile.transform.SetParent(dungeonLevelGameObject.transform);
                         mapTile.transform.localPosition = new Vector3(x, y, 7 - z);
                         Renderer renderer = mapTile.GetComponent<MeshRenderer>();
-                        renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                        renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
                         renderer.material.mainTexture = Tile.expandedTiles[(int)tileIndex];
                         renderer.material.mainTextureOffset = new Vector2((float)Tile.TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)Tile.TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
                         renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * Tile.TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * Tile.TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
@@ -881,7 +881,7 @@ public static class Dungeon
                 mapTile.transform.SetParent(dungeonBlockGameObject.transform);
                 mapTile.transform.localPosition = new Vector3(x, y, 0);
                 Renderer renderer = mapTile.GetComponent<MeshRenderer>();
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
                 renderer.material.mainTexture = Tile.expandedTiles[(int)tileIndex];
                 renderer.material.mainTextureOffset = new Vector2((float)Tile.TILE_BORDER_SIZE / (float)renderer.material.mainTexture.width, (float)Tile.TILE_BORDER_SIZE / (float)renderer.material.mainTexture.height);
                 renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * Tile.TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * Tile.TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);

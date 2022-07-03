@@ -159,7 +159,7 @@ public class World : MonoBehaviour
         renderer.material.mainTextureScale = new Vector2((float)(renderer.material.mainTexture.width - (2 * Tile.TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.width, (float)(renderer.material.mainTexture.height - (2 * Tile.TILE_BORDER_SIZE)) / (float)renderer.material.mainTexture.height);
 
         // set the shader
-        renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+        renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
         // add so speech works
         partyGameObject.AddComponent<UnityEngine.UI.Text>();
@@ -200,7 +200,7 @@ public class World : MonoBehaviour
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
                 // add our little animator script and set the tile
                 Animate3 animate = fighterGameObject.AddComponent<Animate3>();
@@ -289,7 +289,7 @@ public class World : MonoBehaviour
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
                 // add our little animator script and set the tile
                 Animate3 animate = characterGameObject.AddComponent<Animate3>();
@@ -381,7 +381,7 @@ public class World : MonoBehaviour
             renderer.material.mainTexture = null;
 
             // set the shader
-            renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+            renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
             // rotate the moongate game object into position after creating
             Vector3 moongateLocation = new Vector3(0, 255, 0);
@@ -454,7 +454,7 @@ public class World : MonoBehaviour
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
                 // add our little animator script and set the tile
                 Animate3 animate = npcGameObject.AddComponent<Animate3>();
@@ -597,7 +597,7 @@ public class World : MonoBehaviour
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
                 // rotate the hit game object into position after creating
                 Vector3 npcLocation = new Vector3(0, 255, 0);
@@ -711,7 +711,7 @@ public class World : MonoBehaviour
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
                 // there is at least one case where the dungeon monster tile refers to an energy field.
                 // TODO: see if these are actually monsters or just static objects in the actual game,
@@ -774,7 +774,7 @@ public class World : MonoBehaviour
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
                 // add our little animator script and set the tile to zero
                 Animate3 animate = dungeonMonsterGameObject.AddComponent<Animate3>();
@@ -847,6 +847,35 @@ public class World : MonoBehaviour
                     // update the position
                     childofmonsters.localPosition = new Vector3(x * 11 + 5, (7 - y) * 11 + 5, 0);
                     childofmonsters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
+
+
+                    /*
+                             // put the new map in place
+        Dungeon.currentDungeonBlockLevel[x, 7 - y].dungeonGameObject.transform.localPosition = new Vector3(x * 11, (7 - y) * 11, 0);
+        Dungeon.currentDungeonBlockLevel[x, 7 - y].dungeonGameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+
+        for (int j = 0; j < 8; j++)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                int offset_x = u4.Party._x - Dungeon.currentDungeonBlockLevel.GetLength(0) / 2;
+                int offset_y = Dungeon.currentDungeonBlockLevel.GetLength(1) - (u4.Party._y - Dungeon.currentDungeonBlockLevel.GetLength(1) / 2);
+
+                int x = (i + offset_x + Dungeon.currentDungeonBlockLevel.GetLength(0)) % Dungeon.currentDungeonBlockLevel.GetLength(0);
+                int y = (j + offset_y + Dungeon.currentDungeonBlockLevel.GetLength(1)) % Dungeon.currentDungeonBlockLevel.GetLength(1);
+
+                if (Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject)
+                {
+                    // adjust the position for wrapping
+                    Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.localPosition = new Vector3((i + offset_x) * 11, (j + offset_y - Dungeon.currentDungeonBlockLevel.GetLength(1)) * 11, 0);
+                    Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+                }
+            }
+        }
+                     */
+
+
+
 
                     // make it billboard
                     Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
@@ -1993,6 +2022,45 @@ public class World : MonoBehaviour
                 UpdateDungeonHallway(dungeonTile, u4.Party._x, (u4.Party._y + 7) % 8, dun);
             }
         }
+
+        // the transition to the dungeon room happens before we know the player has moved,
+        // if this move to the dungeon room happens on a wrap point the room will be over blank space
+        // need to update the dungeon wrap here so this doesn't happen
+        WrapDungeon();
+    }
+
+    void WrapDungeon()
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                int offset_x = u4.Party._x - Dungeon.currentDungeonBlockLevel.GetLength(0) / 2;
+                int offset_y = Dungeon.currentDungeonBlockLevel.GetLength(1) - (u4.Party._y - Dungeon.currentDungeonBlockLevel.GetLength(1) / 2);
+
+                int x = (i + offset_x + Dungeon.currentDungeonBlockLevel.GetLength(0)) % Dungeon.currentDungeonBlockLevel.GetLength(0);
+                int y = (j + offset_y + Dungeon.currentDungeonBlockLevel.GetLength(1)) % Dungeon.currentDungeonBlockLevel.GetLength(1);
+
+                if (Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject)
+                {
+                    // adjust the position for wrapping
+                    Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.localPosition = new Vector3((i + offset_x) * 11, (j + offset_y - Dungeon.currentDungeonBlockLevel.GetLength(1)) * 11, 0);
+                    Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+
+                    Transform terrainTransform = Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.Find("terrain");
+
+                    Renderer renderer = terrainTransform.GetComponent<Renderer>();
+
+                    float value = ((5f * 11f) - Vector3.Distance(Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.position, new Vector3(u4.Party._x * 11, 0, (7 - u4.Party._y) * 11) /*partyGameObject.transform.position - new Vector3(5,0,5) */)) / (5f * 11f); 
+                    if (value > 0.85f)
+                    {
+
+                        Debug.Log("test");
+                    }
+                    renderer.material.color = new Color (value, value, value, 1);
+                }
+            }
+        }
     }
 
     void UpdateDungeon()
@@ -2064,27 +2132,8 @@ public class World : MonoBehaviour
             }
         }
 
-        // wrap dungeon
-        for (int j = 0; j < 8; j++)
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                int offset_x = u4.Party._x - Dungeon.currentDungeonBlockLevel.GetLength(0) / 2;
-                int offset_y = Dungeon.currentDungeonBlockLevel.GetLength(1) - (u4.Party._y - Dungeon.currentDungeonBlockLevel.GetLength(1) / 2);
-
-                int x = (i + offset_x + Dungeon.currentDungeonBlockLevel.GetLength(0)) % Dungeon.currentDungeonBlockLevel.GetLength(0);
-                int y = (j + offset_y + Dungeon.currentDungeonBlockLevel.GetLength(1)) % Dungeon.currentDungeonBlockLevel.GetLength(1);
-
-                if (Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject)
-                {
-                    // need to adjust the position for wrapping
-                    Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.localPosition = new Vector3((i + offset_x) * 11, (j + offset_y - Dungeon.currentDungeonBlockLevel.GetLength(1)) * 11, 0);
-                    Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
-
-                    Renderer renderer = Dungeon.currentDungeonBlockLevel[x, y].dungeonGameObject.GetComponent<MeshRenderer>();
-                }
-            }
-        }
+        // wrap dungeon so we are always mostly in the center of the 8x8 map
+        WrapDungeon();
     }
 
     void UpdateDungeonHallway(Dungeon.DUNGEON_TILE dungeonTile, int x, int y, Dungeon.DUNGEONS dun)

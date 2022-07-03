@@ -425,7 +425,7 @@ public class Title : MonoBehaviour
                 renderer.material.mainTexture = null;
 
                 // set the shader
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
                 // rotate the fighters game object into position after creating
                 Vector3 fightersLocation = new Vector3(0, 255, 0);

@@ -862,7 +862,7 @@ public static class Tile
         combinedLinearTexture.Apply();
 
         // create a material based on this texture atlas
-        combinedLinearMaterial = new Material(Shader.Find("Unlit/Transparent Cutout"));
+        combinedLinearMaterial = new Material(Shader.Find("Unlit/Transparent Cutout 2"));
         combinedLinearMaterial.mainTexture = combinedLinearTexture;
     }
 
@@ -954,7 +954,7 @@ public static class Tile
         combinedTexture.Apply();
 
         // create a material based on this texture atlas
-        combinedMaterial = new Material(Shader.Find("Unlit/Transparent Cutout"));
+        combinedMaterial = new Material(Shader.Find("Unlit/Transparent Cutout 2"));
         combinedMaterial.mainTexture = combinedTexture;
     }
     public static void CreateExpandedTextureAtlas(ref Texture2D[] tilesTextures, bool useMipMaps = false, TextureFormat textureFormat = TextureFormat.RGBA32)
@@ -1034,7 +1034,7 @@ public static class Tile
         combinedExpandedTexture.Apply();
 
         // create a material based on this texture atlas
-        combinedExpandedMaterial = new Material(Shader.Find("Unlit/Transparent Cutout"));
+        combinedExpandedMaterial = new Material(Shader.Find("Unlit/Transparent Cutout 2"));
         combinedExpandedMaterial.mainTexture = combinedExpandedTexture;
     }
 

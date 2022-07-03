@@ -360,7 +360,7 @@ public static class Map
 
                 // set the shader
                 Renderer renderer = mapTile.GetComponent<MeshRenderer>();
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
                 // set the tile and texture offset and scale
                 if (useExpandedTile)
@@ -856,7 +856,7 @@ public static class Map
 
         // set the shader
         Renderer renderer = mapTile.GetComponent<MeshRenderer>();
-        renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+        renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
         // set the tile and texture offset and scale
 
@@ -1304,7 +1304,7 @@ public static class Map
 
                 // set the shader
                 Renderer renderer = mapTile.GetComponent<MeshRenderer>();
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
                 // set the tile and texture offset and scale
                 renderer.material = Tile.combinedExpandedMaterial;
@@ -1345,7 +1345,7 @@ public static class Map
 
                 // set the shader
                 renderer = reverseMapTile.GetComponent<MeshRenderer>();
-                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout");
+                renderer.material.shader = Shader.Find("Unlit/Transparent Cutout 2");
 
                 // set the tile and texture offset and scale
                 renderer.material = Tile.combinedExpandedMaterial;
