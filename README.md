@@ -1,5 +1,7 @@
 # ANHK VR
 
+<img src="https://user-images.githubusercontent.com/8979271/177064766-e6c86dd7-ceee-4fc5-9e34-c3ad86c7e7f3.png" width=50% height=50%>
+
 This is an early alpha attempt to run the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift but other systems may be supported in the future.
 
 Instructions:
@@ -69,17 +71,17 @@ This project does not contain any copyrighted game assets or code or text or gra
 This project uses the free asset "Effects Pro: Simple Image Effects" from the Unity Asset Store for the magic inverse screen effect, MIT license.
 https://assetstore.unity.com/packages/vfx/shaders/fullscreen-camera-effects/effects-pro-simple-image-effects-191099
 
-![OculusScreenshot1653440228](https://user-images.githubusercontent.com/8979271/170156004-6984eb32-8968-4600-94c2-9c7536495fbb.jpeg)
-![OculusScreenshot1653440283](https://user-images.githubusercontent.com/8979271/170156009-a6912951-2b66-4b0e-a269-0e5af692f717.jpeg)
-![OculusScreenshot1651018124](https://user-images.githubusercontent.com/8979271/165412915-4acd534b-1021-4a26-8a6e-382fc15d91a3.jpeg)
-![OculusScreenshot1648335085](https://user-images.githubusercontent.com/8979271/163682632-7b579fef-d83a-43d6-82e3-e933a85602ec.jpeg)
-![OculusScreenshot1650143616](https://user-images.githubusercontent.com/8979271/163691827-da3db1af-fe13-41d9-a65e-8d7db2a1ac9d.jpeg)
-![OculusScreenshot1650143652](https://user-images.githubusercontent.com/8979271/163691837-a2bb9ffb-4310-4f2e-bbba-1199f47bbcf1.jpeg)
-![OculusScreenshot1648337583](https://user-images.githubusercontent.com/8979271/163682638-376f9e42-6409-456e-9d22-001c288492a9.jpeg)
+![OculusScreenshot1656893311](https://user-images.githubusercontent.com/8979271/177064319-6e233842-107a-498e-929a-6e0cb1e17b65.jpeg)
+![OculusScreenshot1656893278](https://user-images.githubusercontent.com/8979271/177064320-18d15813-419d-4daa-863d-d9d1fcf30693.jpeg)
+![OculusScreenshot1656894520](https://user-images.githubusercontent.com/8979271/177064324-3a8c583d-f32f-4a5a-88bc-aa18bda29694.jpeg)
+![OculusScreenshot1656889680](https://user-images.githubusercontent.com/8979271/177064323-ea84ed0e-3043-4a62-96cf-55fa67598b1b.jpeg)
+![OculusScreenshot1656893632](https://user-images.githubusercontent.com/8979271/177064316-fb6cd808-dde5-4dd8-a53f-146108d803cb.jpeg)
+![OculusScreenshot1656893808](https://user-images.githubusercontent.com/8979271/177064315-be7f3d3d-d46d-4309-91c3-fa963fcc5979.jpeg)
+![OculusScreenshot1656893966](https://user-images.githubusercontent.com/8979271/177064314-64c98e2b-58d2-48f8-8277-8bf2e2963762.jpeg)
+![OculusScreenshot1656894287](https://user-images.githubusercontent.com/8979271/177064326-e9cbf252-e53f-45bc-b423-f270f7e88e13.jpeg)
+![OculusScreenshot1656894238](https://user-images.githubusercontent.com/8979271/177064328-5a5076e5-4736-4dee-8e09-1c0896211302.jpeg)
+![OculusScreenshot1656894104](https://user-images.githubusercontent.com/8979271/177064329-9d30fa02-7516-497a-a554-69456d10be02.jpeg)
+![OculusScreenshot1656894019](https://user-images.githubusercontent.com/8979271/177064331-606f73b1-1809-4909-bdfa-b49b5ed6c15f.jpeg)
 ![OculusScreenshot1649382760](https://user-images.githubusercontent.com/8979271/163682643-d788f259-0705-452e-8a63-127ce4d9c24f.jpeg)
 ![OculusScreenshot1649382903](https://user-images.githubusercontent.com/8979271/163682648-7b30c985-67fb-4127-9519-49daafd5cb17.jpeg)
-![OculusScreenshot1650143751](https://user-images.githubusercontent.com/8979271/163691844-96659c80-4102-4bf9-bfab-7536d261d580.jpeg)
-![OculusScreenshot1650143881](https://user-images.githubusercontent.com/8979271/163691863-becb0410-9bc9-4583-8b1d-d8c84432ced1.jpeg)
-![OculusScreenshot1650143908](https://user-images.githubusercontent.com/8979271/163691872-6e600a66-66bd-43b1-a0e6-287e4368ea20.jpeg)
 ![OculusScreenshot1650589506](https://user-images.githubusercontent.com/8979271/164576777-a6845f7d-7187-40f8-b3e1-670046022fa1.jpeg)
-![OculusScreenshot1650851795](https://user-images.githubusercontent.com/8979271/165008449-a2e9da3f-7a83-4ec2-ad57-7d04584e5e4c.jpeg)
