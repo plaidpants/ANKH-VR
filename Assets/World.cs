@@ -3397,18 +3397,14 @@ public class World : MonoBehaviour
                     // get the current tile from the game engine
                     Tile.TILE currentTileIndex = u4.tMap32x32[x, y];
 
-                    // check if it is different than what we read from the map file at startup
-                    if (currentTileIndex != Settlement.settlementMap[(int)settlement][x, y])
+                    // check if we have already seen this change
+                    if (Settlement.settlementsMapGameObjects[(int)settlement][x, y] != Map.allMapTilesGameObjects[(int)currentTileIndex])
                     {
-                        // check if we have already seen this change
-                        if (Settlement.settlementsMapGameObjects[(int)settlement][x, y] != Map.allMapTilesGameObjects[(int)currentTileIndex])
-                        {
-                            // update the tile game object to match the current map tile
-                            Settlement.settlementsMapGameObjects[(int)settlement][x, y] = Map.allMapTilesGameObjects[(int)currentTileIndex];
+                        // update the tile game object to match the current map tile
+                        Settlement.settlementsMapGameObjects[(int)settlement][x, y] = Map.allMapTilesGameObjects[(int)currentTileIndex];
 
-                            // indicate below that we need to redo the raycast
-                            settlementMapChanged = true;
-                        }
+                        // indicate below that we need to redo the raycast
+                        settlementMapChanged = true;
                     }
                 }
             }
