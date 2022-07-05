@@ -3574,6 +3574,7 @@ public class World : MonoBehaviour
                 else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.HONESTY) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.HUMILITY))
                 {
                     // we are in a shrine
+                    // TODO: should move the shrine stuff into same place as here so we handle all the vision stuff in one place
                     vision.transform.gameObject.SetActive(true);
                     DungeonMapText.transform.gameObject.SetActive(false);
                 }
