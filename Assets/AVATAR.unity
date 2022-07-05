@@ -569,6 +569,87 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1131267912}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &211838136
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 211838137}
+  - component: {fileID: 211838139}
+  - component: {fileID: 211838138}
+  m_Layer: 5
+  m_Name: DungeonMap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &211838137
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 211838136}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1962505775}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 160, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &211838138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 211838136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 6a1639c5fcbb6ab42953975a5166d0e4, type: 2}
+    m_FontSize: 20
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 40
+    m_Alignment: 1
+    m_AlignByGeometry: 1
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: "\x03\x03 \x03\x03\x03\x03\x03\n\x03\x01 \x0E  \x0E \n\x03\x03 \x03\x03\x03\x03
+    \n\x03    \x0E\x03 \n\x03F\x03 \x03\x03\x03\x0E\n\x03\x03\x03F\x03\x05  \n\x03
+    \x03\x03\x03\x03\x03\x03\n  \x0E  T\x03 \n"
+--- !u!222 &211838139
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 211838136}
+  m_CullTransparentMesh: 1
 --- !u!1 &220430093 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 220430093, guid: a0b6d7f16c50987468b2815c88b9cda5,
@@ -8913,21 +8994,25 @@ PrefabInstance:
       propertyPath: engine
       value: 
       objectReference: {fileID: 999847451}
+    - target: {fileID: 1030935697, guid: 264ae02e2b95e0345960362312f0ab15, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1030935698, guid: 264ae02e2b95e0345960362312f0ab15, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1030935698, guid: 264ae02e2b95e0345960362312f0ab15, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1030935698, guid: 264ae02e2b95e0345960362312f0ab15, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1030935698, guid: 264ae02e2b95e0345960362312f0ab15, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -142
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1033201019, guid: 264ae02e2b95e0345960362312f0ab15, type: 3}
       propertyPath: engine
@@ -9595,7 +9680,7 @@ PrefabInstance:
     - target: {fileID: 720628943143755467, guid: 264ae02e2b95e0345960362312f0ab15,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 720628943584009693, guid: 264ae02e2b95e0345960362312f0ab15,
         type: 3}
@@ -10705,22 +10790,22 @@ PrefabInstance:
     - target: {fileID: 4051553512760348400, guid: 264ae02e2b95e0345960362312f0ab15,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4051553512760348400, guid: 264ae02e2b95e0345960362312f0ab15,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4051553512760348400, guid: 264ae02e2b95e0345960362312f0ab15,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4051553512760348400, guid: 264ae02e2b95e0345960362312f0ab15,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -24
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4069064210328748574, guid: 264ae02e2b95e0345960362312f0ab15,
         type: 3}
@@ -13729,6 +13814,7 @@ MonoBehaviour:
   talkWordList: []
   keyword1ButtonText: {fileID: 614336522}
   keyword2ButtonText: {fileID: 1438280028}
+  DungeonMapText: {fileID: 211838138}
   keyword1Button: {fileID: 1833785971}
   keyword2Button: {fileID: 1399474509}
   InputPanel: {fileID: 1611383152}
@@ -13793,6 +13879,7 @@ MonoBehaviour:
   reagentsStatus: {fileID: 1333643935}
   mixturesStatus: {fileID: 105059952}
   lastMode: -1
+  lastModeCheck: -1
   wasJustInside: 0
   readyToAutomaticallyEnter: 1
   rotateTransform: {fileID: 572009426}
@@ -13801,6 +13888,8 @@ MonoBehaviour:
   vision: {fileID: 1030935699}
   timerPeriod: 0.02
   flagTimerPeriod: 0.1
+  ConvertMapToVision: 0c0000000b0000000a0000000100000001000000090000000200000008000000070000000500000005000000050000000500000004000000040000000400000005000000050000000500000005000000050000000500000005000000040000000500000004000000040000000500000005000000060000000600000005000000060000000600000006000000060000000600000006000000060000000600000006000000060000000600000006000000060000000600000006000000060000000700000007000000070000000700000007000000070000000700000005000000050000000700000006000000060000000500000000000000030000000400000003000000030000000300000003000000030000000300000003000000030000000300000007000000030000000300000003000000030000000300000003000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000500000005000000050000000400000004000000040000000400000004000000040000000400000004000000040000000400000004000000040000000400000004000000040000000400000004000000040000000400000004000000040000000400000004000000040000000400000004000000040000000400000004000000060000000000000007000000
+  ConvertDungeonMapToFont: 200000000600000005000000040000002400000020000000200000000f00000054000000460000005e000000000000000e0000000e0000000200000003000000
 --- !u!4 &1753957574
 Transform:
   m_ObjectHideFlags: 0
@@ -14873,6 +14962,12 @@ Transform:
 --- !u!1 &1962505774 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 720628943143755467, guid: 264ae02e2b95e0345960362312f0ab15,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131267912}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1962505775 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 720628943143755466, guid: 264ae02e2b95e0345960362312f0ab15,
     type: 3}
   m_PrefabInstance: {fileID: 1131267912}
   m_PrefabAsset: {fileID: 0}

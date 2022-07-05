@@ -34,6 +34,7 @@ public class World : MonoBehaviour
 
     public Text keyword1ButtonText;
     public Text keyword2ButtonText;
+    public Text DungeonMapText;
     public GameObject keyword1Button;
     public GameObject keyword2Button;
     public GameObject InputPanel;
@@ -96,6 +97,8 @@ public class World : MonoBehaviour
     public GameObject mixturesStatus;
 
     public U4_Decompiled_AVATAR.MODE lastMode = (U4_Decompiled_AVATAR.MODE)(-1);
+    public U4_Decompiled_AVATAR.MODE lastModeCheck = (U4_Decompiled_AVATAR.MODE)(-1);
+    
     public bool wasJustInside = false;
     public bool readyToAutomaticallyEnter = true;
 
@@ -1049,6 +1052,7 @@ public class World : MonoBehaviour
 
         // allocate vision texture that we can overlap pictures onto
         visionTexture = new Texture2D(320, 200);
+        visionTexture.filterMode = FilterMode.Point;
         Picture.ClearTexture(visionTexture, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
 
         // everything I need it now loaded, start the game engine thread
@@ -2283,6 +2287,25 @@ public class World : MonoBehaviour
         }
     }
 
+    void UpdateVision()
+    {
+        // since you are looking at a gem or through a telescope you should not be able to see anything else so temp turn everything off
+        terrain.SetActive(false);
+        animatedTerrrain.SetActive(false);
+        billboardTerrrain.SetActive(false);
+        fighters.SetActive(false);
+        characters.SetActive(false);
+        npcs.SetActive(false);
+        party.SetActive(false);
+        moongate.SetActive(false);
+        skyGameObject.SetActive(false); 
+        dungeon.SetActive(false);
+        dungeonMonsters.SetActive(false);
+
+        Camera.main.clearFlags = CameraClearFlags.SolidColor;
+        Camera.main.backgroundColor = Color.black;
+    }
+
     void UpdateCombatCamp()
     {
         AddFighters(u4.Fighters, u4.Combat1);
@@ -2361,6 +2384,361 @@ public class World : MonoBehaviour
                 Combat.CombatTerrains[i].gameObject.SetActive(false);
             }
         }
+    }
+
+    public enum VISION_TILE
+    {
+        EMPTY = 0,
+        GRASS = 1,
+        FOREST = 2,
+        LAVA = 3,
+        CASTLE_BRIDGE = 4,
+        DUNEGON_TOWN = 5,
+        SHRINE = 6,
+        MOUNTAIN = 7,
+        HILL = 8,
+        BUSH = 9,
+        SHALLOW_WATER = 10,
+        WATER = 11,
+        DEEP_WATER = 12
+    }
+
+    public VISION_TILE[] ConvertMapToVision = 
+    {
+        VISION_TILE.DEEP_WATER,
+        VISION_TILE.WATER,
+        VISION_TILE.SHALLOW_WATER,
+        VISION_TILE.GRASS,
+        VISION_TILE.GRASS,
+        VISION_TILE.BUSH,
+        VISION_TILE.FOREST,
+        VISION_TILE.HILL,
+        VISION_TILE.MOUNTAIN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.MOUNTAIN,
+        VISION_TILE.MOUNTAIN,
+        VISION_TILE.MOUNTAIN,
+        VISION_TILE.MOUNTAIN,
+        VISION_TILE.MOUNTAIN,
+        VISION_TILE.MOUNTAIN,
+        VISION_TILE.MOUNTAIN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.MOUNTAIN,
+        VISION_TILE.SHRINE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.EMPTY,
+        VISION_TILE.LAVA,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.LAVA,
+        VISION_TILE.LAVA,
+        VISION_TILE.LAVA,
+        VISION_TILE.LAVA,
+        VISION_TILE.LAVA,
+        VISION_TILE.LAVA,
+        VISION_TILE.LAVA,
+        VISION_TILE.LAVA,
+        VISION_TILE.LAVA,
+        VISION_TILE.MOUNTAIN,
+        VISION_TILE.LAVA,
+        VISION_TILE.LAVA,
+        VISION_TILE.LAVA,
+        VISION_TILE.LAVA,
+        VISION_TILE.LAVA,
+        VISION_TILE.LAVA,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.DUNEGON_TOWN,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.CASTLE_BRIDGE,
+        VISION_TILE.SHRINE,
+        VISION_TILE.EMPTY,
+        VISION_TILE.MOUNTAIN
+    };
+
+    void PaintGreen(int x, int y, int xx, int yy)
+    {
+        visionTexture.SetPixel((visionTexture.width / 2) - (32 * 4 / 2) + y + 4 * xx, (visionTexture.height / 2) - (32 * 4 / 2) + 4 - x + 4 * yy, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.GREEN]);
+    }
+
+    void PaintBlue(int x, int y, int xx, int yy)
+    {
+        visionTexture.SetPixel((visionTexture.width / 2) - (32 * 4 / 2) + y + 4 * xx, (visionTexture.height / 2) - (32 * 4 / 2) + 4 - x + 4 * yy, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLUE]);
+    }
+
+    void PaintWhite(int x, int y, int xx, int yy)
+    {
+        visionTexture.SetPixel((visionTexture.width / 2) - (32 * 4 / 2) + y + 4 * xx, (visionTexture.height / 2) - (32 * 4 / 2) + 4 - x + 4 * yy, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.WHITE]);
+    }
+
+    void DisplayVision()
+    {
+        Picture.ClearTexture(visionTexture, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
+
+        for (int y = 0; y < 32; y++)
+        {
+            for (int x = 0; x < 32; x++)
+            {
+                // the table only converts the first 128 tiles
+                if ((int)u4.tMap32x32[x, 31 - y] < 0x80)
+                {
+                    switch (ConvertMapToVision[(int)u4.tMap32x32[x, 31 - y]])
+                    {
+                        case VISION_TILE.GRASS:
+                        {
+                            PaintGreen(0, 1, x, y);
+                            PaintGreen(1, 3, x, y);
+                            PaintGreen(2, 1, x, y);
+                            PaintGreen(3, 3, x, y);
+                            break;
+                        }
+                        case VISION_TILE.FOREST:
+                        {
+                            PaintGreen(0, 3, x, y);
+                            PaintGreen(1, 1, x, y);
+                            PaintGreen(2, 3, x, y);
+                            PaintGreen(3, 1, x, y);
+                            PaintGreen(0, 1, x, y);
+                            PaintGreen(1, 3, x, y);
+                            PaintGreen(2, 1, x, y);
+                            PaintGreen(3, 3, x, y);
+                            break;
+                        }
+                        case VISION_TILE.LAVA:
+                        {
+                            PaintBlue(0, 0, x, y);
+                            PaintBlue(1, 0, x, y);
+                            PaintBlue(2, 0, x, y);
+                            PaintBlue(3, 0, x, y);
+                            PaintBlue(0, 2, x, y);
+                            PaintBlue(1, 2, x, y);
+                            PaintBlue(2, 2, x, y);
+                            PaintBlue(3, 2, x, y);
+                            break;
+                        }
+                        case VISION_TILE.CASTLE_BRIDGE:
+                        {
+                            PaintWhite(0, 0, x, y);
+                            PaintWhite(0, 1, x, y);
+                            PaintWhite(0, 2, x, y);
+                            PaintWhite(0, 3, x, y);
+                            PaintWhite(3, 0, x, y);
+                            PaintWhite(3, 1, x, y);
+                            PaintWhite(3, 2, x, y);
+                            PaintWhite(3, 3, x, y);
+                            break;
+                        }
+                        case VISION_TILE.DUNEGON_TOWN:
+                        {
+                            PaintWhite(1, 1, x, y);
+                            PaintWhite(2, 1, x, y);
+                            PaintWhite(1, 2, x, y);
+                            PaintWhite(2, 2, x, y);
+                            break;
+                        }
+                        case VISION_TILE.SHRINE:
+                        {
+                            PaintWhite(1, 0, x, y);
+                            PaintWhite(2, 0, x, y);
+                            PaintWhite(1, 3, x, y);
+                            PaintWhite(2, 3, x, y);
+                            PaintWhite(0, 0, x, y);
+                            PaintWhite(0, 1, x, y);
+                            PaintWhite(0, 2, x, y);
+                            PaintWhite(0, 3, x, y);
+                            PaintWhite(3, 0, x, y);
+                            PaintWhite(3, 1, x, y);
+                            PaintWhite(3, 2, x, y);
+                            PaintWhite(3, 3, x, y);
+                            break;
+                        }
+                        case VISION_TILE.MOUNTAIN:
+                        {
+                            PaintWhite(1, 1, x, y);
+                            PaintWhite(2, 1, x, y);
+                            PaintWhite(1, 2, x, y);
+                            PaintWhite(2, 2, x, y);
+                            PaintWhite(1, 0, x, y);
+                            PaintWhite(2, 0, x, y);
+                            PaintWhite(1, 3, x, y);
+                            PaintWhite(2, 3, x, y);
+                            PaintWhite(0, 0, x, y);
+                            PaintWhite(0, 1, x, y);
+                            PaintWhite(0, 2, x, y);
+                            PaintWhite(0, 3, x, y);
+                            PaintWhite(3, 0, x, y);
+                            PaintWhite(3, 1, x, y);
+                            PaintWhite(3, 2, x, y);
+                            PaintWhite(3, 3, x, y);
+                            break;
+                        }
+                        case VISION_TILE.HILL:
+                        {
+                            PaintWhite(0, 0, x, y);
+                            PaintWhite(1, 0, x, y);
+                            PaintWhite(0, 1, x, y);
+                            PaintWhite(1, 1, x, y);
+                            PaintWhite(2, 2, x, y);
+                            PaintWhite(3, 2, x, y);
+                            PaintWhite(2, 3, x, y);
+                            PaintWhite(3, 3, x, y);
+                            break;
+                        }
+                        case VISION_TILE.BUSH:
+                        {
+                            PaintGreen(0, 1, x, y);
+                            PaintGreen(1, 1, x, y);
+                            PaintGreen(2, 1, x, y);
+                            PaintGreen(0, 3, x, y);
+                            PaintGreen(2, 3, x, y);
+                            PaintGreen(3, 3, x, y);
+                            break;
+                        }
+                        case VISION_TILE.SHALLOW_WATER:
+                        {
+                            PaintBlue(0, 0, x, y);
+                            PaintBlue(2, 0, x, y);
+                            PaintBlue(1, 2, x, y);
+                            PaintBlue(3, 2, x, y);
+                            break;
+                        }
+                        case VISION_TILE.WATER:
+                        {
+                            PaintBlue(0, 0, x, y);
+                            PaintBlue(2, 2, x, y);
+                            break;
+                        }
+                        case VISION_TILE.DEEP_WATER:
+                        {
+                            PaintWhite(2 * (x & 1), 2, x, y);
+                            break;
+                        }
+                        default:
+                        {
+                            // do nothing
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    PaintWhite(1, 1, x, y);
+                    PaintWhite(2, 1, x, y);
+                    PaintWhite(1, 2, x, y);
+                    PaintWhite(2, 2, x, y);
+                }
+            }
+        }
+        visionTexture.Apply();
+
+        vision.sprite = Sprite.Create(visionTexture, new Rect(0.0f, 0.0f, visionTexture.width, visionTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
+        vision.color = new Color(255f, 255f, 255f, 255f);
+    }
+
+    public int [] ConvertDungeonMapToFont = { 0x20, 0x06, 0x05, 0x04, 0x24, 0x20, 0x20, 0x0F, 0x54, 0x46, 0x5E, 0x00, 0x0E, 0x0E, 0x02, 0x03 };
+
+    // TODO: the game engine uses a much more sophisticated map display to account for wrapping,
+    // might want to consider this for the 3D dungeon also but this simple map display is sufficent for now
+    string DisplayDungeonVision()
+    {
+        string dungString = "";
+        byte[] dun = new byte[8];
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                if (x == u4.Party._x && y == u4.Party._y)
+                {
+                    dun[x] = 1;
+                }
+                else
+                {
+                    dun[x] = (byte)(ConvertDungeonMapToFont[((int)u4.tMap8x8x8[u4.Party._z][x, 7 - y]) >> 4]);
+                }
+            }
+            dungString += u4.enc.GetString(dun, 0, 8) + "\n";
+        }
+
+        return dungString;
     }
 
     void UpdatePanelsText()
@@ -2809,6 +3187,10 @@ public class World : MonoBehaviour
             {
                 UpdateCombatCamp();
             }
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.VISION)
+            {
+                UpdateVision();
+            }
 
             // keep the sky game objects in sync with the game
             if (skyGameObject)
@@ -3040,7 +3422,8 @@ public class World : MonoBehaviour
         partyGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
 
         // we've moved, regenerate the raycast, TODO NPCs can also affect the raycast when moving, need to check them also or redo raycast more often
-        if ((u4.Party._x != lastRaycastPlayer_posx) || // player moved
+        if ((u4.current_mode != lastModeCheck) ||
+            (u4.Party._x != lastRaycastPlayer_posx) || // player moved
             (u4.Party._y != lastRaycastPlayer_posy) || // player moved
             (u4.Party.f_1dc != lastRaycastPlayer_f_1dc) || // balloon flying or grounded or dungeon torch active
             ((u4.open_door_timer > 0) != last_door_timer) || // door has opened or closed
@@ -3051,6 +3434,13 @@ public class World : MonoBehaviour
         {
             Vector3 location = Vector3.zero;
 
+            // if we werejust in a vision, clear it out
+            if (lastModeCheck == U4_Decompiled_AVATAR.MODE.VISION)
+            {
+                Picture.ClearTexture(visionTexture, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
+            }
+
+            lastModeCheck = u4.current_mode;
             lastSettlement = settlement; // update the settlement if it changed
             lastRaycastPlayer_posx = u4.Party._x; // update the last raycast position
             lastRaycastPlayer_posy = u4.Party._y;
@@ -3147,6 +3537,46 @@ public class World : MonoBehaviour
                     ((u4.Party._x - raycastSettlementMap.GetLength(0) / 2 - 1) ) , 0,
                     entireMapTILEs.GetLength(1) - ((u4.Party._y - raycastSettlementMap.GetLength(1) / 2 - 1) )  - raycastSettlementMap.GetLength(1));
                 */
+            }
+            else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.VISION)
+            {
+                if (u4.Party._loc == U4_Decompiled_AVATAR.LOCATIONS.OUTDOORS)
+                {
+                    // we are in a outdoors, show an outdoor vision
+                    vision.transform.gameObject.SetActive(true);
+                    DungeonMapText.transform.gameObject.SetActive(false);
+                    DisplayVision();
+                }
+                else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
+                {
+                    // we are in a dungeon, show a dungeon vision
+                    vision.transform.gameObject.SetActive(false);
+                    DungeonMapText.transform.gameObject.SetActive(true);
+                    DungeonMapText.text = DisplayDungeonVision();
+                }
+                else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.COVE))
+                {
+                    // check which castle level we are on first
+                    if ((u4.Party._loc == U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == Tile.TILE.LADDER_UP))
+                    {
+                        settlement = Settlement.SETTLEMENT.LCB_1;
+                    }
+                    else
+                    {
+                        settlement = (Settlement.SETTLEMENT)u4.Party._loc;
+                    }
+
+                    // we are in a settlement, show a settlement vision
+                    vision.transform.gameObject.SetActive(true);
+                    DungeonMapText.transform.gameObject.SetActive(false);
+                    DisplayVision();
+                }
+                else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.HONESTY) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.HUMILITY))
+                {
+                    // we are in a shrine
+                    vision.transform.gameObject.SetActive(true);
+                    DungeonMapText.transform.gameObject.SetActive(false);
+                }
             }
 
             // Position the map in place
