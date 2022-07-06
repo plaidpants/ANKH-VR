@@ -1,7 +1,7 @@
 # ANKH VR
 <img src="https://user-images.githubusercontent.com/8979271/177441885-38f6dcca-48a4-4bd2-8031-42c6c518364e.png" width=50% height=50%>
 
-This project runs the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift but other systems may be supported in the future. It is functionally complete but there are bugs and minor stuff and improvements to make but I would consider it Beta at this point.
+This project runs the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift or Oculus Quest using a link connection but other systems may be supported in the future including potentially running natively on the Oculus Quest. It is functionally complete but there are bugs and minor stuff and improvements to make but I would consider it Beta at this point.
 
 Instructions:
 
@@ -67,8 +67,19 @@ sdcard\Android\data\com.SwivelChairGames.ANKHVR\files\u4
                                                                  
 This project does not contain any copyrighted game assets or code or text or graphics or fonts or any other intellectual property related to Ultima 4 it relies completely on the files from the original game. This project is not licensed by Origin Systems or Electronic Arts.
 
-This project uses the free asset "Effects Pro: Simple Image Effects" from the Unity Asset Store for the magic inverse screen effect, MIT license.
+This project uses the following:
+"Effects Pro: Simple Image Effects" from the Unity Asset Store for the magic inverse screen effect, MIT license.
 https://assetstore.unity.com/packages/vfx/shaders/fullscreen-camera-effects/effects-pro-simple-image-effects-191099
+Combine textures and meshes for tile map mesh and texture generation, MIT license.
+https://forum.unity.com/threads/combine-textures-and-meshes-reduce-draw-calls.117155/
+ScreenShakeVR for the tremor effect, License: You can freely use/modify the code.
+from here https://www.zulubo.com/gamedev/2019/1/5/vr-screen-shake-the-art-of-not-throwing-up
+Zulubo Productions zach.tsiakalis.brown@gmail.com
+Wireframe Shader for the highlighted box around the party member in combat, License information http://www.shaderslab.com/index.html All the shaders of this website are totally free-to-use. Feel free to use them in any project without any credits.
+http://www.shaderslab.com/demo-94---wireframe-without-diagonal.html
+Unlit-AlphaTest shader modified for lighting effect in the dungeon, MIT license
+Unity built-in shader source
+https://unity3d.com/get-unity/download/archive
 
 ![OculusScreenshot1656893311](https://user-images.githubusercontent.com/8979271/177064319-6e233842-107a-498e-929a-6e0cb1e17b65.jpeg)
 ![OculusScreenshot1656893278](https://user-images.githubusercontent.com/8979271/177064320-18d15813-419d-4daa-863d-d9d1fcf30693.jpeg)
