@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: SwivelChairGames
-  productName: ANHK-VR
+  productName: ANKH-VR
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
@@ -40,7 +40,7 @@ PlayerSettings:
     width: 1
     height: 1
   m_SplashScreenLogos: []
-  m_VirtualRealitySplashScreen: {fileID: 2800000, guid: 78322ae1f763bda46873105fcac775c3,
+  m_VirtualRealitySplashScreen: {fileID: 2800000, guid: f87b90deab8802344bd50e2e52b50399,
     type: 3}
   m_HolographicTrackingLossScreen: {fileID: 0}
   defaultScreenWidth: 1024
@@ -139,6 +139,8 @@ PlayerSettings:
   preloadedAssets:
   - {fileID: 11400000, guid: a5d02445c1ba2fe489593dc31ba3c625, type: 2}
   - {fileID: 0}
+  - {fileID: 1953530370000838894, guid: 1104404b7d95eac4da621a36f9e45da0, type: 2}
+  - {fileID: -6517218471499782410, guid: 1a4c68ca72a83449f938d669337cb305, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -158,7 +160,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: com.SwivelChairGames.ANHKVR
-    Standalone: com.SwivelChairGames.ANHKVR
+    Standalone: com.SwivelChairGames.ANKHVR
   buildNumber:
     Standalone: 0
     iPhone: 0
