@@ -51,7 +51,7 @@ Download the appropriate AVATAR.bps & TITLE.bps patch file for your system from 
   
 https://github.com/plaidpants/u4-decompiled/releases
 
-Copy the contents of the entire ultima 4 install folder to the following location on your system and then run the ANHK-VR.exe or ANHK-VR.apk (apk not yet available)
+Copy the contents of the entire ultima 4 install folder to the following location on your system and then run the ANKH-VR.exe or ANKH-VR.apk (apk not yet available)
 
 Windows PC
   
