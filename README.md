@@ -17,23 +17,15 @@ Download, rename and place in the ultima 4 install folder the original mockingbo
   
 http://www.applevault.com/ultima/
 
-castles.mp3
-  
-combat.mp3
-  
-dungeon.mp3
-  
-fanfare.mp3
-  
-rulebrit.mp3
-  
-shopping.mp3
-  
-shrines.mp3
-  
-towns.mp3
-  
-wanderer.mp3
+castles.mp3<br />
+combat.mp3<br />
+dungeon.mp3<br />
+fanfare.mp3<br />
+rulebrit.mp3<br />
+shopping.mp3<br />
+shrines.mp3<br />
+towns.mp3<br />
+wanderer.mp3<br />
 
 or 
 
@@ -41,11 +33,9 @@ https://bitbucket.org/mcmagi/ultima-exodus/downloads/u4-voyd-music-12.zip
 
 Move any game save files you would like to use to the root of the ultima 4 install directory.
 
-MONSTERS.SAV
-  
-OUTMONST.SAV
-  
-PARTY.SAV
+MONSTERS.SAV<br />
+OUTMONST.SAV<br />
+PARTY.SAV<br />
 
 Download the appropriate AVATAR.bps & TITLE.bps patch file for your system from the link below and copy them to the ultima 4 install directory
   
@@ -67,20 +57,6 @@ sdcard\Android\data\com.SwivelChairGames.ANKHVR\files\u4
                                                                  
 This project does not contain any copyrighted game assets or code or text or graphics or fonts or any other intellectual property related to Ultima 4 it relies completely on the files from the original game. This project is not licensed by Origin Systems or Electronic Arts.
 
-This project uses the following:
-"Effects Pro: Simple Image Effects" from the Unity Asset Store for the magic inverse screen effect, MIT license.
-https://assetstore.unity.com/packages/vfx/shaders/fullscreen-camera-effects/effects-pro-simple-image-effects-191099
-Combine textures and meshes for tile map mesh and texture generation, MIT license.
-https://forum.unity.com/threads/combine-textures-and-meshes-reduce-draw-calls.117155/
-ScreenShakeVR for the tremor effect, License: You can freely use/modify the code.
-from here https://www.zulubo.com/gamedev/2019/1/5/vr-screen-shake-the-art-of-not-throwing-up
-Zulubo Productions zach.tsiakalis.brown@gmail.com
-Wireframe Shader for the highlighted box around the party member in combat, License information http://www.shaderslab.com/index.html All the shaders of this website are totally free-to-use. Feel free to use them in any project without any credits.
-http://www.shaderslab.com/demo-94---wireframe-without-diagonal.html
-Unlit-AlphaTest shader modified for lighting effect in the dungeon, MIT license
-Unity built-in shader source
-https://unity3d.com/get-unity/download/archive
-
 ![OculusScreenshot1656893311](https://user-images.githubusercontent.com/8979271/177064319-6e233842-107a-498e-929a-6e0cb1e17b65.jpeg)
 ![OculusScreenshot1656893278](https://user-images.githubusercontent.com/8979271/177064320-18d15813-419d-4daa-863d-d9d1fcf30693.jpeg)
 ![OculusScreenshot1656894520](https://user-images.githubusercontent.com/8979271/177064324-3a8c583d-f32f-4a5a-88bc-aa18bda29694.jpeg)
@@ -98,3 +74,30 @@ https://unity3d.com/get-unity/download/archive
 ![OculusScreenshot1649382760](https://user-images.githubusercontent.com/8979271/163682643-d788f259-0705-452e-8a63-127ce4d9c24f.jpeg)
 ![OculusScreenshot1649382903](https://user-images.githubusercontent.com/8979271/163682648-7b30c985-67fb-4127-9519-49daafd5cb17.jpeg)
 ![OculusScreenshot1650589506](https://user-images.githubusercontent.com/8979271/164576777-a6845f7d-7187-40f8-b3e1-670046022fa1.jpeg)
+
+This project make use of the following:<br />
+"Effects Pro: Simple Image Effects" from the Unity Asset Store for the magic inverse screen effect, MIT license.<br />
+https://assetstore.unity.com/packages/vfx/shaders/fullscreen-camera-effects/effects-pro-simple-image-effects-191099<br />
+Combine textures and meshes for tile map mesh and texture generation, MIT license.<br />
+https://forum.unity.com/threads/combine-textures-and-meshes-reduce-draw-calls.117155/<br />
+ScreenShakeVR for the tremor effect, License: You can freely use/modify the code.<br />
+from here https://www.zulubo.com/gamedev/2019/1/5/vr-screen-shake-the-art-of-not-throwing-up<br />
+Zulubo Productions zach.tsiakalis.brown@gmail.com<br />
+Wireframe Shader for the highlighted box around the party member in combat, License information http://www.shaderslab.com/index.html free to use without any credits.<br />
+http://www.shaderslab.com/demo-94---wireframe-without-diagonal.html<br />
+Unlit-AlphaTest shader modified for lighting effect in the dungeon, MIT license<br />
+Unity built-in shader source<br />
+https://unity3d.com/get-unity/download/archive<br />
+Native dll invocation helper by Francis R. Griffiths-Keam to dynamicaly load the patched DLL at startup, license: free to use this code as you please.<br />
+http://runningdimensions.com/blog/?p=5<br />
+BSP file format used to patch AVATAR.EXE and TITLE.EXE to AVATAR.DLL and TITLE.DLL at startup<br />
+https://www.romhacking.net/documents/746/<br />
+https://raw.githubusercontent.com/TheAnsarya/bps-patch/master/bps-patch/Decoder.cs (was completely rewritten from scratch for mono for unity)<br />
+Flips, free file patching tool, used to create AVATAR.BPS and TITLE.BPS from the modified u4-decompiled binaries and the original AVATAR.EXE and TITLE.EXE<br />
+https://github.com/Alcaro/Flips<br />
+https://www.smwcentral.net/?p=section&a=details&id=11474<br />
+lzw algorithm and file format used by ultima 4<br />
+https://ultima4.ultimacodex.com/ultima-4-encodedecode/ (was completely rewritten from scratch in mono for unity)<br />
+u4-decompiled, used to create a modified binary DLL instead of the original ultima 4 EXE so we can have unity link and run the original game engine, this project also uses a patch file system to create the DLL from the original EXE at startup so no original intellectual property from utlima 4 must be included in the release. there is quite a bit of magic going on under the hood to be able to make this work. I would like to do the same on the Oculus Quest natively but this may not be possible with the operating system running on the Oculus Quest.<br />
+https://github.com/plaidpants/u4-decompiled/<br />
+https://github.com/ergonomy-joe/u4-decompiled/<br />
