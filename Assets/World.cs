@@ -2550,7 +2550,7 @@ public class World : MonoBehaviour
         visionTexture.SetPixel((visionTexture.width / 2) - (32 * 4 / 2) + y + 4 * xx, (visionTexture.height / 2) - (32 * 4 / 2) + 4 - x + 4 * yy, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.WHITE]);
     }
 
-    void DisplayVision()
+    void DisplayMapVision()
     {
         Picture.ClearTexture(visionTexture, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
 
@@ -2714,11 +2714,10 @@ public class World : MonoBehaviour
         vision.color = new Color(255f, 255f, 255f, 255f);
     }
 
+    // used to convert the dungeon tiles into utlima font characters for display as text that will be able to render the dungeon map
     public int [] ConvertDungeonMapToFont = { 0x20, 0x06, 0x05, 0x04, 0x24, 0x20, 0x20, 0x0F, 0x54, 0x46, 0x5E, 0x00, 0x0E, 0x0E, 0x02, 0x03 };
 
-    // TODO: the game engine uses a much more sophisticated map display to account for wrapping,
-    // might want to consider this for the 3D dungeon also but this simple map display is sufficent for now
-    string DisplayDungeonVision()
+    string DisplayDungeonVisionSimple()
     {
         string dungString = "";
         byte[] dun = new byte[8];
@@ -2736,6 +2735,107 @@ public class World : MonoBehaviour
                 }
             }
             dungString += u4.enc.GetString(dun, 0, 8) + "\n";
+        }
+
+        return dungString;
+    }
+
+    public int[,] DungeonVisionMap = new int[22, 22];
+    public bool[,] DungeonVisionMapMarker = new bool[22, 22];
+    public int[] DungeonVisionMapStack = new int[600];
+
+    // TODO: the game engine uses a much more sophisticated map display to account for wrapping,
+    // might want to consider this for the 3D dungeon also but this simple map display is sufficent for now
+    string DisplayDungeonVision()
+    {
+        int last_check_X;
+        int check_adjust_y;
+        uint StackPointer;
+        int check_adjust_x;
+        int last_check_Y;
+        int map_x;
+        int map_y;
+
+        // initialize dungeon vision array
+        for (map_y = 0; map_y < 22; map_y++)
+        {
+            for (map_x = 0; map_x < 22; map_x++)
+            {
+                DungeonVisionMap[map_y, map_x] = 18; // blank character in font
+                DungeonVisionMapMarker[map_y, map_x] = false; // all unset to start
+            }
+        }
+
+        StackPointer = 0;
+        map_y = 11;
+        map_x = 11;
+        DungeonVisionMapStack[StackPointer++] = map_y;
+        DungeonVisionMapStack[StackPointer++] = map_x;
+        DungeonVisionMapStack[StackPointer++] = u4.Party._x;
+        DungeonVisionMapStack[StackPointer++] = 7 - u4.Party._y;
+        DungeonVisionMapMarker[map_y - 1, map_x - 1] = true; // mark off starting position as checked
+        DungeonVisionMap[map_y - 1, map_x - 1] = 1; // red dot for player
+
+        do
+        {
+            last_check_Y = DungeonVisionMapStack[--StackPointer];
+            last_check_X = DungeonVisionMapStack[--StackPointer];
+            map_x = DungeonVisionMapStack[--StackPointer] - 1;
+            map_y = DungeonVisionMapStack[--StackPointer] - 1;
+
+            for (check_adjust_y = -1; check_adjust_y < 2; map_x++, map_y -= 3, check_adjust_y++)
+            {
+                for (check_adjust_x = -1; check_adjust_x < 2; map_y++, check_adjust_x++)
+                {
+                    if (((check_adjust_y != 0) | (check_adjust_x != 0)))
+                    {
+                        int check_x;
+                        int check_y;
+
+                        check_x = (check_adjust_y + last_check_Y) & 7;
+                        check_y = (check_adjust_x + last_check_X) & 7;
+
+                        if ((map_y < 1) ||
+                            (map_y > 22) ||
+                            (map_x < 1) ||
+                            (map_x > 22) ||
+                            DungeonVisionMapMarker[map_y - 1, map_x - 1])
+                        {
+                            continue;
+                        }
+
+                        // mark it on the map
+                        DungeonVisionMap[map_y - 1, map_x - 1] = ConvertDungeonMapToFont[(int)u4.tMap8x8x8[u4.Party._z][check_y, check_x] >> 4];
+
+                        if (((int)u4.tMap8x8x8[u4.Party._z][check_y, check_x] & 0xf0) != 0xf0)
+                        {
+                            DungeonVisionMapStack[StackPointer++] = map_y;
+                            DungeonVisionMapStack[StackPointer++] = map_x;
+                            DungeonVisionMapStack[StackPointer++] = check_y;
+                            DungeonVisionMapStack[StackPointer++] = check_x;
+                            if (StackPointer >= DungeonVisionMapStack.Length)
+                            {
+                                StackPointer = 0;
+                            }
+
+                            DungeonVisionMapMarker[map_y - 1, map_x - 1] = true;
+                        }
+                    }
+                }
+            }
+        } while (StackPointer != 0);
+
+        // construct strings to use the as text displayed in the ultima font which has dungeon map characters
+        string dungString = "";
+        byte[] dun = new byte[22];
+        for (int y = 0; y < 22; y++)
+        {
+            for (int x = 0; x < 22; x++)
+            {
+                dun[x] = (byte)DungeonVisionMap[x, 21 - y];
+            }
+
+            dungString += u4.enc.GetString(dun, 0, 22) + "\n";
         }
 
         return dungString;
@@ -3541,7 +3641,7 @@ public class World : MonoBehaviour
                     // we are in a outdoors, show an outdoor vision
                     vision.transform.gameObject.SetActive(true);
                     DungeonMapText.transform.gameObject.SetActive(false);
-                    DisplayVision();
+                    DisplayMapVision();
                 }
                 else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
                 {
@@ -3565,7 +3665,7 @@ public class World : MonoBehaviour
                     // we are in a settlement, show a settlement vision
                     vision.transform.gameObject.SetActive(true);
                     DungeonMapText.transform.gameObject.SetActive(false);
-                    DisplayVision();
+                    DisplayMapVision();
                 }
                 else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.HONESTY) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.HUMILITY))
                 {
