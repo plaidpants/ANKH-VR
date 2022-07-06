@@ -1,6 +1,5 @@
-# ANHK VR
-
-<img src="https://user-images.githubusercontent.com/8979271/177064766-e6c86dd7-ceee-4fc5-9e34-c3ad86c7e7f3.png" width=50% height=50%>
+# ANKH VR
+<img src="https://user-images.githubusercontent.com/8979271/177441885-38f6dcca-48a4-4bd2-8031-42c6c518364e.png" width=50% height=50%>
 
 This is an early alpha attempt to run the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift but other systems may be supported in the future.
 
