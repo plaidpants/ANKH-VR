@@ -101,3 +101,5 @@ https://ultima4.ultimacodex.com/ultima-4-encodedecode/ (was completely rewritten
 u4-decompiled, used to create a modified binary DLL instead of the original ultima 4 EXE so we can have unity link and run the original game engine, this project also uses a patch file system to create the DLL from the original EXE at startup so no original intellectual property from utlima 4 must be included in the release. there is quite a bit of magic going on under the hood to be able to make this work. I would like to do the same on the Oculus Quest natively but this may not be possible with the operating system running on the Oculus Quest.<br />
 https://github.com/plaidpants/u4-decompiled/<br />
 https://github.com/ergonomy-joe/u4-decompiled/<br />
+ScatterMyStars for the stars and sky, MIT License<br />
+https://github.com/ReCogMission/FirstTutorials<br />
