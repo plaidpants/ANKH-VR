@@ -1,7 +1,10 @@
 # ANKH VR
 <img src="https://user-images.githubusercontent.com/8979271/177441885-38f6dcca-48a4-4bd2-8031-42c6c518364e.png" width=50% height=50%>
 
-This project runs the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift or Oculus Quest using a link connection but other systems may be supported in the future including potentially running natively on the Oculus Quest. It is functionally complete but there are bugs and minor stuff and improvements to make but I would consider it Beta at this point.
+This project runs the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift or Oculus Quest using a link connection but other systems may be supported in the future. It is functionally complete but there are bugs and minor stuff and improvements to make but I would consider it Beta at this point.
+
+The Android OS current does not allow dynamic linking with non-NDK native libraries so I will need to find a different way include the orignal game engine to make this work natively on the Oculus Quest as the way I am patching, creating and loading a DLL at startup in windows will not work under Android.
+https://developer.android.com/about/versions/nougat/android-7.0-changes#ndk
 
 Instructions:
 
@@ -37,23 +40,17 @@ MONSTERS.SAV<br />
 OUTMONST.SAV<br />
 PARTY.SAV<br />
 
-Download the appropriate AVATAR.bps & TITLE.bps patch file for your system from the link below and copy them to the ultima 4 install directory
+Download and extract the AVATAR.bps & TITLE.bps patch file for your system from the link below and copy them to the ultima 4 install directory
   
 https://github.com/plaidpants/u4-decompiled/releases
 
-Copy the contents of the entire ultima 4 install folder to the following location on your system and then run the ANKH-VR.exe or ANKH-VR.apk (apk not yet available)
+Copy the contents of the entire ultima 4 install folder to the following location on your system and then run the ANKH-VR.exe
 
 Windows PC
   
 %APPDATA%\\..\LocalLow\SwivelChairGames\ANKH-VR\u4
 
   %APPDATA%\\..\LocalLow\SwivelChairGames\ANKH-VR\u4\AVATAR.EXE <- you should have this file at this directory location along with all the other files
-  
-Oculus Quest (not yet available)
-                                                                  
-sdcard\Android\data\com.SwivelChairGames.ANKHVR\files\u4
-                                                                  
-  sdcard\Android\data\com.SwivelChairGames.ANKHVR\files\u4\AVATAR.EXE <- you should have this file at this directory location along with all the other files
                                                                  
 This project does not contain any copyrighted game assets or code or text or graphics or fonts or any other intellectual property related to Ultima 4 it relies completely on the files from the original game. This project is not licensed by Origin Systems or Electronic Arts.
 
@@ -98,6 +95,8 @@ https://github.com/Alcaro/Flips<br />
 https://www.smwcentral.net/?p=section&a=details&id=11474<br />
 lzw algorithm and file format used by ultima 4<br />
 https://ultima4.ultimacodex.com/ultima-4-encodedecode/ (was completely rewritten from scratch in mono for unity)<br />
-u4-decompiled, used to create a modified binary DLL instead of the original ultima 4 EXE so we can have unity link and run the original game engine, this project also uses a patch file system to create the DLL from the original EXE at startup so no original intellectual property from utlima 4 must be included in the release. there is quite a bit of magic going on under the hood to be able to make this work. I would like to do the same on the Oculus Quest natively but this may not be possible with the operating system running on the Oculus Quest.<br />
+u4-decompiled, used to create a modified binary DLL instead of the original ultima 4 EXE so we can have unity link and run the original game engine, this project also uses a patch file system to create the DLL from the original EXE at startup so no original intellectual property from utlima 4 must be included in the release. there is quite a bit of magic going on under the hood to be able to make this work. This appears to not be possible with Android so I will need to do it a different way for the Oculsu Quest.<br />
 https://github.com/plaidpants/u4-decompiled/<br />
 https://github.com/ergonomy-joe/u4-decompiled/<br />
+ScatterMyStars for the stars and sky, MIT License<br />
+https://github.com/ReCogMission/FirstTutorials<br />
