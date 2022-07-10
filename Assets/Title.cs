@@ -556,7 +556,7 @@ public class Title : MonoBehaviour
                 // the map is static so we only need to create it once
                 createMapFlag = false;
 
-                Map.CreateMap(gameObject, u4_TITLE.baseMap, new Vector3(-5, 0, 7), new Vector3(90.0f, 0.0f, 0.0f), lookAtObject);
+                Map.CreateMap(gameObject, u4_TITLE.initialMap, new Vector3(-5, 0, 7), new Vector3(90.0f, 0.0f, 0.0f), lookAtObject);
             }
 
             // add and update the animated fighters to the title scene

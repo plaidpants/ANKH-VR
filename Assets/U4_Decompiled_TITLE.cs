@@ -1,4 +1,4 @@
-//#define USE_UNITY_DLL_FUNCTION
+#define USE_UNITY_DLL_FUNCTION
 
 using System.Collections;
 using System.Collections.Generic;
@@ -50,8 +50,6 @@ public class U4_Decompiled_TITLE : MonoBehaviour
 
     public Queue<LoadPicture> loadPictureQueue = new Queue<LoadPicture>();
 
-    //static System.IntPtr nativeLibraryPtr2;
-
     public INPUT_MODE inputMode;
 
     public enum INPUT_MODE
@@ -74,9 +72,9 @@ public class U4_Decompiled_TITLE : MonoBehaviour
         DELAY_TEXT_CONTINUE = 9,
     }
 
+#if !USE_UNITY_DLL_FUNCTION
     static System.IntPtr nativeLibraryPtr2;
 
-#if !USE_UNITY_DLL_FUNCTION
     delegate void main();
     delegate void main_keyboardHit(char key);
     delegate void main_CurMap(byte[] buffer, int length);
@@ -111,11 +109,7 @@ public class U4_Decompiled_TITLE : MonoBehaviour
 
         DecoderBSP.ApplyPatch(sourceFile, patchFile, targetFile);
 
-
-#if USE_UNITY_DLL_FUNCTION
-        //SetDllDirectory(Application.persistentDataPath + "/u4/");
-        //LoadLibrary(Application.persistentDataPath + "/u4/TITLE.DLL");
-#else
+#if !USE_UNITY_DLL_FUNCTION
         //Debug.Log("Load TITLE.DLL");
         // now attempt to load this DLL
         if (U4_Decompiled_TITLE.nativeLibraryPtr2 != System.IntPtr.Zero)
@@ -126,9 +120,9 @@ public class U4_Decompiled_TITLE : MonoBehaviour
 #if PLATFORM_ANDROID && !UNITY_EDITOR
         nativeLibraryPtr2 = Native.dlopen(Application.persistentDataPath + "/u4/TITLE", (int)Native.PosixDlopenFlags.Now);
 #else
-        U4_Decompiled_TITLE.nativeLibraryPtr2 = Native.LoadLibrary(Application.persistentDataPath + "/u4/TITLE.DLL");
+        nativeLibraryPtr2 = Native.LoadLibrary(Application.persistentDataPath + "/u4/TITLE.DLL");
 #endif
-        if (U4_Decompiled_TITLE.nativeLibraryPtr2 == System.IntPtr.Zero)
+        if (nativeLibraryPtr2 == System.IntPtr.Zero)
         {
             Debug.LogError("Failed to load native library");
         }
@@ -143,7 +137,7 @@ public class U4_Decompiled_TITLE : MonoBehaviour
         }
         bytebuffer[path.Length] = 0;
 #if USE_UNITY_DLL_FUNCTION
-        main_SetDataPath(buffer, path.Length);
+        main_SetDataPath(bytebuffer, path.Length);
 #else
         Native.Invoke<main_SetDataPath>(U4_Decompiled_TITLE.nativeLibraryPtr2, bytebuffer, path.Length); 
 #endif
@@ -152,152 +146,68 @@ public class U4_Decompiled_TITLE : MonoBehaviour
 #if USE_UNITY_DLL_FUNCTION
 #if PLATFORM_ANDROID && !UNITY_EDITOR
     // interface to the game engine
-    [DllImport("AVATAR")]
+    [DllImport("libTITLE")]
     public static extern void main();
-    [DllImport("AVATAR")]
-    public static extern MODE main_CurMode();
-    [DllImport("AVATAR")]
-    public static extern TILE main_D_96F8();
-    [DllImport("AVATAR")]
-    public static extern TILE main_D_946C();
-    [DllImport("AVATAR")]
-    public static extern int main_D_95A5_x();
-    [DllImport("AVATAR")]
-    public static extern int main_D_95A5_y();
-    [DllImport("AVATAR")]
+    [DllImport("libTITLE")]
     public static extern void main_keyboardHit(char key);
-    [DllImport("AVATAR")]
+    [DllImport("libTITLE")]
     public static extern void main_CurMap(byte[] buffer, int length);
-    [DllImport("AVATAR")]
-    public static extern void main_Combat(byte[] buffer, int length);
-    [DllImport("AVATAR")]
-    public static extern void main_Fighters(byte[] buffer, int length);
-    [DllImport("AVATAR")]
-    public static extern void main_D_96F9(byte[] buffer, int length);
-    [DllImport("AVATAR")]
-    public static extern void main_Party(byte[] buffer, int length);
-    [DllImport("AVATAR")]
-    public static extern void main_Hit(byte[] buffer, int length);
-    [DllImport("AVATAR")]
-    public static extern void main_ActiveChar(byte[] buffer, int length);
-    [DllImport("AVATAR")]
-    public static extern TILE main_tile_cur();
-    [DllImport("AVATAR")]
-    public static extern DIRECTION main_WindDir();
-    [DllImport("AVATAR")]
-    public static extern int main_spell_sta();
-    [DllImport("AVATAR")]
-    public static extern int main_Text(byte[] buffer, int length);
-    [DllImport("AVATAR")]
-    public static extern int main_D_9445(); // moongate x
-    [DllImport("AVATAR")]
-    public static extern int main_D_9448(); // moongate y
-    [DllImport("AVATAR")]
-    public static extern TILE main_D_9141(); // moongate tile
-    [DllImport("AVATAR")]
-    public static extern int main_NPC_Text(byte[] buffer, int length);
-    [DllImport("AVATAR")]
-    public static extern int main_D_17FA();
-    [DllImport("AVATAR")]
-    public static extern int main_D_17FC();
-    [DllImport("AVATAR")]
-    public static extern int main_D_17FE();
-    [DllImport("AVATAR")]
+    [DllImport("libTITLE")]
     public static extern int main_SoundFlag();
-    [DllImport("AVATAR")]
+    [DllImport("libTITLE")]
     public static extern void main_SetDataPath(byte[] buffer, int length);
-    [DllImport("AVATAR")]
-    public static extern void main_char_highlight(byte[] buffer, int length);
-    [DllImport("AVATAR")]   
-    public static extern int main_sound_effect();
-    [DllImport("AVATAR")]   
-    public static extern int main_sound_effect_length();
-    [DllImport("AVATAR")]   
+    [DllImport("libTITLE")]
+    public static extern int main_sound_effect();    
+    [DllImport("libTITLE")]
     public static extern void main_sound_effect_done();
-    [DllImport("AVATAR")]   
-    public static extern int main_screen_xor_state();  
-    [DllImport("AVATAR")]   
-    public static extern int main_camera_shake_accumulator();  
-    [DllImport("AVATAR")]   
-    public static extern int main_D_1665();  
-    [DllImport("AVATAR")]   
-    public static extern int main_D_1666();  
+    [DllImport("libTITLE")]
+    public static extern INPUT_MODE main_input_mode();
+    [DllImport("libTITLE")]
+    public static extern int main_GetPicture(byte[] buffer, int length);
+    [DllImport("libTITLE")]
+    public static extern int main_Text(byte[] buffer, int length);
+    [DllImport("libTITLE")]
+    public static extern int main_screen_copy_frame(int[] buffer, int length);
+    [DllImport("libTITLE")]
+    public static extern int main_dot(int[] buffer, int length);
+    [DllImport("libTITLE")]
+    public static extern int main_D_3683(byte[] buffer, int length);
+    [DllImport("libTITLE")]
+    public static extern int main_D_6976(byte[] buffer, int length);
+    [DllImport("libTITLE")]
+    public static extern int main_D_3A24(byte[] buffer, int length);
 #else
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    static extern bool SetDllDirectory(string lpPathName);
-    [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
-    public static extern System.IntPtr LoadLibrary(string lpFileName);
     // interface to the game engine
-    [DllImport("AVATAR.DLL")]
+    [DllImport("TITLE")]
     public static extern void main();
-    [DllImport("AVATAR.DLL")]
-    public static extern MODE main_CurMode();
-    [DllImport("AVATAR.DLL")]
-    public static extern TILE main_D_96F8();
-    [DllImport("AVATAR.DLL")]
-    public static extern TILE main_D_946C();
-    [DllImport("AVATAR.DLL")]
-    public static extern int main_D_95A5_x();
-    [DllImport("AVATAR.DLL")]
-    public static extern int main_D_95A5_y();
-    [DllImport("AVATAR.DLL")]
+    [DllImport("TITLE")]
     public static extern void main_keyboardHit(char key);
-    [DllImport("AVATAR.DLL")]
+    [DllImport("TITLE")]
     public static extern void main_CurMap(byte[] buffer, int length);
-    [DllImport("AVATAR.DLL")]
-    public static extern void main_Combat(byte[] buffer, int length);
-    [DllImport("AVATAR.DLL")]
-    public static extern void main_Fighters(byte[] buffer, int length);
-    [DllImport("AVATAR.DLL")]
-    public static extern void main_D_96F9(byte[] buffer, int length);
-    [DllImport("AVATAR.DLL")]
-    public static extern void main_Party(byte[] buffer, int length);
-    [DllImport("AVATAR.DLL")]
-    public static extern void main_Hit(byte[] buffer, int length);
-    [DllImport("AVATAR.DLL")]
-    public static extern void main_ActiveChar(byte[] buffer, int length);
-    [DllImport("AVATAR.DLL")]
-    public static extern TILE main_tile_cur();
-    [DllImport("AVATAR.DLL")]
-    public static extern DIRECTION main_WindDir();
-    [DllImport("AVATAR.DLL")]
-    public static extern int main_spell_sta();
-    [DllImport("AVATAR.DLL")]
-    public static extern int main_Text(byte[] buffer, int length);
-    [DllImport("AVATAR.DLL")]
-    public static extern int main_D_9445(); // moongate x
-    [DllImport("AVATAR.DLL")]
-    public static extern int main_D_9448(); // moongate y
-    [DllImport("AVATAR.DLL")]
-    public static extern TILE  main_D_9141(); // moongate tile
-    [DllImport("AVATAR.DLL")]
-    public static extern int main_NPC_Text(byte[] buffer, int length);
-    [DllImport("AVATAR.DLL")]
-    public static extern int main_D_17FA(); 
-    [DllImport("AVATAR.DLL")]
-    public static extern int main_D_17FC();
-    [DllImport("AVATAR.DLL")]
-    public static extern int main_D_17FE();
-    [DllImport("AVATAR.DLL")]
+    [DllImport("TITLE")]
     public static extern int main_SoundFlag();
-    [DllImport("AVATAR.DLL")]
+    [DllImport("TITLE")]
     public static extern void main_SetDataPath(byte[] buffer, int length);
-    [DllImport("AVATAR.DLL")]
-    public static extern void main_char_highlight(byte[] buffer, int length);   
-    [DllImport("AVATAR.DLL")]
+    [DllImport("TITLE")]
     public static extern int main_sound_effect();
-    [DllImport("AVATAR.DLL")]   
-    public static extern int main_sound_effect_length();
-    [DllImport("AVATAR.DLL")]   
+    [DllImport("TITLE")]
     public static extern void main_sound_effect_done();
-    [DllImport("AVATAR.DLL")]   
-    public static extern int main_screen_xor_state();
-    [DllImport("AVATAR.DLL")]   
-    public static extern int main_camera_shake_accumulator();  
-    [DllImport("AVATAR.DLL")]   
-    public static extern int main_D_1665();  
-    [DllImport("AVATAR.DLL")]   
-    public static extern int main_D_1666();  
+    [DllImport("TITLE")]
+    public static extern INPUT_MODE main_input_mode();
+    [DllImport("TITLE")]
+    public static extern int main_GetPicture(byte[] buffer, int length);
+    [DllImport("TITLE")]
+    public static extern int main_Text(byte[] buffer, int length);
+    [DllImport("TITLE")]
+    public static extern int main_screen_copy_frame(int[] buffer, int length);
+    [DllImport("TITLE")]
+    public static extern int main_dot(int[] buffer, int length);
+    [DllImport("TITLE")]
+    public static extern int main_D_3683(byte[] buffer, int length);
+    [DllImport("TITLE")]
+    public static extern int main_D_6976(byte[] buffer, int length);
+    [DllImport("TITLE")]
+    public static extern int main_D_3A24(byte[] buffer, int length);
 #endif
 #endif
 
@@ -316,7 +226,7 @@ public class U4_Decompiled_TITLE : MonoBehaviour
 #if USE_UNITY_DLL_FUNCTION
         main();
 #else
-        Native.Invoke<main>(U4_Decompiled_TITLE.nativeLibraryPtr2);
+        Native.Invoke<main>(nativeLibraryPtr2);
 #endif
     }
 
@@ -384,7 +294,7 @@ public class U4_Decompiled_TITLE : MonoBehaviour
     public void CommandA()
     {
 #if USE_UNITY_DLL_FUNCTION
-        main_keyboardHit(character);
+        main_keyboardHit('A');
 #else
         Native.Invoke<main_keyboardHit>(U4_Decompiled_TITLE.nativeLibraryPtr2, 'A');
 #endif
@@ -393,7 +303,7 @@ public class U4_Decompiled_TITLE : MonoBehaviour
     public void CommandB()
     {
 #if USE_UNITY_DLL_FUNCTION
-        main_keyboardHit(character);
+        main_keyboardHit('B');
 #else
         Native.Invoke<main_keyboardHit>(U4_Decompiled_TITLE.nativeLibraryPtr2, 'B');
 #endif
@@ -402,7 +312,7 @@ public class U4_Decompiled_TITLE : MonoBehaviour
     public void CommandM()
     {
 #if USE_UNITY_DLL_FUNCTION
-        main_keyboardHit(character);
+        main_keyboardHit('M');
 #else
         Native.Invoke<main_keyboardHit>(U4_Decompiled_TITLE.nativeLibraryPtr2, 'M');
 #endif
@@ -421,7 +331,7 @@ public class U4_Decompiled_TITLE : MonoBehaviour
     public void CommandF()
     {
 #if USE_UNITY_DLL_FUNCTION
-        main_keyboardHit(character);
+        main_keyboardHit('F');
 #else
         Native.Invoke<main_keyboardHit>(U4_Decompiled_TITLE.nativeLibraryPtr2, 'F');
 #endif
@@ -441,7 +351,7 @@ public class U4_Decompiled_TITLE : MonoBehaviour
     public void CommandBackspace()
     {
 #if USE_UNITY_DLL_FUNCTION
-        main_keyboardHit((char)KEYS.VK_RETURN);
+        main_keyboardHit((char)KEYS.VK_BACK);
 #else
         Native.Invoke<main_keyboardHit>(U4_Decompiled_TITLE.nativeLibraryPtr2, (char)KEYS.VK_BACK);
 #endif
@@ -478,6 +388,8 @@ catch
 
         lastKeyboardHit = (char)KEYS.VK_ESCAPE;
 
+#if !USE_UNITY_DLL_FUNCTION
+        // It is now safe to unload the DLL
         if (trd != null)
         {
 #if UNITY_EDITOR
@@ -487,21 +399,23 @@ catch
                 ;
             }
 #endif
+
             // It is now safe to unload the DLL
-            if (U4_Decompiled_TITLE.nativeLibraryPtr2 != System.IntPtr.Zero)
+            if (nativeLibraryPtr2 != System.IntPtr.Zero)
             {
                 //Debug.Log("Unload AVATAR.DLL");
 #if PLATFORM_ANDROID && !UNITY_EDITOR
-            Debug.Log(Native.dlclose(nativeLibraryPtr2) == 0
-                          ? "Native library successfully unloaded."
-                          : "Native library could not be unloaded.");
+                Debug.Log(Native.dlclose(nativeLibraryPtr2) == 0
+                    ? "Native library successfully unloaded."
+                    : "Native library could not be unloaded.");
 #else
-                Debug.Log(Native.FreeLibrary(U4_Decompiled_TITLE.nativeLibraryPtr2)
-                              ? "Native library successfully unloaded."
-                              : "Native library could not be unloaded.");
+                Debug.Log(Native.FreeLibrary(nativeLibraryPtr2)
+                    ? "Native library successfully unloaded."
+                    : "Native library could not be unloaded.");
 #endif
             }
         }
+#endif
     }
 
     public enum KEYS
@@ -517,7 +431,6 @@ catch
         VK_END = 0x23,
         VK_HOME = 0x24
     };
-
 
     public System.Text.ASCIIEncoding enc;
 
@@ -913,7 +826,7 @@ blit_mask_table:
         else if (Input.GetKeyDown(KeyCode.B))
         {
 #if USE_UNITY_DLL_FUNCTION
-            //main_keyboardHit((char)'B');
+            main_keyboardHit((char)'B');
 #else
             Native.Invoke<main_keyboardHit>(nativeLibraryPtr2, (char)'B');
 #endif
@@ -1315,7 +1228,7 @@ blit_mask_table:
 
             // read the circular buffer from the game engine
 #if USE_UNITY_DLL_FUNCTION
-            int buffer_size = main_screen_copy_frame(buffer, buffer.Length);
+            int buffer_size = main_screen_copy_frame(intbuffer, intbuffer.Length);
 #else
             int buffer_size = Native.Invoke<int, main_screen_copy_frame>(U4_Decompiled_TITLE.nativeLibraryPtr2, intbuffer, intbuffer.Length);
 #endif
@@ -1355,7 +1268,7 @@ blit_mask_table:
 
             // read the circular buffer from the game engine
 #if USE_UNITY_DLL_FUNCTION
-            int buffer_size = main_screen_copy_frame(buffer, buffer.Length);
+            int dot_available = main_dot(intbuffer, intbuffer.Length);
 #else
             int dot_available = Native.Invoke<int, main_dot>(U4_Decompiled_TITLE.nativeLibraryPtr2, intbuffer, intbuffer.Length);
 #endif
@@ -1372,7 +1285,7 @@ blit_mask_table:
 
 // read the circular text buffer from the game engine
 #if USE_UNITY_DLL_FUNCTION
-            int text_size = main_Text(buffer, buffer.Length);
+            int text_size = main_Text(bytebuffer, bytebuffer.Length);
 #else
             int text_size = Native.Invoke<int, main_Text>(U4_Decompiled_TITLE.nativeLibraryPtr2, bytebuffer, bytebuffer.Length);
 #endif
@@ -1432,9 +1345,9 @@ blit_mask_table:
             }
 
 #if USE_UNITY_DLL_FUNCTION
-            main_NPC_Text(buffer, buffer.Length);
+            int pictureFilenameDest = main_GetPicture(bytebuffer, bytebuffer.Length);
 #else
-           int pictureFilenameDest = Native.Invoke<int, main_GetPicture>(nativeLibraryPtr2, bytebuffer, bytebuffer.Length);
+            int pictureFilenameDest = Native.Invoke<int, main_GetPicture>(nativeLibraryPtr2, bytebuffer, bytebuffer.Length);
 #endif
             if (pictureFilenameDest != 0)
             {
@@ -1457,7 +1370,7 @@ blit_mask_table:
         }
 
 #if USE_UNITY_DLL_FUNCTION
-        main_D_3683(buffer, buffer.Length);
+        main_D_3683(bytebuffer, bytebuffer.Length);
 #else
         Native.Invoke<main_D_3683>(nativeLibraryPtr2, bytebuffer, bytebuffer.Length);
 #endif
@@ -1470,24 +1383,8 @@ blit_mask_table:
             }
         }
 
-        // TODO: only need to do this once as the map is static
 #if USE_UNITY_DLL_FUNCTION
-        main_D_3A24(buffer, buffer.Length);
-#else
-        Native.Invoke<main_D_3683>(nativeLibraryPtr2, bytebuffer, bytebuffer.Length);
-#endif
-        buffer_index = 0;
-        for (int y = 0; y < 5; y++)
-        {
-            for (int x = 0; x < 19; x++)
-            {
-                Tile.TILE tile = (Tile.TILE)bytebuffer[buffer_index++];
-                baseMap[x, y] = tile;
-            }
-        }
-
-#if USE_UNITY_DLL_FUNCTION
-        main_D_3A24(buffer, buffer.Length);
+        int ret = main_D_3A24(bytebuffer, bytebuffer.Length);
 #else
         int ret = Native.Invoke<int, main_D_3A24>(nativeLibraryPtr2, bytebuffer, bytebuffer.Length);
 #endif
@@ -1513,7 +1410,7 @@ blit_mask_table:
         mapChanged = pendingMapChanged;
 
 #if USE_UNITY_DLL_FUNCTION
-        main_D_6976(buffer, buffer.Length);
+        main_D_6976(bytebuffer, bytebuffer.Length);
 #else
         Native.Invoke<main_D_6976>(nativeLibraryPtr2, bytebuffer, bytebuffer.Length);
 #endif
@@ -1521,7 +1418,6 @@ blit_mask_table:
 
     bool playStartupSoundOnlyOnce = false;
     public Tile.TILE[,] map = new Tile.TILE[19, 5];
-    public Tile.TILE[,] baseMap = new Tile.TILE[19, 5];
     public bool mapChanged = false;
     public Tile.TILE[,] initialMap = new Tile.TILE[19, 5];
 }
