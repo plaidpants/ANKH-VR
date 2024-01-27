@@ -1061,7 +1061,7 @@ public class World : MonoBehaviour
 
     void UpdateInputPanelState()
     {
-        if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.CITIZEN_WORD)
+        if ((u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.CITIZEN_WORD) && (u4.npcTalkIndex <= U4_Decompiled_AVATAR.TALK_INDEX.CITIZEN_31))
         {
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
@@ -1086,14 +1086,45 @@ public class World : MonoBehaviour
                 // only add the special keywords if we already know them
                 // TODO don't need to do this so often, only when we get new text
                 // TODO need to clear npcTalkIndex when switching levels or settlements as the index might not be valid for the other location
-                if (word.Length >= 4)
+                // Some keywords are just 1 or 2 characters so I need to remove this check
+                //if (word.Length >= 2)
                 {
+                    // the talk file may have trailing spaces in the keyword if it is less than 4 characters, we need to remove them for the compare
+                    // convert to lower
                     string lower = word.ToLower();
-                    //Debug.Log(lower);
-                    string sub = lower.Substring(0, 4);
+                    // trim any whitespace off the end
+                    string trimmed = lower.TrimEnd();
+                    //clip the string to a max of 4 characters
+                    string sub;
+                    if (trimmed.Length > 4)
+                    { 
+                        sub = trimmed.Substring(0, 4); 
+                    }
+                    else
+                    {
+                        sub = trimmed;
+                    }
+
+                    // convert to lower
+                    string lowerKeyword = Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD1].ToLower();
+                    // trim any whitespace off the end
+                    string trimmedKeyword = lowerKeyword.TrimEnd();
+                    //clip the string to a max of 4 characters
+                    string subKeyword;
+                    if (trimmedKeyword.Length > 4)
+                    {
+                        subKeyword = trimmedKeyword.Substring(0, 4);
+                    }
+                    else
+                    {
+                        subKeyword = trimmedKeyword;
+                    }
+
                     //Debug.Log(sub);
-                    if (sub ==
-                        Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD1].ToLower().Substring(0, 4))
+                    //Debug.Log(settlement);
+                    //Debug.Log("u4.npcTalkIndex " + u4.npcTalkIndex);
+
+                    if (trimmed == subKeyword)
                     {
                         u4.keyword1 = lower;
                         lower = char.ToUpper(lower[0]) + lower.Substring(1, lower.Length - 1);
@@ -1101,8 +1132,22 @@ public class World : MonoBehaviour
                         keyword1found = true;
                         keyword1Button.SetActive(true);
                     }
-                    if (sub ==
-                        Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD2].ToLower().Substring(0, 4))
+
+                    // convert to lower
+                    lowerKeyword = Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD2].ToLower();
+                    // trim any whitespace off the end
+                    trimmedKeyword = lowerKeyword.TrimEnd();
+                    //clip the string to a max of 4 characters
+                    if (trimmedKeyword.Length > 4)
+                    {
+                        subKeyword = trimmedKeyword.Substring(0, 4);
+                    }
+                    else
+                    {
+                        subKeyword = trimmedKeyword;
+                    }
+
+                    if (sub == subKeyword)
                     {
                         u4.keyword2 = lower;
                         lower = char.ToUpper(lower[0]) + lower.Substring(1, lower.Length - 1);

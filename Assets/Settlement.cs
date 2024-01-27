@@ -210,6 +210,20 @@ public static class Settlement
                     // skip over null terminator to go to the next string
                     stringBufferIndex++;
                 }
+
+                string wordtocheck = npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.KEYWORD2];
+                string nametocheck = npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.NAME];
+                // There is a bug in the talk files, fix it here
+                if ((wordtocheck == "HEAL") && (nametocheck == "Calabrini"))
+                {
+                    npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.KEYWORD2] = "INJU";
+                    npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.QUESTION] = "Dost thou seek\nan inn or art\nthou injured ?";
+                }
+
+                if ((wordtocheck == "HEAL") && (nametocheck == "Michelle"))
+                {
+                    npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.KEYWORD2] = "VISI";
+                }
             }
 
             // load settlement map data
