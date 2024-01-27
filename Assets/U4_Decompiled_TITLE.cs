@@ -97,6 +97,7 @@ public class U4_Decompiled_TITLE : MonoBehaviour
         //Debug.Log("Load songs");
         LoadSongs();
 
+#if !USE_UNITY_DLL_FUNCTION
         //Debug.Log("Patch TITLE.EXE to TITLE.DLL");
         // create a DLL file from the original DOS TITLE.EXE file by patching it
         var sourceFile = new FileInfo(Application.persistentDataPath + "/u4/TITLE.EXE");
@@ -109,7 +110,6 @@ public class U4_Decompiled_TITLE : MonoBehaviour
 
         DecoderBSP.ApplyPatch(sourceFile, patchFile, targetFile);
 
-#if !USE_UNITY_DLL_FUNCTION
         //Debug.Log("Load TITLE.DLL");
         // now attempt to load this DLL
         if (U4_Decompiled_TITLE.nativeLibraryPtr2 != System.IntPtr.Zero)

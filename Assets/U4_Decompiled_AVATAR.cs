@@ -377,6 +377,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         //Debug.Log("Load songs");
         LoadSongs();
 
+#if !USE_UNITY_DLL_FUNCTION
         //Debug.Log("Patch AVATAR.EXE to AVATAR.DLL");
         // create a DLL file from the original DOS AVATAR.EXE file by patching it
         var sourceFile = new FileInfo(Application.persistentDataPath + "/u4/AVATAR.EXE");
@@ -389,7 +390,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
 
         DecoderBSP.ApplyPatch(sourceFile, patchFile, targetFile);
 
-#if !USE_UNITY_DLL_FUNCTION
+
         //Debug.Log("Load AVATAR library");
         // now attempt to load this DLL
         if (nativeLibraryPtr != System.IntPtr.Zero)
@@ -1200,7 +1201,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
 #endif
             lastKeyboardHit = upper[i];
             //yield on a new YieldInstruction that waits for 5 seconds.
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.15f);
         }
 
 #if USE_UNITY_DLL_FUNCTION
@@ -4003,7 +4004,7 @@ sfx_storm:
             System.Array.Clear(buffer, 0, buffer.Length);
 
 #if USE_UNITY_DLL_FUNCTION
-            main_NPC_Text(buffer, buffer.Length);
+            main_GetVision(buffer, buffer.Length);
 #else
             Native.Invoke<main_GetVision>(nativeLibraryPtr, buffer, buffer.Length);
 #endif
