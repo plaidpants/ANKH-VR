@@ -3,7 +3,7 @@
 --- !u!129 &1
 PlayerSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 22
+  serializedVersion: 23
   productGUID: 836cb89d9eb5c7e4eb8991df78c68443
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
@@ -137,8 +137,8 @@ PlayerSettings:
     Others: 1
   bundleVersion: 0.1.0
   preloadedAssets:
-  - {fileID: 11400000, guid: a5d02445c1ba2fe489593dc31ba3c625, type: 2}
   - {fileID: 0}
+  - {fileID: 11400000, guid: a5d02445c1ba2fe489593dc31ba3c625, type: 2}
   - {fileID: -522186012846737645, guid: 1104404b7d95eac4da621a36f9e45da0, type: 2}
   - {fileID: -8196854396901781169, guid: 1a4c68ca72a83449f938d669337cb305, type: 2}
   metroInputSource: 0
@@ -242,7 +242,7 @@ PlayerSettings:
   clonedFromGUID: 14e3da668dfd3496fb0ecd9272fcff02
   templatePackageId: com.unity.template.vr@2.0.1
   templateDefaultScene: Assets/Scenes/SampleScene.unity
-  useCustomMainManifest: 1
+  useCustomMainManifest: 0
   useCustomLauncherManifest: 0
   useCustomMainGradleTemplate: 0
   useCustomLauncherGradleManifest: 0
@@ -641,6 +641,7 @@ PlayerSettings:
   switchNetworkInterfaceManagerInitializeEnabled: 1
   switchPlayerConnectionEnabled: 1
   switchUseNewStyleFilepaths: 0
+  switchUseLegacyFmodPriorities: 1
   switchUseMicroSleepForYield: 1
   switchEnableRamDiskSupport: 0
   switchMicroSleepForYieldTime: 25
@@ -741,10 +742,10 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    1: CROSS_PLATFORM_INPUT
+    1: CROSS_PLATFORM_INPUT;USE_INPUT_SYSTEM_POSE_CONTROL
     4: CROSS_PLATFORM_INPUT;MOBILE_INPUT
-    7: CROSS_PLATFORM_INPUT;MOBILE_INPUT
-    14: MOBILE_INPUT
+    7: CROSS_PLATFORM_INPUT;MOBILE_INPUT;USE_INPUT_SYSTEM_POSE_CONTROL
+    14: MOBILE_INPUT;USE_INPUT_SYSTEM_POSE_CONTROL
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
@@ -846,6 +847,7 @@ PlayerSettings:
     m_VersionName: 
   apiCompatibilityLevel: 6
   activeInputHandler: 2
+  windowsGamepadBackendHint: 0
   cloudProjectId: 9b3a18ec-ea27-4507-881f-214f09002eed
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
