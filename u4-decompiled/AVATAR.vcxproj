@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="common.c" />
+    <ClCompile Include="ERRMSG.C" />
+    <ClCompile Include="lzw.c" />
+    <ClCompile Include="U4_3D.C" />
+    <ClCompile Include="U4_AI.C" />
+    <ClCompile Include="U4_ANIM.C" />
+    <ClCompile Include="U4_COMBA.C" />
+    <ClCompile Include="U4_COMBB.C" />
+    <ClCompile Include="U4_COMBC.C" />
+    <ClCompile Include="U4_CSTES.C" />
+    <ClCompile Include="U4_DNG.C" />
+    <ClCompile Include="U4_END.C" />
+    <ClCompile Include="U4_EVT.C" />
+    <ClCompile Include="U4_EXPLO.C" />
+    <ClCompile Include="U4_FILE.C" />
+    <ClCompile Include="u4_forWin.c" />
+    <ClCompile Include="U4_GET.C" />
+    <ClCompile Include="U4_HOLE.C" />
+    <ClCompile Include="U4_INIT.C" />
+    <ClCompile Include="U4_LB.C" />
+    <ClCompile Include="U4_LOCAT.C" />
+    <ClCompile Include="U4_MAIN.C" />
+    <ClCompile Include="U4_MAIN2.C" />
+    <ClCompile Include="U4_MAP.C" />
+    <ClCompile Include="U4_MIX.C" />
+    <ClCompile Include="U4_NPC.C" />
+    <ClCompile Include="U4_PEER.C" />
+    <ClCompile Include="U4_Q_N_V.C" />
+    <ClCompile Include="U4_SHOPS.C" />
+    <ClCompile Include="U4_SHRIN.C" />
+    <ClCompile Include="U4_SPELL.C" />
+    <ClCompile Include="U4_SRCH.C" />
+    <ClCompile Include="U4_SRCH2.C" />
+    <ClCompile Include="U4_TALK.C" />
+    <ClCompile Include="U4_USE.C" />
+    <ClCompile Include="U4_UTIL.C" />
+    <ClCompile Include="U4_VAR.C" />
+    <ClCompile Include="U4_Z.C" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common.h" />
+    <ClInclude Include="lzw.h" />
+    <ClInclude Include="U4.H" />
+    <ClInclude Include="U4_DOS.H" />
+    <ClInclude Include="U4_FILE.H" />
+    <ClInclude Include="U4_GRAPH.H" />
+    <ClInclude Include="U4_LOC.H" />
+    <ClInclude Include="U4_SCAN.H" />
+    <ClInclude Include="U4_SHAPE.H" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{541570e2-647b-42f5-b5e9-f6562c566058}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>AVATAR</RootNamespace>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>AVATAR</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderCompileAs>CompileAsC</PrecompiledHeaderCompileAs>
+      <CppLanguageStandard>Default</CppLanguageStandard>
+      <PreprocessorDefinitions>SLEEPFACTOR=10;DISABLE_WINDOWS;__ANDROID_API__=$(AndroidAPILevelNumber);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-fdeclspec %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderCompileAs>CompileAsC</PrecompiledHeaderCompileAs>
+      <PreprocessorDefinitions>SLEEPFACTOR=5;__ANDROID_API__=$(AndroidAPILevelNumber);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-fdeclspec %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

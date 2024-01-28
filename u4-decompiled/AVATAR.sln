@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34407.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AVATAR", "AVATAR.vcxproj", "{541570E2-647B-42F5-B5E9-F6562C566058}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TITLE", "TITLE.vcxproj", "{D37DB019-9B37-47DC-879C-488D943D7E6D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM64 = Debug|ARM64
+		Release|ARM64 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{541570E2-647B-42F5-B5E9-F6562C566058}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{541570E2-647B-42F5-B5E9-F6562C566058}.Debug|ARM64.Build.0 = Debug|ARM64
+		{541570E2-647B-42F5-B5E9-F6562C566058}.Release|ARM64.ActiveCfg = Release|ARM64
+		{541570E2-647B-42F5-B5E9-F6562C566058}.Release|ARM64.Build.0 = Release|ARM64
+		{D37DB019-9B37-47DC-879C-488D943D7E6D}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{D37DB019-9B37-47DC-879C-488D943D7E6D}.Debug|ARM64.Build.0 = Debug|ARM64
+		{D37DB019-9B37-47DC-879C-488D943D7E6D}.Release|ARM64.ActiveCfg = Release|ARM64
+		{D37DB019-9B37-47DC-879C-488D943D7E6D}.Release|ARM64.Build.0 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2615C51A-7671-4021-AA44-3E78578909D9}
+	EndGlobalSection
+EndGlobal

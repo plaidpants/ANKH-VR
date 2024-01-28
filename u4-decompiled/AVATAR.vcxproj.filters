@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="common.c" />
+    <ClCompile Include="ERRMSG.C" />
+    <ClCompile Include="lzw.c" />
+    <ClCompile Include="U4_3D.C" />
+    <ClCompile Include="U4_AI.C" />
+    <ClCompile Include="U4_ANIM.C" />
+    <ClCompile Include="U4_COMBA.C" />
+    <ClCompile Include="U4_COMBB.C" />
+    <ClCompile Include="U4_COMBC.C" />
+    <ClCompile Include="U4_CSTES.C" />
+    <ClCompile Include="U4_DNG.C" />
+    <ClCompile Include="U4_END.C" />
+    <ClCompile Include="U4_EVT.C" />
+    <ClCompile Include="U4_EXPLO.C" />
+    <ClCompile Include="U4_FILE.C" />
+    <ClCompile Include="u4_forWin.c" />
+    <ClCompile Include="U4_GET.C" />
+    <ClCompile Include="U4_HOLE.C" />
+    <ClCompile Include="U4_INIT.C" />
+    <ClCompile Include="U4_LB.C" />
+    <ClCompile Include="U4_LOCAT.C" />
+    <ClCompile Include="U4_MAIN.C" />
+    <ClCompile Include="U4_MAIN2.C" />
+    <ClCompile Include="U4_MAP.C" />
+    <ClCompile Include="U4_MIX.C" />
+    <ClCompile Include="U4_NPC.C" />
+    <ClCompile Include="U4_PEER.C" />
+    <ClCompile Include="U4_Q_N_V.C" />
+    <ClCompile Include="U4_SHOPS.C" />
+    <ClCompile Include="U4_SHRIN.C" />
+    <ClCompile Include="U4_SPELL.C" />
+    <ClCompile Include="U4_SRCH.C" />
+    <ClCompile Include="U4_SRCH2.C" />
+    <ClCompile Include="U4_TALK.C" />
+    <ClCompile Include="U4_USE.C" />
+    <ClCompile Include="U4_UTIL.C" />
+    <ClCompile Include="U4_VAR.C" />
+    <ClCompile Include="U4_Z.C" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common.h" />
+    <ClInclude Include="lzw.h" />
+    <ClInclude Include="U4.H" />
+    <ClInclude Include="U4_DOS.H" />
+    <ClInclude Include="U4_FILE.H" />
+    <ClInclude Include="U4_GRAPH.H" />
+    <ClInclude Include="U4_LOC.H" />
+    <ClInclude Include="U4_SCAN.H" />
+    <ClInclude Include="U4_SHAPE.H" />
+  </ItemGroup>
+</Project>

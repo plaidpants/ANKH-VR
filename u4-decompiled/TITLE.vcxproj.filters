@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="TITLE.H" />
+    <ClInclude Include="U4_SCAN.H" />
+    <ClInclude Include="lzw.h" />
+    <ClInclude Include="common.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="TITLE_0.C" />
+    <ClCompile Include="TITLE_1.C" />
+    <ClCompile Include="TITLE_X.C" />
+    <ClCompile Include="DATA.C" />
+    <ClCompile Include="lzw.c" />
+    <ClCompile Include="common.c" />
+    <ClCompile Include="u4title_main.c" />
+  </ItemGroup>
+</Project>
