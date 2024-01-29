@@ -3966,7 +3966,11 @@ sfx_storm:
 
                     if (wordList.Contains(word) == false)
                     {
-                        wordList.Add(word);
+                        //wordList.Add(word);
+                        // we will add the most recent words at the start of the list so when we iterate through them the most recent match will be
+                        // displayed on the keyword button, so if the keyword is knowledge and you recently talked to someone who said that word
+                        // the keyword displayed will be "knowledge" instead of an much older unrelated word such as "know"
+                        wordList.Insert(0, word);
                     }
                 }
 

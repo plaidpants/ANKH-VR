@@ -179,6 +179,7 @@ public static class Settlement
                 npcStrings[settlement][talkIndex] = new List<string>();
 
                 npcQuestionTriggerIndex[settlement][talkIndex] = talkFileData[talkIndex * 288];
+
                 if (talkFileData[(talkIndex * 288) + 1] != 0)
                 {
                     npcQuestionAffectHumility[settlement][talkIndex] = true;
@@ -211,18 +212,48 @@ public static class Settlement
                     stringBufferIndex++;
                 }
 
-                string wordtocheck = npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.KEYWORD2];
+                string wordtocheck1 = npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.KEYWORD1];
+                string wordtocheck2 = npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.KEYWORD2];
                 string nametocheck = npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.NAME];
-                // There is a bug in the talk files, fix it here
-                if ((wordtocheck == "HEAL") && (nametocheck == "Calabrini"))
+                // There are bugs in the talk files, fix them here
+                if ((wordtocheck2 == "HEAL") && (nametocheck == "Calabrini"))
                 {
-                    npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.KEYWORD2] = "INJU";
-                    npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.QUESTION] = "Dost thou seek\nan inn or art\nthou injured ?";
+                    npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.KEYWORD2] = "INJU"; // keyword is not injured instead of healing
+                    npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.QUESTION] = "Dost thou seek\nan inn or art\nthou injured?"; // reword question text to use the word injured instead of healing
                 }
 
-                if ((wordtocheck == "HEAL") && (nametocheck == "Michelle"))
+                if ((wordtocheck2 == "HEAL") && (nametocheck == "Michelle"))
                 {
-                    npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.KEYWORD2] = "VISI";
+                    npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.KEYWORD2] = "VISI"; // change keyword to trugger of the word visit instead of healer
+                }
+
+                //Additional talk file keyword fixes from Fenyx
+                if ((wordtocheck1 == "REAS") && (nametocheck == "Estro"))
+                {
+                    npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.KEYWORD1] = "RESE"; // the keyword should be research not reasearch
+                }
+
+                if ((wordtocheck1 == "SINE") && (nametocheck == "a poor beggar."))
+                {
+                    npcStrings[settlement][talkIndex][(int)NPC_STRING_INDEX.KEYWORD1] = "SINN"; // the keyword should be sinner not siner
+                }
+
+                // fix talk file trigger question indexes
+                if ((npcQuestionTriggerIndex[settlement][talkIndex] == 0) && (nametocheck == "Water"))
+                {
+                    npcQuestionTriggerIndex[settlement][talkIndex] = 6; // correct missing question index
+                }
+                if ((npcQuestionTriggerIndex[settlement][talkIndex] == 0) && (nametocheck == "Alkerion"))
+                {
+                    npcQuestionTriggerIndex[settlement][talkIndex] = 6; // correct missing question index
+                }
+                if ((npcQuestionTriggerIndex[settlement][talkIndex] == 0) && (nametocheck == "Shamino"))
+                {
+                    npcQuestionTriggerIndex[settlement][talkIndex] = 6; // correct missing question index
+                }
+                if ((npcQuestionTriggerIndex[settlement][talkIndex] == 0) && (nametocheck == "Charm"))
+                {
+                    npcQuestionTriggerIndex[settlement][talkIndex] = 6; // correct missing question index
                 }
             }
 
