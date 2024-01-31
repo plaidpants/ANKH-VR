@@ -1,18 +1,18 @@
 # ANKH VR
 <img src="https://user-images.githubusercontent.com/8979271/177441885-38f6dcca-48a4-4bd2-8031-42c6c518364e.png" width=50% height=50%>
 
-This project runs the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift or Oculus Quest using a link connection but other systems may be supported in the future. It is functionally complete but there are bugs and minor stuff and improvements to make but I would consider it Beta at this point.
+This project runs the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift or Oculus Quest using a link connection or natively on the oculus quest other systems may be supported in the future. It is functionally complete but there are bugs and minor stuff and improvements to make but I would consider it alpha on the oculus quest and Beta on the PC at this point.
 
-The Android OS current does not allow dynamic linking with non-NDK native libraries so I will need to find a different way include the orignal game engine to make this work natively on the Oculus Quest as the way I am patching, creating and loading a DLL at startup in windows will not work under Android.
+The oculus quest version does not rely on patching the original EXE into a modern shared library like I did on the PC and instead references all internal text and data from the original EXE's. The Android OS current does not allow dynamic linking with non-NDK native libraries 
 https://developer.android.com/about/versions/nougat/android-7.0-changes#ndk
 
-Instructions:
+Instructions for PC or Oculus Quest:
 
 Aquire or purchase a free copy of Ultima 4 from gog.com or other source.
 
 https://www.gog.com/en/game/ultima_4
 
-Install the game on your Windows PC in a folder.
+Install the game on a Windows PC in a folder.
 
 e.g. [GOGLibrary]\Ultima 4 - Quest of the Avatar
 
@@ -40,19 +40,29 @@ MONSTERS.SAV<br />
 OUTMONST.SAV<br />
 PARTY.SAV<br />
 
-Download and extract the AVATAR.bps & TITLE.bps patch file for your system from the link below and copy them to the ultima 4 install directory
-  
+To run on your PC, download and extract the AVATAR.bps & TITLE.bps patch file for your system from the link below and copy them to the ultima 4 install directory, you do not need to do this if planning to install on an Oculus Quest.
+
 https://github.com/plaidpants/u4-decompiled/releases
 
-Copy the contents of the entire ultima 4 install folder to the following location on your system and then run the ANKH-VR.exe
+Copy the contents of the entire ultima 4 install folder to the Unity Persistant Storage area for the ANKH-VR game on your system and then run ANKH-VR
 
-Windows PC
+Windows PC ANKH-VR Unity Persistant Storage area location
   
 %APPDATA%\\..\LocalLow\SwivelChairGames\ANKH-VR\u4
 
-  %APPDATA%\\..\LocalLow\SwivelChairGames\ANKH-VR\u4\AVATAR.EXE <- you should have this file at this directory location along with all the other files
-                                                                 
-This project does not contain any copyrighted game assets or code or text or graphics or fonts or any other intellectual property related to Ultima 4 it relies completely on the files from the original game. This project is not licensed by Origin Systems or Electronic Arts.
+  %APPDATA%\\..\LocalLow\SwivelChairGames\ANKH-VR\u4\AVATAR.EXE <- you should have this file at this directory location along with all the other files from the Utima 4 Install directory
+
+Oculus Quest Android ANKH-VR Unity Persistant Storage area location, use SideQuest or other means to copy these files to this location
+
+/sdcard/Android/data/com.SwivelChairGames.ANKHVR/files/u4
+
+  /sdcard/Android/data/com.SwivelChairGames.ANKHVR/files/u4/AVATAR.EXE <- you should have this file at this directory location along with all the other files from the Utima 4 Install directory
+
+Extra step is required on the Oculus Quest, if you copy any save game files, the .SAV files, you will need to make them write-able as by default when you upload them to the Oculus Quest they are only readable by the game not write-able, to fix this you need to execute this custom command from SideQuest or from adb directly to change the permission on the .SAV files to allow reading and writing. If you don't copy this files and you you create a new game the files will be write-able by default.
+
+  adb shell chmod 660  /sdcard/Android/data/com.SwivelChairGames.ANKHVR/files/u4/*.SAV
+
+This project does not contain any copyrighted game assets or code or data or text or graphics or fonts or any other intellectual property related to Ultima 4 it relies completely on the files from the original game. This project is not licensed by Origin Systems or Electronic Arts.
 
 ![OculusScreenshot1656893311](https://user-images.githubusercontent.com/8979271/177064319-6e233842-107a-498e-929a-6e0cb1e17b65.jpeg)
 ![OculusScreenshot1656893278](https://user-images.githubusercontent.com/8979271/177064320-18d15813-419d-4daa-863d-d9d1fcf30693.jpeg)
