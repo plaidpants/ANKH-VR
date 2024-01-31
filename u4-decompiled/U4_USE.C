@@ -58,25 +58,25 @@ void C_01E1()
 	}
 	switch(D_943E) {
 		case 0:
-			if(TST_MSK(Party.mItems, 7)) {
+			if(TST_MSK(Party.mItems, ST_KEY_T)) {
 				u4_puts(D_00EE);
 				return;
 			}
-			SET_MSK(Party.mItems, 7);
+			SET_MSK(Party.mItems, ST_KEY_T);
 		break;
 		case 1:
-			if(TST_MSK(Party.mItems, 6)) {
+			if(TST_MSK(Party.mItems, ST_KEY_L)) {
 				u4_puts(D_00EE);
 				return;
 			}
-			SET_MSK(Party.mItems, 6);
+			SET_MSK(Party.mItems, ST_KEY_L);
 		break;
 		case 2:
-			if(TST_MSK(Party.mItems, 5)) {
+			if(TST_MSK(Party.mItems, ST_KEY_C)) {
 				u4_puts(D_00EE);
 				return;
 			}
-			SET_MSK(Party.mItems, 5);
+			SET_MSK(Party.mItems, ST_KEY_C);
 		break;
 	}
 	u4_puts(/*D_00BC*/&AVATAR[0xF379 + 0x5] /* "Thou doth find one third of the Three Part Key!\n" */);
@@ -155,9 +155,9 @@ C_03A1:
 /*use key(s)*/
 C_044C() {
 	if(
-		((Party.mItems >> 7) & 1) |
-		((Party.mItems >> 6) & 1) |
-		((Party.mItems >> 5) & 1)
+		((Party.mItems >> ST_KEY_T) & 1) |
+		((Party.mItems >> ST_KEY_L) & 1) |
+		((Party.mItems >> ST_KEY_C) & 1)
 	)
 		u4_puts(&AVATAR[0xF47C + 0x5] /* "No place to Use them!\n" */);
 	else
@@ -166,7 +166,7 @@ C_044C() {
 
 /*use bell*/
 C_0487() {
-	if(!TST_MSK(Party.mItems, 4)) {
+	if(!TST_MSK(Party.mItems, ST_BELL)) {
 		u4_puts(D_0100);
 		return 0;
 	}
@@ -174,39 +174,39 @@ C_0487() {
 		u4_puts(D_00EE);
 		return 0;
 	}
-	SET_MSK(Party.mItems, 12);
+	SET_MSK(Party.mItems, ST_USE_BELL);
 	u4_puts(&AVATAR[0xF568 + 0x5] /* "The Bell rings on and on!\n" */);
 }
 
 /*use book*/
 C_04C0() {
-	if(!TST_MSK(Party.mItems, 3)) {
+	if(!TST_MSK(Party.mItems, ST_BOOK)) {
 		u4_puts(D_0100);
 		return 0;
 	}
 	if(Party._loc != 0 || Party._x != 0xe9 || Party._y != 0xe9 ||
-		!TST_MSK(Party.mItems, 12)
+		!TST_MSK(Party.mItems, ST_USE_BELL)
 	) {
 		u4_puts(D_00EE);
 		return 0;
 	}
-	SET_MSK(Party.mItems, 11);
+	SET_MSK(Party.mItems, ST_USE_BOOK);
 	u4_puts(&AVATAR[0xF583 + 0x5] /* "The words resonate with the ringing!\n" */);
 }
 
 /*use candle*/
 C_0501() {
-	if(!TST_MSK(Party.mItems, 2)) {
+	if(!TST_MSK(Party.mItems, ST_CANDLE)) {
 		u4_puts(D_0100);
 		return 0;
 	}
 	if(Party._loc != 0 || Party._x != 0xe9 || Party._y != 0xe9 ||
-		!TST_MSK(Party.mItems, 11)
+		!TST_MSK(Party.mItems, ST_USE_BOOK)
 	) {
 		u4_puts(D_00EE);
 		return 0;
 	}
-	SET_MSK(Party.mItems, 10);
+	SET_MSK(Party.mItems, ST_USE_CANDLE);
 	u4_puts(&AVATAR[0xF5A9 + 0x5] /* "As you light the Candle the Earth Trembles!\n" */);
 	sound(6,0);
 	shakefx();
@@ -214,7 +214,7 @@ C_0501() {
 
 /*use horn*/
 C_0553() {
-	if(!TST_MSK(Party.mItems, 8)) {
+	if(!TST_MSK(Party.mItems, ST_HORN)) {
 		u4_puts(D_0100);
 		return 0;
 	}
@@ -230,7 +230,7 @@ C_0553() {
 
 /*use wheel*/
 C_058C() {
-	if(!TST_MSK(Party.mItems, 9)) {
+	if(!TST_MSK(Party.mItems, ST_WHEEL)) {
 		u4_puts(D_0100);
 		return 0;
 	}
@@ -247,7 +247,7 @@ C_058C() {
 C_05CE() {
 	int bp_02;
 
-	if(!TST_MSK(Party.mItems, 0)) {
+	if(!TST_MSK(Party.mItems, ST_SKULL)) {
 		u4_puts(D_0100);
 		return 0;
 	}
@@ -275,18 +275,18 @@ C_05CE() {
 		}
 /*C_06B2:*/
 		t_callback();
-		karma_dec((char *)&(Party._hones), 5);
-		karma_dec((char *)&(Party._compa), 5);
-		karma_dec((char *)&(Party._valor), 5);
-		karma_dec((char *)&(Party._justi), 5);
-		karma_dec((char *)&(Party._sacri), 5);
-		karma_dec((char *)&(Party._honor), 5);
-		karma_dec((char *)&(Party._spiri), 5);
-		karma_dec((char *)&(Party._humil), 5);
+		karma_dec((U16 *)&(Party._hones), 5);
+		karma_dec((U16 *)&(Party._compa), 5);
+		karma_dec((U16 *)&(Party._valor), 5);
+		karma_dec((U16 *)&(Party._justi), 5);
+		karma_dec((U16 *)&(Party._sacri), 5);
+		karma_dec((U16 *)&(Party._honor), 5);
+		karma_dec((U16 *)&(Party._spiri), 5);
+		karma_dec((U16 *)&(Party._humil), 5);
 		dspl_Stats();
 	} else {
 		u4_puts(&AVATAR[0xF662 + 0x5] /* "\nYou cast the Skull of Mondain into the Abyss!\n" */);
-		SET_MSK(Party.mItems, 1);
+		SET_MSK(Party.mItems, ST_CAST_SKULL);
 		karma_inc((char *)&(Party._hones), 10);
 		karma_inc((char *)&(Party._compa), 10);
 		karma_inc((char *)&(Party._valor), 10);
@@ -301,7 +301,7 @@ C_05CE() {
 		Gra_09();
 		sound(6,0); shakefx();
 	}
-	RST_MSK(Party.mItems, 0);
+	RST_MSK(Party.mItems, ST_SKULL);
 }
 
 struct {

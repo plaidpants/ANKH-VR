@@ -1125,7 +1125,7 @@ C_D7D6()
 	u_delay(1, 0);
 	for(bp_02 = Party.f_1d8 - 1; bp_02 >= 0; bp_02 --) {
 		if(isCharaAlive(bp_02))
-			Party.chara[bp_02]._stat = 'S';
+			Party.chara[bp_02]._status = 'S';
 	}
 	dspl_Stats();
 	Party._tile = TIL_38;
@@ -1133,8 +1133,8 @@ C_D7D6()
 	u_delay(5, 0);
 	Party._tile = TIL_1F;
 	for(bp_02 = Party.f_1d8 - 1; bp_02 >= 0; bp_02 --) {
-		if(Party.chara[bp_02]._stat == 'S') {
-			Party.chara[bp_02]._stat = 'G';
+		if(Party.chara[bp_02]._status == 'S') {
+			Party.chara[bp_02]._status = 'G';
 			HP_inc(bp_02, U4_RND3(50) * 2 + 100);
 		}
 	}
@@ -1332,7 +1332,7 @@ C_DAA2()
 	bp_02 = C_DA05();
 	if(bp_02 == -1)
 		return 0;
-	if(Party.chara[bp_02]._stat != 'P') {
+	if(Party.chara[bp_02]._status != 'P') {
 		u4_puts(/*D_57ED*/&AVATAR[0x14A60 + 0x2E36] /* "Thou suffers not from Poison!\n" */);
 		add_npc_talk(VENDOR_HEALER, &AVATAR[0x14A60 + 0x2E36] /* "Thou suffers not from Poison!" */);
 		return 0;
@@ -1355,7 +1355,7 @@ C_DAA2()
 			return 0;
 		}
 	}
-	Party.chara[bp_02]._stat = 'G';
+	Party.chara[bp_02]._status = 'G';
 	C_DA79(bp_02);
 	dspl_Stats();
 }
@@ -1395,7 +1395,7 @@ C_DB93()
 	bp_02 = C_DA05();
 	if(bp_02 == -1)
 		return 0;
-	if(Party.chara[bp_02]._stat != 'D') {
+	if(Party.chara[bp_02]._status != 'D') {
 		u4_puts(/*D_5931*/&AVATAR[0x14BA4 + 0x2E36] /* "Thou art not dead fool!\n" */);
 		add_npc_talk(VENDOR_HEALER, &AVATAR[0x14BA4 + 0x2E36] /* "Thou art not dead fool!" */);
 		return 0;
@@ -1408,7 +1408,7 @@ C_DB93()
 		return 0;
 	}
 	if(C_DA3E(300)) {
-		Party.chara[bp_02]._stat = 'G';
+		Party.chara[bp_02]._status = 'G';
 		C_DA79(bp_02);
 		dspl_Stats();
 	}

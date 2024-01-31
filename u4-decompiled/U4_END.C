@@ -192,9 +192,9 @@ C_31F4()
 	u_delay(4, 0);
 	Gra_16((D_943A == 1)?/*D_11BC*/&AVATAR[0x10479 + 0x5] /* "key7.pic" */:/*D_11C5*/&AVATAR[0x10482 + 0x5] /* "key7.ega" */, 0, 0);
 	if(
-		!TST_MSK(Party.mItems, 5) |
-		!TST_MSK(Party.mItems, 7) |
-		!TST_MSK(Party.mItems, 6)
+		!TST_MSK(Party.mItems, ST_KEY_C) |
+		!TST_MSK(Party.mItems, ST_KEY_T) |
+		!TST_MSK(Party.mItems, ST_KEY_L)
 	) {
 		u4_puts(/*D_11CE*/&AVATAR[0x1048B + 0x5] /* "\nThou dost not have the Key of Three Parts.\n" */);
 		C_2F9D(12);
@@ -205,7 +205,7 @@ C_31F4()
 	u4_puts(/*D_121E*/&AVATAR[0x104DB + 0x5] /* "\nA voice rings out:\n" */);
 	if(!C_310F(/*D_123D*/&AVATAR[0x104FA + 0x5] /* "\"What is the Word of Passage?\"" */, /*D_1233*/&AVATAR[0x104F0 + 0x5] /* "veramocor" */))
 		C_3010();
-#if 1 // Skip end game checks
+#if 1 // Disable to skip end game checks
 	if(D_8CCA != 8) {
 		u4_puts(/*D_125C*/&AVATAR[0x10519 + 0x5] /* "\nThou hast not proved thy leadership in all eight virtues.\n" */);
 		set_input_mode(INPUT_MODE_DELAY_NO_CONTINUE);

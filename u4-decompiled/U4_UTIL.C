@@ -117,7 +117,7 @@ int bp04;
 /*get character sprite id ?*/
 C_0ACF(bp04)
 {
-	if(Party.chara[bp04]._stat == 'S')
+	if(Party.chara[bp04]._status == 'S')
 		return TIL_38;
 	return (Party.chara[bp04]._class << 1) + TIL_20;
 }
@@ -313,7 +313,7 @@ unsigned char bp04;
 			u4_putc(loc_D->_name[loc_C]);
 		txt_X = 35;
 		u4_putl(loc_D->_HP[0], 3, ' ');
-		u4_putc(loc_D->_stat);
+		u4_putc(loc_D->_status);
 	}
 	txt_X = 24;
 	txt_Y = 10;
@@ -351,7 +351,7 @@ int bp04;
 {
 	if(bp04 >= Party.f_1d8)
 		return 0;
-	switch(Party.chara[bp04]._stat) {
+	switch(Party.chara[bp04]._status) {
 		case 'G': case 'P': case 'S': return 1;
 		default: return 0;
 	}
@@ -363,7 +363,7 @@ int bp04;
 {
 	if(bp04 >= Party.f_1d8)
 		return 0;
-	switch(Party.chara[bp04]._stat) {
+	switch(Party.chara[bp04]._status) {
 		case 'G': case 'P': return 1;
 		default: return 0;
 	}
@@ -375,7 +375,7 @@ C_0EB1()
 	int bp_02;
 
 	for(bp_02 = Party.f_1d8 - 1; bp_02 >= 0; bp_02 --) {
-		Party.chara[bp_02]._stat = 'D';
+		Party.chara[bp_02]._status = 'D';
 		Party.chara[bp_02]._HP[0] = 0;
 	}
 	Gra_13();
@@ -444,7 +444,7 @@ C_0EB1()
 	u4_puts(&AVATAR[0xF841 + 0x5] /* "\n\nLord British says: I have pulled thy spirit and some possessions from the void.  Be more careful in the future!\n" */);
 	add_npc_talk(LORD_BRITISH, &AVATAR[0xF841 + 0x5] /* "I have pulled thy spirit and some possessions from the void.  Be more careful in the future!\n" */);
 	for(bp_02 = Party.f_1d8 - 1; bp_02 >= 0; bp_02 --) {
-		Party.chara[bp_02]._stat = 'G';
+		Party.chara[bp_02]._status = 'G';
 		Party.chara[bp_02]._HP[0] = Party.chara[bp_02]._HP[1];
 	}
 	for(bp_02 = 15; bp_02 >= 0; bp_02 --)
@@ -492,7 +492,7 @@ C_10FD()
 	}
 	/*character dies*/
 	si->_HP[0] = 0;
-	si->_stat = 'D';
+	si->_status = 'D';
 	if(CurMode >= MOD_COMBAT)
 		D_944A[bp06] = Fighters._chtile[bp06] = TIL_38;
 	dspl_Stats();

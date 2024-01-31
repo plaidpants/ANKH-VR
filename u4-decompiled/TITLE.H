@@ -24,8 +24,6 @@ extern char AVATAR[];
 #else
 	#define far
 	#define cdecl
-//	#define Sleep usleep
-
 	typedef unsigned short U16;
 	typedef signed short S16;
 #endif

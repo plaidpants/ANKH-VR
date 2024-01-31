@@ -183,10 +183,10 @@ int bp04;
 		case TIL_44:
 			u4_puts(/*D_29D7*/&AVATAR[0x11C82 + 0x2017] /* "Poisoned!\n" */);
 			C_9764(si);
-			if(U4_RND1(1) || Party.chara[si]._stat != 'G')
+			if(U4_RND1(1) || Party.chara[si]._status != 'G')
 				u4_puts(/*D_29E2*/&AVATAR[0x11C8D + 0x2017] /* "Failed.\n" */);
 			else
-				Party.chara[si]._stat = 'P';
+				Party.chara[si]._status = 'P';
 		break;
 		case TIL_45:
 			u4_puts(/*D_29EB*/&AVATAR[0x11C96 + 0x2017] /* "Electrified!\n" */);
@@ -199,10 +199,10 @@ int bp04;
 		case TIL_47:
 			u4_puts(/*D_2A05*/&AVATAR[0x11CB0 + 0x2017] /* "Slept!\n" */);
 			C_9764(si);
-			if(U4_RND1(1) || Party.chara[si]._stat != 'G')
+			if(U4_RND1(1) || Party.chara[si]._status != 'G')
 				u4_puts(/*D_2A0D*/&AVATAR[0x11C8D + 0x2017] /* "Failed.\n" */);
 			else {
-				Party.chara[si]._stat = 'S';
+				Party.chara[si]._status = 'S';
 				Fighters._chtile[si] = TIL_38;
 			}
 		break;
@@ -419,8 +419,8 @@ C_9D51:
 				t_callback();
 				Gra_09(); sound(9, 0x80); Gra_09();
 				for(loc_B = Party.f_1d8 - 1; loc_B >= 0; loc_B --) {
-					if(Fighters._chtile[loc_B] != 0 && Party.chara[loc_B]._stat == 'G' && U4_RND1(1)) {
-						Party.chara[loc_B]._stat = 'S';
+					if(Fighters._chtile[loc_B] != 0 && Party.chara[loc_B]._status == 'G' && U4_RND1(1)) {
+						Party.chara[loc_B]._status = 'S';
 						Fighters._chtile[loc_B] = TIL_38;
 					}
 				}

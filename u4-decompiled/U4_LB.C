@@ -159,11 +159,11 @@ C_E21E() {
 		add_npc_talk(LORD_BRITISH, &AVATAR[0x16829 + 0x3837] /* "Thou art doing very well indeed on the path to Avatarhood! Strive ye to achieve the Elevation in all eight virtues!\n" */);
 		u4_puts(/*D_75B7*/&AVATAR[0x16829 + 0x3837] /* "Thou art doing very well indeed on the path to Avatarhood! Strive ye to achieve the Elevation in all eight virtues!\n" */);
 	} else
-	if(!((Party.mItems >> 4) & (Party.mItems >> 3) & (Party.mItems >> 2) & 1)) {
+	if(!((Party.mItems >> ST_BELL) & (Party.mItems >> ST_BOOK) & (Party.mItems >> ST_CANDLE) & 1)) {
 		add_npc_talk(LORD_BRITISH, &AVATAR[0x1689E + 0x3837] /* "Find ye the Bell, Book and Candle!  With these three things, one may enter the Great Stygian Abyss!\n" */);
 		u4_puts(/*D_762C*/&AVATAR[0x1689E + 0x3837] /* "Find ye the Bell, Book and Candle!  With these three things, one may enter the Great Stygian Abyss!\n" */);
 	} else
-	if(!((Party.mItems >> 5) & (Party.mItems >> 6) & (Party.mItems >> 7) & 1)) {
+	if(!((Party.mItems >> ST_KEY_C) & (Party.mItems >> ST_KEY_L) & (Party.mItems >> ST_KEY_T) & 1)) {
 		add_npc_talk(LORD_BRITISH, &AVATAR[0x16903 + 0x3837] /* "Before thou dost enter the Abyss thou shalt need the Key of Three Parts, and the Word of Passage.\n" */);
 		u4_puts(/*D_7691*/&AVATAR[0x16903 + 0x3837] /* "Before thou dost enter the Abyss thou shalt need the Key of Three Parts, and the Word of Passage.\n" */); C_E1FC();
 		add_npc_talk(LORD_BRITISH, &AVATAR[0x16966 + 0x3837] /* "\nThen might thou enter the Chamber of the Codex of Ultimate Wisdom!\n" */);
@@ -220,8 +220,8 @@ C_E408() {
 	int bp_02;
 
 	for(bp_02 = Party.f_1d8 - 1; bp_02 >= 0; bp_02 --) {
-		if(Party.chara[bp_02]._stat != 'D') {
-			Party.chara[bp_02]._stat = 'G';
+		if(Party.chara[bp_02]._status != 'D') {
+			Party.chara[bp_02]._status = 'G';
 			Party.chara[bp_02]._HP[0] = Party.chara[bp_02]._HP[1];
 		}
 	}
@@ -264,7 +264,7 @@ C_E4C3() {
 		if(Party.chara[loc_B]._HP[1] < loc_C) {
 			Party.chara[loc_B]._HP[1] = loc_C;
 			Party.chara[loc_B]._HP[0] = loc_C;
-			Party.chara[loc_B]._stat = 'G';
+			Party.chara[loc_B]._status = 'G';
 			C_E498(&(Party.chara[loc_B]._str));
 			C_E498(&(Party.chara[loc_B]._dex));
 			C_E498(&(Party.chara[loc_B]._int));
@@ -312,9 +312,9 @@ A champion of virtue is called for. Thou may be this champion, but only time sha
 		add_npc_talk(LORD_BRITISH, &AVATAR[0x16CEE + 0x3837] /* "How may I help thee?\n" */);
 	} else {
 		/*-- second time and after --*/
-		if(Party.chara[0]._stat == 'D') {
+		if(Party.chara[0]._status == 'D') {
 			/*resurection*/
-			Party.chara[0]._stat = 'G';
+			Party.chara[0]._status = 'G';
 			u4_puts(Party.chara[0]._name);
 			add_npc_talk(LORD_BRITISH, Party.chara[0]._name);
 			u4_puts(/*D_7A92*/&AVATAR[0x16D04 + 0x3837] /* ", Thou shalt live again!\n" */);

@@ -98,18 +98,18 @@ C_B863()
 			C_B730(bp_02, 1);
 		return 0;
 		case 3:
-			if(Party.chara[bp_02]._stat != 'P') {
+			if(Party.chara[bp_02]._status != 'P') {
 				u4_puts(D_2E04[0]);
 			} else {
-				Party.chara[bp_02]._stat = 'G';
+				Party.chara[bp_02]._status = 'G';
 				u4_puts(/*D_2F01*/&AVATAR[0x121A9 + 0x201A] /* "\nHmm--Delicious!\n" */);
 			}
 		break;
 		case 4:
-			if(Party.chara[bp_02]._stat == 'P') {
+			if(Party.chara[bp_02]._status == 'P') {
 				u4_puts(D_2E04[0]);
 			} else {
-				Party.chara[bp_02]._stat = 'P';
+				Party.chara[bp_02]._status = 'P';
 				u4_puts(/*D_2F13*/&AVATAR[0x121BB + 0x201A] /* "\nArgh-Choke-Gasp!\n" */);
 				C_B730(bp_02, 1);
 			};

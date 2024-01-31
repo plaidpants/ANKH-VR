@@ -16,7 +16,8 @@
 	typedef unsigned short U16;
 	typedef short S16;
 #else
-	typedef uint16_t  U16;
+	#define far
+	typedef uint16_t U16;
 	typedef int16_t S16;
 #endif
 
@@ -86,6 +87,19 @@
 #define DIR_N 1
 #define DIR_E 2
 #define DIR_S 3
+#define ST_USE_BELL   12
+#define ST_USE_BOOK   11
+#define ST_USE_CANDLE 10
+#define ST_WHEEL       9
+#define ST_HORN        8
+#define ST_KEY_T       7
+#define ST_KEY_L       6
+#define ST_KEY_C       5
+#define ST_BELL        4
+#define ST_BOOK        3
+#define ST_CANDLE      2
+#define ST_CAST_SKULL  1
+#define ST_SKULL       0
 
 #define DNG_X_p(x, dir) (((x) + D_080C[(dir)]) & 7)
 #define DNG_X_m(x, dir) (((x) - D_080C[(dir)]) & 7)
@@ -112,7 +126,11 @@ struct tNPC /*size:0x100*/ {
 	/*_80*/unsigned char _old_x[32], _old_y[32];
 	/*_c0*/unsigned char _var[32];/*_agressivity (or _z in dungeon)*/
 	/*_e0*/unsigned char _tlkidx[32];
-} __attribute__((packed));
+}
+#ifndef _WINDOWS
+__attribute__((packed))
+#endif
+;
 
 /* *.ULT or *.DNG */
 struct t_500 {
@@ -123,7 +141,11 @@ struct t_500 {
 	} /*__8742.__000*/_map;
 	/*MONSTERS.SAV or OUTMONST.SAV or .ULT(last 0x100 bytes)*/
 	struct tNPC /*__8B42/__8742.__400*/_npc;
-} __attribute__((packed));
+} 
+#ifndef _WINDOWS
+__attribute__((packed))
+#endif
+;
 
 struct tChara /*size:0x27*/ {
 	/*+00*/U16 _HP[2];
@@ -138,8 +160,13 @@ struct tChara /*size:0x27*/ {
 	/*+14*/char _name[16];
 	/*+24*/char p_24;/*sex char*/
 	/*+25*/char _class;
-	/*+26*/char _stat;
-} __attribute__((packed));;
+	/*+26*/char _status;
+}
+#ifndef _WINDOWS
+__attribute__((packed))
+#endif
+;
+
 
 struct tParty /*size:0x1f6*/ {
 //	/*+000*/unsigned long f_000;/*a counter*/
@@ -187,13 +214,13 @@ struct tParty /*size:0x1f6*/ {
 	/*+1f0*/U16 _dir;/*[dungeon]*/
 	/*+1f2*/S16 _z;/*[dungeon]*/
 	/*+1f4*/U16 _loc;
-} __attribute__((__packed__));
-
-#ifndef WIN32
-//_Static_assert(sizeof(U16) == 2);
-
-//_Static_assert(sizeof(struct tParty) == 502);
+}
+#ifndef _WINDOWS
+__attribute__((packed))
 #endif
+;
+
+
 #define TST_MSK(mask, bit) ((mask) & (1 << (bit)))
 #define SET_MSK(mask, bit) (mask) |= (1 << (bit))
 #define RST_MSK(mask, bit) (mask) &= ~(1 << (bit))
@@ -205,7 +232,12 @@ struct tCombat/*size:0xc0*/ {
 	char _030[16];/*padding?*/
 	unsigned char _map[11*11];/*_040 D_94B0*/
 	char _0b9[7];/*padding?*/
-} __attribute__((packed));
+}
+#ifndef _WINDOWS
+__attribute__((packed))
+#endif
+;
+
 
 #define Combat_MAP(a,b) (Combat._map[(a)*11+(b)])
 
@@ -215,7 +247,12 @@ struct t_68 {
 	/*030*/char _tile[16],_gtile[16];
 	/*050*/char _sleeping[16];
 	/*060*/char _chtile[8];
-} __attribute__((packed));
+}
+#ifndef _WINDOWS
+__attribute__((packed))
+#endif
+;
+
 
 /***************************************************************/
 /* note: pascal functions restore the stack by themsevles      */
@@ -404,8 +441,13 @@ extern C_E72C();
 struct tPSP {
 	unsigned char _00[0x80];
 	unsigned char _80[0x80];
-} __attribute__((packed));
-extern struct tPSP *far_psp;/*D_0078*/
+}
+#ifndef _WINDOWS
+__attribute__((packed))
+#endif
+;
+
+extern struct tPSP far *far_psp;/*D_0078*/
 
 extern unsigned /*D_0672*/cursor_rate;
 extern char cdecl /*D_06A6*/SoundFlag;
@@ -430,7 +472,7 @@ extern unsigned char * D_2468;
 /*====---- uninitialized ----====*/
 extern unsigned /*D_8728*/speed_info;
 extern unsigned /*D_872B*/equip_flags;
-extern void *patch_tandy;/*D_872D*/
+extern void far *patch_tandy;/*D_872D*/
 extern struct t_500 D_8742;
 
 /*====---- c_common ----====*/
@@ -438,19 +480,19 @@ extern unsigned char D_9140;
 extern unsigned char D_9141;
 extern int D_9142;
 extern struct tParty /*D_9144*/Party;
-extern tMap32x32 *D_933A[][8];
+extern tMap32x32 far *D_933A[][8];
 extern int D_943A;/* graphic adaptater type */
 extern unsigned char /*D_943C*/tile_forward;
 extern int D_943E;
 extern unsigned D_9440;
 extern unsigned char /*D_9442,D_9443*/ship_x, ship_y;
 extern unsigned char /*D_9444*/tile_cur;
-extern char D_9445;
+extern unsigned char D_9445;
 extern unsigned D_9446;
-extern char D_9448;
+extern unsigned char D_9448;
 extern char D_944A[];
 extern unsigned char D_9452;
-extern void /*D_9454*/*pShapes;
+extern void far /*D_9454*/*pShapes;
 extern jmp_buf D_9458;
 
 #define MOD_VISION   0
@@ -465,7 +507,12 @@ extern unsigned /*D_946A*/CurMode;
 
 struct aStruct {
 	unsigned char x, y;
-} __attribute__((packed));
+}
+#ifndef _WINDOWS
+__attribute__((packed))
+#endif
+;
+
 
 extern unsigned char D_946C;
 extern unsigned /*D_946E*/spell_cnt;
@@ -475,11 +522,11 @@ extern struct t_68 /*D_9530*/Fighters;
 extern int /*D_959A*/activeChara;
 extern struct aStruct D_959C;
 extern unsigned char /*D_959E*/tile_east;
-extern void /*D_95A0*/*pCharset;
+extern void far /*D_95A0*/*pCharset;
 extern char /*D_95A4*/spell_sta;
 extern struct aStruct D_95A5;
 extern int /*D_95A8*/txt_X;
-extern unsigned char /*D_95AA*/tile_north;
+extern char /*D_95AA*/tile_north;
 extern unsigned /*D_95AC*/activeCharaY;
 extern unsigned /*D_95AE*/hit_tile;
 extern unsigned char /*D_95B0,D_95B1*/hit_x, hit_y;

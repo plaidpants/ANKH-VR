@@ -199,22 +199,13 @@ int __cdecl Gra_0(
 	unsigned dst_ofs/*bp0c*/, unsigned dst_seg/*bp0e*/,
 	int dst_x_in_byte/*bp10*/
 ) {
-#ifndef WIN32
-	__android_log_print(ANDROID_LOG_INFO, "ANKH", "Gra_0\n");
-#endif
-
 	set_the_view_mutex();
 
 	while (get_the_view_mutex())
 	{
-#ifndef WIN32
-		__android_log_print(ANDROID_LOG_INFO, "ANKH", "Gra_0 wait for get_the_view_mutex false\n");
-#endif
 		Sleep(1 * SLEEPFACTOR);
 	}
-#ifndef WIN32
-	__android_log_print(ANDROID_LOG_INFO, "ANKH", "Gra_0 wait 10\n");
-#endif
+
 	Sleep(10 * SLEEPFACTOR);
 
 #ifdef ENABLE_WINDOWS
@@ -290,7 +281,8 @@ __cdecl Gra_3(
 			src += sizeof(unsigned short);
 
 			if(random_stuff != -1) {
-				static unsigned short D_32D0[] = {
+				static unsigned short * D_32D0 = (unsigned short *)&TITLE[0x72D0]; //{
+				#if 0
 					0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
 					0x0000,0x0001,0xC004,0x0010,0x0080,0x0104,0x0400,0x0401,
 					0x0100,0xC3C0,0x1000,0xC410,0x1004,0x0411,0x0110,0x03C4,
@@ -300,6 +292,7 @@ __cdecl Gra_3(
 					0xD3F1,0xF3FC,0x3C8F,0xCF8F,0x3F3F,0xFFCF,0x13FC,0xCFFF,
 					0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF
 				};
+				#endif
 				if(word == 0)
 					continue;
 				//TODO random noise sound

@@ -8,8 +8,9 @@
 
 #include <string.h>
 #include <stdlib.h>
+#ifndef _WINDOWS
 #include <android/log.h>
-
+#endif
 C_C445() {}
 C_C44A() {}
 C_C44F() {}

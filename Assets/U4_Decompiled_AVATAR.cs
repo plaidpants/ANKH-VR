@@ -4091,7 +4091,7 @@ sfx_storm:
 #endif
 
 #if USE_UNITY_DLL_FUNCTION
-            //moongate_x = main_D_9445();
+            moongate_x = main_D_9445();
 #else
             moongate_x = Native.Invoke<int, main_D_9445>(nativeLibraryPtr);
 #endif
@@ -4459,11 +4459,11 @@ sfx_storm:
 
             if (screen_xor_state == 1)
             {
-                Camera.main.GetComponent<Effects>().EnableFx();
+                Camera.main.GetComponent<ScreenInvertVR>().enabled = true ;
             }
             else
             {
-                Camera.main.GetComponent<Effects>().DisableFx();
+                Camera.main.GetComponent<ScreenInvertVR>().enabled = false;
             }
 
 #if USE_UNITY_DLL_FUNCTION

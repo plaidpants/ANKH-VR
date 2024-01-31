@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef WIN32
+#ifndef _WINDOWS
 #include <android/log.h>
 #endif
 
@@ -22,7 +22,7 @@ char *bp04;
 {
 	int bp_02;
 
-#ifndef WIN32
+#ifndef _WINDOWS
 	__android_log_print(ANDROID_LOG_INFO, "ANKH", bp04);
 #endif
 

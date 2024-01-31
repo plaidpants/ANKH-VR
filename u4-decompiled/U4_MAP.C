@@ -7,8 +7,9 @@
 #include "U4.H"
 
 #include <stdlib.h>
+#ifndef _WINDOWS
 #include <android/log.h>
-
+#endif
 int D_08CE = -1;
 int D_08D0 = -1;
 
@@ -20,25 +21,25 @@ unsigned bp04;
 	int bp_02;
 
 	if(D_08CE != -1) {
-		dfree((void *)D_933A[D_08D0][D_08CE]);
+		dfree((void far *)D_933A[D_08D0][D_08CE]);
 		D_933A[D_08D0][D_08CE] = 0;
 	}
 	if(D_933A[bp06][bp04] == 0) {
 #if 0
 		if ((File_MAP = dopen(/*D_314D*/&AVATAR[0x12319 + 0x2E2E] /* "WORLD.MAP" */, 0)) == -1) {
 			exit(3);
-		}
+		} // ADDED
 		if(dlseek(File_MAP, (bp06 * 8 + bp04) * sizeof(tMap32x32)) == -1)
 			exit(1);
-		D_933A[bp06][bp04] = (tMap32x32 *)dalloc(sizeof(tMap32x32));
+		D_933A[bp06][bp04] = (tMap32x32 far *)dalloc(sizeof(tMap32x32));
 		if(D_933A[bp06][bp04] == 0)
 			exit(1);
 		bp_02 = dread(File_MAP, D_933A[bp06][bp04], sizeof(tMap32x32));
 		if(bp_02 != sizeof(tMap32x32))
 			exit(3);
 
-		dclose(File_MAP);
-		File_MAP = 0;
+		dclose(File_MAP); // ADDED
+		File_MAP = 0; // ADDED
 #else
 		D_933A[bp06][bp04] = (tMap32x32*)dalloc(sizeof(tMap32x32));
 		if (D_933A[bp06][bp04] == 0)
@@ -159,7 +160,7 @@ C_27D9()
 	}
 }
 
-unsigned char * D_08EC = &AVATAR[0xFBA9 + 0x5] /* {0xE0,  0xE0,  0xE2,  0xE3,  0xE4,  0xE5,  0xE5,  0xE4} */;
+unsigned char * D_08EC = &AVATAR[0xFBA9 + 0x5] /* {  0xE0,  0xE0,  0xE2,  0xE3,  0xE4,  0xE5,  0xE5,  0xE4} */;
 unsigned char * D_08F4 = &AVATAR[0xFBB1 + 0x5] /* {  0xDC,  0xE4,  0xDC,  0xE4,  0xE3,  0xE1,  0xDF,  0xDE} */;
 unsigned char * D_08FC = &AVATAR[0xFBB9 + 0x5] /* {TIL_82,TIL_82,TIL_82,TIL_82,TIL_83,TIL_83,TIL_81,TIL_81} */;
 

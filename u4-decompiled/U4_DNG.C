@@ -140,9 +140,9 @@ C_87E2()
 
 	C_10FD();
 	for(di = &(Party.chara[0]), si = 0; si < Party.f_1d8; di ++, si++) {
-		if(di->_stat == 'S' && U4_RND1(7) == 0) {
-			di->_stat = 'G';
-		} else if(di->_stat == 'P') {
+		if(di->_status == 'S' && U4_RND1(7) == 0) {
+			di->_status = 'G';
+		} else if(di->_status == 'P') {
 			hitChara(si, 2);
 			Gra_11(si);
 			sound(6,0);

@@ -7,7 +7,9 @@
 #include "U4.H"
 
 #include <string.h>
+#ifndef _WINDOWS
 #include <android/log.h>
+#endif
 
 typedef tHandler_tlk(void);
 typedef tHandler_tlk *pHandler_tlk;
@@ -293,15 +295,47 @@ int bp04;
 	// Also the keyword INN has a space after the word so need to be careful when comparing strings 
 	// in the unity part of the code as some keywords are only one character
 	// The issue also exists with Michelle
-	if ((strncmp(D_8CCE[11], "HEAL", 4) == 0) && (strncmp(D_8CCE[0], "Calabrini", 4) == 0))
+	if ((_strnicmp(D_8CCE[11], "HEAL", 4) == 0) && (_strnicmp(D_8CCE[0], "Calabrini", 4) == 0))
 	{
-		D_8CCE[7] = "Dost thou seek\nan inn or art\nthou injured ?";
+		D_8CCE[7] = "Dost thou seek\nan inn or art\nthou injured?"; // reword text to use the word injured instead of Healing
 		D_8CCE[11] = "INJU";
 	}
 
-	if ((strncmp(D_8CCE[11], "HEAL", 4) == 0) && (strncmp(D_8CCE[0], "Michelle", 4) == 0))
+	if ((_strnicmp(D_8CCE[11], "HEAL", 4) == 0) && (_strnicmp(D_8CCE[0], "Michelle", 4) == 0))
 	{
-		D_8CCE[11] = "VISI";
+		D_8CCE[11] = "VISI"; // Trigger off the word visit instead of healer
+	}
+
+	// Additional talk file keyword fixes from Fenyx
+	if ((_strnicmp(D_8CCE[10], "REAS", 4) == 0) && (_strnicmp(D_8CCE[0], "Estro", 4) == 0))
+	{
+		D_8CCE[10] = "RESE";
+	}
+
+	if ((_strnicmp(D_8CCE[10], "SINE", 4) == 0) && (_strnicmp(D_8CCE[0], "a poor beggar.", 4) == 0))
+	{
+		D_8CCE[10] = "SINN";
+	}
+
+	// question trigger fixes
+	if ((D_95CE[0] == 0) && (_strnicmp(D_8CCE[0], "Water", 4) == 0))
+	{
+		D_95CE[0] = 6; // correct question index
+	}
+
+	if ((D_95CE[0] == 0) && (_strnicmp(D_8CCE[0], "Alkerion", 4) == 0))
+	{
+		D_95CE[0] = 6; // correct question index
+	}
+
+	if ((D_95CE[0] == 0) && (_strnicmp(D_8CCE[0], "Shamino", 4) == 0))
+	{
+		D_95CE[0] = 6; // correct question index
+	}
+
+	if ((D_95CE[0] == 0) && (_strnicmp(D_8CCE[0], "Charm", 4) == 0))
+	{
+		D_95CE[0] = 6; // correct question index
 	}
 
 	/*personnal question 1 & 2*/

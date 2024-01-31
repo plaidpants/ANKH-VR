@@ -10,7 +10,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <fcntl.h>
-
+#ifndef _WINDOWS
+#include <android/log.h>
+#endif
 __declspec(dllexport) int main_tile_cur()
 {
 	return tile_cur;
@@ -716,11 +718,6 @@ __declspec(dllexport) void main_set_dir(int direction)
 
 int QUIT = 0;
 
-#ifndef WIN32
-#include <android/log.h>
-extern int __android_log_print(int prio, const char* tag, const char* fmt, ...);
-#endif
-
 // load a complete copy of the original EXE here
 unsigned char AVATAR_original[98208];
 // expand into this 2x buffer
@@ -785,7 +782,7 @@ int /*C_08D1*/Save(char* filename, int file_size, char* buffer)
 	strcpy(path, getDataPath());
 	strcat(path, filename);
 
-#ifndef WIN32
+#ifndef _WINDOWS
 	__android_log_print(ANDROID_LOG_INFO, "ANKH", "open for writing path %s", path);
 #endif
 
@@ -794,7 +791,7 @@ int /*C_08D1*/Save(char* filename, int file_size, char* buffer)
 
 	if (file == NULL)
 	{
-#ifndef WIN32
+#ifndef _WINDOWS
 		__android_log_print(ANDROID_LOG_INFO, "ANKH", "error openning file for writing\n");
 #endif
 		return -1;
@@ -821,7 +818,7 @@ int Load(char* filename, int file_size, char* buffer)
 	strcpy(path, getDataPath());
 	strcat(path, filename);
 
-#ifndef WIN32
+#ifndef _WINDOWS
 	__android_log_print(ANDROID_LOG_INFO, "ANKH", "%s\n", path);
 #endif
 
@@ -830,7 +827,7 @@ int Load(char* filename, int file_size, char* buffer)
 
 	if (file == NULL) 
 	{
-#ifndef WIN32
+#ifndef _WINDOWS
 		__android_log_print(ANDROID_LOG_INFO, "ANKH", "error openning file for reading\n");
 #endif
 		return -1;
@@ -862,7 +859,7 @@ int LoadSeek(char* filename, int file_size, int offset, char* buffer)
 
 	if (file == NULL)
 	{
-#ifndef WIN32
+#ifndef _WINDOWS
 		__android_log_print(ANDROID_LOG_INFO, "ANKH", "error openning file for seeking\n");
 #endif
 		return -1;
@@ -886,8 +883,8 @@ __declspec(dllexport) int /*C_191E*/ main()
 {
 	register unsigned si = 0;
 	int bp_04;
-#ifndef WIN32
-	__android_log_print(ANDROID_LOG_INFO, "ANKH", "ANKH says hello 1\n");
+#ifndef _WINDOWS
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "ANKH says hello\n");
 #endif
 
 	// we will use this buffer to reference strings and other things originally in the EXE instead of embedding them in this code
@@ -968,16 +965,14 @@ __declspec(dllexport) int /*C_191E*/ main()
 		setjmp(D_9458);
 		t_callback();
 		C_9209();
-		if (C_10FD()) 
-		{
+		if(C_10FD()) {
 			u4_putc(0x10);
 			set_input_mode(INPUT_MODE_MAIN_INPUT);
 			u_delay(25, 1);
 			si = u_kbhit() ? u_kbread() : KBD_SPACE;
 			if (u4_isupper((unsigned char)si))
 				si = (si & 0xff00) | u4_lower((unsigned char)si);
-			switch (si) 
-			{
+			switch(si) {
 				case KBD_ESC: QUIT = 1;  return 0;
 				case KBD_SPACE: w_Pass(); break;
 				case 0x487e:
@@ -1015,8 +1010,7 @@ __declspec(dllexport) int /*C_191E*/ main()
 				case KBD_y: CMD_Yell(); break;
 				case KBD_z: CMD_Ztats(); break;
 				case KBD_CTRL_S:
-					if(bp_04 == KBD_ALT_Z)
-					{
+					if(bp_04 == KBD_ALT_Z) {
 						C_1C21();
 						break;
 					}
@@ -1026,17 +1020,13 @@ __declspec(dllexport) int /*C_191E*/ main()
 					D_07F8 = 0;
 					break;
 			}
-		} 
-		else 
-		{
+		} else {
+			u4_puts("Zzzzz\n");
 			u4_puts(&AVATAR[0xF94E + 0x5]); // "Zzzzz\n"
 		}
-		if (D_07F8 != 0) 
-		{
+		if(D_07F8 != 0) {
 			C_1C53();
-		} 
-		else 
-		{
+		} else {
 			t_callback();
 			D_07F8 = 1;
 		}
@@ -1156,9 +1146,9 @@ C_1C53()
 		Party._ship ++;
 	/*S=>G(randomly), P=>takes 2 hit*/
 	for(di = Party.chara, si = 0; si < Party.f_1d8; di++, si++) {
-		if(di->_stat == 'S' && U4_RND1(7) == 0) {
-			di->_stat = 'G';
-		} else if(di->_stat == 'P') {
+		if(di->_status == 'S' && U4_RND1(7) == 0) {
+			di->_status = 'G';
+		} else if(di->_status == 'P') {
 			hitChara(si, 2);
 			Gra_11(si); sound(6,0); Gra_11(si);
 		}

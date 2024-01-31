@@ -49,12 +49,12 @@ int bp04;
 		} else if(si == 0) {/*Acid*/
 			C_70CE(bp04);
 		} else if(si == 1) {/*Sleep*/
-			Party.chara[bp04]._stat = 'S';
+			Party.chara[bp04]._status = 'S';
 			if(CurMode >= MOD_COMBAT)
 				Fighters._chtile[bp04] = TIL_38;
 			C_09D9(bp04);
 		} else if(si == 2) {/*Poison*/
-			Party.chara[bp04]._stat = 'P';
+			Party.chara[bp04]._status = 'P';
 			dspl_Stats();
 			C_09D9(bp04);
 		} else {/*Bomb*/

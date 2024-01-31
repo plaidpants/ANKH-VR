@@ -848,18 +848,10 @@ static int the_view_mutex = 0;
 void set_the_view_mutex()
 {
 	the_view_mutex = 1;
-
-#ifndef WIN32
-	__android_log_print(ANDROID_LOG_INFO, "ANKH", "set_the_view_mutex %d\n", the_view_mutex);
-#endif
 }
 
 int get_the_view_mutex()
 {
-#ifndef WIN32
-	__android_log_print(ANDROID_LOG_INFO, "ANKH", "get_the_view_mutex %d\n", the_view_mutex);
-#endif
-
 	return the_view_mutex;
 }
 
@@ -869,15 +861,8 @@ __declspec(dllexport) int cdecl  main_D_3A24(unsigned char buffer[], int length)
 	// nothing to get
 	if (the_view_mutex == 0)
 	{
-#ifndef WIN32
-		__android_log_print(ANDROID_LOG_INFO, "ANKH", "main_D_3A24 nothing to get\n");
-#endif
 //		return 0;  // TODO: This mutex is not working for some reason
 	}
-
-#ifndef WIN32
-	__android_log_print(ANDROID_LOG_INFO, "ANKH", "main_D_3A24\n");
-#endif
 
 	if (length >= sizeof(D_3A24))
 	{
@@ -905,7 +890,7 @@ __declspec(dllexport) cdecl /*C_0EAA*/main()
 	CMN_kbhit = 0;
 
 #ifndef WIN32
-	__android_log_print(ANDROID_LOG_INFO, "ANKH", "ANKH TITLE says hello 1\n");
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "ANKH TITLE says hello\n");
 #endif
 
 	// we will use this buffer to reference strings and other things originally in the EXE instead of embedding them in this code

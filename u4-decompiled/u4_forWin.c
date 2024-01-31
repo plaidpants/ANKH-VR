@@ -5,6 +5,11 @@
 #include <string.h>
 //#include <io.h>
 #include <fcntl.h>
+#include <stdlib.h>
+
+#ifndef _WINDOWS
+#include <android/log.h>
+#endif
 
 #ifdef ENABLE_WINDOWS
 #include <windows.h>
@@ -810,11 +815,6 @@ int dlseek_deprecated(FILE* f, unsigned long ofs)
 	return ret;
 }
 
-#ifndef WIN32
-#include <android/log.h>
-extern int __android_log_print(int prio, const char* tag, const char* fmt, ...);
-#endif
-
 FILE* dopen_deprecated(char* filename, int mode)
 {
 	FILE* filepointer;
@@ -823,14 +823,14 @@ FILE* dopen_deprecated(char* filename, int mode)
 	strcpy(path, getDataPath());
 	strcat(path, filename);
 
-#ifndef WIN32
+#ifndef _WINDOWS
 	__android_log_print(ANDROID_LOG_INFO, "ANKH path", path);
 #endif
 
 	//ret = _open(path, _O_RDWR | _O_BINARY);
 	filepointer = fopen(path, "rb");
 
-#ifndef WIN32
+#ifndef _WINDOWS
 	__android_log_print(ANDROID_LOG_INFO, "ANKH File", "File * %d", filepointer);
 #endif
 
@@ -841,7 +841,7 @@ int dread_deprecated(FILE* filepointer, void* buffer, int buffersize)
 {
 	int byteswritten;
 
-#ifndef WIN32
+#ifndef _WINDOWS
 	__android_log_print(ANDROID_LOG_INFO, "ANKH count", "count A %d, FD %d, buffer %d", buffersize, filepointer, buffer);
 #endif
 
@@ -850,7 +850,7 @@ int dread_deprecated(FILE* filepointer, void* buffer, int buffersize)
 	{
 		// error
 	}
-#ifndef WIN32
+#ifndef _WINDOWS
 	__android_log_print(ANDROID_LOG_INFO, "ANKH count", "count B %d ret %d", buffersize, byteswritten);
 #endif
 
@@ -1138,6 +1138,7 @@ unsigned char u_rand_b()
 	return rand();
 }
 
+#ifndef _WINDOWS
 int _strnicmp(const char* s1, const char* s2, size_t n) {
 	if (n == 0) {
 		return 0;
@@ -1161,5 +1162,5 @@ int Sleep(int time)
 	usleep(time * 1000);
 	return 0;
 }
-
+#endif
 #endif // #ifdef ENABLE_WINDOWS

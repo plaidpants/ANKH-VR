@@ -12,7 +12,7 @@ C_919A()
 
 	for(si = Party.f_1d8; --si >= 0; ) {
 		if(isCharaConscious(si) && U4_RND1(3) == 0) {
-			Party.chara[si]._stat = 'S';
+			Party.chara[si]._status = 'S';
 			C_09D9(si);
 			dspl_Stats();
 		}
@@ -24,8 +24,8 @@ C_91D1()
 	register int si;
 
 	for(si = Party.f_1d8; --si >= 0; ) {
-		if(Party.chara[si]._stat == 'G' && U4_RND1(7) == 0) {
-			Party.chara[si]._stat = 'P';
+		if(Party.chara[si]._status == 'G' && U4_RND1(7) == 0) {
+			Party.chara[si]._status = 'P';
 			C_09D9(si);
 			dspl_Stats();
 		}
@@ -53,15 +53,15 @@ C_9209()
 			return 0;
 		switch(Combat_MAP(Combat._charaY[activeChara], Combat._charaX[activeChara])) {
 			case TIL_03: case TIL_44:
-				if(Party.chara[activeChara]._stat == 'G') {
-					Party.chara[activeChara]._stat = 'P';
+				if(Party.chara[activeChara]._status == 'G') {
+					Party.chara[activeChara]._status = 'P';
 					C_09D9(activeChara);
 					dspl_Stats();
 				}
 			break;
 			case TIL_47:
 				if(isCharaConscious(activeChara)) {
-					Party.chara[activeChara]._stat = 'S';
+					Party.chara[activeChara]._status = 'S';
 					Fighters._chtile[activeChara] = TIL_38;
 					C_09D9(activeChara);
 					dspl_Stats();

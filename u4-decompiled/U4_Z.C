@@ -65,7 +65,7 @@ int bp04;
 	txt_X = 24;
 	txt_Y = 1; u4_putc(si->p_24);
 	txt_Y = 1; C_45D6(D_1E98[77 + si->_class], 0);
-	txt_X = 38; u4_putc(si->_stat);
+	txt_X = 38; u4_putc(si->_status);
 	txt_X = 25;
 	txt_Y = 3; u4_puts(/*D_18D6*/&AVATAR[0x10B89 + 0x200F] /* "MP:" */); u4_putl(si->_MP, 2, '0');
 	txt_X = 32; u4_puts(/*D_18DA*/&AVATAR[0x10B8D + 0x200F] /* "LV:" */); u4_putc((si->_HP[1]/100)+'0');
@@ -200,41 +200,41 @@ C_4A3D()
 		} while(++si < 8);
 		txt_Y ++;
 	}
-	if(TST_MSK(Party.mItems, 4) || TST_MSK(Party.mItems, 3) || TST_MSK(Party.mItems, 2)) {
+	if(TST_MSK(Party.mItems, ST_BELL) || TST_MSK(Party.mItems, ST_BOOK) || TST_MSK(Party.mItems, ST_CANDLE)) {
 		txt_X = 24;
-		if(TST_MSK(Party.mItems, 4))
+		if(TST_MSK(Party.mItems, ST_BELL))
 			u4_puts(/*D_196A*/&AVATAR[0xF56C + 0x5] /* "Bell " */);
-		if(TST_MSK(Party.mItems, 3))
+		if(TST_MSK(Party.mItems, ST_BOOK))
 			u4_puts(/*D_1970*/&AVATAR[0x10C23 + 0x200F] /* "Book " */);
-		if(TST_MSK(Party.mItems, 2)) {
+		if(TST_MSK(Party.mItems, ST_CANDLE)) {
 			u4_puts(/*D_1976*/&AVATAR[0xF5BA + 0x5] /* "Candl" */);
-			if(!TST_MSK(Party.mItems, 3) || !TST_MSK(Party.mItems, 4))
+			if(!TST_MSK(Party.mItems, ST_BOOK) || !TST_MSK(Party.mItems, ST_BELL))
 				u4_putc('e');
 		}
 		txt_Y ++;
 	}
-	if(TST_MSK(Party.mItems, 5) || TST_MSK(Party.mItems, 6) || TST_MSK(Party.mItems, 7)) {
+	if(TST_MSK(Party.mItems, ST_KEY_C) || TST_MSK(Party.mItems, ST_KEY_L) || TST_MSK(Party.mItems, ST_KEY_T)) {
 		txt_X = 24;
 		u4_puts(/*D_197C*/&AVATAR[0x10C2F + 0x200F] /* "3 Part Key:" */);
-		if(TST_MSK(Party.mItems, 7))
+		if(TST_MSK(Party.mItems, ST_KEY_T))
 			u4_putc('T');
-		if(TST_MSK(Party.mItems, 6))
+		if(TST_MSK(Party.mItems, ST_KEY_L))
 			u4_putc('L');
-		if(TST_MSK(Party.mItems, 5))
+		if(TST_MSK(Party.mItems, ST_KEY_C))
 			u4_putc('C');
 		txt_Y ++;
 	}
-	if(TST_MSK(Party.mItems, 8)) {
+	if(TST_MSK(Party.mItems, ST_HORN)) {
 		txt_X = 24;
 		u4_puts(/*D_1988*/&AVATAR[0xF5DA + 0x5] /* "Horn" */);
 		txt_Y ++;
 	}
-	if(TST_MSK(Party.mItems, 9)) {
+	if(TST_MSK(Party.mItems, ST_WHEEL)) {
 		txt_X = 24;
 		u4_puts(/*D_198D*/&AVATAR[0xF608 + 0x5] /* "Wheel" */);
 		txt_Y ++;
 	}
-	if(TST_MSK(Party.mItems, 0)) {
+	if(TST_MSK(Party.mItems, ST_SKULL)) {
 		txt_X = 24;
 		u4_puts(/*D_1993*/&AVATAR[0xF63B + 0x5] /* "Skull" */);
 	}

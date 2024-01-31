@@ -57,11 +57,11 @@ C_8DE0()
 
 C_8E16()
 {
-	if(TST_MSK(Party.mItems, 4)) {
+	if(TST_MSK(Party.mItems, ST_BELL)) {
 		u4_puts(D_27A6);
 		return 0;
 	}
-	SET_MSK(Party.mItems, 4);
+	SET_MSK(Party.mItems, ST_BELL);
 	C_8D4B();
 	u4_puts(/*D_27E1*/&AVATAR[0x11A8C + 0x2017] /* "The Bell of Courage!\n" */);
 	XP_inc(0, 400);
@@ -69,11 +69,11 @@ C_8E16()
 
 C_8E46()
 {
-	if(TST_MSK(Party.mItems, 8)) {
+	if(TST_MSK(Party.mItems, ST_HORN)) {
 		u4_puts(D_27A6);
 		return 0;
 	}
-	SET_MSK(Party.mItems, 8);
+	SET_MSK(Party.mItems, ST_HORN);
 	C_8D4B();
 	u4_puts(/*D_27F7*/&AVATAR[0x11AA2 + 0x2017] /* "A Silver Horn!\n" */);
 	XP_inc(0, 400);
@@ -81,11 +81,11 @@ C_8E46()
 
 C_8E77()
 {
-	if(TST_MSK(Party.mItems, 9)) {
+	if(TST_MSK(Party.mItems, ST_WHEEL)) {
 		u4_puts(D_27A6);
 		return 0;
 	}
-	SET_MSK(Party.mItems, 9);
+	SET_MSK(Party.mItems, ST_WHEEL);
 	C_8D4B();
 	u4_puts(/*D_2807*/&AVATAR[0x11AB2 + 0x2017] /* "The Wheel from the H.M.S. Cape!\n" */);
 	XP_inc(0, 400);
@@ -94,14 +94,14 @@ C_8E77()
 C_8EA8()
 {
 	if(
-		TST_MSK(Party.mItems, 0) ||
+		TST_MSK(Party.mItems, ST_SKULL) ||
 		(Party._trammel | Party._felucca) ||
-		TST_MSK(Party.mItems, 1)
+		TST_MSK(Party.mItems, ST_CAST_SKULL)
 	) {
 		u4_puts(D_27A6);
 		return 0;
 	}
-	SET_MSK(Party.mItems, 0);
+	SET_MSK(Party.mItems, ST_SKULL);
 	C_8D4B();
 	u4_puts(/*D_2828*/&AVATAR[0x11AD3 + 0x2017] /* "The Skull of Mondain the Wizard!\n" */);
 	XP_inc(0, 400);
@@ -136,11 +136,11 @@ C_8F21()
 
 C_8F51()
 {
-	if(TST_MSK(Party.mItems, 3)) {
+	if(TST_MSK(Party.mItems, ST_BOOK)) {
 		u4_puts(D_27A6);
 		return 0;
 	}
-	SET_MSK(Party.mItems, 3);
+	SET_MSK(Party.mItems, ST_BOOK);
 	C_8D4B();
 	u4_puts(/*D_286E*/&AVATAR[0x11B19 + 0x2017] /* "The Book of Truth!\n" */);
 	XP_inc(0, 400);
@@ -148,11 +148,11 @@ C_8F51()
 
 C_8F81()
 {
-	if(TST_MSK(Party.mItems, 2)) {
+	if(TST_MSK(Party.mItems, ST_CANDLE)) {
 		u4_puts(D_27A6);
 		return 0;
 	}
-	SET_MSK(Party.mItems, 2);
+	SET_MSK(Party.mItems, ST_CANDLE);
 	C_8D4B();
 	u4_puts(/*D_2882*/&AVATAR[0x11B2D + 0x2017] /* "The Candle of Love!\n" */);
 	XP_inc(0, 400);

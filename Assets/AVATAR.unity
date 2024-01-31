@@ -6242,8 +6242,8 @@ GameObject:
   - component: {fileID: 608211744}
   - component: {fileID: 608211743}
   - component: {fileID: 608211746}
-  - component: {fileID: 608211747}
   - component: {fileID: 608211748}
+  - component: {fileID: 608211749}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -6486,23 +6486,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &608211747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 608211741}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 134fae17805a1bc42b69e538e74e7bb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  on: 1
-  contrast: 0
-  brightness: 0
-  effectType: 2
-  styleStrength: 0
 --- !u!114 &608211748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6510,7 +6493,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 608211741}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3ab96a88c661ea49bcd93a60c4e7f39, type: 3}
   m_Name: 
@@ -6518,6 +6501,19 @@ MonoBehaviour:
   shakeMagnitude: 0.2
   shakeFrequency: 20
   debug: 0
+--- !u!114 &608211749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 608211741}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32f60b68fef1b348a95f54e5924488a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  negativeShader: {fileID: 4800000, guid: cd1f15a197dd879408f91b73580d3bf1, type: 3}
 --- !u!1 &610704106
 GameObject:
   m_ObjectHideFlags: 0
