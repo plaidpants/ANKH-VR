@@ -58,7 +58,7 @@ Oculus Quest Android ANKH-VR Unity Persistant Storage area location, use SideQue
 
   /sdcard/Android/data/com.SwivelChairGames.ANKHVR/files/u4/AVATAR.EXE <- you should have this file at this directory location along with all the other files from the Utima 4 Install directory
 
-Extra step is required on the Oculus Quest, if you copy any save game files, the .SAV files, you will need to make them write-able as by default when you upload them to the Oculus Quest they are only readable by the game not write-able, to fix this you need to execute this custom command from SideQuest or from adb directly to change the permission on the .SAV files to allow reading and writing. If you don't copy this files and you create a new game the files will be write-able by default.
+Extra step is required on the Oculus Quest, if you copy any save game files, the .SAV files, you will need to make them write-able as by default when you upload them to the Oculus Quest they are only readable by the game not write-able, to fix this you need to execute this custom command from SideQuest or from adb directly to change the permission on the .SAV files to allow reading and writing. If you don't copy these files and you create a new game the files will be created write-able by default.
 
   adb shell chmod 660  /sdcard/Android/data/com.SwivelChairGames.ANKHVR/files/u4/*.SAV
 
