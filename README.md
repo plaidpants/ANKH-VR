@@ -1,9 +1,9 @@
 # ANKH VR
 <img src="https://user-images.githubusercontent.com/8979271/177441885-38f6dcca-48a4-4bd2-8031-42c6c518364e.png" width=50% height=50%>
 
-This project runs the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift or Oculus Quest using a link connection or natively on the oculus quest other systems may be supported in the future. It is functionally complete but there are bugs and minor stuff and improvements to make but I would consider it alpha on the oculus quest and Beta on the PC at this point.
+This project runs the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift or Oculus Quest using a link connection or natively on the oculus quest, other systems may be supported in the future. It is functionally complete but there are bugs and minor stuff and improvements to make but I would consider it alpha on the oculus quest and Beta on the PC at this point.
 
-The oculus quest version does not rely on patching the original EXE into a modern shared library like I did on the PC and instead references all internal text and data from the original EXE's. The Android OS current does not allow dynamic linking with non-NDK native libraries 
+The oculus quest version does not rely on patching the original EXE into a modern shared library like the PC version and instead references all internal text and data from the original EXE's. The Android OS current does not allow dynamic linking with non-NDK native libraries 
 https://developer.android.com/about/versions/nougat/android-7.0-changes#ndk
 
 Instructions for PC or Oculus Quest:
@@ -16,19 +16,19 @@ Install the game on a Windows PC in a folder.
 
 e.g. [GOGLibrary]\Ultima 4 - Quest of the Avatar
 
-Download, rename and place in the ultima 4 install folder the original mockingboard music or other suitable music in mp3 or ogg format.
+Download, rename and place in the ultima 4 install folder the original mockingboard music or other suitable music in MP3 or OGG format. FYI, android/Quest is case sensitive.
   
 http://www.applevault.com/ultima/
 
-castles.mp3<br />
-combat.mp3<br />
-dungeon.mp3<br />
-fanfare.mp3<br />
-rulebrit.mp3<br />
-shopping.mp3<br />
-shrines.mp3<br />
-towns.mp3<br />
-wanderer.mp3<br />
+CASTLES.MP3<br />
+COMBAT.MP3<br />
+DUNGEON.MP3<br />
+FANFARE.MP3<br />
+RULEBRIT.MP3<br />
+SHOPPING.MP3<br />
+SHRINES.MP3br />
+TOWNS.MP3<br />
+WANDERER.MP3<br />
 
 or 
 
@@ -44,7 +44,7 @@ To run on your PC, download and extract the AVATAR.bps & TITLE.bps patch file fo
 
 https://github.com/plaidpants/u4-decompiled/releases
 
-Copy the contents of the entire ultima 4 install folder to the Unity Persistant Storage area for the ANKH-VR game on your system and then run ANKH-VR
+Copy the contents of the entire ultima 4 install folder to the Unity Persistant Storage area for the ANKH-VR game on your system and then run ANKH-VR, FYI Android/Quest is case sensitive.
 
 Windows PC ANKH-VR Unity Persistant Storage area location
   
@@ -58,7 +58,7 @@ Oculus Quest Android ANKH-VR Unity Persistant Storage area location, use SideQue
 
   /sdcard/Android/data/com.SwivelChairGames.ANKHVR/files/u4/AVATAR.EXE <- you should have this file at this directory location along with all the other files from the Utima 4 Install directory
 
-Extra step is required on the Oculus Quest, if you copy any save game files, the .SAV files, you will need to make them write-able as by default when you upload them to the Oculus Quest they are only readable by the game not write-able, to fix this you need to execute this custom command from SideQuest or from adb directly to change the permission on the .SAV files to allow reading and writing. If you don't copy this files and you you create a new game the files will be write-able by default.
+Extra step is required on the Oculus Quest, if you copy any save game files, the .SAV files, you will need to make them write-able as by default when you upload them to the Oculus Quest they are only readable by the game not write-able, to fix this you need to execute this custom command from SideQuest or from adb directly to change the permission on the .SAV files to allow reading and writing. If you don't copy this files and you create a new game the files will be write-able by default.
 
   adb shell chmod 660  /sdcard/Android/data/com.SwivelChairGames.ANKHVR/files/u4/*.SAV
 
