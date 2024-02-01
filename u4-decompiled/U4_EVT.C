@@ -37,7 +37,7 @@ C_9209()
 {
 	unsigned bp_02;
 
-	if(CurMode == MOD_OUTDOORS && tile_cur == TIL_17 && U4_RND1(7) == 0) {	// TODO: add not flying in the balloon
+	if(CurMode == MOD_OUTDOORS && tile_cur == TIL_17 && U4_RND1(7) == 0 && Party.f_1dc != 0) {	// Added and not flying in the balloon
 		u4_puts(/*D_2998*/&AVATAR[0x11C43 + 0x2017] /* "\nBridge Trolls!\n" */);
 		D_96F8 = TIL_A4;
 		D_9772 = Party._x;
