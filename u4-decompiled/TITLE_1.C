@@ -592,12 +592,12 @@ casting.\n",
 /*0x37*//*D_2CC7*/& TITLE[0x6CC7], //"\n\nThe gypsy places the last two cards ",
 /*0x38*//*D_2CEC*/& TITLE[0x6CEC], //"upon the table. They are the cards of ",
 
-/*0x39*//*D_2D14*/&TITLE[0x458B] /* "Honesty" */,
-/*0x3a*//*D_2D1C*/&TITLE[0x44C7] /* "Compassion" */,
-/*0x3b*//*D_2D27*/&TITLE[0x45AF] /* "Valor" */,
-/*0x3c*//*D_2D2D*/&TITLE[0x4BD7] /* "Justice" */,
-/*0x3d*//*D_2D35*/&TITLE[0x4C7C] /* "Sacrifice" */,
-/*0x3e*//*D_2D3F*/&TITLE[0x486B] /* "Honor" */,
+/*0x39*//*D_2D14*/&TITLE[0x6D14] /* "Honesty" */,
+/*0x3a*//*D_2D1C*/&TITLE[0x6D1C] /* "Compassion" */,
+/*0x3b*//*D_2D27*/&TITLE[0x6D27] /* "Valor" */,
+/*0x3c*//*D_2D2D*/&TITLE[0x6D2D] /* "Justice" */,
+/*0x3d*//*D_2D35*/&TITLE[0x6D35] /* "Sacrifice" */,
+/*0x3e*//*D_2D3F*/&TITLE[0x6D3F] /* "Honor" */,
 /*0x3f*//*D_2D45*/&TITLE[0x6D45] /* "Spirituality" */,
 /*0x40*//*D_2D52*/&TITLE[0x6D52] /* "Humility" */,
 /*0x41*//*D_2D5B*/"",
@@ -632,7 +632,14 @@ char *bp04;
 	char bp_02;
 
 	while(bp_02 = *bp04) {
-		if(bp_02 == '\n') {
+		if ((*bp04 == 'A' || *bp04 == 'B') & (*(bp04 + 1) == ')')) {
+			// add a newlines between questions for better text formattng
+			add_char_to_text_buffer('\n');			
+		}
+
+		if ((*bp04 == ' ') && (*(bp04 + 1) == ' ')) {
+			// remove double spaces
+		} else if(bp_02 == '\n') {
 			add_char_to_text_buffer(bp_02);
 			txt_Y ++;
 			txt_X = 0;
@@ -891,14 +898,11 @@ C_2C12()
 			u4_puts(/*D_2F52*/STR(0x37));
 		else
 			u4_puts(/*D_2F50*/STR(0x36));
-		u4_puts("\n\n");
 		u4_puts(/*D_2F54*/STR(0x38));
 		C_2B6D(loc_B, 0);
-		u4_puts("\n\n");
 		u4_puts(STR(0x39 + loc_B));
-		u4_puts(/*D_308E*/&TITLE[0x45B5] /* " and " */);
+		u4_puts(/*D_308E*/&TITLE[0x708E] /* " and " */);
 		C_2B6D(loc_C, 1);
-		u4_puts("\n\n");
 		u4_puts(STR(0x39 + loc_C));
 		u4_puts(/*D_3094*/ &TITLE[0x7094] /* ". She says \"Consider this:\"" */);
 		set_input_mode(INPUT_MODE_GENERAL_TEXT_CONTINUE);
