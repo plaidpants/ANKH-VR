@@ -96,7 +96,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderCompileAs>CompileAsC</PrecompiledHeaderCompileAs>
       <CppLanguageStandard>Default</CppLanguageStandard>
-      <PreprocessorDefinitions>SLEEPFACTOR=2;DISABLE_WINDOWS;__ANDROID_API__=$(AndroidAPILevelNumber);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SLEEPFACTOR=1;DISABLE_WINDOWS;__ANDROID_API__=$(AndroidAPILevelNumber);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>-fdeclspec -fsigned-char %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
