@@ -10,7 +10,9 @@
 #include "U4.H"
 
 #include <stdlib.h>
-
+#ifndef _WINDOWS
+#include <android/log.h>
+#endif
 char * D_27A6 = &AVATAR[0x11A51 + 0x2017] /* "Nothing Here!\n" */;
 
 /* "You find..." & karma+=5*/
@@ -249,7 +251,11 @@ typedef s_handler *pS_handler;
 struct t_05_original {
 	unsigned char _00, _01, _02;
 	short _03;
-} * D_2920_original[] = {
+} 
+#ifndef _WINDOWS
+__attribute__((packed))
+#endif
+* D_2920_original[] = {
 	&AVATAR[0x11BCB + 0x2017], // {0x00,0xB6,0x36,C_8DAA},/*Mandrake root*/
 	&AVATAR[0x11BD0 + 0x2017], // {0x00,0x64,0xA5,C_8DAA},/*Mandrake root*/
 	&AVATAR[0x11BD5 + 0x2017], // {0x00,0x2E,0x95,C_8DE0},/*Nightshade*/
@@ -278,6 +284,7 @@ struct t_05_original {
 
 
 pS_handler D_2920_handler[] = {
+	C_8DAA,/*Mandrake root*/
 	C_8DAA,/*Mandrake root*/
 	C_8DE0,/*Nightshade*/
 	C_8DE0,/*Nightshade*/
