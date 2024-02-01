@@ -3614,7 +3614,7 @@ public class World : MonoBehaviour
                     {
                         for (int x = 0; x < raycastOutdoorMap.GetLength(0); x++)
                         {
-                            raycastOutdoorMap[x, y] = Outdoor.outdoorMap[x + offset_x, y + offset_y];
+                            raycastOutdoorMap[x, y] = Outdoor.outdoorMap[(x + offset_x + Outdoor.outdoorMap.GetLength(0)) % Outdoor.outdoorMap.GetLength(0), (y + offset_y + Outdoor.outdoorMap.GetLength(1)) % Outdoor.outdoorMap.GetLength(1)];
                         }
                     }
                 }
