@@ -66,6 +66,8 @@ Extra step is required on the Oculus Quest, if you copy any save game files, the
 
   adb shell chmod 666  /sdcard/Android/data/com.SwivelChairGames.ANKHVR/files/u4/*.SAV
 
+Note: this port of Ultima 4 does not support any modifications or patches to the AVATAR.EXE or TITLE.EXE that move any of the data around in these files so many of the randomizer or other patchers will cause trouble and make it not work. It does support patches to the other files (.TLK, .DNG, etc.) so any fixes or modifications to those files would probabaly be supported. I will try and incorperate some of the fixes from other Ultima 4 projects in the future.
+
 This project does not contain any copyrighted game assets or code or data or text or graphics or fonts or any other intellectual property related to Ultima 4 it relies completely on the files from the original game. This project is not licensed by Origin Systems or Electronic Arts.
 
 ![OculusScreenshot1656893311](https://user-images.githubusercontent.com/8979271/177064319-6e233842-107a-498e-929a-6e0cb1e17b65.jpeg)
