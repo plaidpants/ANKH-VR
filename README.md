@@ -65,6 +65,8 @@ Extra step is required on the Oculus Quest, if you copy any save game files, the
 <img width="306" alt="snap" src="https://github.com/plaidpants/ANKH-VR/assets/8979271/2c168cd5-7e3b-42c9-bbb6-246b87613552">
 
   adb shell chmod 666  /sdcard/Android/data/com.SwivelChairGames.ANKHVR/files/u4/*.SAV
+  
+<img width="717" alt="snap3" src="https://github.com/plaidpants/ANKH-VR/assets/8979271/01efaa7a-1799-4406-8f21-6229894f48d8">
 
 Note: this port of Ultima 4 does not support any modifications or patches to the AVATAR.EXE or TITLE.EXE that move any of the data around in these files so many of the randomizer or other patchers will cause trouble and make it not work. It does support patches to the other files (.TLK, .DNG, etc.) so any fixes or modifications to those files would probabaly be supported. I will try and incorperate some of the fixes from other Ultima 4 projects in the future.
 
