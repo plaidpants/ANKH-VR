@@ -53,6 +53,7 @@ Windows PC ANKH-VR Unity Persistant Storage area location
   %APPDATA%\\..\LocalLow\SwivelChairGames\ANKH-VR\u4\AVATAR.EXE <- you should have this file at this directory location along with all the other files from the Utima 4 Install directory
 
 Oculus Quest Android ANKH-VR Unity Persistant Storage area location, use SideQuest or other means to copy these files to this location. **NOTE: Sidequest sometimes fails to copy all the files when you copy a bunch of them so double check all the files transferred before continuing.**
+
 <img width="306" alt="snap2" src="https://github.com/plaidpants/ANKH-VR/assets/8979271/0844bed8-4837-4609-83a3-c18c1aecb53d">
 
 /sdcard/Android/data/com.SwivelChairGames.ANKHVR/files/u4
