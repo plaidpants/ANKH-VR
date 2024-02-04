@@ -192,13 +192,17 @@ unsigned char * D_4190[] = {
 	add_npc_talk(VENDOR_REAGENT, &AVATAR[0x1324E + 0x2E2E] /* "Welcome to " */);
 	u4_puts(D_4180[D_9142]);
 	add_npc_talk(VENDOR_REAGENT, D_4180[D_9142]);
+	u4_puts(". ");
+	add_npc_talk(VENDOR_REAGENT, ". ");
 	Gra_13();
 	C_4BC7();
 	u4_puts(/*D_3FDF*/ &AVATAR[0x1325A + 0x2E2E] /* ". \n\nI am " */);
 	add_npc_talk(VENDOR_REAGENT, &AVATAR[0x1325A + 0x2E2E] /* ". I am " */);
 	u4_puts(D_4188[D_9142]);
 	add_npc_talk(VENDOR_REAGENT, D_4188[D_9142]);
-	u4_puts(/*D_3FE7*/&AVATAR[0x13262 + 0x2E2E] /* ". \nAre you in need of Reagents?\x12\x12\b" */);
+	u4_puts(". \n");
+	add_npc_talk(VENDOR_REAGENT, ". \n");
+	u4_puts(/*D_3FE7*/&AVATAR[0x13262 + 0x2E2E] /* "Are you in need of Reagents?\x12\x12\b" */);
 	add_npc_talk(VENDOR_REAGENT, &AVATAR[0x13262 + 0x2E2E] /* ". \nAre you in need of Reagents?\n" */);
 	set_input_mode(INPUT_MODE_GENERAL_YES_NO);
 	loc_C = AskY_N();
@@ -373,11 +377,25 @@ C_CD1D(bp06, bp04)
 int bp06;
 int bp04;
 {
-	if(D_46D2[bp06] * bp04 > Party._gold) {
+// SHOP overflow bug fix
+#if 0
+	if (D_46D2[bp06] * bp04 > Party._gold) {
 		u4_puts(/*D_4652*/&AVATAR[0x138CD + 0x2E2E] /* "I fear you have not the funds, perhaps something else.\n" */);
 		add_npc_talk(VENDOR_WEAPON, &AVATAR[0x138CD + 0x2E2E] /* "I fear you have not the funds, perhaps something else." */);
 		return 0;
+}
+#else
+	register int si;
+	/*Loop so it can't jump to an overflow and allow purchasing a lot of items for cheap. */
+	for (si = 0; si <= bp04; si++) {
+		if (D_46D2[bp06] * si > Party._gold) {
+			u4_puts(/*D_4652*/&AVATAR[0x138CD + 0x2E2E] /* "I fear you have not the funds, perhaps something else.\n" */);
+			add_npc_talk(VENDOR_WEAPON, &AVATAR[0x138CD + 0x2E2E] /* "I fear you have not the funds, perhaps something else." */);
+			return 0;
+		}
 	}
+#endif
+
 	Party._gold -= D_46D2[bp06] * bp04; dspl_Gold();
 	Party._weapons[bp06] += bp04;
 	if(Party._weapons[bp06] > 99)
