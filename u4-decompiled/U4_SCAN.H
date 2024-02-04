@@ -34,6 +34,7 @@
 #define KBD_6 0x0736
 #define KBD_7 0x0837
 #define KBD_8 0x0938
+#define KBD_9 0x0a39
 #define KBD_0 0x0b30
 
 #define KBD_a 0x1E61

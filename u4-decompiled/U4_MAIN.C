@@ -1120,7 +1120,7 @@ __declspec(dllexport) void main_keyboardHit(char wParam)
 		case '6': CMN_kbhit = KBD_6; break;
 		case '7': CMN_kbhit = KBD_7; break;
 		case '8': CMN_kbhit = KBD_8; break;
-		//case '9': CMN_kbhit = KBD_9; break;
+		case '9': CMN_kbhit = KBD_9; break;
 	}
 }
 
