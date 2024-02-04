@@ -52,7 +52,8 @@
 			// Set the height of the camera
 			transform.position = new Vector3(transform.position.x ,currentHeight , transform.position.z);
 
-			// Always look at the target
-			transform.LookAt(target);
+			// Always look at the target, this makes the camera look down at the party/player tile, this causes discomfort for some people
+			// as the horizon is now not flat.
+			//transform.LookAt(target);
 		}
 	}
