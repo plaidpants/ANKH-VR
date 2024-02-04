@@ -234,8 +234,12 @@ char *D_2BB2[] = {
 			u4_puts(D_8CCE[1]);
 			u4_puts(/*D_2C1A*/&AVATAR[0x11EC5 + 0x2017] /* " says: Oh, Thank thee! I shall never forget thy kindness!\n" */);
 			add_npc_talk(D_8CE6, &AVATAR[0x11ECC + 0x2017] /* "Oh, Thank thee! I shall never forget thy kindness!\n" */);
-			if((Party._moves >> 4) != Party.f_1ec)
+			if((Party._moves >> 4) != Party.f_1ec) {
 				karma_inc(&(Party._compa), 2);
+				// ADDED: Shrine says giving your last gold increases sacrifice
+				if (Party._gold == 0)
+					karma_inc(&(Party._sacri), 3);
+			}
 			Party.f_1ec = Party._moves >> 4;
 		}
 	}
