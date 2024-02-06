@@ -937,7 +937,15 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
 #endif
         lastKeyboardHit = '8';
     }
-
+    public void CommandCharacter9()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit('9');
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'9');
+#endif
+        lastKeyboardHit = '9';
+    }
     public void CommandBoard()
     {
 #if USE_UNITY_DLL_FUNCTION
@@ -969,12 +977,14 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     }
     public void CommandEnter()
     {
+        Debug.Log("AutoEnter CommandEnter() enter");
 #if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('E');
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'E');
 #endif
         lastKeyboardHit = 'E';
+        Debug.Log("AutoEnter CommandEnter() exit");
     }
 
     public void CommandFire()
