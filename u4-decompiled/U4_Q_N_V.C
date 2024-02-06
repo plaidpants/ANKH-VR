@@ -15,10 +15,15 @@
 	u4_putl(Party._moves, 1, '0');
 	u4_puts(/*D_21B2*/&AVATAR[0x11465 + 0x200F] /* " moves\n" */);
 	if(Party._loc) {
+/*ENABLE_TOWN_SAVE4*/
+#if 1
+// always allow saves
+#else
 		if(Party._loc < 0x11 || Party._loc > 0x18) {
 			u4_puts(/*D_21BA*/&AVATAR[0xF8C3 + 0x5] /* "Not Here!\n" */);
 			return 0;
 		}
+#endif
 	}
 	if(Save(/*D_21C5*/&AVATAR[0x11478 + 0x200F] /* "PARTY.SAV" */, sizeof(struct tParty), &Party) == -1)
 		exit(3);
@@ -26,7 +31,20 @@
 		if(Save(/*D_21CF*/&AVATAR[0x11482 + 0x200F] /* "MONSTERS.SAV" */, sizeof(struct tNPC), &(D_8742._npc)) == -1)
 			exit(3);
 	}
+/*ENABLE_TOWN_SAVE4*/
+#if 1
+	if (Party._loc != 0 && Party._loc < 0x11)
+	{
+		/*Force doors to close before saving*/
+		C_431D(); C_431D(); C_431D(); C_431D(); C_431D();
+		if(Save("TOWNMAP.SAV", sizeof(struct t_500), &D_8742) == -1)
+			exit(3);
+		return 0;
+	}
+	if(Party._loc == 0 || Party._loc > 0x18)
+#else
 	if(Party._loc < 0x11 || Party._loc > 0x18)
+#endif
 		return 0;
 	if(Save(/*D_21DC*/&AVATAR[0x11482 + 0x200F] /* "MONSTERS.SAV" */, sizeof(struct tNPC), &(D_8742._npc)) == -1)
 		exit(3);
