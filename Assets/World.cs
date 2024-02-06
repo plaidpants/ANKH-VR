@@ -99,8 +99,7 @@ public class World : MonoBehaviour
     public U4_Decompiled_AVATAR.MODE lastMode = (U4_Decompiled_AVATAR.MODE)(-1);
     public U4_Decompiled_AVATAR.MODE lastModeCheck = (U4_Decompiled_AVATAR.MODE)(-1);
     
-    public bool wasJustInside = false;
-    public bool readyToAutomaticallyEnter = true;
+    public bool readyToAutomaticallyEnter = false;
 
     public Transform rotateTransform;
     //public GameObject convertMe;
@@ -1701,8 +1700,8 @@ public class World : MonoBehaviour
             Combat.CombatTerrains[i].gameObject.SetActive(false);
         }
 
-        // automatically enter things when you are on an enterable tile unless just left somewhere or you are flying in the balloon
-        if ((readyToAutomaticallyEnter == true) && (u4.Party.f_1dc == 0) &&
+        // automatically enter things when you are on an enterable tile unless just left somewhere or you are flying in the balloon or just attempted entering and failed
+        if ((readyToAutomaticallyEnter == true) && (u4.Party.f_1dc == 0) && (u4.lastKeyboardHit != 'E') &&
             ((u4.current_tile == Tile.TILE.CASTLE_ENTRANCE) ||
             (u4.current_tile == Tile.TILE.CASTLE) ||
             (u4.current_tile == Tile.TILE.TOWN) ||
@@ -1712,11 +1711,11 @@ public class World : MonoBehaviour
             (u4.current_tile == Tile.TILE.SHRINE)))
         {
             u4.CommandEnter();
-            readyToAutomaticallyEnter = false;
+            readyToAutomaticallyEnter = false; 
         }
 
         // wait until we move off of an entrance tile after leaving somewhere
-        if ((wasJustInside == true) &&
+        if ((readyToAutomaticallyEnter == false) &&
             (u4.current_tile != Tile.TILE.CASTLE_ENTRANCE) &&
             (u4.current_tile != Tile.TILE.CASTLE) &&
             (u4.current_tile != Tile.TILE.TOWN) &&
@@ -1726,25 +1725,24 @@ public class World : MonoBehaviour
             (u4.current_tile != Tile.TILE.SHRINE))
         {
             readyToAutomaticallyEnter = true;
-            wasJustInside = false;
         }
 
         // automatically board horse, ship and balloon
         if (((u4.current_tile == Tile.TILE.HORSE_EAST) ||
-            (u4.current_tile == Tile.TILE.HORSE_EAST) ||
+            (u4.current_tile == Tile.TILE.HORSE_WEST) ||
             (u4.current_tile == Tile.TILE.SHIP_EAST) ||
             (u4.current_tile == Tile.TILE.SHIP_NORTH) ||
             (u4.current_tile == Tile.TILE.SHIP_WEST) ||
             (u4.current_tile == Tile.TILE.SHIP_SOUTH) ||
             (u4.current_tile == Tile.TILE.BALOON)) &&
             (lastCurrentTile != Tile.TILE.HORSE_EAST) &&
-            (lastCurrentTile != Tile.TILE.HORSE_EAST) &&
+            (lastCurrentTile != Tile.TILE.HORSE_WEST) &&
             (lastCurrentTile != Tile.TILE.SHIP_EAST) &&
             (lastCurrentTile != Tile.TILE.SHIP_NORTH) &&
             (lastCurrentTile != Tile.TILE.SHIP_WEST) &&
             (lastCurrentTile != Tile.TILE.SHIP_SOUTH) &&
             (lastCurrentTile != Tile.TILE.BALOON) &&
-            (u4.lastKeyboardHit != 'X'))
+            (u4.lastKeyboardHit != 'X') && (u4.lastKeyboardHit != 'B'))
         {
             u4.CommandBoard();
         }
@@ -1798,6 +1796,16 @@ public class World : MonoBehaviour
             u4.CommandDecsend();
         }
 
+        // automatically board horse, ship and balloon
+        if (((u4.current_tile == Tile.TILE.HORSE_EAST) ||
+            (u4.current_tile == Tile.TILE.HORSE_WEST)) &&
+            (lastCurrentTile != Tile.TILE.HORSE_EAST) &&
+            (lastCurrentTile != Tile.TILE.HORSE_WEST) &&
+            (u4.lastKeyboardHit != 'X') && (u4.lastKeyboardHit != 'B'))
+        {
+            u4.CommandBoard();
+        }
+
         // update last tile so we don't get stuck in a loop
         lastCurrentTile = u4.current_tile;
 
@@ -1806,7 +1814,7 @@ public class World : MonoBehaviour
             Camera.main.clearFlags = CameraClearFlags.Skybox;
         }
 
-        // TODO update open doors here
+        // TODO auto open doors here
     }
 
     void UpdateCombat()
@@ -3296,8 +3304,17 @@ public class World : MonoBehaviour
                 // did we just come out of somewhere to the outdoors
                 if (u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS)
                 {
-                    // flag that we were just inside so we don't try to enter something right away again
-                    wasJustInside = true;
+                    // set flag because we were just inside so we don't try to enter something right away again
+                    readyToAutomaticallyEnter = false;
+                }
+
+                // are we currently indoors
+                if ((u4.current_mode == U4_Decompiled_AVATAR.MODE.DUNGEON) ||
+                    (u4.current_mode == U4_Decompiled_AVATAR.MODE.SETTLEMENT) ||
+                    (u4.current_mode == U4_Decompiled_AVATAR.MODE.SHRINE))
+                {
+                    // set flag because we are inside so we don't try to enter something
+                    readyToAutomaticallyEnter = false;
                 }
 
                 // update last mode
