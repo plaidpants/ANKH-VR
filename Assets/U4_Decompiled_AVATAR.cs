@@ -1620,7 +1620,14 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         yield return www;
         // note the updated interface does not seem to work with local files so don't bother updating until Unity fixes this
         //Debug.Log("Loaded #" + (int)index + " " + url);
-        music[(int)index] = www.GetAudioClip(false, false);
+        try
+        {
+            music[(int)index] = www.GetAudioClip(false, false);
+        }
+        catch
+        {
+            Debug.Log("Not Loaded #" + (int)index + " " + url);
+        }
     }
 
     /* 
