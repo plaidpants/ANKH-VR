@@ -700,7 +700,7 @@ public static class Map
             useExpandedTile = true;
             useLinearTile = false;
         }
-        // tress we need to stand upright and face the camera
+        // trees we need to stand upright and face the camera
         else if ((tileIndex == Tile.TILE.FOREST) ||
             (tileIndex == Tile.TILE.TOWN) ||
             (tileIndex == Tile.TILE.VILLAGE) ||
