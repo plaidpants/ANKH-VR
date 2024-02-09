@@ -1301,7 +1301,6 @@ public static class Tile
                         tile == (int)Tile.TILE.BRIDGE ||
                         tile == (int)Tile.TILE.BRIDGE_BOTTOM ||
                         tile == (int)Tile.TILE.BRIDGE_TOP ||
-                        tile == (int)Tile.TILE.BRUSH ||
                         tile == (int)Tile.TILE.NIXIE ||
                         tile == (int)Tile.TILE.NIXIE2 ||
                         (tile >= (int)Tile.TILE.MISSLE_ATTACK_SMALL && tile <= (int)Tile.TILE.MISSLE_ATTACK_RED) ||
@@ -1425,7 +1424,6 @@ public static class Tile
                         tile == (int)Tile.TILE.BRIDGE ||
                         tile == (int)Tile.TILE.BRIDGE_BOTTOM ||
                         tile == (int)Tile.TILE.BRIDGE_TOP ||
-                        tile == (int)Tile.TILE.BRUSH ||
                         tile == (int)Tile.TILE.NIXIE ||
                         tile == (int)Tile.TILE.NIXIE2 ||
                         (tile >= (int)Tile.TILE.MISSLE_ATTACK_SMALL && tile <= (int)Tile.TILE.MISSLE_ATTACK_RED) ||
