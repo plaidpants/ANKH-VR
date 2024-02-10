@@ -80,7 +80,7 @@ extern int QUIT;
 				activeCharaX = Combat._charaX[activeChara];
 				activeCharaY = Combat._charaY[activeChara];
 				u4_puts(Party.chara[activeChara]._name);
-				u4_puts(/*D_1FE6*/&AVATAR[0x11299 + 0x200F] /* " with " */);
+				u4_puts(/*D_1FE6*/&AVATAR[0x11299 + 0x000f] /* " with " */);
 				u4_puts(D_1E98[37 + Party.chara[activeChara]._weapon]);
 				Gra_CR();
 				u4_putc(0x10);
@@ -134,7 +134,7 @@ extern int QUIT;
 							break;
 						}
 					default:
-						u4_puts(/*D_1FED*/&AVATAR[0x112A0 + 0x200F] /* "Bad command\n" */);
+						u4_puts(/*D_1FED*/&AVATAR[0x112A0 + 0x000f] /* "Bad command\n" */);
 						sound(2,0);
 						Gra_11(activeChara);
 						activeChara --;
@@ -190,13 +190,13 @@ unsigned char _damage;
 	u4_putc(' ');
 	add_char_to_text_buffer(' ');
 	if(Fighters._tile[_npcId] != TIL_5E && (Fighters._HP[_npcId] -= _damage) < 0) {
-		u4_puts(/*D_1FFA*/&AVATAR[0x112AD + 0x200F] /* "Killed!\n" */);
+		u4_puts(/*D_1FFA*/&AVATAR[0x112AD + 0x000f] /* "Killed!\n" */);
 		if(_charaId != -1) {
 			register int di;
 
 			di = D_23D2[C_7C25(Fighters._tile[_npcId])] / 16 + 1;
 			XP_inc(_charaId, di);
-			u4_puts(/*D_2003*/&AVATAR[0x112B6 + 0x200F] /* "Exp. " */);
+			u4_puts(/*D_2003*/&AVATAR[0x112B6 + 0x000f] /* "Exp. " */);
 			u4_putl(di, 1, ' ');
 			Gra_CR();
 		}
@@ -209,19 +209,19 @@ unsigned char _damage;
 		loc_C = loc_B + loc_A;/*75% HP*/
 		loc_D = Fighters._HP[_npcId];
 		if(loc_D < 24) {
-			u4_puts(/*D_2009*/&AVATAR[0x112BC + 0x200F] /* "Fleeing!\n" */);
+			u4_puts(/*D_2009*/&AVATAR[0x112BC + 0x000f] /* "Fleeing!\n" */);
 		} else if(loc_D < loc_B) {
-			u4_puts(/*D_2013*/&AVATAR[0x112C6 + 0x200F] /* "Critical!\n" */);
+			u4_puts(/*D_2013*/&AVATAR[0x112C6 + 0x000f] /* "Critical!\n" */);
 		} else {
 			Gra_CR();
 			if(loc_D < loc_A) {
-				u4_puts(/*D_201E*/&AVATAR[0x112D1 + 0x200F] /* "Heavily " */);
+				u4_puts(/*D_201E*/&AVATAR[0x112D1 + 0x000f] /* "Heavily " */);
 			} else if(loc_D < loc_C) {
-				u4_puts(/*D_2027*/&AVATAR[0x112DA + 0x200F] /* "Lightly " */);
+				u4_puts(/*D_2027*/&AVATAR[0x112DA + 0x000f] /* "Lightly " */);
 			} else {
-				u4_puts(/*D_2030*/&AVATAR[0x112E3 + 0x200F] /* "Barely " */);
+				u4_puts(/*D_2030*/&AVATAR[0x112E3 + 0x000f] /* "Barely " */);
 			}
-			u4_puts(/*D_2038*/&AVATAR[0x112EB + 0x200F] /* "Wounded!\n" */);
+			u4_puts(/*D_2038*/&AVATAR[0x112EB + 0x000f] /* "Wounded!\n" */);
 		}
 	}
 }
@@ -274,7 +274,7 @@ int /*bp04*/_range;
 	if(_range == 0)
 		sound(4,0);
 	hit_tile = 0;
-	u4_puts(/*D_2042*/&AVATAR[0x112F5 + 0x200F] /* "Missed!\n" */);
+	u4_puts(/*D_2042*/&AVATAR[0x112F5 + 0x000f] /* "Missed!\n" */);
 	if(Party.chara[activeChara]._weapon == 9 && hit_x < 11 && hit_y < 11 && Combat_MAP(hit_y, hit_x) >= TIL_03)
 		Combat_MAP(hit_y, hit_x) = TIL_46;
 	C_3C54();
@@ -330,7 +330,7 @@ int _dir_y;
 	/*-- For OIL, ask range --*/
 	if(loc_A->_weapon == 9) {
 		set_input_mode(INPUT_MODE_NUMBER_INPUT_1_DIGITS);
-		loc_D = AskLetter(/*D_204B*/&AVATAR[0x112FE + 0x200F] /* "Range:\x12\x12\b" */, '0', '9');
+		loc_D = AskLetter(/*D_204B*/&AVATAR[0x112FE + 0x000f] /* "Range:\x12\x12\b" */, '0', '9');
 		loc_D -= '0';
 		if(loc_D < 0)
 			return 0;
@@ -339,7 +339,7 @@ int _dir_y;
 	if(loc_A->_weapon == 2 || loc_A->_weapon == 9) {
 		if(Party._weapons[loc_A->_weapon] == 0) {
 			loc_A->_weapon = 0;
-			u4_puts(/*D_2055*/&AVATAR[0x11308 + 0x200F] /* "Last one!\n" */);
+			u4_puts(/*D_2055*/&AVATAR[0x11308 + 0x000f] /* "Last one!\n" */);
 		} else {
 			Party._weapons[loc_A->_weapon] --;
 		}
@@ -379,7 +379,7 @@ C_61D1()
 
 	loc_C = &(Party.chara[activeChara]);
 	set_input_mode(INPUT_MODE_GENERAL_DIRECTION);
-	AskDir(/*D_2060*/&AVATAR[0x10AE0 + 0x7] /* "Dir: " */, &loc_A, &loc_B);
+	AskDir(/*D_2060*/&AVATAR[0x10AE0 + 0x0007] /* "Dir: " */, &loc_A, &loc_B);
 	if(!(loc_A | loc_B))
 		return 0;
 	hit_x = Combat._charaX[activeChara];
@@ -418,13 +418,13 @@ C_61D1()
 	int loc_A, loc_B;
 
 	if(CurMode <= MOD_BUILDING && Party.f_1dc != 0) {
-		u4_puts(/*D_2066*/&AVATAR[0x11319 + 0x200F] /* "Attack\n" */);
+		u4_puts(/*D_2066*/&AVATAR[0x11319 + 0x000f] /* "Attack\n" */);
 		w_DriftOnly();
 		return 0;
 	}
 
 	set_input_mode(INPUT_MODE_GENERAL_DIRECTION);
-	AskDir(/*D_206E*/&AVATAR[0x11321 + 0x200F] /* "Attack: " */, &loc_A, &loc_B);
+	AskDir(/*D_206E*/&AVATAR[0x11321 + 0x000f] /* "Attack: " */, &loc_A, &loc_B);
 	if(!(loc_A|loc_B))
 		return 0;
 	if(
@@ -433,7 +433,7 @@ C_61D1()
 		D_8742._npc._tile[loc_C] == TIL_02 ||
 		D_8742._npc._tile[loc_C] == TIL_8E
 	) {
-		u4_puts(/*D_2077*/&AVATAR[0x1132A + 0x200F] /* "Nothing to Attack!\n" */);
+		u4_puts(/*D_2077*/&AVATAR[0x1132A + 0x000f] /* "Nothing to Attack!\n" */);
 		return 0;
 	}
 	if(CurMode == MOD_BUILDING) {

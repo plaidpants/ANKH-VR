@@ -8,11 +8,15 @@ using System.Threading;
 using UnityEngine.UI;
 using System.IO;
 using System.Text.RegularExpressions;
+using Meta.WitAi.TTS.Utilities;
+using Meta.WitAi.TTS;
+using Meta.WitAi.TTS.Data;
+using System.Linq;
 
 public class U4_Decompiled_AVATAR : MonoBehaviour
 {
     private Thread trd;
-
+	public TTSSpeaker speaker;
     public AudioSource specialEffectAudioSource;
     public string gameText;
     public string npcText;
@@ -4051,23 +4055,55 @@ sfx_storm:
             if (text_size != 0)
             {
                 npcText = "";
+                TALK_INDEX currentTalkIndex = TALK_INDEX.INVALID;
 
                 for (int i = 0; i < text_size; i++)
                 {
+                    // check the current talk index, assign only if it is not invalid
                     npcTalkIndex = (TALK_INDEX)(buffer[i * 500]);
+                    if (npcTalkIndex != TALK_INDEX.INVALID)
+                    {
+                        currentTalkIndex = npcTalkIndex;
+                    }
 
                     //int npcIndex = buffer[i * 500];
                     //partyText.text = partyText.text + npcIndex + " : " + /* Settlements[(int)Party._loc].GetComponent<Settlement>().npcStrings[_npc[npcIndex]._tlkidx - 1][0] + " says : " + */
-    string npcTalk = enc.GetString(buffer, i * 500 + 1, 500);
+                    string npcTalk = enc.GetString(buffer, i * 500 + 1, 500);
 
                     int firstNull = npcTalk.IndexOf('\0');
                     npcTalk = npcTalk.Substring(0, firstNull);
                     npcText = npcText + npcTalk;
                 }
 
+                // Fix gp -> gold pieces
+                npcText = npcText.Replace("gp", " gold pieces");
+                npcText = npcText.Replace("g.p.", " gold pieces");
+                npcText = npcText.Replace("pts", " points");
+                npcText = npcText.Replace("He asks: ", ""); // remove extra interogative
+
                 // TODO move this out of the game engine monitor
-                // TODO need to collect enough text til the newline so we don't have broken speech patterns in the middle of constructed sentences e.g. "I am" ... "a guard."...
-                //WindowsVoice.speak(npcText); 
+                // TODO need to collect enough text til the newline or period so we don't have broken speech patterns in the middle of constructed sentences e.g. "I am" ... "a guard."...
+
+                // Get all voice name presets
+                string[] voiceNames = speaker.TTSService.GetAllPresetVoiceSettings()
+                    .Select((voiceSetting) => voiceSetting.SettingsId).ToArray();
+                speaker.VoiceID = voiceNames[(int)currentTalkIndex % voiceNames.Length];
+
+                // Split the text into sentences. web api has a limit of 280 characters which can be reached pretty quickly as space and other special chars are expandaed to 
+/* example
+curl ^
+More?   -H "Authorization: Bearer XXXXXXXXXXXXXXXXXXXXXX" ^
+More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20Evil%20Lords%20have%20been%20routed%20evil%20yet%20remains%20in%20Britannia.%20If%20but%20one%20soul%20could%20complete%20the%20Quest%20of%20the%20Avatar%2C%20our%20people%20would%20have%20a%20new%20hope%2C%20a%20new%20goal%20for%20life.%20There%20would%20be%20a%20shining%20example%20that%20there%20is%20more%20to%20life%20than%20the%20endless%20struggle%20for%20possessions%20and%20gold%21"
+{
+  "code": "msg-invalid",
+  "error": "Message is too long: length is 303 (max is 280)"
+}*/
+                
+                string[] sentences = npcText.Split(new char[] { '.', '!', '?' });
+                foreach (string sentence in sentences)
+                {
+                    speaker.SpeakQueued(sentence);
+                }
             }
 
             // attacker tile and tile under attacker (used to determine combat map to use when pirates attack)

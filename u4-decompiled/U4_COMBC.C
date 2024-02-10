@@ -14,7 +14,7 @@
 ----------------------------------------*/
 
 /*base for enemy HP/XP/attack*/
-unsigned char* D_23D2 = &AVATAR[0x11685 + 0x200F]; //{
+unsigned char* D_23D2 = &AVATAR[0x11685 + 0x000f]; //{
 #if 0
 	/*80~8f*/
 	0xFF,/*pirate*/
@@ -76,7 +76,7 @@ unsigned char* D_23D2 = &AVATAR[0x11685 + 0x200F]; //{
 #endif
 
 /*enemy tile "partners"*/
-unsigned char * D_2406 = &AVATAR[0x116B9 + 0x200F]; //{
+unsigned char * D_2406 = &AVATAR[0x116B9 + 0x000f]; //{
 #if 0
 	/*80~8f*/
 	TIL_C8,/*pirate->rogue*/
@@ -120,7 +120,7 @@ unsigned char * D_2406 = &AVATAR[0x116B9 + 0x200F]; //{
 #endif
 
 /*enemy number*/
-unsigned char * D_242A = &AVATAR[0x116DD + 0x200F]; //{
+unsigned char * D_242A = &AVATAR[0x116DD + 0x000f]; //{
 #if 0
 	/*80~8F*/
 	 1,/*pirate*/
@@ -166,11 +166,11 @@ unsigned char * D_242A = &AVATAR[0x116DD + 0x200F]; //{
 #endif
 
 /*weapons damage*/
-unsigned char * D_2450 = &AVATAR[0x11703 + 0x200F] /*{0x08,0x10,0x18,0x20,0x28,0x30,0x40,0x28,0x38,0x40,0x60,0x60,0x80,0x50,0xA0,0xFF}*/;
+unsigned char * D_2450 = &AVATAR[0x11703 + 0x000f] /*{0x08,0x10,0x18,0x20,0x28,0x30,0x40,0x28,0x38,0x40,0x60,0x60,0x80,0x50,0xA0,0xFF}*/;
 /*armors protection*/
-unsigned char * D_2460 = &AVATAR[0x11713 + 0x200F] /*{0x60,0x80,0x90,0xA0,0xB0,0xC0,0xD0,0xF8}*/;
+unsigned char * D_2460 = &AVATAR[0x11713 + 0x000f] /*{0x60,0x80,0x90,0xA0,0xB0,0xC0,0xD0,0xF8}*/;
 /*range weapons flag*/
-unsigned char * D_2468 = &AVATAR[0x1171B + 0x200F] /*{0x00,0x00,0x00,0xFF,0x00,0x00,0x00,0xFF,0xFF,0xFF,0x00,0xFF,0x00,0xFF,0xFF,0x00}*/;
+unsigned char * D_2468 = &AVATAR[0x1171B + 0x000f] /*{0x00,0x00,0x00,0xFF,0x00,0x00,0x00,0xFF,0xFF,0xFF,0x00,0xFF,0x00,0xFF,0xFF,0x00}*/;
 
 C_7C25(bp04)
 unsigned char bp04;
@@ -221,20 +221,20 @@ unsigned char bp04;
 }
 
 char *D_2512[] = {
-	/*D_2478*//* 0*/&AVATAR[0x1172B + 0x200F] /* "GRASS.CON" */,
-	/*D_2482*//* 1*/&AVATAR[0x11735 + 0x200F] /* "BRIDGE.CON" */,
-	/*D_248D*//* 2*/&AVATAR[0x11740 + 0x200F] /* "BRICK.CON" */,
-	/*D_2497*//* 3*/&AVATAR[0x1174A + 0x200F] /* "DUNGEON.CON" */,
-	/*D_24A3*//* 4*/&AVATAR[0x11756 + 0x200F] /* "HILL.CON" */,
-	/*D_24AC*//* 5*/&AVATAR[0x1175F + 0x200F] /* "FOREST.CON" */,
-	/*D_24B7*//* 6*/&AVATAR[0x1176A + 0x200F] /* "BRUSH.CON" */,
-	/*D_24C1*//* 7*/&AVATAR[0x11774 + 0x200F] /* "MARSH.CON" */,
-	/*D_24CB*//* 8*/&AVATAR[0x1177E + 0x200F] /* "SHIPSEA.CON" */,
-	/*D_24D7*//* 9*/&AVATAR[0x1178A + 0x200F] /* "SHIPSHOR.CON" */,
-	/*D_24E4*//*10*/&AVATAR[0x11797 + 0x200F] /* "SHORE.CON" */,
-	/*D_24EE*//*11*/&AVATAR[0x117A1 + 0x200F] /* "SHIPSHIP.CON" */,
-	/*D_24FB*//*12*/&AVATAR[0x117AE + 0x200F] /* "SHORSHIP.CON" */,
-	/*D_2508*//*13*/&AVATAR[0x117BB + 0x200F] /* "CAMP.CON" */
+	/*D_2478*//* 0*/&AVATAR[0x1172B + 0x000f] /* "GRASS.CON" */,
+	/*D_2482*//* 1*/&AVATAR[0x11735 + 0x000f] /* "BRIDGE.CON" */,
+	/*D_248D*//* 2*/&AVATAR[0x11740 + 0x000f] /* "BRICK.CON" */,
+	/*D_2497*//* 3*/&AVATAR[0x1174A + 0x000f] /* "DUNGEON.CON" */,
+	/*D_24A3*//* 4*/&AVATAR[0x11756 + 0x000f] /* "HILL.CON" */,
+	/*D_24AC*//* 5*/&AVATAR[0x1175F + 0x000f] /* "FOREST.CON" */,
+	/*D_24B7*//* 6*/&AVATAR[0x1176A + 0x000f] /* "BRUSH.CON" */,
+	/*D_24C1*//* 7*/&AVATAR[0x11774 + 0x000f] /* "MARSH.CON" */,
+	/*D_24CB*//* 8*/&AVATAR[0x1177E + 0x000f] /* "SHIPSEA.CON" */,
+	/*D_24D7*//* 9*/&AVATAR[0x1178A + 0x000f] /* "SHIPSHOR.CON" */,
+	/*D_24E4*//*10*/&AVATAR[0x11797 + 0x000f] /* "SHORE.CON" */,
+	/*D_24EE*//*11*/&AVATAR[0x117A1 + 0x000f] /* "SHIPSHIP.CON" */,
+	/*D_24FB*//*12*/&AVATAR[0x117AE + 0x000f] /* "SHORSHIP.CON" */,
+	/*D_2508*//*13*/&AVATAR[0x117BB + 0x000f] /* "CAMP.CON" */
 };
 
 /*load CON file*/
@@ -282,16 +282,16 @@ C_7C65()
 		exit(3);
 }
 
-short * D_256E = &AVATAR[0x11820 + 0x200F] /*{0,1,2,3,4,0,0,0,0,0,0,0,5,0,6,0}*/;
+short * D_256E = &AVATAR[0x11820 + 0x000f] /*{0,1,2,3,4,0,0,0,0,0,0,0,5,0,6,0}*/;
 
 char *D_258E[] = {
-	/*D_252E*/&AVATAR[0x117E1 + 0x200F] /* "DNG0.CON" */,
-	/*D_2537*/&AVATAR[0x117EA + 0x200F] /* "DNG1.CON" */,
-	/*D_2540*/&AVATAR[0x117F3 + 0x200F] /* "DNG2.CON" */,
-	/*D_2549*/&AVATAR[0x117FC + 0x200F] /* "DNG3.CON" */,
-	/*D_2552*/&AVATAR[0x11805 + 0x200F] /* "DNG4.CON" */,
-	/*D_255B*/&AVATAR[0x1180E + 0x200F] /* "DNG5.CON" */,
-	/*D_2564*/&AVATAR[0x11817 + 0x200F] /* "DNG6.CON" */
+	/*D_252E*/&AVATAR[0x117E1 + 0x000f] /* "DNG0.CON" */,
+	/*D_2537*/&AVATAR[0x117EA + 0x000f] /* "DNG1.CON" */,
+	/*D_2540*/&AVATAR[0x117F3 + 0x000f] /* "DNG2.CON" */,
+	/*D_2549*/&AVATAR[0x117FC + 0x000f] /* "DNG3.CON" */,
+	/*D_2552*/&AVATAR[0x11805 + 0x000f] /* "DNG4.CON" */,
+	/*D_255B*/&AVATAR[0x1180E + 0x000f] /* "DNG5.CON" */,
+	/*D_2564*/&AVATAR[0x11817 + 0x000f] /* "DNG6.CON" */
 };
 
 /*load dungeon CON file*/
@@ -312,10 +312,10 @@ C_7D50()
 C_7D92()
 {
 #ifdef WIN32
-	if(Load(/*D_259C*/&AVATAR[0x11847 + 0x2017] /* "INN.CON" */, sizeof(struct tCombat), &Combat) == -1)
+	if(Load(/*D_259C*/&AVATAR[0x11847 + 0x0017] /* "INN.CON" */, sizeof(struct tCombat), &Combat) == -1)
 #else
-//	if(Load(/*D_259C*/&AVATAR[0x11847 + 0x2017] /* "INN.CON" */, (char *)&Fighters - (char *)&Combat, &Combat) == -1)
-	if (Load(/*D_259C*/&AVATAR[0x11847 + 0x2017] /* "INN.CON" */, sizeof(struct tCombat), &Combat) == -1)
+//	if(Load(/*D_259C*/&AVATAR[0x11847 + 0x0017] /* "INN.CON" */, (char *)&Fighters - (char *)&Combat, &Combat) == -1)
+	if (Load(/*D_259C*/&AVATAR[0x11847 + 0x0017] /* "INN.CON" */, sizeof(struct tCombat), &Combat) == -1)
 #endif
 		exit(3);
 	C_7FD7();
@@ -326,7 +326,7 @@ C_7DBC()
 {
 	register int si;
 
-	u4_puts(/*D_25A4*/&AVATAR[0x1184F + 0x2017] /* "\n\n**** Combat ****\n\n" */);
+	u4_puts(/*D_25A4*/&AVATAR[0x1184F + 0x0017] /* "\n\n**** Combat ****\n\n" */);
 	D_9452 = D_96F8;
 	for(si = 15; si >= 0; si --) {
 		Fighters._tile[si] = 
@@ -455,15 +455,15 @@ C_7FFD()
 	memcpy(D_95B2, loc_A._000, 16);
 	D_943E = -1;
 	if((tile_cur & 0xf) == 0xf && Party._loc < 0x18) {
-		u4_puts(/*D_25B9*/&AVATAR[0x11864 + 0x2017] /* "\nThe Altar Room of " */);
+		u4_puts(/*D_25B9*/&AVATAR[0x11864 + 0x0017] /* "\nThe Altar Room of " */);
 		if(Party._x == 3) {
-			u4_puts(/*D_25CD*/&AVATAR[0x11878 + 0x2017] /* "Love\n" */);
+			u4_puts(/*D_25CD*/&AVATAR[0x11878 + 0x0017] /* "Love\n" */);
 			D_943E = 1;
 		} else if(Party._x <= 2) {
-			u4_puts(/*D_25D3*/&AVATAR[0x1187E + 0x2017] /* "Truth\n" */);
+			u4_puts(/*D_25D3*/&AVATAR[0x1187E + 0x0017] /* "Truth\n" */);
 			D_943E = 0;
 		} else {
-			u4_puts(/*D_25DA*/&AVATAR[0x11885 + 0x2017] /* "Courage\n" */);
+			u4_puts(/*D_25DA*/&AVATAR[0x11885 + 0x0017] /* "Courage\n" */);
 			D_943E = 2;
 		}
 	}
@@ -590,9 +590,9 @@ C_8283()
 	0x16 - shame    - truth courage
 	0x17 - hythloth - truth love courage*/
 unsigned char * D_261A[] = {
-	&AVATAR[0x118C5 + 0x2017] /*{0x11,0x16,0x17,0x14}*/,/*truth*/
-	&AVATAR[0x118C9 + 0x2017] /*{0x12,0x14,0x17,0x15}*/,/*love*/
-	&AVATAR[0x118CD + 0x2017] /*{0x13,0x15,0x17,0x16}*/ /*courage*/
+	&AVATAR[0x118C5 + 0x0017] /*{0x11,0x16,0x17,0x14}*/,/*truth*/
+	&AVATAR[0x118C9 + 0x0017] /*{0x12,0x14,0x17,0x15}*/,/*love*/
+	&AVATAR[0x118CD + 0x0017] /*{0x13,0x15,0x17,0x16}*/ /*courage*/
 };
 
 C_837A()
@@ -610,14 +610,14 @@ C_837A()
 				karma_inc(&(Party._justi), 2);
 			} else {
 /*C_83CE:*/
-				u4_puts(/*D_25E3*/&AVATAR[0x1188E + 0x2017] /* "Battle is lost!\n" */);
+				u4_puts(/*D_25E3*/&AVATAR[0x1188E + 0x0017] /* "Battle is lost!\n" */);
 				karma_dec(&(Party._valor), 2);
 			}
 			C_8214();
 			return 0;
 		}
 /*C_83E6:*/
-		u4_puts(/*D_25F4*/&AVATAR[0x1189F + 0x2017] /* "Leave Room!\n" */);
+		u4_puts(/*D_25F4*/&AVATAR[0x1189F + 0x0017] /* "Leave Room!\n" */);
 		if(D_96EE == 0) {
 			if(D_96F4 < 0)
 				Party._dir = DIR_N;
@@ -633,7 +633,7 @@ C_837A()
 			Party._loc = D_261A[D_943E][(Party._dir - 1) & 3];
 			Party.out_x = D_0844[Party._loc - 1];
 			Party.out_y = D_0864[Party._loc - 1];
-			u4_puts(/*D_2601*/&AVATAR[0x118AC + 0x2017] /* "into Dungeon\n" */);
+			u4_puts(/*D_2601*/&AVATAR[0x118AC + 0x0017] /* "into Dungeon\n" */);
 			u4_puts(D_1E98[127 + Party._loc - 1]);
 			//dclose(File_DNG);
 			//File_DNG = 0;
@@ -646,7 +646,7 @@ C_837A()
 		return 0;
 	}
 /*C_849E:*/
-	u4_puts(/*D_260F*/&AVATAR[0x118BA + 0x2017] /* "\nVictory!\n" */);
+	u4_puts(/*D_260F*/&AVATAR[0x118BA + 0x0017] /* "\nVictory!\n" */);
 	if(!C_0AFE(D_96F8))
 		karma_inc(&(Party._valor), U4_RND1(1));
 	if(D_95CC != MOD_COM_CAMP)

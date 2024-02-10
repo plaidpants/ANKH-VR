@@ -7,7 +7,7 @@
 #include "U4.H"
 
 /*spells m.p. cost*/
-char* D_208C = &AVATAR[0x1133F + 0x200F]; //{
+char* D_208C = &AVATAR[0x1133F + 0x000f]; //{
 #if 0
 	 5,/*Awaken*/
 	15,/*Blink*/
@@ -51,7 +51,7 @@ int bp04;
 
 /*C_6399*/w_Failed()
 {
-	u4_puts(/*D_20A6*/&AVATAR[0x11359 + 0x200F] /* "Failed!\n" */);
+	u4_puts(/*D_20A6*/&AVATAR[0x11359 + 0x000f] /* "Failed!\n" */);
 	hit_tile = 0;
 	sound(8,0);
 }
@@ -77,7 +77,7 @@ C_63B4()
 C_6409()
 {
 	if(CurMode != MOD_OUTDOORS) {
-		u4_puts(/*D_20AF*/&AVATAR[0x11362 + 0x200F] /* "Outdoors Only!\n" */);
+		u4_puts(/*D_20AF*/&AVATAR[0x11362 + 0x000f] /* "Outdoors Only!\n" */);
 		w_Failed();
 		return 0;
 	}
@@ -88,7 +88,7 @@ C_6409()
 C_6428()
 {
 	if(CurMode < MOD_COMBAT) {
-		u4_puts(/*D_20BF*/&AVATAR[0x11372 + 0x200F] /* "Combat Only!\n" */);
+		u4_puts(/*D_20BF*/&AVATAR[0x11372 + 0x000f] /* "Combat Only!\n" */);
 		w_Failed();
 		return 0;
 	}
@@ -99,7 +99,7 @@ C_6428()
 C_6447()
 {
 	if(CurMode != MOD_DUNGEON) {
-		u4_puts(/*D_20CD*/&AVATAR[0x11380 + 0x200F] /* "Dungeon Only!\n" */);
+		u4_puts(/*D_20CD*/&AVATAR[0x11380 + 0x000f] /* "Dungeon Only!\n" */);
 		w_Failed();
 		return 0;
 	}
@@ -117,7 +117,7 @@ int bp04;
 	if(!C_6428())
 		return 0;
 	set_input_mode(INPUT_MODE_GENERAL_DIRECTION);
-	AskDir(/*D_20DC*/&AVATAR[0x10AE0 + 0x7] /* "Dir: " */, &loc_A, &loc_B);
+	AskDir(/*D_20DC*/&AVATAR[0x10AE0 + 0x0007] /* "Dir: " */, &loc_A, &loc_B);
 	if(!(loc_A|loc_B))
 		return 0;
 	if(!C_63B4())
@@ -152,7 +152,7 @@ int bp04;
 	register int si;
 
 	set_input_mode(INPUT_MODE_GENERAL_ASK_CHARACTER_NUMBER);
-	si = AskChara(/*D_20E2*/&AVATAR[0x11395 + 0x200F] /* "Who:\x12\x12\b" */);
+	si = AskChara(/*D_20E2*/&AVATAR[0x11395 + 0x000f] /* "Who:\x12\x12\b" */);
 	if(si < 0)
 		return 0;
 	if(!C_63B4())
@@ -176,7 +176,7 @@ int bp04;
 		if(!C_6409())
 			return 0;
 		set_input_mode(INPUT_MODE_GENERAL_DIRECTION);
-		AskDir(/*D_20EA*/&AVATAR[0x10AE0 + 0x7] /* "Dir: " */, &loc_A, &loc_B);
+		AskDir(/*D_20EA*/&AVATAR[0x10AE0 + 0x0007] /* "Dir: " */, &loc_A, &loc_B);
 		if(!(loc_A|loc_B))
 			return 0;
 		if(!C_63B4())
@@ -208,7 +208,7 @@ int bp04;
 	register int si;
 
 	set_input_mode(INPUT_MODE_GENERAL_ASK_CHARACTER_NUMBER);
-	if((si = AskChara(/*D_20F0*/&AVATAR[0x11395 + 0x200F] /* "Who:\x12\x12\b" */)) < 0)
+	if((si = AskChara(/*D_20F0*/&AVATAR[0x11395 + 0x000f] /* "Who:\x12\x12\b" */)) < 0)
 		return 0;
 	if(!C_63B4())
 		return 0;
@@ -240,7 +240,7 @@ int bp04;
 		return 0;
 	}
 	set_input_mode(INPUT_MODE_GENERAL_DIRECTION);
-	AskDir(/*D_20F8*/&AVATAR[0x10AE0 + 0x7] /* "Dir: " */, &loc_A, &loc_B);
+	AskDir(/*D_20F8*/&AVATAR[0x10AE0 + 0x0007] /* "Dir: " */, &loc_A, &loc_B);
 	if(!(loc_A|loc_B))
 		return 0;
 	if(!C_63B4())
@@ -280,7 +280,7 @@ int bp04;
 	int loc_B;
 	int loc_A, loc_C, loc_E;
 
-	u4_puts(/*D_20FE*/&AVATAR[0x113B1 + 0x200F] /* "Energy type? " */);
+	u4_puts(/*D_20FE*/&AVATAR[0x113B1 + 0x000f] /* "Energy type? " */);
 	set_input_mode(INPUT_MODE_ENERGY_TYPE_POISON_FIRE_LIGHTNING_SLEEP);
 	loc_B = (unsigned char)u_kbread();
 /*bad hack:I must force the redefinition of u4_islower
@@ -315,7 +315,7 @@ the original bytecode*/
 	}
 	if(CurMode >= MOD_COMBAT) {
 		set_input_mode(INPUT_MODE_GENERAL_DIRECTION);
-		AskDir(/*D_210C*/&AVATAR[0x10AE0 + 0x7] /* "Dir: " */, &loc_A, &loc_C);
+		AskDir(/*D_210C*/&AVATAR[0x10AE0 + 0x0007] /* "Dir: " */, &loc_A, &loc_C);
 		if(!(loc_A|loc_C))
 			return 0;
 		if(!C_63B4())
@@ -345,7 +345,7 @@ the original bytecode*/
 	if(!C_6409())
 		return 0;
 	set_input_mode(INPUT_MODE_GENERAL_ASK_PHASE);
-	si = AskLetter(/*D_2112*/&AVATAR[0x113C5 + 0x200F] /* "To Phase:\x12\x12\b" */, '0', '8');
+	si = AskLetter(/*D_2112*/&AVATAR[0x113C5 + 0x000f] /* "To Phase:\x12\x12\b" */, '0', '8');
 	if(si < 0 || si == (int)'0')
 		return 0;
 	if(!C_63B4())
@@ -361,7 +361,7 @@ the original bytecode*/
 	register int si;
 
 	set_input_mode(INPUT_MODE_GENERAL_ASK_CHARACTER_NUMBER);
-	if((si = AskChara(/*D_211F*/&AVATAR[0x113D2 + 0x200F] /* "Who?\x12\x12\b" */)) < 0)
+	if((si = AskChara(/*D_211F*/&AVATAR[0x113D2 + 0x000f] /* "Who?\x12\x12\b" */)) < 0)
 		return 0;
 	if(!C_63B4())
 		return 0;
@@ -454,7 +454,7 @@ the original bytecode*/
 		return 0;
 	}
 	set_input_mode(INPUT_MODE_GENERAL_ASK_CHARACTER_NUMBER);
-	si = AskChara(/*D_2127*/&AVATAR[0x11395 + 0x200F] /* "Who:\x12\x12\b" */);
+	si = AskChara(/*D_2127*/&AVATAR[0x11395 + 0x000f] /* "Who:\x12\x12\b" */);
 	if(si < 0)
 		return 0;
 	if(!C_63B4())
@@ -534,7 +534,7 @@ the original bytecode*/
 	if(!C_6409())
 		return 0;
 	set_input_mode(INPUT_MODE_GENERAL_DIRECTION);
-	AskDir(/*D_212F*/&AVATAR[0x113E2 + 0x200F] /* "From Dir: " */, &bp_02, &bp_04);
+	AskDir(/*D_212F*/&AVATAR[0x113E2 + 0x000f] /* "From Dir: " */, &bp_02, &bp_04);
 	if(!(bp_02|bp_04))
 		return 0;
 	if(!C_63B4())
@@ -654,10 +654,10 @@ pSpell_handler D_216E[] = {
 
 /*C_6E4A*/CMD_Cast()
 {
-	u4_puts(/*D_213A*/&AVATAR[0x113ED + 0x200F] /* "Cast Spell!\n" */);
+	u4_puts(/*D_213A*/&AVATAR[0x113ED + 0x000f] /* "Cast Spell!\n" */);
 	if(CurMode < MOD_COMBAT) {
 		set_input_mode(INPUT_MODE_GENERAL_ASK_CHARACTER_NUMBER);
-		if((activeChara = AskChara(/*D_2147*/&AVATAR[0x113FA + 0x200F] /* "Player:\x12\x12\b" */)) < 0)
+		if((activeChara = AskChara(/*D_2147*/&AVATAR[0x113FA + 0x000f] /* "Player:\x12\x12\b" */)) < 0)
 			return 0;
 		if(!isCharaConscious(activeChara)) {
 			w_Disabled();
@@ -669,7 +669,7 @@ pSpell_handler D_216E[] = {
 	txt_Y = 23;
 	txt_X = 24;
 	set_input_mode(INPUT_MODE_GENERAL_ASK_SPELL);
-	D_8CCC = AskLetter(/*D_2152*/&AVATAR[0x11405 + 0x200F] /* "Spell:\x12\x12\b" */, 'A', 'Z');
+	D_8CCC = AskLetter(/*D_2152*/&AVATAR[0x11405 + 0x000f] /* "Spell:\x12\x12\b" */, 'A', 'Z');
 	Gra_13();
 	C_4649();
 	dspl_Stats();
@@ -678,7 +678,7 @@ pSpell_handler D_216E[] = {
 	if(D_8CCC < 0)
 		return 0;
 	D_8CCC -= 'A';
-	u4_puts(D_1E98[101 + D_8CCC]); u4_puts(/*D_215C*/&AVATAR[0xF376 + 0x5] /* "!\n" */);
+	u4_puts(D_1E98[101 + D_8CCC]); u4_puts(/*D_215C*/&AVATAR[0x1140F + 0x000f] /* "!\n" */);
 	/*-- check mixture --*/
 	if(Party._mixtures[D_8CCC] == 0) {
 		w_NoneLeft();
@@ -687,7 +687,7 @@ pSpell_handler D_216E[] = {
 	Party._mixtures[D_8CCC] --;
 	/*-- check m.p --*/
 	if(Party.chara[activeChara]._MP < D_208C[D_8CCC]) {
-		u4_puts(/*D_215F*/&AVATAR[0x11412 + 0x200F] /* "M.P. too low!\n" */);
+		u4_puts(/*D_215F*/&AVATAR[0x11412 + 0x000f] /* "M.P. too low!\n" */);
 		w_Failed();
 		return 0;
 	}

@@ -8,9 +8,9 @@
 
 #include <string.h>
 
-char * D_00EE = &AVATAR[0xF3AB + 0x5] /* "Hmm...No effect!\n" */;
-char * D_0100 = &AVATAR[0xF3BD + 0x5] /* "None owned!\n" */;
-char * D_010E = &AVATAR[0xF3CB + 0x5]; // {/*colors masks*/
+char * D_00EE = &AVATAR[0xF3AB + 0x0005] /* "Hmm...No effect!\n" */;
+char * D_0100 = &AVATAR[0xF3BD + 0x0005] /* "None owned!\n" */;
+char * D_010E = &AVATAR[0xF3CB + 0x0005]; // {/*colors masks*/
 #if 0
 	(1<<6)|(1<<5)|(1<<3)|(1<<0),/*truth*/ // 0x69
 	(1<<6)|(1<<4)|(1<<3)|(1<<1),/*love*/  // 0x5A
@@ -28,7 +28,7 @@ void C_01E1()
 		u4_puts(D_00EE);
 		return;
 	}
-	u4_puts(/*D_0080*/&AVATAR[0xF33D + 0x5] /* "\nThere are holes for 4 stones. What colors:\n" */);
+	u4_puts(/*D_0080*/&AVATAR[0xF33D + 0x0005] /* "\nThere are holes for 4 stones. What colors:\n" */);
 	bp_04 = 0;
 	for(bp_02 = 1; bp_02 <= 4; bp_02++) {
 		u4_putc(bp_02 + 'A' - 1); u4_putc(':');
@@ -47,7 +47,7 @@ void C_01E1()
 			return;
 		}
 		if((1 << bp_10) & bp_04) {
-			u4_puts(/*D_00AD*/&AVATAR[0xF36A + 0x5] /* "Already used!\n" */);
+			u4_puts(/*D_00AD*/&AVATAR[0xF36A + 0x0005] /* "Already used!\n" */);
 			return;
 		}
 		bp_04 |= (1 << bp_10);
@@ -79,18 +79,18 @@ void C_01E1()
 			SET_MSK(Party.mItems, ST_KEY_C);
 		break;
 	}
-	u4_puts(/*D_00BC*/&AVATAR[0xF379 + 0x5] /* "Thou doth find one third of the Three Part Key!\n" */);
+	u4_puts(/*D_00BC*/&AVATAR[0xF379 + 0x0005] /* "Thou doth find one third of the Three Part Key!\n" */);
 }
 
 char *D_0284[] = {
-	/*D_0111*/&AVATAR[0xF3CE + 0x5] /* "Truth" */,
-	/*D_0117*/&AVATAR[0xF3D4 + 0x5] /* "Love" */,
-	/*D_011C*/&AVATAR[0xF3D9 + 0x5] /* "Courage" */,
-	/*D_0124*/&AVATAR[0xF3E1 + 0x5] /* "Truth and Love" */,
-	/*D_0133*/&AVATAR[0xF3F0 + 0x5] /* "Love and Courage" */,
-	/*D_0144*/&AVATAR[0xF401 + 0x5] /* "Courage and Truth" */,
-	/*D_0156*/&AVATAR[0xF413 + 0x5] /* "Truth, Love and Courage" */,
-	/*D_016E*/&AVATAR[0xF42B + 0x5] /* "\nA voice rings out:  What Virtue exists independently of Truth, Love and Courage" */
+	/*D_0111*/&AVATAR[0xF3CE + 0x0005] /* "Truth" */,
+	/*D_0117*/&AVATAR[0xF3D4 + 0x0005] /* "Love" */,
+	/*D_011C*/&AVATAR[0xF3D9 + 0x0005] /* "Courage" */,
+	/*D_0124*/&AVATAR[0xF3E1 + 0x0005] /* "Truth and Love" */,
+	/*D_0133*/&AVATAR[0xF3F0 + 0x0005] /* "Love and Courage" */,
+	/*D_0144*/&AVATAR[0xF401 + 0x0005] /* "Courage and Truth" */,
+	/*D_0156*/&AVATAR[0xF413 + 0x0005] /* "Truth, Love and Courage" */,
+	/*D_016E*/&AVATAR[0xF42B + 0x0005] /* "\nA voice rings out:  What Virtue exists independently of Truth, Love and Courage" */
 };
 
 /*use stone(s)*/
@@ -100,16 +100,16 @@ C_0311() {
 	if(Party.mStones) {
 		char bp_10[14];
 		if(CurMode != MOD_COM_ROOM && CurMode != MOD_DUNGEON)
-			u4_puts(/*D_01BF*/&AVATAR[0xF47C + 0x5] /* "No place to Use them!\n" */);
+			u4_puts(/*D_01BF*/&AVATAR[0xF47C + 0x0005] /* "No place to Use them!\n" */);
 		if(CurMode == MOD_DUNGEON) {
 			if(tile_cur != 0xb0 || Party._loc != 0x18) {
 				u4_puts(D_00EE);
 				return 0;
 			}
 			if(Party._z != 7)
-				u4_puts(/*D_01D6*/&AVATAR[0xF493 + 0x5] /* "\nAs thou doth approach, a voice rings out: What virtue dost stem from " */);
+				u4_puts(/*D_01D6*/&AVATAR[0xF493 + 0x0005] /* "\nAs thou doth approach, a voice rings out: What virtue dost stem from " */);
 			u4_puts(D_0284[Party._z]);
-			u4_puts(/*D_021D*/&AVATAR[0xF4DA + 0x5] /* "?\n\n" */);
+			u4_puts(/*D_021D*/&AVATAR[0xF4DA + 0x0005] /* "?\n\n" */);
 			set_input_mode(INPUT_MODE_VIRTUE_WORD);
 			u4_gets(bp_10, 13);
 			Gra_CR();
@@ -119,7 +119,7 @@ C_03A1:
 					u4_puts(D_00EE);
 				return 0;
 			}
-			u4_puts(/*D_0221*/&AVATAR[0xF4DE + 0x5] /* "\nThe Voice says: Use thy Stone.\n\nColor:\n" */);
+			u4_puts(/*D_0221*/&AVATAR[0xF4DE + 0x0005] /* "\nThe Voice says: Use thy Stone.\n\nColor:\n" */);
 			set_input_mode(INPUT_MODE_USE_STONE_COLOR_WORD);
 			u4_gets(bp_10, 11);
 			Gra_CR();
@@ -131,7 +131,7 @@ C_03A1:
 			if(bp_02 == -1)
 				goto C_03A1;
 			if(!TST_MSK(Party.mStones, bp_02)) {
-				u4_puts(/*D_024A*/&AVATAR[0xF507 + 0x5] /* "\nYou have none!\n\n" */);
+				u4_puts(/*D_024A*/&AVATAR[0xF507 + 0x0005] /* "\nYou have none!\n\n" */);
 				return 0;
 			}
 			if(Party._z != bp_02) {
@@ -143,7 +143,7 @@ C_03A1:
 				return 0;
 			}
 			D_8742._map.x8x8x8[Party._z][Party._y][Party._x] = 0x20; // changes to dungeon ladder down tile
-			u4_puts(/*D_025C*/&AVATAR[0xF519 + 0x5] /* "\nThe altar changes before thyne eyes!\n" */);
+			u4_puts(/*D_025C*/&AVATAR[0xF519 + 0x0005] /* "\nThe altar changes before thyne eyes!\n" */);
 		} else {
 			C_01E1();
 		}
@@ -159,7 +159,7 @@ C_044C() {
 		((Party.mItems >> ST_KEY_L) & 1) |
 		((Party.mItems >> ST_KEY_C) & 1)
 	)
-		u4_puts(&AVATAR[0xF47C + 0x5] /* "No place to Use them!\n" */);
+		u4_puts(&AVATAR[0xF47C + 0x0005] /* "No place to Use them!\n" */);
 	else
 		u4_puts(D_0100);
 }
@@ -175,7 +175,7 @@ C_0487() {
 		return 0;
 	}
 	SET_MSK(Party.mItems, ST_USE_BELL);
-	u4_puts(&AVATAR[0xF568 + 0x5] /* "The Bell rings on and on!\n" */);
+	u4_puts(&AVATAR[0xF568 + 0x0005] /* "The Bell rings on and on!\n" */);
 }
 
 /*use book*/
@@ -191,7 +191,7 @@ C_04C0() {
 		return 0;
 	}
 	SET_MSK(Party.mItems, ST_USE_BOOK);
-	u4_puts(&AVATAR[0xF583 + 0x5] /* "The words resonate with the ringing!\n" */);
+	u4_puts(&AVATAR[0xF583 + 0x0005] /* "The words resonate with the ringing!\n" */);
 }
 
 /*use candle*/
@@ -207,7 +207,7 @@ C_0501() {
 		return 0;
 	}
 	SET_MSK(Party.mItems, ST_USE_CANDLE);
-	u4_puts(&AVATAR[0xF5A9 + 0x5] /* "As you light the Candle the Earth Trembles!\n" */);
+	u4_puts(&AVATAR[0xF5A9 + 0x0005] /* "As you light the Candle the Earth Trembles!\n" */);
 	sound(6,0);
 	shakefx();
 }
@@ -222,7 +222,7 @@ C_0553() {
 		u4_puts(D_00EE);
 		return 0;
 	}
-	u4_puts(&AVATAR[0xF5D6 + 0x5] /* "The Horn sounds an eerie tone!\n" */);
+	u4_puts(&AVATAR[0xF5D6 + 0x0005] /* "The Horn sounds an eerie tone!\n" */);
 	spell_sta = 1;
 	spell_cnt = 10;
 	dspl_Stats();
@@ -238,7 +238,7 @@ C_058C() {
 		u4_puts(D_00EE);
 		return 0;
 	}
-	u4_puts(&AVATAR[0xF5F6 + 0x5] /* "Once mounted, the Wheel glows with a blue light!\n" */);
+	u4_puts(&AVATAR[0xF5F6 + 0x0005] /* "Once mounted, the Wheel glows with a blue light!\n" */);
 	Party._ship = 99;
 	dspl_Stats();
 }
@@ -252,7 +252,7 @@ C_05CE() {
 		return 0;
 	}
 	if(Party._loc != 0 || Party._x != 0xe9 || Party._y != 0xe9) {
-		u4_puts(&AVATAR[0xF628 + 0x5] /* "\nYou hold the evil Skull of Mondain the Wizard aloft....\n" */);
+		u4_puts(&AVATAR[0xF628 + 0x0005] /* "\nYou hold the evil Skull of Mondain the Wizard aloft....\n" */);
 		sound(6,0); shakefx();
 		Gra_09();
 		sound(6,0); shakefx();
@@ -285,7 +285,7 @@ C_05CE() {
 		karma_dec((U16 *)&(Party._humil), 5);
 		dspl_Stats();
 	} else {
-		u4_puts(&AVATAR[0xF662 + 0x5] /* "\nYou cast the Skull of Mondain into the Abyss!\n" */);
+		u4_puts(&AVATAR[0xF662 + 0x0005] /* "\nYou cast the Skull of Mondain into the Abyss!\n" */);
 		SET_MSK(Party.mItems, ST_CAST_SKULL);
 		karma_inc((char *)&(Party._hones), 10);
 		karma_inc((char *)&(Party._compa), 10);
@@ -308,16 +308,16 @@ struct {
 	char *_00;
 	void (*_02)();
 } D_0434[] = {
-	{/*D_03D5*/&AVATAR[0xF354 + 0x5] /* "stone" */,  C_0311},
-	{/*D_03DB*/&AVATAR[0xF354 + 0x5] /* "stones" */, C_0311},
-	{/*D_03E2*/&AVATAR[0xF69F + 0x5] /* "bell" */,   C_0487},
-	{/*D_03E7*/&AVATAR[0xF6A4 + 0x5] /* "book" */,   C_04C0},
-	{/*D_03EC*/&AVATAR[0xF6A9 + 0x5] /* "candle" */, C_0501},
-	{/*D_03F3*/&AVATAR[0xF309 + 0x5] /* "key" */,    C_044C},
-	{/*D_03F7*/&AVATAR[0xF6B4 + 0x5] /* "keys" */,   C_044C},
-	{/*D_03FC*/&AVATAR[0xF6B9 + 0x5] /* "horn" */,   C_0553},
-	{/*D_0401*/&AVATAR[0xF6BE + 0x5] /* "wheel" */,  C_058C},
-	{/*D_0407*/&AVATAR[0xF6C4 + 0x5] /* "skull" */,  C_05CE},
+	{/*D_03D5*/&AVATAR[0xF354 + 0x0005] /* "stone" */,  C_0311},
+	{/*D_03DB*/&AVATAR[0xF354 + 0x0005] /* "stones" */, C_0311},
+	{/*D_03E2*/&AVATAR[0xF69F + 0x0005] /* "bell" */,   C_0487},
+	{/*D_03E7*/&AVATAR[0xF6A4 + 0x0005] /* "book" */,   C_04C0},
+	{/*D_03EC*/&AVATAR[0xF6A9 + 0x0005] /* "candle" */, C_0501},
+	{/*D_03F3*/&AVATAR[0xF309 + 0x0005] /* "key" */,    C_044C},
+	{/*D_03F7*/&AVATAR[0xF6B4 + 0x0005] /* "keys" */,   C_044C},
+	{/*D_03FC*/&AVATAR[0xF6B9 + 0x0005] /* "horn" */,   C_0553},
+	{/*D_0401*/&AVATAR[0xF6BE + 0x0005] /* "wheel" */,  C_058C},
+	{/*D_0407*/&AVATAR[0xF6C4 + 0x0005] /* "skull" */,  C_05CE},
 	{/*D_040D*/"",       0}
 };
 
@@ -325,7 +325,7 @@ struct {
 	register int si;
 	char bp_0e[12];
 
-	u4_puts(&AVATAR[0xF6CB + 0x5] /* "Use which item:\n" */);
+	u4_puts(&AVATAR[0xF6CB + 0x0005] /* "Use which item:\n" */);
 	set_input_mode(INPUT_MODE_USE_WORD);
 	u4_gets(bp_0e, 11);
 	Gra_CR();
@@ -335,5 +335,5 @@ struct {
 			return 0;
 		}
 	}
-	u4_puts(&AVATAR[0xF6DC + 0x5] /* "Not a Usable item!\n" */);
+	u4_puts(&AVATAR[0xF6DC + 0x0005] /* "Not a Usable item!\n" */);
 }

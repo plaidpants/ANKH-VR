@@ -17,10 +17,10 @@ C_70F1()
 {
 	register int si;
 
-	u4_puts(/*D_2240*/&AVATAR[0x114F3 + 0x200F] /* "The Chest Holds:\n" */);
+	u4_puts(/*D_2240*/&AVATAR[0x114F3 + 0x000f] /* "The Chest Holds:\n" */);
 	si = U4_RND3(80) + U4_RND1(7) + 10;
 	u4_putl(si, 1, ' ');
-	u4_puts(/*D_2252*/&AVATAR[0x11505 + 0x200F] /* " Gold\n" */);
+	u4_puts(/*D_2252*/&AVATAR[0x11505 + 0x000f] /* " Gold\n" */);
 	Party._gold = (Party._gold + si <= 9999)?Party._gold + si:9999;
 }
 
@@ -35,16 +35,16 @@ int bp04;
 		 therefore, Sleep or Poison trap never occur.*/
 		si &= u_rand_a();
 		if(si == 0)
-			u4_puts(/*D_2259*/&AVATAR[0x1150C + 0x200F] /* "Acid" */);
+			u4_puts(/*D_2259*/&AVATAR[0x1150C + 0x000f] /* "Acid" */);
 		else if(si == 1)
-			u4_puts(/*D_225E*/&AVATAR[0x10FEE + 0x200F] /* "Sleep" */);
+			u4_puts(/*D_225E*/&AVATAR[0x10FEE + 0x000f] /* "Sleep" */);
 		else if(si == 2)
-			u4_puts(/*D_2264*/&AVATAR[0x11517 + 0x200F] /* "Poison" */);
+			u4_puts(/*D_2264*/&AVATAR[0x11517 + 0x000f] /* "Poison" */);
 		else
-			u4_puts(/*D_226B*/&AVATAR[0x1151E + 0x200F] /* "Bomb" */);
-		u4_puts(/*D_2270*/&AVATAR[0x11523 + 0x200F] /* " Trap!\n" */);
+			u4_puts(/*D_226B*/&AVATAR[0x1151E + 0x000f] /* "Bomb" */);
+		u4_puts(/*D_2270*/&AVATAR[0x11523 + 0x000f] /* " Trap!\n" */);
 		if(bp04 == -1 || U4_RND3(100) <= Party.chara[bp04]._dex + 25) {
-			u4_puts(/*D_2278*/&AVATAR[0x1152B + 0x200F] /* "Evaded!\n" */);
+			u4_puts(/*D_2278*/&AVATAR[0x1152B + 0x000f] /* "Evaded!\n" */);
 			sound(8,0);
 		} else if(si == 0) {/*Acid*/
 			C_70CE(bp04);
@@ -103,13 +103,13 @@ int bp04;
 	register int si;
 
 	if(Party.f_1dc != 0 && Party._tile == TIL_18) {
-		u4_puts(/*D_2281*/&AVATAR[0x11534 + 0x200F] /* "Get chest\n" */);
+		u4_puts(/*D_2281*/&AVATAR[0x11534 + 0x000f] /* "Get chest\n" */);
 		w_DriftOnly();
 		return 0;
 	}
-	u4_puts(/*D_228C*/&AVATAR[0x1153F + 0x200F] /* "Get Chest!\n" */);
+	u4_puts(/*D_228C*/&AVATAR[0x1153F + 0x000f] /* "Get Chest!\n" */);
 	set_input_mode(INPUT_MODE_GENERAL_ASK_CHARACTER_NUMBER);
-	if((si = AskChara(/*D_2298*/&AVATAR[0x1154B + 0x200F] /* "Who opens?\x12\x12\b" */)) < 0)
+	if((si = AskChara(/*D_2298*/&AVATAR[0x1154B + 0x000f] /* "Who opens?\x12\x12\b" */)) < 0)
 		return 0;
 	if(!isCharaConscious(si)) {
 		w_Disabled();
@@ -133,7 +133,7 @@ C_7337()
 /*(G)et chest [combat]*/
 C_73B8()
 {
-	u4_puts(/*D_22A6*/&AVATAR[0x1153F + 0x200F] /* "Get Chest!\n" */);
+	u4_puts(/*D_22A6*/&AVATAR[0x1153F + 0x000f] /* "Get Chest!\n" */);
 	C_7337();
 }
 
@@ -141,20 +141,20 @@ C_73B8()
 FIRE
 ----------------------------------------*/
 
-char * D_22C8 = &AVATAR[0x1157B + 0x200F] /* "Broadsides Only!\n" */;
+char * D_22C8 = &AVATAR[0x1157B + 0x000f] /* "Broadsides Only!\n" */;
 
 /*C_73C9*/CMD_Fire()
 {
 	int loc_A, loc_B, loc_C, loc_D, loc_E, loc_F;
 
-	u4_puts(/*D_22B2*/&AVATAR[0x11565 + 0x200F] /* "Fire " */);
+	u4_puts(/*D_22B2*/&AVATAR[0x11565 + 0x000f] /* "Fire " */);
 	if(Party._tile < TIL_10 || Party._tile > TIL_13) {
 		w_What();
 		return 0;
 	}
-	u4_puts(/*D_22B8*/&AVATAR[0x1156B + 0x200F] /* "Cannon!\n" */);
+	u4_puts(/*D_22B8*/&AVATAR[0x1156B + 0x000f] /* "Cannon!\n" */);
 	set_input_mode(INPUT_MODE_GENERAL_DIRECTION);
-	AskDir(/*D_22C1*/&AVATAR[0x10AE0 + 0x7] /* "Dir: " */, &loc_C, &loc_D);
+	AskDir(/*D_22C1*/&AVATAR[0x11574 + 0x000f] /* "Dir: " */, &loc_C, &loc_D);
 	if(!(loc_C|loc_D))
 		return 0;
 	if(loc_C != 0) {
@@ -206,7 +206,7 @@ IGNITE
 
 /*C_7525*/CMD_Ignite()
 {
-	u4_puts(/*D_22DA*/&AVATAR[0x1158D + 0x200F] /* "Ignite Torch!\n" */);
+	u4_puts(/*D_22DA*/&AVATAR[0x1158D + 0x000f] /* "Ignite Torch!\n" */);
 	if(CurMode != MOD_DUNGEON) {
 		w_NotHere();
 		return 0;

@@ -12,14 +12,14 @@ LOCATE
 
 /*C_755E*/CMD_Locate()
 {
-	u4_puts(/*D_22EA*/&AVATAR[0x1159D + 0x200F] /* "Locate position with " */);
+	u4_puts(/*D_22EA*/&AVATAR[0x1159D + 0x000f] /* "Locate position with " */);
 	if(Party._sextants == 0) {
 		w_What();
 		return 0;
 	}
-	u4_puts(/*D_2300*/&AVATAR[0x115B3 + 0x200F] /* "sextant\n" */);
+	u4_puts(/*D_2300*/&AVATAR[0x115B3 + 0x000f] /* "sextant\n" */);
 	add_char_to_text_buffer('\n');
-	u4_puts(&AVATAR[0x115BC + 0x200F] /* "Latitude: " */);
+	u4_puts(&AVATAR[0x115BC + 0x000f] /* "Latitude: " */);
 	u4_putc((Party._y >> 4) + 'A');
 	add_char_to_text_buffer((Party._y >> 4) + 'A');
 	u4_putc('\'');
@@ -28,7 +28,7 @@ LOCATE
 	add_char_to_text_buffer((Party._y & 0xf) + 'A');
 	u4_puts("\"");
 	add_char_to_text_buffer('\n');
-	u4_puts(/*D_2314*/&AVATAR[0x115C8 + 0x200F] /* "\nLongitude: " */);
+	u4_puts(/*D_2314*/&AVATAR[0x115C8 + 0x000f] /* "\nLongitude: " */);
 	u4_putc((Party._x >> 4) + 'A');
 	add_char_to_text_buffer((Party._x >> 4) + 'A');
 	u4_putc('\'');
@@ -45,7 +45,7 @@ LOCATE
 
 ----------------------------------------*/
 
-unsigned char * D_2334 = &AVATAR[0x115E7 + 0x200F]; //{
+unsigned char * D_2334 = &AVATAR[0x115E7 + 0x000f]; //{
 #if 0
 	/*weapons class masks*/
 	0xFF,0xFF,0xFF,0xFF,0x7F,0x6F,0x6F,0x7E,0x7E,0xFF,0x2C,0x0C,0x2E,0x5E,0xD0,0xFF,
@@ -60,9 +60,9 @@ int bp08;
 int bp06;
 int bp04;
 {
-	u4_puts(/*D_2322*/&AVATAR[0xF42B + 0x5] /* "\nA " */);
+	u4_puts(/*D_2322*/&AVATAR[0x115D4 + 0x000f] /* "\nA " */);
 	u4_puts(D_1E98[77 + (int)Party.chara[bp08]._class]);
-	u4_puts(/*D_2326*/&AVATAR[0x115D9 + 0x200F] /* " may NOT use " */);
+	u4_puts(/*D_2326*/&AVATAR[0x115D9 + 0x000f] /* " may NOT use " */);
 	if (bp04)
 	{
 		u4_putc('a');
@@ -80,19 +80,19 @@ int bp04;
 	int loc_C;
 
 	if(CurMode >= MOD_COMBAT) {
-		u4_puts(/*D_234C*/&AVATAR[0x115FF + 0x200F] /* "Ready Weapon!\n" */);
+		u4_puts(/*D_234C*/&AVATAR[0x115FF + 0x000f] /* "Ready Weapon!\n" */);
 		loc_A = activeChara;
 	} else {
-		u4_puts(/*D_235B*/&AVATAR[0x1160E + 0x200F] /* "Ready a weapon\n" */);
+		u4_puts(/*D_235B*/&AVATAR[0x1160E + 0x000f] /* "Ready a weapon\n" */);
 		set_input_mode(INPUT_MODE_GENERAL_ASK_CHARACTER_NUMBER);
-		if((loc_A = AskChara(/*D_236B*/&AVATAR[0x10C9C + 0x200F] /* "for:\x12\x12\b" */)) < 0)
+		if((loc_A = AskChara(/*D_236B*/&AVATAR[0x10C9C + 0x000f] /* "for:\x12\x12\b" */)) < 0)
 			return 0;
 	}
 	Gra_13();
 	C_4832();
 	txt_Y = 23; txt_X = 24;
 	set_input_mode(INPUT_MODE_GENERAL_ASK_LETTER_WEAPON);
-	loc_B = AskLetter(/*D_2373*/&AVATAR[0x11626 + 0x200F] /* "Weapon:\x12\x12\b" */, 'A', 'P');
+	loc_B = AskLetter(/*D_2373*/&AVATAR[0x11626 + 0x000f] /* "Weapon:\x12\x12\b" */, 'A', 'P');
 	Gra_13();
 	C_4649();
 	dspl_Stats();
@@ -127,15 +127,15 @@ int bp04;
 	register int loc_A, loc_B;
 	int loc_C;
 
-	u4_puts(/*D_237E*/&AVATAR[0x11631 + 0x200F] /* "Wear Armour\n" */);
+	u4_puts(/*D_237E*/&AVATAR[0x11631 + 0x000f] /* "Wear Armour\n" */);
 	set_input_mode(INPUT_MODE_GENERAL_ASK_CHARACTER_NUMBER);
-	if((loc_A = AskChara(/*D_238B*/&AVATAR[0x10C9C + 0x200F] /* "for:\x12\x12\b" */)) < 0)
+	if((loc_A = AskChara(/*D_238B*/&AVATAR[0x10C9C + 0x000f] /* "for:\x12\x12\b" */)) < 0)
 		return 0;
 	Gra_13();
 	C_48F8();
 	txt_Y = 23; txt_X = 24;
 	set_input_mode(INPUT_MODE_GENERAL_ASK_LETTER_ARMOR);
-	loc_B = AskLetter(/*D_2393*/&AVATAR[0x11646 + 0x200F] /* "Armour:\x12\x12\b" */, 'A', 'H');
+	loc_B = AskLetter(/*D_2393*/&AVATAR[0x11646 + 0x000f] /* "Armour:\x12\x12\b" */, 'A', 'H');
 	Gra_13();
 	C_4649();
 	dspl_Stats();

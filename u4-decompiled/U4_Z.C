@@ -67,21 +67,21 @@ int bp04;
 	txt_Y = 1; C_45D6(D_1E98[77 + si->_class], 0);
 	txt_X = 38; u4_putc(si->_status);
 	txt_X = 25;
-	txt_Y = 3; u4_puts(/*D_18D6*/&AVATAR[0x10B89 + 0x200F] /* "MP:" */); u4_putl(si->_MP, 2, '0');
-	txt_X = 32; u4_puts(/*D_18DA*/&AVATAR[0x10B8D + 0x200F] /* "LV:" */); u4_putc((si->_HP[1]/100)+'0');
+	txt_Y = 3; u4_puts(/*D_18D6*/&AVATAR[0x10B89 + 0x000f] /* "MP:" */); u4_putl(si->_MP, 2, '0');
+	txt_X = 32; u4_puts(/*D_18DA*/&AVATAR[0x10B8D + 0x000f] /* "LV:" */); u4_putc((si->_HP[1]/100)+'0');
 	txt_X = 24;
-	txt_Y = 4; u4_puts(/*D_18DE*/&AVATAR[0x10B91 + 0x200F] /* "STR:" */); u4_putl(si->_str, 2, '0');
-	txt_X = 32; u4_puts(/*D_18E3*/&AVATAR[0xF7AE + 0x5] /* "HP:" */); u4_putl(si->_HP[0], 4, '0');
+	txt_Y = 4; u4_puts(/*D_18DE*/&AVATAR[0x10B91 + 0x000f] /* "STR:" */); u4_putl(si->_str, 2, '0');
+	txt_X = 32; u4_puts(/*D_18E3*/&AVATAR[0xF7AE + 0x0005] /* "HP:" */); u4_putl(si->_HP[0], 4, '0');
 	txt_X = 24;
-	txt_Y = 5; u4_puts(/*D_18E7*/&AVATAR[0x10B9A + 0x200F] /* "DEX:" */); u4_putl(si->_dex, 2, '0');
-	txt_X = 32; u4_puts(/*D_18EC*/&AVATAR[0x10B9F + 0x200F] /* "HM:" */); u4_putl(si->_HP[1], 4, '0');
+	txt_Y = 5; u4_puts(/*D_18E7*/&AVATAR[0x10B9A + 0x000f] /* "DEX:" */); u4_putl(si->_dex, 2, '0');
+	txt_X = 32; u4_puts(/*D_18EC*/&AVATAR[0x10B9F + 0x000f] /* "HM:" */); u4_putl(si->_HP[1], 4, '0');
 	txt_X = 24;
-	txt_Y = 6; u4_puts(/*D_18F0*/&AVATAR[0x10BA3 + 0x200F] /* "INT:" */); u4_putl(si->_int, 2, '0');
-	txt_X = 32; u4_puts(/*D_18F5*/&AVATAR[0x10B9B + 0x200F] /* "EX:" */); u4_putl(si->_XP, 4, '0');
+	txt_Y = 6; u4_puts(/*D_18F0*/&AVATAR[0x10BA3 + 0x000f] /* "INT:" */); u4_putl(si->_int, 2, '0');
+	txt_X = 32; u4_puts(/*D_18F5*/&AVATAR[0x10B9B + 0x000f] /* "EX:" */); u4_putl(si->_XP, 4, '0');
 	txt_Y = 7;
-	txt_X = 24; u4_puts(/*D_18F9*/&AVATAR[0x10BAC + 0x200F] /* "W:" */); u4_puts(D_1E98[37 + si->_weapon]);
+	txt_X = 24; u4_puts(/*D_18F9*/&AVATAR[0x10BAC + 0x000f] /* "W:" */); u4_puts(D_1E98[37 + si->_weapon]);
 	txt_Y = 8;
-	txt_X = 24; u4_puts(/*D_18FC*/&AVATAR[0x10BAF + 0x200F] /* "A:" */); u4_puts(D_1E98[53 + si->_armor]);
+	txt_X = 24; u4_puts(/*D_18FC*/&AVATAR[0x10BAF + 0x000f] /* "A:" */); u4_puts(D_1E98[53 + si->_armor]);
 }
 
 C_4832()
@@ -90,10 +90,10 @@ C_4832()
 
 	set_zstats_mode(ZSTATS_MODE_WEAPONS);
 	txt_Y = 0;
-	C_45D6(/*D_18FF*/&AVATAR[0x10BB2 + 0x200F] /* "Weapons" */, 0);
+	C_45D6(/*D_18FF*/&AVATAR[0x10BB2 + 0x000f] /* "Weapons" */, 0);
 	txt_Y = 1;
 	txt_X = 24;
-	u4_puts(/*D_1907*/&AVATAR[0x10BBA + 0x200F] /* "A-Hands" */);
+	u4_puts(/*D_1907*/&AVATAR[0x10BBA + 0x000f] /* "A-Hands" */);
 	txt_Y = 2;
 	txt_X = 24;
 	si = 1;
@@ -111,7 +111,7 @@ C_4832()
 		}
 	} while(++si < 0x10);
 	while(txt_X < 40) {
-		u4_puts(/*D_190F*/&AVATAR[0x10BC2 + 0x200F] /* "       " */);
+		u4_puts(/*D_190F*/&AVATAR[0x10BC2 + 0x000f] /* "       " */);
 		txt_X = (txt_X - 1) & ~7;
 		if(++txt_Y == 9) {
 			txt_Y = 1;
@@ -126,10 +126,10 @@ C_48F8()
 
 	set_zstats_mode(ZSTATS_MODE_ARMOUR);
 	txt_Y = 0;
-	C_45D6(/*D_1917*/&AVATAR[0x10BCA + 0x200F] /* "Armour" */, 0);
+	C_45D6(/*D_1917*/&AVATAR[0x10BCA + 0x000f] /* "Armour" */, 0);
 	txt_Y = 1;
 	txt_X = 24;
-	u4_puts(/*D_191E*/&AVATAR[0x10BD1 + 0x200F] /* "A  -No Armour" */);
+	u4_puts(/*D_191E*/&AVATAR[0x10BD1 + 0x000f] /* "A  -No Armour" */);
 	txt_Y = 2;
 	for(si = 1; si < 8; si ++) {
 		if(Party._armors[si]) {
@@ -150,27 +150,27 @@ C_4987()
 {
 	set_zstats_mode(ZSTATS_MODE_EQUIPMENT);
 	txt_Y = 0;
-	C_45D6(/*D_192C*/&AVATAR[0x10BDF + 0x200F] /* "Equipment" */, -1);
+	C_45D6(/*D_192C*/&AVATAR[0x10BDF + 0x000f] /* "Equipment" */, -1);
 
 	txt_X = 24; txt_Y = 1;
-	u4_putl(Party._torches, 2, ' '); u4_puts(/*D_1936*/&AVATAR[0x10BE9 + 0x200F] /* " Torches" */);
+	u4_putl(Party._torches, 2, ' '); u4_puts(/*D_1936*/&AVATAR[0x10BE9 + 0x000f] /* " Torches" */);
 
 	txt_X = 24; txt_Y ++;
-	u4_putl(Party._gems, 2, ' '); u4_puts(/*D_193F*/&AVATAR[0x10BF2 + 0x200F] /* " Gems" */);
+	u4_putl(Party._gems, 2, ' '); u4_puts(/*D_193F*/&AVATAR[0x10BF2 + 0x000f] /* " Gems" */);
 
 	txt_X = 24; txt_Y ++;
-	u4_putl(Party._keys, 2, ' '); u4_puts(/*D_1945*/&AVATAR[0x10BF8 + 0x200F] /* " Keys" */);
+	u4_putl(Party._keys, 2, ' '); u4_puts(/*D_1945*/&AVATAR[0x10BF8 + 0x000f] /* " Keys" */);
 
 	if(Party._sextants) {
 		txt_X = 24; txt_Y = 4;
-		u4_putl(Party._sextants, 2, ' '); u4_puts(/*D_194B*/&AVATAR[0x10BFE + 0x200F] /* " Sextants" */);
+		u4_putl(Party._sextants, 2, ' '); u4_puts(/*D_194B*/&AVATAR[0x10BFE + 0x000f] /* " Sextants" */);
 	}
 	txt_Y ++;
 	C_45B5();
 }
 
-char * D_199A = &AVATAR[0x10C4D + 0x200F] /* "BYRGOPWB" */;
-char * D_19A4 = &AVATAR[0x10C57 + 0x200F] /* "HCVJSHSH" */;
+char * D_199A = &AVATAR[0x10C4D + 0x000f] /* "BYRGOPWB" */;
+char * D_19A4 = &AVATAR[0x10C57 + 0x000f] /* "HCVJSHSH" */;
 
 C_4A3D()
 {
@@ -178,11 +178,11 @@ C_4A3D()
 
 	set_zstats_mode(ZSTATS_MODE_ITEMS);
 	txt_Y = 0;
-	C_45D6(/*D_1955*/&AVATAR[0x10C08 + 0x200F] /* "Items" */, 0);
+	C_45D6(/*D_1955*/&AVATAR[0x10C08 + 0x000f] /* "Items" */, 0);
 	txt_Y = 1;
 	if(Party.mStones) {
 		txt_X = 24;
-		u4_puts(/*D_195B*/&AVATAR[0x10C0E + 0x200F] /* "Stones:" */);
+		u4_puts(/*D_195B*/&AVATAR[0x10C0E + 0x000f] /* "Stones:" */);
 		si = 0;
 		do {
 			if(TST_MSK(Party.mStones, si))
@@ -192,7 +192,7 @@ C_4A3D()
 	}
 	if(Party.mRunes) {
 		txt_X = 24;
-		u4_puts(/*D_1963*/&AVATAR[0x10C16 + 0x200F] /* "Runes:" */);
+		u4_puts(/*D_1963*/&AVATAR[0x10C16 + 0x000f] /* "Runes:" */);
 		si = 0;
 		do {
 			if(TST_MSK(Party.mRunes, si))
@@ -203,11 +203,11 @@ C_4A3D()
 	if(TST_MSK(Party.mItems, ST_BELL) || TST_MSK(Party.mItems, ST_BOOK) || TST_MSK(Party.mItems, ST_CANDLE)) {
 		txt_X = 24;
 		if(TST_MSK(Party.mItems, ST_BELL))
-			u4_puts(/*D_196A*/&AVATAR[0xF56C + 0x5] /* "Bell " */);
+			u4_puts(/*D_196A*/&AVATAR[0xF56C + 0x0005] /* "Bell " */);
 		if(TST_MSK(Party.mItems, ST_BOOK))
-			u4_puts(/*D_1970*/&AVATAR[0x10C23 + 0x200F] /* "Book " */);
+			u4_puts(/*D_1970*/&AVATAR[0x10C23 + 0x000f] /* "Book " */);
 		if(TST_MSK(Party.mItems, ST_CANDLE)) {
-			u4_puts(/*D_1976*/&AVATAR[0xF5BA + 0x5] /* "Candl" */);
+			u4_puts(/*D_1976*/&AVATAR[0xF5BA + 0x0005] /* "Candl" */);
 			if(!TST_MSK(Party.mItems, ST_BOOK) || !TST_MSK(Party.mItems, ST_BELL))
 				u4_putc('e');
 		}
@@ -215,7 +215,7 @@ C_4A3D()
 	}
 	if(TST_MSK(Party.mItems, ST_KEY_C) || TST_MSK(Party.mItems, ST_KEY_L) || TST_MSK(Party.mItems, ST_KEY_T)) {
 		txt_X = 24;
-		u4_puts(/*D_197C*/&AVATAR[0x10C2F + 0x200F] /* "3 Part Key:" */);
+		u4_puts(/*D_197C*/&AVATAR[0x10C2F + 0x000f] /* "3 Part Key:" */);
 		if(TST_MSK(Party.mItems, ST_KEY_T))
 			u4_putc('T');
 		if(TST_MSK(Party.mItems, ST_KEY_L))
@@ -226,17 +226,17 @@ C_4A3D()
 	}
 	if(TST_MSK(Party.mItems, ST_HORN)) {
 		txt_X = 24;
-		u4_puts(/*D_1988*/&AVATAR[0xF5DA + 0x5] /* "Horn" */);
+		u4_puts(/*D_1988*/&AVATAR[0xF5DA + 0x0005] /* "Horn" */);
 		txt_Y ++;
 	}
 	if(TST_MSK(Party.mItems, ST_WHEEL)) {
 		txt_X = 24;
-		u4_puts(/*D_198D*/&AVATAR[0xF608 + 0x5] /* "Wheel" */);
+		u4_puts(/*D_198D*/&AVATAR[0xF608 + 0x0005] /* "Wheel" */);
 		txt_Y ++;
 	}
 	if(TST_MSK(Party.mItems, ST_SKULL)) {
 		txt_X = 24;
-		u4_puts(/*D_1993*/&AVATAR[0xF63B + 0x5] /* "Skull" */);
+		u4_puts(/*D_1993*/&AVATAR[0xF63B + 0x0005] /* "Skull" */);
 	}
 }
 
@@ -246,7 +246,7 @@ C_4BC7()
 
 	set_zstats_mode(ZSTATS_MODE_REAGENTS);
 	txt_Y = 0;
-	C_45D6(/*D_19AD*/&AVATAR[0x10C60 + 0x200F] /* "Reagents" */, 0);
+	C_45D6(/*D_19AD*/&AVATAR[0x10C60 + 0x000f] /* "Reagents" */, 0);
 	txt_Y = 1;
 	si = 0;
 	do {
@@ -270,7 +270,7 @@ C_4C42()
 
 	set_zstats_mode(ZSTATS_MODE_MIXTURES);
 	txt_Y = 0;
-	C_45D6(/*D_19B6*/&AVATAR[0x10C69 + 0x200F] /* "Mixtures" */, 0);
+	C_45D6(/*D_19B6*/&AVATAR[0x10C69 + 0x000f] /* "Mixtures" */, 0);
 	txt_Y = 1;
 	txt_X = 24;
 	si = 0;
@@ -384,7 +384,7 @@ int bp04;
 /*C_4E45*/CMD_Ztats()
 {
 	if(CurMode >= MOD_COMBAT) {
-		u4_puts(/*D_19DC*/&AVATAR[0x10C8F + 0x200F] /* "Ztats\n" */);
+		u4_puts(/*D_19DC*/&AVATAR[0x10C8F + 0x000f] /* "Ztats\n" */);
 		Gra_11(activeChara);
 		C_4CC1(activeChara);
 		Gra_11(activeChara);
@@ -392,7 +392,7 @@ int bp04;
 		int bp_02;
 
 		set_input_mode(INPUT_MODE_GENERAL_ASK_CHARACTER_NUMBER);
-		bp_02 = AskChara(/*D_19E3*/&AVATAR[0x10C96 + 0x200F] /* "Ztats for:\x12\x12\b" */);
+		bp_02 = AskChara(/*D_19E3*/&AVATAR[0x10C96 + 0x000f] /* "Ztats for:\x12\x12\b" */);
 		if(bp_02 != -1)
 			C_4CC1((bp_02 == -2)?8:bp_02);
 	}

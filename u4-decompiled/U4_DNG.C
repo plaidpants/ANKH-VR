@@ -82,13 +82,13 @@ extern int QUIT;
 						break;
 					}
 				default:
-					u4_puts(/*D_2626*/&AVATAR[0x118D1 + 0x2017] /* "Bad command\n" */);
+					u4_puts(/*D_2626*/&AVATAR[0x118D1 + 0x0017] /* "Bad command\n" */);
 					sound(2,0);
 					D_07F8 = 0;
 			}
 			C_AE41();
 		} else {
-			u4_puts(/*D_2633*/&AVATAR[0x118DE + 0x2017] /* "Zzzzz\n" */);
+			u4_puts(/*D_2633*/&AVATAR[0x118DE + 0x0017] /* "Zzzzz\n" */);
 		}
 		if(D_07F8 != 0 && Party._z >= 0)
 			C_87E2();
@@ -150,7 +150,7 @@ C_87E2()
 		}
 	}
 	if(food_dec(Party.f_1d8)) {
-		u4_puts(/*D_263A*/&AVATAR[0x118E5 + 0x2017] /* "\nStarving!!!\n" */); 
+		u4_puts(/*D_263A*/&AVATAR[0x118E5 + 0x0017] /* "\nStarving!!!\n" */); 
 		for(si = 0; si < Party.f_1d8; si++) {
 			if(isCharaAlive(si))
 				hitChara(si, 2);
@@ -172,7 +172,7 @@ C_87E2()
 			spell_sta = 7;
 	}
 	if(Party.f_1dc == 0)
-		u4_puts(/*D_2648*/&AVATAR[0x118F3 + 0x2017] /* "It's Dark!\n" */);
+		u4_puts(/*D_2648*/&AVATAR[0x118F3 + 0x0017] /* "It's Dark!\n" */);
 	dspl_Stats();
 	if(C_8743() == 0) {
 		while((tile_cur & 0xf0) == 0xd0) {
@@ -202,7 +202,7 @@ unsigned bp04;
 /*Advance*/
 C_891E()
 {
-	u4_puts(/*D_2654*/&AVATAR[0x118FF + 0x2017] /* "Advance\n" */);
+	u4_puts(/*D_2654*/&AVATAR[0x118FF + 0x0017] /* "Advance\n" */);
 	if(!C_88E8(tile_forward, 0)) {
 		w_Blocked();
 		return 0;
@@ -214,7 +214,7 @@ C_891E()
 /*Retreat*/
 C_895F()
 {
-	u4_puts(/*D_265D*/&AVATAR[0x11908 + 0x2017] /* "Retreat\n" */);
+	u4_puts(/*D_265D*/&AVATAR[0x11908 + 0x0017] /* "Retreat\n" */);
 	if(!C_88E8(tile_back, 1)) {
 		w_Blocked();
 		return 0;
@@ -226,7 +226,7 @@ C_895F()
 /*Turn Left*/
 C_899F()
 {
-	u4_puts(/*D_2666*/&AVATAR[0x11911 + 0x2017] /* "Turn Left\n" */);
+	u4_puts(/*D_2666*/&AVATAR[0x11911 + 0x0017] /* "Turn Left\n" */);
 	Party._dir = (Party._dir - 1) & 3;
 	D_07F8 = 0;
 }
@@ -234,7 +234,7 @@ C_899F()
 /*Turn Right*/
 C_89BD()
 {
-	u4_puts(/*D_2671*/&AVATAR[0x1191C + 0x2017] /* "Turn Right\n" */);
+	u4_puts(/*D_2671*/&AVATAR[0x1191C + 0x0017] /* "Turn Right\n" */);
 	Party._dir = (Party._dir + 1) & 3;
 	D_07F8 = 0;
 }
@@ -242,14 +242,14 @@ C_89BD()
 /*(K)limb [dungeon]*/
 C_89DB()
 {
-	u4_puts(/*D_267D*/&AVATAR[0x11928 + 0x2017] /* "Klimb " */);
+	u4_puts(/*D_267D*/&AVATAR[0x11928 + 0x0017] /* "Klimb " */);
 	if(
 		(tile_cur & 0xf0) == 0x10 ||
 		(tile_cur & 0xf0) == 0x30
 	) {
-		u4_puts(/*D_2684*/&AVATAR[0x1192F + 0x2017] /* "up!\n" */);
+		u4_puts(/*D_2684*/&AVATAR[0x1192F + 0x0017] /* "up!\n" */);
 		if(--Party._z >= 0) {
-			u4_puts(/*D_2689*/&AVATAR[0x11934 + 0x2017] /* "To level " */);
+			u4_puts(/*D_2689*/&AVATAR[0x11934 + 0x0017] /* "To level " */);
 			u4_putc(Party._z + '1');
 			add_char_to_text_buffer(Party._z + '1');
 			Gra_CR();
@@ -263,13 +263,13 @@ C_89DB()
 /*(D)escend [dungeon]*/
 C_8A1F()
 {
-	u4_puts(/*D_2693*/&AVATAR[0x1193E + 0x2017] /* "Descend " */);
+	u4_puts(/*D_2693*/&AVATAR[0x1193E + 0x0017] /* "Descend " */);
 	if(
 		(tile_cur & 0xf0) == 0x20 ||
 		(tile_cur & 0xf0) == 0x30
 	) {
 		Party._z ++;
-		u4_puts(/*D_269C*/&AVATAR[0x11947 + 0x2017] /* "down to level " */);
+		u4_puts(/*D_269C*/&AVATAR[0x11947 + 0x0017] /* "down to level " */);
 		u4_putc(Party._z + '1');
 		add_char_to_text_buffer(Party._z + '1');
 		Gra_CR();

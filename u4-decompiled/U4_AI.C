@@ -132,7 +132,7 @@ int bp04;
 		return 0;
 	}
 	u4_puts(Party.chara[bp06]._name);
-	u4_puts(/*D_29CA*/&AVATAR[0x11C75 + 0x2017] /* " is Killed!\n" */);
+	u4_puts(/*D_29CA*/&AVATAR[0x11C75 + 0x0017] /* " is Killed!\n" */);
 	karma_inc(&(Party._sacri), 1);
 	dspl_Stats();
 	C_10FD();
@@ -181,41 +181,41 @@ int bp04;
 	add_char_to_text_buffer(' ');
 	switch(hit_tile) {
 		case TIL_44:
-			u4_puts(/*D_29D7*/&AVATAR[0x11C82 + 0x2017] /* "Poisoned!\n" */);
+			u4_puts(/*D_29D7*/&AVATAR[0x11C82 + 0x0017] /* "Poisoned!\n" */);
 			C_9764(si);
 			if(U4_RND1(1) || Party.chara[si]._status != 'G')
-				u4_puts(/*D_29E2*/&AVATAR[0x11C8D + 0x2017] /* "Failed.\n" */);
+				u4_puts(/*D_29E2*/&AVATAR[0x11C8D + 0x0017] /* "Failed.\n" */);
 			else
 				Party.chara[si]._status = 'P';
 		break;
 		case TIL_45:
-			u4_puts(/*D_29EB*/&AVATAR[0x11C96 + 0x2017] /* "Electrified!\n" */);
+			u4_puts(/*D_29EB*/&AVATAR[0x11C96 + 0x0017] /* "Electrified!\n" */);
 			C_96B9(si, bp08);
 		break;
 		case TIL_46:
-			u4_puts(/*D_29F9*/&AVATAR[0x11CA4 + 0x2017] /* "Fiery Hit!\n" */);
+			u4_puts(/*D_29F9*/&AVATAR[0x11CA4 + 0x0017] /* "Fiery Hit!\n" */);
 			C_96B9(si, bp08);
 		break;
 		case TIL_47:
-			u4_puts(/*D_2A05*/&AVATAR[0x11CB0 + 0x2017] /* "Slept!\n" */);
+			u4_puts(/*D_2A05*/&AVATAR[0x11CB0 + 0x0017] /* "Slept!\n" */);
 			C_9764(si);
 			if(U4_RND1(1) || Party.chara[si]._status != 'G')
-				u4_puts(/*D_2A0D*/&AVATAR[0x11C8D + 0x2017] /* "Failed.\n" */);
+				u4_puts(/*D_2A0D*/&AVATAR[0x11C8D + 0x0017] /* "Failed.\n" */);
 			else {
 				Party.chara[si]._status = 'S';
 				Fighters._chtile[si] = TIL_38;
 			}
 		break;
 		case TIL_4C:
-			u4_puts(/*D_2A16*/&AVATAR[0x11CC1 + 0x2017] /* "Lava Hit!\n" */);
+			u4_puts(/*D_2A16*/&AVATAR[0x11CC1 + 0x0017] /* "Lava Hit!\n" */);
 			C_96B9(si, bp08);
 		break;
 		case TIL_4E:
-			u4_puts(/*D_2A21*/&AVATAR[0x11CCC + 0x2017] /* "Magical Hit!\n" */);
+			u4_puts(/*D_2A21*/&AVATAR[0x11CCC + 0x0017] /* "Magical Hit!\n" */);
 			C_96B9(si, bp08);
 		break;
 		default:
-			u4_puts(/*D_2A2F*/&AVATAR[0x11CAA + 0x2017] /* "Hit!\n" */);
+			u4_puts(/*D_2A2F*/&AVATAR[0x11CAA + 0x0017] /* "Hit!\n" */);
 			C_96B9(si, bp08);
 	}
 	hit_tile = 0;
@@ -371,7 +371,7 @@ int bp04;
 {
 	Gra_CR();
 	u4_puts(C_1513((unsigned char)Fighters._tile[bp04]));
-	u4_puts(/*D_2A35*/&AVATAR[0x11CE0 + 0x2017] /* " Flees!\n" */);
+	u4_puts(/*D_2A35*/&AVATAR[0x11CE0 + 0x0017] /* " Flees!\n" */);
 	if(C_0AFE((unsigned char)Fighters._tile[bp04])) {
 		karma_inc(&(Party._compa), 1);
 		karma_inc(&(Party._justi), 1);

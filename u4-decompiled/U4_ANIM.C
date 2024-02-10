@@ -38,10 +38,10 @@ char *bp04;
 	txt_X = 7;
 	u4_puts(bp04);
 	switch(bp06) {
-		case DIR_N: u4_puts(&AVATAR[0x108EF + 0x5] /* " North" */); break;
-		case DIR_S: u4_puts(&AVATAR[0x108F6 + 0x5] /* " South" */); break;
-		case DIR_E: u4_puts(&AVATAR[0x108FD + 0x5] /* "  East" */); break;
-		case DIR_W: u4_puts(&AVATAR[0x10904 + 0x5] /* "  West" */); break;
+		case DIR_N: u4_puts(&AVATAR[0x108EF + 0x0005] /* " North" */); break;
+		case DIR_S: u4_puts(&AVATAR[0x108F6 + 0x0005] /* " South" */); break;
+		case DIR_E: u4_puts(&AVATAR[0x108FD + 0x0005] /* "  East" */); break;
+		case DIR_W: u4_puts(&AVATAR[0x10904 + 0x0005] /* "  West" */); break;
 	}
 	if(CurMode == MOD_DUNGEON) {
 		txt_Y = 0;
@@ -63,7 +63,7 @@ C_35C7()
 		if(!U4_RND1(0xfc))
 			WindDir = (U4_RND1(2) + WindDir - 1) & 3;
 	}
-	C_353D(WindDir, &AVATAR[0x1090B + 0x5] /* "Wind" */);
+	C_353D(WindDir, &AVATAR[0x1090B + 0x0005] /* "Wind" */);
 }
 
 unsigned D_1656[] = {192, 96, 60, 36, 20, 12, 8};
@@ -421,7 +421,7 @@ C_3C54()
 	} else if(CurMode == MOD_BUILDING) {
 		C_3B83();
 	} else if(CurMode == MOD_DUNGEON) {
-		C_353D(Party._dir, &AVATAR[0x10937 + 0x7] /* "DIR:" */);
+		C_353D(Party._dir, &AVATAR[0x10937 + 0x0007] /* "DIR:" */);
 		C_34EA();
 		C_B677();
 		C_ADEF();

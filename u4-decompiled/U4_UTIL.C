@@ -30,7 +30,7 @@ int bp04;
 
 /*C_09A3*/w_Pass()
 {
-	u4_puts(&AVATAR[0xF787 + 0x5] /* "Pass\n" */);
+	u4_puts(&AVATAR[0xF787 + 0x0005] /* "Pass\n" */);
 }
 
 /*increments hit points*/
@@ -74,7 +74,7 @@ unsigned bp04;
 		txt_X = 31;
 		txt_Y = 10;
 		u4_putc(spell_sta);
-		u4_puts(&AVATAR[0xF78D + 0x5] /* "\n Thou hast lost\n  an Eighth!\n" */);
+		u4_puts(&AVATAR[0xF78D + 0x0005] /* "\n Thou hast lost\n  an Eighth!\n" */);
 	}
 	*bp06 -= bp04;
 	if(*bp06 <= 0)
@@ -322,10 +322,10 @@ unsigned char bp04;
 	u4_putc(' ');
 	u4_putc(spell_sta);
 	if(Party._tile < TIL_14) {
-		u4_puts(&AVATAR[0xF7AC + 0x5] /* " SHP:" */);
+		u4_puts(&AVATAR[0xF7AC + 0x0005] /* " SHP:" */);
 		u4_putl(Party._ship, 2, '0');
 	} else {
-		u4_puts(&AVATAR[0xF7B2 + 0x5] /* " G:" */);
+		u4_puts(&AVATAR[0xF7B2 + 0x0005] /* " G:" */);
 		u4_putl(Party._gold, 4, '0');
 	}
 	txt_Y = loc_E;
@@ -384,29 +384,29 @@ C_0EB1()
 	u_delay(5, 0);
 	Gra_10();
 	CurMode = MOD_VISION;
-	u4_puts(&AVATAR[0xF7B6 + 0x5]); //  "\n\n\nAll is Dark...\n"
+	u4_puts(&AVATAR[0xF7B6 + 0x0005]); //  "\n\n\nAll is Dark...\n"
 	set_input_mode(INPUT_MODE_DELAY_NO_CONTINUE);
 	u_delay(5, 0);
-	u4_puts(&AVATAR[0xF7C9 + 0x5]); // "\nBut wait...\n"
+	u4_puts(&AVATAR[0xF7C9 + 0x0005]); // "\nBut wait...\n"
 	set_input_mode(INPUT_MODE_DELAY_NO_CONTINUE);
 	u_delay(5, 0);
-	u4_puts(&AVATAR[0xF7D7 + 0x5] /* "Where am I?...\n" */);
+	u4_puts(&AVATAR[0xF7D7 + 0x0005] /* "Where am I?...\n" */);
 	set_input_mode(INPUT_MODE_DELAY_NO_CONTINUE);
 	u_delay(5, 0);
-	u4_puts(&AVATAR[0xF7E7 + 0x5] /* "Am I dead?...\n" */);
+	u4_puts(&AVATAR[0xF7E7 + 0x0005] /* "Am I dead?...\n" */);
 	set_input_mode(INPUT_MODE_DELAY_NO_CONTINUE);
 	u_delay(5, 0);
-	u4_puts(&AVATAR[0xF7F6 + 0x5] /* "Afterlife?...\n" */);
+	u4_puts(&AVATAR[0xF7F6 + 0x0005] /* "Afterlife?...\n" */);
 	set_input_mode(INPUT_MODE_DELAY_NO_CONTINUE);
 	u_delay(5, 0);
-	u4_puts(&AVATAR[0xF805 + 0x5] /* "You hear:\n" */);
+	u4_puts(&AVATAR[0xF805 + 0x0005] /* "You hear:\n" */);
 	txt_X = (12 - (unsigned)strlen(Party.chara[0]._name)) / 2 + 25;
 	u4_puts(Party.chara[0]._name);
 	add_npc_talk(LORD_BRITISH, Party.chara[0]._name);
 	Gra_CR();
 	set_input_mode(INPUT_MODE_DELAY_NO_CONTINUE);
 	u_delay(5, 0);
-	u4_puts(&AVATAR[0xF810 + 0x5] /* "I feel motion...\n" */);
+	u4_puts(&AVATAR[0xF810 + 0x0005] /* "I feel motion...\n" */);
 	set_input_mode(INPUT_MODE_DELAY_NO_CONTINUE);
 	u_delay(5, 0);
 	Party._tile = TIL_1F;
@@ -424,12 +424,12 @@ C_0EB1()
 		//File_DNG = 0; // ADDED
 	//}
 	if(Party._loc == 0) {
-		if(Save(&AVATAR[0xF822 + 0x5] /* "OUTMONST.SAV" */, sizeof(struct tNPC), &(D_8742._npc)) == -1)
+		if(Save(&AVATAR[0xF822 + 0x0005] /* "OUTMONST.SAV" */, sizeof(struct tNPC), &(D_8742._npc)) == -1)
 			exit(3);
 	}
-	if(Load(&AVATAR[0xF82F + 0x5] /* "LCB_2.ULT" */, sizeof(struct t_500), &D_8742) == -1)
+	if(Load(&AVATAR[0xF82F + 0x0005] /* "LCB_2.ULT" */, sizeof(struct t_500), &D_8742) == -1)
 		exit(3);
-	//File_TLK = dopen(&AVATAR[0xF839 + 0x5] /* "LCB.TLK" */, 0);
+	//File_TLK = dopen(&AVATAR[0xF839 + 0x0005] /* "LCB.TLK" */, 0);
 	CurMode = MOD_BUILDING;
 	Party._loc = 0x01;
 	Party.f_1dc = 0;
@@ -441,8 +441,8 @@ C_0EB1()
 	D_95C6 = 0;
 	t_callback();
 	C_3A80();
-	u4_puts(&AVATAR[0xF841 + 0x5] /* "\n\nLord British says: I have pulled thy spirit and some possessions from the void.  Be more careful in the future!\n" */);
-	add_npc_talk(LORD_BRITISH, &AVATAR[0xF841 + 0x5] /* "I have pulled thy spirit and some possessions from the void.  Be more careful in the future!\n" */);
+	u4_puts(&AVATAR[0xF841 + 0x0005] /* "\n\nLord British says: I have pulled thy spirit and some possessions from the void.  Be more careful in the future!\n" */);
+	add_npc_talk(LORD_BRITISH, &AVATAR[0xF841 + 0x0005] /* "I have pulled thy spirit and some possessions from the void.  Be more careful in the future!\n" */);
 	for(bp_02 = Party.f_1d8 - 1; bp_02 >= 0; bp_02 --) {
 		Party.chara[bp_02]._status = 'G';
 		Party.chara[bp_02]._HP[0] = Party.chara[bp_02]._HP[1];
@@ -501,42 +501,42 @@ C_10FD()
 
 /*C_1188*/w_What()
 {
-	u4_puts(&AVATAR[0xF8B4 + 0x5] /* "What?\n" */);
+	u4_puts(&AVATAR[0xF8B4 + 0x0005] /* "What?\n" */);
 	u_kbflush();
 }
 
 /*C_1199*/w_Cant_t()
 {
-	u4_puts(&AVATAR[0xF8BB + 0x5] /* "Can't!\n" */);
+	u4_puts(&AVATAR[0xF8BB + 0x0005] /* "Can't!\n" */);
 	u_kbflush();
 }
 
 /*C_11AA*/w_NotHere()
 {
-	u4_puts(&AVATAR[0xF8C3 + 0x5] /* "Not Here!\n" */);
+	u4_puts(&AVATAR[0xF8C3 + 0x0005] /* "Not Here!\n" */);
 	u_kbflush();
 }
 
 /*C_11BB*/w_Disabled()
 {
-	u4_puts(&AVATAR[0xF8CE + 0x5] /* "Disabled!\n" */);
+	u4_puts(&AVATAR[0xF8CE + 0x0005] /* "Disabled!\n" */);
 	u_kbflush();
 }
 
 /*C_11CC*/w_OnlyOnFoot()
 {
-	u4_puts(&AVATAR[0xF8D9 + 0x5] /* "Only on foot!\n" */);
+	u4_puts(&AVATAR[0xF8D9 + 0x0005] /* "Only on foot!\n" */);
 	u_kbflush();
 }
 
 /*C_11DD*/w_SlowProgress()
 {
-	u4_puts(&AVATAR[0xF8E8 + 0x5] /* "Slow progress!\n" */);
+	u4_puts(&AVATAR[0xF8E8 + 0x0005] /* "Slow progress!\n" */);
 }
 
 /*C_11EB*/w_NoneLeft()
 {
-	u4_puts(&AVATAR[0xF8F8 + 0x5] /* "None left!\n" */);
+	u4_puts(&AVATAR[0xF8F8 + 0x0005] /* "None left!\n" */);
 }
 
 /*C_11F9*/AskLetter(bp08, bp06, bp04)
@@ -579,7 +579,7 @@ char *bp04;
 
 	if(Party.f_1d8 == 1) {
 		u4_puts(bp04);
-		u4_puts(&AVATAR[0xF904 + 0x5] /* "1\n" */);
+		u4_puts(&AVATAR[0xF904 + 0x0005] /* "1\n" */);
 		return 0;
 	}
 	si = AskLetter(bp04, '0', '0' + Party.f_1d8);
@@ -609,19 +609,19 @@ register int *di;
 			break;
 			case KBD_UP:
 				*di = -1;
-				u4_puts(&AVATAR[0xF907 + 0x5] /* "North" */);
+				u4_puts(&AVATAR[0xF907 + 0x0005] /* "North" */);
 			break;
 			case KBD_DOWN:
 				*di = 1;
-				u4_puts(&AVATAR[0xF90D + 0x5] /* "South" */);
+				u4_puts(&AVATAR[0xF90D + 0x0005] /* "South" */);
 			break;
 			case KBD_RIGHT:
 				*si = 1;
-				u4_puts(&AVATAR[0xF913 + 0x5] /* "East" */);
+				u4_puts(&AVATAR[0xF913 + 0x0005] /* "East" */);
 			break;
 			case KBD_LEFT:
 				*si = -1;
-				u4_puts(&AVATAR[0xF918 + 0x5] /* "West" */);
+				u4_puts(&AVATAR[0xF918 + 0x0005] /* "West" */);
 			break;
 			default:
 				bp_04 &= 0xff;
@@ -773,7 +773,7 @@ C_1584()
 			for(loc_B = Party.f_1d8; --loc_B >= 0; )
 				Gra_11(loc_B);
 			dspl_Stats();
-			u4_puts(&AVATAR[0xF91D + 0x5] /* "Thy Ship Sinks!\n" */);
+			u4_puts(&AVATAR[0xF91D + 0x0005] /* "Thy Ship Sinks!\n" */);
 			C_0EB1();
 		}
 	}

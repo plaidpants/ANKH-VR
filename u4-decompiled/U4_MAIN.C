@@ -348,7 +348,7 @@ void add_npc_talk_long(char npc_index, long number)
 	npc_text_buffer[current_npc_text_buffer_pointer][0] = npc_index;
 	npc_text_buffer[current_npc_text_buffer_pointer][1] = 0;
 
-	snprintf(&npc_text_buffer[current_npc_text_buffer_pointer][1], 10, &AVATAR[0x162BC + 0x3837] /* "%l" */, number);
+	snprintf(&npc_text_buffer[current_npc_text_buffer_pointer][1], 10, "%l", number);
 
 	current_npc_text_buffer_pointer++;
 	if (current_npc_text_buffer_pointer > MAX_NPC_TEXT - 1)
@@ -904,22 +904,48 @@ __declspec(dllexport) int /*C_191E*/ main()
 	{
 		// we found a marker
 		if ((index < 98208 - 7) && // only check up to the end where a marker would fit
-			// First 2 bytes are some kind of checksum I think, just ignore for now although we could expand something that is not meant to be expanded with zeros
+			// First 2 bytes are some kind of checksum I think, just ignore for now although we could expand something that is not meant to be expanded
 			(AVATAR_original[index + 2] == (unsigned char)0xB2) && // marker 0xB2 start
-			(AVATAR_original[index + 5] == (unsigned char)0x00) && // marker 0x00 ??? this one may be a high byte of the length but for our purposes we can assume it is always zero
+			((AVATAR_original[index + 3] == (unsigned char)0x00) 
+				|| (AVATAR_original[index + 3] == (unsigned char)0x0a)
+				|| (AVATAR_original[index + 3] == (unsigned char)0x06)
+				|| (AVATAR_original[index + 3] == (unsigned char)0x03)
+				|| (AVATAR_original[index + 3] == (unsigned char)0x05)
+				|| (AVATAR_original[index + 3] == (unsigned char)0x20)) && // these are the only valid fill values I've found, check this instead of checksum
 			(AVATAR_original[index + 6] == (unsigned char)0xB0))   // marker 0xB0 end
 		{
-			// get the length of the zero section
-			int length = AVATAR_original[index + 3] * 0x100 + AVATAR_original[index + 4];
+			// get the length of the fill section
+			int length = AVATAR_original[index + 4] + AVATAR_original[index + 5] * 100;
+			char fillValue = AVATAR_original[index + 3];
 
 			// gather some data
 			offset_accumulated += length - 7;
-			//printf("%08x: %04x \n", index, offset_accumulated);
-
-			// fill with zeros
+			//printf("%08x: %04x %02x\n", index, offset_accumulated);
+#ifndef _WINDOWS
+			__android_log_print(ANDROID_LOG_INFO, "ANKH", "%08x: %04x %02x %04x", index, offset_accumulated, fillValue, length);
+#endif
+/*
+Current output
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 0000f2be: 0005 00 000c
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 00010920: 0007 00 0009
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 00010b81: 000f 20 000f
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 0001182a: 0017 00 000f
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 00011fd6: 001a 00 000a
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 0001223a: 0023 06 0010
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 00012251: 0025 03 0009
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 0001225f: 002e 05 0010
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 0001440f: 0036 00 000f
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 000160c1: 0037 0a 0008
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 00017806: 0038 00 0008
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 0001780f: 007d 00 004c
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 00017824: 008e 00 0018
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 00017830: 00b6 00 002f
+2024/02/10 11:18:53.112 27391 27890 Info ANKH 00017913: 04b7 00 0408
+*/
+			// fill with specified value
 			for (int j = 0; j < length; j++)
 			{
-				AVATAR[expanded_index++] = 0x00;
+				AVATAR[expanded_index++] = fillValue;
 			}
 
 			// skip over marker
@@ -933,6 +959,9 @@ __declspec(dllexport) int /*C_191E*/ main()
 		AVATAR[expanded_index++] = AVATAR_original[index++];
 	}
 
+	//I found another expansion for a group of 8 "\n", we will overwrite it with 7 "\n" instead to avoid moving things around as I missed it in my original analysis
+	//AB 1C B2 0A 08 00 B0
+
 #if 0
 	int f = _open("S:\\u4-decompiled\\AVATAR.EXE.expanded", _O_RDWR | _O_BINARY | _O_CREAT);
 	_write(f, &AVATAR[0], 98208*2);
@@ -944,7 +973,7 @@ __declspec(dllexport) int /*C_191E*/ main()
 
 	if (Party._loc >= 0x11 && Party._loc <= 0x18) {
 		CurMode = MOD_DUNGEON;
-		if (Load(&AVATAR[0xF935 + 0x5] /* "DNGMAP.SAV" */, sizeof(tMap8x8x8), &(D_8742._map)) == -1)
+		if (Load(&AVATAR[0xF935 + 0x0005] /* "DNGMAP.SAV" */, sizeof(tMap8x8x8), &(D_8742._map)) == -1)
 			exit(3);
 		//File_DNG = dopen(D_0894[Party._loc - 0x11], 0);
 		if (setjmp(D_9458) == 0)
@@ -1023,14 +1052,14 @@ __declspec(dllexport) int /*C_191E*/ main()
 						break;
 					}
 				default:
-					u4_puts(&AVATAR[0xF940 + 0x5]); // "Bad command!\n"
+					u4_puts(&AVATAR[0xF940 + 0x0005]); // "Bad command!\n"
 					sound(2,0);
 					D_07F8 = 0;
 					break;
 			}
 		} else {
 			u4_puts("Zzzzz\n");
-			u4_puts(&AVATAR[0xF94E + 0x5]); // "Zzzzz\n"
+			u4_puts(&AVATAR[0xF94E + 0x0005]); // "Zzzzz\n"
 		}
 		if(D_07F8 != 0) {
 			C_1C53();
@@ -1163,7 +1192,7 @@ C_1C53()
 	}
 	/*FOOD management*/
 	if(food_dec(Party.f_1d8)) {
-		u4_puts(&AVATAR[0xF955 + 0x5]); //"\nStarving!!!\n"
+		u4_puts(&AVATAR[0xF955 + 0x0005]); //"\nStarving!!!\n"
 		for(si = 0; si < Party.f_1d8; si ++) {
 			if(isCharaAlive(si))
 				hitChara(si, 2);

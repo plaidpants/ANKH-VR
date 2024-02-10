@@ -6,7 +6,7 @@
 
 #include "U4.H"
 
-char * D_1FD8 = &AVATAR[0x1128B + 0x200F] /* "\nAttacked by " */;
+char * D_1FD8 = &AVATAR[0x1128B + 0x000f] /* "\nAttacked by " */;
 
 /*can npc move?*/
 C_4E94(bp0a, bp08, bp06, bp04)

@@ -88,7 +88,7 @@ C_7918()
 
 /*C_794D*/w_SameExit()
 {
-	u4_puts(/*D_239E*/&AVATAR[0x11651 + 0x200F] /* "All must use same exit!\n" */);
+	u4_puts(/*D_239E*/&AVATAR[0x11651 + 0x000f] /* "All must use same exit!\n" */);
 	sound(1,0);
 }
 
@@ -201,27 +201,27 @@ unsigned char bp04;
 /*North [combat]*/
 C_7B89()
 {
-	u4_puts(/*D_23B7*/&AVATAR[0xFC17 + 0x5] /* "North\n" */);
+	u4_puts(/*D_23B7*/&AVATAR[0xFC17 + 0x0005] /* "North\n" */);
 	C_7AE3(activeChara, Combat._charaX[activeChara], Combat._charaY[activeChara] - 1);
 }
 
 /*South [combat]*/
 C_7BAF()
 {
-	u4_puts(/*D_23BE*/&AVATAR[0xFC38 + 0x5] /* "South\n" */);
+	u4_puts(/*D_23BE*/&AVATAR[0xFC38 + 0x0005] /* "South\n" */);
 	C_7AE3(activeChara, Combat._charaX[activeChara], Combat._charaY[activeChara] + 1);
 }
 
 /*East [combat]*/
 C_7BD5()
 {
-	u4_puts(/*D_23C5*/&AVATAR[0xFC75 + 0x5] /* "East\n" */);
+	u4_puts(/*D_23C5*/&AVATAR[0xFC75 + 0x0005] /* "East\n" */);
 	C_7AE3(activeChara, Combat._charaX[activeChara] + 1, Combat._charaY[activeChara]);
 }
 
 /*West [combat]*/
 C_7BFD()
 {
-	u4_puts(/*D_23CB*/&AVATAR[0xFC57 + 0x5] /* "West\n" */);
+	u4_puts(/*D_23CB*/&AVATAR[0xFC57 + 0x0005] /* "West\n" */);
 	C_7AE3(activeChara, Combat._charaX[activeChara] - 1, Combat._charaY[activeChara]);
 }
