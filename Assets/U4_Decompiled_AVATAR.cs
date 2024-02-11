@@ -26,11 +26,22 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     [SerializeField]
     public List<string> wordList = new List<string>();
     public char lastKeyboardHit;
+    public string[] maleVoiceNames;
+    public string[] femaleVoiceNames;
+    public string[] itVoiceNames;
+    public string lordBritishVoiceName;
+    public string hawkWindVoiceName;
+    public string maleChildVoiceName; 
+    public string femaleChildVoiceName;
+    public string maleWizardVoiceName;
+    public string femaleWizardVoiceName;
+    public string malePirateVoiceName;
+    public string femalePirateVoiceName;
 
     public enum TALK_INDEX
     {
         LORD_BRITISH = 0xff,
-        HAWKKWIND = 0xfe,
+        HAWKWIND = 0xfe,
         VENDOR_PUB = 0xfd,
         VENDOR_REAGENT = 0xfc,
         VENDOR_ARMOR = 0xfb,
@@ -3830,7 +3841,7 @@ sfx_storm:
                             (npcTalkIndex == TALK_INDEX.VENDOR_PUB) ||
                             (npcTalkIndex == TALK_INDEX.VENDOR_REAGENT) ||
                             (npcTalkIndex == TALK_INDEX.VENDOR_WEAPON) ||
-                            (npcTalkIndex == TALK_INDEX.HAWKKWIND))
+                            (npcTalkIndex == TALK_INDEX.HAWKWIND))
                         {
                             musicSource.clip = music[(int)MUSIC.SHOPPING];
                         }
@@ -3846,7 +3857,7 @@ sfx_storm:
                             (lastNPCTalkIndex == TALK_INDEX.VENDOR_REAGENT) ||
                             (lastNPCTalkIndex == TALK_INDEX.VENDOR_WEAPON) ||
                             (lastNPCTalkIndex == TALK_INDEX.LORD_BRITISH) ||
-                            (lastNPCTalkIndex == TALK_INDEX.HAWKKWIND))
+                            (lastNPCTalkIndex == TALK_INDEX.HAWKWIND))
                         {
                             // go back to the original town or castle music based on location
                             if ((Party._loc == LOCATIONS.BRITANNIA) ||
@@ -4079,15 +4090,153 @@ sfx_storm:
                 npcText = npcText.Replace("gp", " gold pieces");
                 npcText = npcText.Replace("g.p.", " gold pieces");
                 npcText = npcText.Replace("pts", " points");
-                npcText = npcText.Replace("He asks: ", ""); // remove extra interogative
+                npcText = npcText.Replace("He asks: ", " "); // remove extra interogative
 
                 // TODO move this out of the game engine monitor
                 // TODO need to collect enough text til the newline or period so we don't have broken speech patterns in the middle of constructed sentences e.g. "I am" ... "a guard."...
 
+                if (currentTalkIndex == TALK_INDEX.LORD_BRITISH)
+                {
+                    // lord british is male
+                    speaker.VoiceID = lordBritishVoiceName;
+                }
+                else if (currentTalkIndex == TALK_INDEX.HAWKWIND)
+                {
+                    // hawkwind is male
+                    speaker.VoiceID = hawkWindVoiceName;
+                }
+                else if (currentTalkIndex == TALK_INDEX.VENDOR_REAGENT)
+                {
+                    // all the reagent vendors are female
+                    /* Margot, Sasha, Shiela, Shannon" */
+                    speaker.VoiceID = femaleVoiceNames[Party._y % femaleVoiceNames.Length];
+                }
+                else if (currentTalkIndex == TALK_INDEX.VENDOR_WEAPON)
+                {
+                    /* Winston, Willard, Peter, Jumar, Hook, Wendy */
+                    if (Party._loc == LOCATIONS.VESPER)
+                    {
+                        // Wendy is female
+                        speaker.VoiceID = femaleVoiceNames[Party._y % femaleVoiceNames.Length];
+                    }
+                    else
+                    {
+                        speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
+                    }
+                }
+                else if (currentTalkIndex == TALK_INDEX.VENDOR_ARMOR)
+                {
+                    /* Winston, Valiant, Jean, Pierre, Limpy are all male*/
+                    speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
+                }
+                else if (currentTalkIndex == TALK_INDEX.VENDOR_GUILD)
+                {
+                    /* One Eyed Willey, Long John Leary are male pirates */
+                    speaker.VoiceID = malePirateVoiceName;
+                }
+                else if (currentTalkIndex == TALK_INDEX.VENDOR_INN)
+                {
+                    /* Scatu, Jason, Smirk, Estro, Zajac, Tyrone, Tymus we are going to assume these are all male */
+                    speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
+                }
+                else if (currentTalkIndex == TALK_INDEX.VENDOR_INN)
+                {
+                    /* Scatu, Jason, Smirk, Estro, Zajac, Tyrone, Tymus we are going to assume these are all male */
+                    speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
+                }
+                else if (currentTalkIndex == TALK_INDEX.VENDOR_HEALER)
+                {
+                    /* Pendragon, Starfire, Salle', Windwalker, Harmony, Celest, Triplet, Justin, Spiran, Quat we are going to assume these are all female */
+                    speaker.VoiceID = femaleVoiceNames[Party._y % femaleVoiceNames.Length];
+                }
+                else if (currentTalkIndex == TALK_INDEX.VENDOR_PUB)
+                {
+                    /* Sam, Celestial, Terran, Greg 'n Rob, The Cap'n, Arron we are going to assume these are all male */
+                    if (Party._loc == LOCATIONS.BUCCANEERS_DEN)
+                    {
+                        speaker.VoiceID = malePirateVoiceName;
+                    }
+                    else
+                    {
+                        speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
+                    }
+                }
+                else if (currentTalkIndex == TALK_INDEX.VENDOR_FOOD)
+                {
+                    /* Shaman, Windrick, Donnar, Mintol, Max we are going to assume these are all male */
+                    speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
+                }
+                else if (currentTalkIndex == TALK_INDEX.VENDOR_HORSE)
+                {
+                    /* Shaman, Windrick, Donnar, Mintol, Max we are going to assume these are all male */
+                    speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
+                }
+                else
+                {
+                    // who are we talking to in the settlement
+                    string name = Settlement.settlementNPCs[(int)Party._loc][(int)currentTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.NAME];
+                    // are they he or she or it or "the child"
+                    string pronoun = Settlement.settlementNPCs[(int)Party._loc][(int)currentTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.PRONOUN];
+                    // get a description of the character
+                    string description = Settlement.settlementNPCs[(int)Party._loc][(int)currentTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.LOOK_DESCRIPTION];
+
+                    // add jesters and ghosts?
+
+
+                    if (description.Contains("child", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = femaleChildVoiceName;
+                        }
+                        else // he or "the child"
+                        {
+                            speaker.VoiceID = maleChildVoiceName;
+                        }
+                    }
+                    else if (description.Contains("wizard", System.StringComparison.CurrentCultureIgnoreCase) || description.Contains("mage", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = femaleWizardVoiceName;
+                        }
+                        else // he
+                        {
+                            speaker.VoiceID = maleWizardVoiceName;
+                        }
+                    }
+                    else if (description.Contains("pirate", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = femalePirateVoiceName;
+                        }
+                        else // he
+                        {
+                            speaker.VoiceID = malePirateVoiceName;
+                        }
+                    }
+                    else
+                    {
+                        if (pronoun.Contains("it", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = itVoiceNames[(int)currentTalkIndex % itVoiceNames.Length];
+                        }
+                        else if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = femaleVoiceNames[(int)currentTalkIndex % femaleVoiceNames.Length];
+                        }
+                        else // he
+                        {
+                            speaker.VoiceID = maleVoiceNames[(int)currentTalkIndex % maleVoiceNames.Length];
+                        }
+                    }
+                }
+
                 // Get all voice name presets
-                string[] voiceNames = speaker.TTSService.GetAllPresetVoiceSettings()
-                    .Select((voiceSetting) => voiceSetting.SettingsId).ToArray();
-                speaker.VoiceID = voiceNames[(int)currentTalkIndex % voiceNames.Length];
+                //string [] allVoiceNames = speaker.TTSService.GetAllPresetVoiceSettings()
+                //    .Select((voiceSetting) => voiceSetting.SettingsId).ToArray();
+                //speaker.VoiceID = allVoiceNames[(int)currentTalkIndex % allVoiceNames.Length];
 
                 // Split the text into sentences. web api has a limit of 280 characters which can be reached pretty quickly as space and other special chars are expandaed to 
 /* example
@@ -4098,11 +4247,14 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
   "code": "msg-invalid",
   "error": "Message is too long: length is 303 (max is 280)"
 }*/
-                
+
                 string[] sentences = npcText.Split(new char[] { '.', '!', '?' });
                 foreach (string sentence in sentences)
                 {
-                    speaker.SpeakQueued(sentence);
+                    // Clean up the question text before speaking it
+                    string adjusted = sentence.Replace('\n', ' ');
+                    adjusted = adjusted.Replace('\r', ' ');
+                    speaker.SpeakQueued(adjusted);
                 }
             }
 

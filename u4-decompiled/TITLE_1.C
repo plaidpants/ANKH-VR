@@ -912,13 +912,14 @@ C_2C12()
 		txt_X = 0;
 		txt_Y = 19;
 		u4_puts("\n\n");
-		u4_puts(STR(D_30CA[loc_B] + loc_C));
 		set_input_mode(INPUT_MODE_A_OR_B_CHOICE);
+		u4_puts(STR(D_30CA[loc_B] + loc_C));
 		do {
 			loc_A = u_kbread();
 			if(u4_isupper((unsigned char)loc_A))
 				loc_A += 'a' - 'A';
 		} while(loc_A != KBD_a && loc_A != KBD_b);
+		set_input_mode(-1);
 		if(loc_A == KBD_b) {
 			/*swap(loc_B,loc_C);*/
 			loc_A = loc_B; loc_B = loc_C; loc_C = loc_A;

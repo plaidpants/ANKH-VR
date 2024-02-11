@@ -87,6 +87,8 @@ static unsigned short D_913E;/*# of drinks in pub*/
 	add_npc_talk(VENDOR_HAWKKWIND, &AVATAR[0x12F9A + 0x002e] /* "Welcome, " */);
 	u4_puts(Party.chara[0]._name);
 	add_npc_talk(VENDOR_HAWKKWIND, Party.chara[0]._name);
+	u4_puts(". ");
+	add_npc_talk(". ");
 	u4_puts(/*D_3D29*/ &AVATAR[0x12FA4 + 0x002e] /* ". \nI am Hawkwind, Seer of Souls. I see that which is within thee and drives thee to deeds of good or evil...\n" */);
 	add_npc_talk(VENDOR_HAWKKWIND, &AVATAR[0x12FA4 + 0x002e] /* ". \nI am Hawkwind, Seer of Souls. I see that which is within thee and drives thee to deeds of good or evil...\n" */);
 	set_input_mode(INPUT_MODE_GENERAL_CONTINUE);

@@ -8,6 +8,10 @@ using System.Threading;
 using UnityEngine.UI;
 using System.IO;
 using System.Text.RegularExpressions;
+using Meta.WitAi.TTS.Utilities;
+using Meta.WitAi.TTS;
+using Meta.WitAi.TTS.Data;
+using System.Linq;
 
 public class U4_Decompiled_TITLE : MonoBehaviour
 {
@@ -18,6 +22,11 @@ public class U4_Decompiled_TITLE : MonoBehaviour
     public bool started_playing_sound_effect = false;
 
     public char lastKeyboardHit;
+
+    public TTSSpeaker speaker;
+    public string lordBritishVoiceName;
+    public string gypsyVoiceName;
+    public string ticketTakerVoiceName;
 
     public struct ScreenCopyFrame
     {
@@ -1298,11 +1307,65 @@ blit_mask_table:
                     gameText = gameText.Remove(gameText.Length - 1);
                 }
 
+                // convert the buffer into a string
                 string engineText = enc.GetString(bytebuffer, 0, text_size);
-                int i;
+
+                if (engineText.Contains("Welcome"))
+                {
+                    speaker.VoiceID = ticketTakerVoiceName;
+                    speaker.Speak("Welcome friend! Enter in peace and find your path.");
+                }
+                if (engineText.Contains("You may approach"))
+                {
+                    speaker.VoiceID = gypsyVoiceName;
+                    speaker.Speak("You may approach, O seeker.");
+                }
+                if (engineText.Contains("We have been waiting"))
+                {
+                    speaker.VoiceID = gypsyVoiceName;
+                    speaker.Speak("We have been waiting such a long time, but at last you have come. Sit here and I shall read the path of your future.");
+                }
+                if (engineText.Contains("casting"))
+                {
+                    speaker.VoiceID = gypsyVoiceName;
+                    speaker.Speak("Let us begin the casting.");
+                }
+                if (engineText.Contains("Consider this:"))
+                {
+                    speaker.VoiceID = gypsyVoiceName;
+                    speaker.Speak("Consider this:");
+                }
+                if (inputMode == INPUT_MODE.A_OR_B_CHOICE)
+                {
+                    speaker.VoiceID = gypsyVoiceName;
+
+                    string[] sentences = engineText.Split(new char[] { '.', '!', '?' });
+                    foreach (string sentence in sentences)
+                    {
+                        // Clean up the question text before speaking it
+                        string adjusted = sentence.Replace("A)", " ");
+                        adjusted = adjusted.Replace("B)", " ");
+                        adjusted = adjusted.Replace('\n', ' ');
+                        adjusted = adjusted.Replace('\r', ' ');
+                        // Need to queue this text as it comes in as pieces and will interrupt itself otherwise
+                        speaker.SpeakQueued(adjusted);
+                    }
+                }
+                if (engineText.Contains("So be it!"))
+                {
+                    speaker.VoiceID = gypsyVoiceName;
+                    speaker.Speak("So be it! Thy path is chosen!");
+                }
+                if (engineText.Contains("sovereign"))
+                {
+                    speaker.VoiceID = lordBritishVoiceName;
+                    speaker.Speak("Seek the counsel of thy sovereign.");
+                }
 
                 // add the ACSII encoded text to the display text plus read the whirlpool character
                 gameText = gameText + engineText + (char)(0x1f - ((int)(Time.time * 3) % 4));
+
+                int i;
 
                 // remove any backspace characters
                 for (i = 1; i < gameText.Length; i++)
