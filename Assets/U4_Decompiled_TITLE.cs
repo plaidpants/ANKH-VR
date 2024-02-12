@@ -1347,6 +1347,8 @@ blit_mask_table:
                         adjusted = adjusted.Replace("B)", " ");
                         adjusted = adjusted.Replace('\n', ' ');
                         adjusted = adjusted.Replace('\r', ' ');
+                        adjusted = adjusted.Replace("thee", "<phoneme ph=\"ði\" alphabet=\"ipa\">thee</phoneme>", System.StringComparison.CurrentCultureIgnoreCase); // fix the pronounciation of Thee
+
                         // Need to queue this text as it comes in as pieces and will interrupt itself otherwise
                         speaker.SpeakQueued(adjusted);
                     }

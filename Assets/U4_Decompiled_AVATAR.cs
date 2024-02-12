@@ -12,6 +12,7 @@ using Meta.WitAi.TTS.Utilities;
 using Meta.WitAi.TTS;
 using Meta.WitAi.TTS.Data;
 using System.Linq;
+using System.Text;
 
 public class U4_Decompiled_AVATAR : MonoBehaviour
 {
@@ -37,6 +38,14 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     public string femaleWizardVoiceName;
     public string malePirateVoiceName;
     public string femalePirateVoiceName;
+
+    public enum VOICE_CHARACTER_IDS { NONE, CHIPMUNK, MONSTER, ROBOT, DAEMON, ALIEN };
+    public enum VOICE_ENVIRONMENT_IDS { NONE, REVERB, ROOM, PHONE, RADIO, PA, CATHEDRAL, HELMET };
+    public enum VOICE_STYLE_IDS { NONE, DEFAULT, ENUNCIATED, FAST, HAPPY, PROJECTED, SAD, SLOW, SOFT, WHIPSPER };
+
+    public VOICE_STYLE_IDS speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+    public VOICE_ENVIRONMENT_IDS speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+    public VOICE_CHARACTER_IDS speakerCharacter = VOICE_CHARACTER_IDS.NONE;
 
     public enum TALK_INDEX
     {
@@ -4090,7 +4099,7 @@ sfx_storm:
                 npcText = npcText.Replace("gp", " gold pieces");
                 npcText = npcText.Replace("g.p.", " gold pieces");
                 npcText = npcText.Replace("pts", " points");
-                npcText = npcText.Replace("He asks: ", " "); // remove extra interogative
+                npcText = npcText.Replace("He asks:", " "); // remove extra interogative
 
                 // TODO move this out of the game engine monitor
                 // TODO need to collect enough text til the newline or period so we don't have broken speech patterns in the middle of constructed sentences e.g. "I am" ... "a guard."...
@@ -4099,17 +4108,26 @@ sfx_storm:
                 {
                     // lord british is male
                     speaker.VoiceID = lordBritishVoiceName;
+                    speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                    speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                    speakerCharacter = VOICE_CHARACTER_IDS.NONE;
                 }
                 else if (currentTalkIndex == TALK_INDEX.HAWKWIND)
                 {
                     // hawkwind is male
                     speaker.VoiceID = hawkWindVoiceName;
+                    speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                    speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                    speakerCharacter = VOICE_CHARACTER_IDS.NONE;
                 }
                 else if (currentTalkIndex == TALK_INDEX.VENDOR_REAGENT)
                 {
                     // all the reagent vendors are female
                     /* Margot, Sasha, Shiela, Shannon" */
                     speaker.VoiceID = femaleVoiceNames[Party._y % femaleVoiceNames.Length];
+                    speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                    speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                    speakerCharacter = VOICE_CHARACTER_IDS.NONE;
                 }
                 else if (currentTalkIndex == TALK_INDEX.VENDOR_WEAPON)
                 {
@@ -4123,31 +4141,41 @@ sfx_storm:
                     {
                         speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
                     }
+                    speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                    speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                    speakerCharacter = VOICE_CHARACTER_IDS.NONE;
                 }
                 else if (currentTalkIndex == TALK_INDEX.VENDOR_ARMOR)
                 {
                     /* Winston, Valiant, Jean, Pierre, Limpy are all male*/
                     speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
+                    speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                    speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                    speakerCharacter = VOICE_CHARACTER_IDS.NONE;
                 }
                 else if (currentTalkIndex == TALK_INDEX.VENDOR_GUILD)
                 {
                     /* One Eyed Willey, Long John Leary are male pirates */
                     speaker.VoiceID = malePirateVoiceName;
+                    speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                    speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                    speakerCharacter = VOICE_CHARACTER_IDS.NONE;
                 }
                 else if (currentTalkIndex == TALK_INDEX.VENDOR_INN)
                 {
                     /* Scatu, Jason, Smirk, Estro, Zajac, Tyrone, Tymus we are going to assume these are all male */
                     speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
-                }
-                else if (currentTalkIndex == TALK_INDEX.VENDOR_INN)
-                {
-                    /* Scatu, Jason, Smirk, Estro, Zajac, Tyrone, Tymus we are going to assume these are all male */
-                    speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
+                    speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                    speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                    speakerCharacter = VOICE_CHARACTER_IDS.NONE;
                 }
                 else if (currentTalkIndex == TALK_INDEX.VENDOR_HEALER)
                 {
                     /* Pendragon, Starfire, Salle', Windwalker, Harmony, Celest, Triplet, Justin, Spiran, Quat we are going to assume these are all female */
                     speaker.VoiceID = femaleVoiceNames[Party._y % femaleVoiceNames.Length];
+                    speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                    speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                    speakerCharacter = VOICE_CHARACTER_IDS.NONE;
                 }
                 else if (currentTalkIndex == TALK_INDEX.VENDOR_PUB)
                 {
@@ -4160,63 +4188,50 @@ sfx_storm:
                     {
                         speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
                     }
+                    speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                    speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                    speakerCharacter = VOICE_CHARACTER_IDS.NONE;
                 }
                 else if (currentTalkIndex == TALK_INDEX.VENDOR_FOOD)
                 {
                     /* Shaman, Windrick, Donnar, Mintol, Max we are going to assume these are all male */
                     speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
+                    speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                    speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                    speakerCharacter = VOICE_CHARACTER_IDS.NONE;
                 }
                 else if (currentTalkIndex == TALK_INDEX.VENDOR_HORSE)
                 {
                     /* Shaman, Windrick, Donnar, Mintol, Max we are going to assume these are all male */
                     speaker.VoiceID = maleVoiceNames[Party._y % maleVoiceNames.Length];
+                    speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                    speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                    speakerCharacter = VOICE_CHARACTER_IDS.NONE;
                 }
                 else
                 {
-                    // who are we talking to in the settlement
-                    string name = Settlement.settlementNPCs[(int)Party._loc][(int)currentTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.NAME];
-                    // are they he or she or it or "the child"
-                    string pronoun = Settlement.settlementNPCs[(int)Party._loc][(int)currentTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.PRONOUN];
-                    // get a description of the character
-                    string description = Settlement.settlementNPCs[(int)Party._loc][(int)currentTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.LOOK_DESCRIPTION];
 
-                    // add jesters and ghosts?
+                    Settlement.SETTLEMENT settlement;
 
-
-                    if (description.Contains("child", System.StringComparison.CurrentCultureIgnoreCase))
+                    // get the current settlement, need to special case BRITANNIA as the castle has two levels, use the ladder to determine which level
+                    if ((Party._loc == U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (tMap32x32[3, 3] == Tile.TILE.LADDER_UP))
                     {
-                        if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            speaker.VoiceID = femaleChildVoiceName;
-                        }
-                        else // he or "the child"
-                        {
-                            speaker.VoiceID = maleChildVoiceName;
-                        }
-                    }
-                    else if (description.Contains("wizard", System.StringComparison.CurrentCultureIgnoreCase) || description.Contains("mage", System.StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            speaker.VoiceID = femaleWizardVoiceName;
-                        }
-                        else // he
-                        {
-                            speaker.VoiceID = maleWizardVoiceName;
-                        }
-                    }
-                    else if (description.Contains("pirate", System.StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            speaker.VoiceID = femalePirateVoiceName;
-                        }
-                        else // he
-                        {
-                            speaker.VoiceID = malePirateVoiceName;
-                        }
+                        settlement = Settlement.SETTLEMENT.LCB_1;
                     }
                     else
+                    {
+                        settlement = (Settlement.SETTLEMENT)Party._loc;
+                    }
+
+                    // who are we talking to in the settlement
+                    string name = Settlement.settlementNPCs[(int)settlement][(int)currentTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.NAME];
+                    // are they he or she or it or "the child"
+                    string pronoun = Settlement.settlementNPCs[(int)settlement][(int)currentTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.PRONOUN];
+                    // get a description of the character
+                    string description = Settlement.settlementNPCs[(int)settlement][(int)currentTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.LOOK_DESCRIPTION];
+
+                    // add jesters and ghosts?
+                    if (description.Contains("jester", System.StringComparison.CurrentCultureIgnoreCase))
                     {
                         if (pronoun.Contains("it", System.StringComparison.CurrentCultureIgnoreCase))
                         {
@@ -4229,6 +4244,111 @@ sfx_storm:
                         else // he
                         {
                             speaker.VoiceID = maleVoiceNames[(int)currentTalkIndex % maleVoiceNames.Length];
+                        }
+                        speakerVoiceStyle = VOICE_STYLE_IDS.HAPPY;
+                        speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                        speakerCharacter = VOICE_CHARACTER_IDS.NONE;
+                    }
+                    else if (description.Contains("ghost", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (pronoun.Contains("it", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = itVoiceNames[(int)currentTalkIndex % itVoiceNames.Length];
+                        }
+                        else if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = femaleVoiceNames[(int)currentTalkIndex % femaleVoiceNames.Length];
+                        }
+                        else // he
+                        {
+                            speaker.VoiceID = maleVoiceNames[(int)currentTalkIndex % maleVoiceNames.Length];
+                        }
+                        speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                        speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                        speakerCharacter = VOICE_CHARACTER_IDS.DAEMON;
+                    }
+                    else if (description.Contains("skeleton", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (pronoun.Contains("it", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = itVoiceNames[(int)currentTalkIndex % itVoiceNames.Length];
+                        }
+                        else if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = femaleVoiceNames[(int)currentTalkIndex % femaleVoiceNames.Length];
+                        }
+                        else // he
+                        {
+                            speaker.VoiceID = maleVoiceNames[(int)currentTalkIndex % maleVoiceNames.Length];
+                        }
+                        speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                        speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                        speakerCharacter = VOICE_CHARACTER_IDS.MONSTER;
+                    }
+                    else if (description.Contains("child", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = femaleChildVoiceName;
+                        }
+                        else // he or "the child"
+                        {
+                            speaker.VoiceID = maleChildVoiceName;
+                        }
+                        speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                        speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                        speakerCharacter = VOICE_CHARACTER_IDS.NONE;
+                    }
+                    else if (description.Contains("wizard", System.StringComparison.CurrentCultureIgnoreCase) || description.Contains("mage", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = femaleWizardVoiceName;
+                        }
+                        else // he
+                        {
+                            speaker.VoiceID = maleWizardVoiceName;
+                        }
+                        speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                        speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                        speakerCharacter = VOICE_CHARACTER_IDS.NONE;
+                    }
+                    else if (description.Contains("pirate", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = femalePirateVoiceName;
+                        }
+                        else // he
+                        {
+                            speaker.VoiceID = malePirateVoiceName;
+                        }
+                        speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                        speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                        speakerCharacter = VOICE_CHARACTER_IDS.NONE;
+                    }
+                    else
+                    {
+                        if (pronoun.Contains("it", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = itVoiceNames[(int)currentTalkIndex % itVoiceNames.Length];
+                            speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                            speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                            speakerCharacter = VOICE_CHARACTER_IDS.ALIEN;
+                        }
+                        else if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            speaker.VoiceID = femaleVoiceNames[(int)currentTalkIndex % femaleVoiceNames.Length];
+                            speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                            speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                            speakerCharacter = VOICE_CHARACTER_IDS.NONE;
+                        }
+                        else // he
+                        {
+                            speaker.VoiceID = maleVoiceNames[(int)currentTalkIndex % maleVoiceNames.Length];
+                            speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                            speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                            speakerCharacter = VOICE_CHARACTER_IDS.NONE;
                         }
                     }
                 }
@@ -4251,9 +4371,62 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
                 string[] sentences = npcText.Split(new char[] { '.', '!', '?' });
                 foreach (string sentence in sentences)
                 {
-                    // Clean up the question text before speaking it
+                    // Clean up the text before speaking it
                     string adjusted = sentence.Replace('\n', ' ');
                     adjusted = adjusted.Replace('\r', ' ');
+                    // fix the pronounciation of Thee
+                    adjusted = adjusted.Replace("thee", "<phoneme ph=\"ði\" alphabet=\"ipa\">thee</phoneme>"); //, System.StringComparison.CurrentCultureIgnoreCase);
+
+                    // Add ssml tags to the front and back, this is always needed to support inline modifications such as <phoneme> above
+                    string prepend = "<speak>";
+                    string append = "</speak>";
+
+                    // generate prepend and append text for speach character enviorment and styles
+                    if ((speakerCharacter != VOICE_CHARACTER_IDS.NONE) ||
+                        (speakerEnviorment != VOICE_ENVIRONMENT_IDS.NONE))
+                    {
+                        // Add prefix & postfix
+                        prepend = prepend + "<sfx";
+                        append = "</sfx>" + append;
+
+                        // Add character
+                        if (speakerCharacter != VOICE_CHARACTER_IDS.NONE)
+                        {
+                            prepend = prepend + " character=\"" + speakerCharacter + "\"";
+                        }
+                        // Add environment
+                        if (speakerEnviorment != VOICE_ENVIRONMENT_IDS.NONE)
+                        {
+                            prepend = prepend + " environment=\"" + speakerEnviorment + "\"";
+                        }
+
+                        // Finalize
+                        prepend = prepend + ">";
+                    }
+
+                    // add voice style
+                    if (speakerVoiceStyle != VOICE_STYLE_IDS.NONE)
+                    {
+                        // Add ssml tags
+                        prepend = prepend + "<voice";
+                        append = "</voice>" + append;
+
+                        // Add voice style
+                        prepend = prepend + " style=\"" + speakerVoiceStyle + "\"";
+
+                        // Finalize
+                        prepend = prepend + ">";
+                    }
+
+                    // add the extra stuff
+                    speaker.PrependedText = prepend;
+                    speaker.AppendedText = append;
+
+                    Debug.Log(prepend);
+                    Debug.Log(adjusted); 
+                    Debug.Log(append);
+
+                    // Speak the text
                     speaker.SpeakQueued(adjusted);
                 }
             }

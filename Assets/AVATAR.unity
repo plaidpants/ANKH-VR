@@ -9263,7 +9263,7 @@ MonoBehaviour:
   - WIT$ROSIE
   itVoiceNames:
   - WIT$VAMPIRE
-  - WIT$CARTOON VILLIAN
+  - WIT$CARTOON VILLAIN
   lordBritishVoiceName: WIT$BRITISH BUTLER
   hawkWindVoiceName: WIT$OVERCONFIDENT
   maleChildVoiceName: WIT$CARTOON KID
@@ -9272,6 +9272,9 @@ MonoBehaviour:
   femaleWizardVoiceName: WIT$WHIMSICAL
   malePirateVoiceName: WIT$PIRATE
   femalePirateVoiceName: WIT$COCKNEY ACCENT
+  speakerVoiceStyle: 0
+  speakerEnviorment: 0
+  speakerCharacter: 0
   inputMode: 0
   zstats_mode: 0
   zstats_character: 0
