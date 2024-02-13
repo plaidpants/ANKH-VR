@@ -131,7 +131,7 @@ char *bp04;
 	Gra_CR();
 	add_npc_talk(D_8CE6, &AVATAR[0x11D6A + 0x0017] /* "I am " */);
 	add_npc_talk(D_8CE6, D_8CCE[0]);
-	add_npc_talk(D_8CE6, "\n");
+	add_npc_talk(D_8CE6, ".\n");
 }
 
 /*C_A280*/TLK_look()
@@ -361,7 +361,7 @@ int bp04;
 		Gra_CR();
 		add_npc_talk(bp04, &AVATAR[0x11D6A + 0x0017] /* "I am " */);
 		add_npc_talk(bp04, D_8CCE[0]);
-		add_npc_talk(bp04, "\n");
+		add_npc_talk(bp04, ".\n");
 	}
 
 	bp_02 = 0;

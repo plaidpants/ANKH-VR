@@ -1,4 +1,4 @@
-#define USE_UNITY_DLL_FUNCTION
+﻿#define USE_UNITY_DLL_FUNCTION
 
 using System.Collections;
 using System.Collections.Generic;
@@ -4285,7 +4285,9 @@ sfx_storm:
                         speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
                         speakerCharacter = VOICE_CHARACTER_IDS.MONSTER;
                     }
-                    else if (description.Contains("child", System.StringComparison.CurrentCultureIgnoreCase))
+                    else if (description.Contains("child", System.StringComparison.CurrentCultureIgnoreCase) ||
+                        description.Contains("girl", System.StringComparison.CurrentCultureIgnoreCase) ||
+                        description.Contains("boy", System.StringComparison.CurrentCultureIgnoreCase))
                     {
                         if (pronoun.Contains("she", System.StringComparison.CurrentCultureIgnoreCase))
                         {
@@ -4374,8 +4376,9 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
                     // Clean up the text before speaking it
                     string adjusted = sentence.Replace('\n', ' ');
                     adjusted = adjusted.Replace('\r', ' ');
-                    // fix the pronounciation of Thee
-                    adjusted = adjusted.Replace("thee", "<phoneme ph=\"�i\" alphabet=\"ipa\">thee</phoneme>"); //, System.StringComparison.CurrentCultureIgnoreCase);
+                    // fix the pronounciation of Thee and tsetse
+                    adjusted = adjusted.Replace("thee", "<phoneme ph=\"ði\" alphabet=\"ipa\">thee</phoneme>"); //, System.StringComparison.CurrentCultureIgnoreCase);
+                    adjusted = adjusted.Replace("tsetse", "<phoneme ph=\"tsɛt si\" alphabet=\"ipa\">tsetse</phoneme>"); //, System.StringComparison.CurrentCultureIgnoreCase);
 
                     // Add ssml tags to the front and back, this is always needed to support inline modifications such as <phoneme> above
                     string prepend = "<speak>";
