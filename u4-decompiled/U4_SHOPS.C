@@ -1062,6 +1062,8 @@ char *D_51BE[] = {
 	add_npc_talk(VENDOR_GUILD, &AVATAR[0x1324E + 0x002e] /* "Welcome to " */);
 	u4_puts(D_51B6[D_9142]);
 	add_npc_talk(VENDOR_GUILD, D_51B6[D_9142]);
+	u4_puts(". ");
+	add_npc_talk(VENDOR_GUILD, ". ");
 	u4_puts(/*D_50A2*/&AVATAR[0x1431D + 0x002e] /* "\nLike to see my goods?\x12\x12\b" */);
 	add_npc_talk(VENDOR_GUILD, &AVATAR[0x1431E + 0x002e] /* "Like to see my goods?" */);
 	set_input_mode(INPUT_MODE_GENERAL_YES_NO);
@@ -1072,7 +1074,8 @@ char *D_51BE[] = {
 A-Torches\n\
 B-Magic Gems\n\
 C-Magic Keys\n"*/);
-		add_npc_talk(VENDOR_GUILD, &AVATAR[0x14337 + 0x002e] /* "Good Mate! Ya see I gots Torches, Magic Gems, Magic Keys. " */);
+		// Need to replace this text for voice
+		add_npc_talk(VENDOR_GUILD, /* &AVATAR[0x14337 + 0x002e] */ "Good Mate! Ya see I gots Torches, Magic Gems and Magic Keys. ");
 		add_npc_talk(VENDOR_GUILD, &AVATAR[0x1437D + 0x002e] /* "Wat'l it be?" */);
 		set_input_mode(INPUT_MODE_GENERAL_ASK_LETTER_GUILD);
 		loc_A = AskLetter(/*D_5102*/&AVATAR[0x1437D + 0x002e] /* "Wat'l it be?\x12\x12\b" */, 'A', 'D') - 'A';
@@ -1129,7 +1132,8 @@ C-Magic Keys\n"*/);
 	Gra_CR();
 	u4_puts(D_51BA[D_9142]);
 	u4_puts(/*D_517E*/&AVATAR[0x143F9 + 0x002e] /* " says:  See ya matie!\n" */);
-	add_npc_talk(VENDOR_GUILD, &AVATAR[0x14401 + 0x002e] /* "See ya matie!" */);
+	//add_npc_talk(VENDOR_GUILD, &AVATAR[0x14401 + 0x002e] /* "See ya matie!" */);
+	add_npc_talk(VENDOR_GUILD, "See yah matey!" ); // try a different spelling to see if it is better
 	add_npc_talk(VENDOR_INVALID, "");
 }
 
