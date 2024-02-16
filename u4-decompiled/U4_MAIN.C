@@ -348,7 +348,7 @@ void add_npc_talk_long(char npc_index, long number)
 	npc_text_buffer[current_npc_text_buffer_pointer][0] = npc_index;
 	npc_text_buffer[current_npc_text_buffer_pointer][1] = 0;
 
-	snprintf(&npc_text_buffer[current_npc_text_buffer_pointer][1], 10, "%l", number);
+	snprintf(&npc_text_buffer[current_npc_text_buffer_pointer][1], 10, "%ld", number);
 
 	current_npc_text_buffer_pointer++;
 	if (current_npc_text_buffer_pointer > MAX_NPC_TEXT - 1)
