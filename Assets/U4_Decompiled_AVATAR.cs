@@ -4380,6 +4380,25 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
                     adjusted = adjusted.Replace("thee", "<phoneme ph=\"ði\" alphabet=\"ipa\">thee</phoneme>"); //, System.StringComparison.CurrentCultureIgnoreCase);
                     adjusted = adjusted.Replace("tsetse", "<phoneme ph=\"tsɛt si\" alphabet=\"ipa\">tsetse</phoneme>"); //, System.StringComparison.CurrentCultureIgnoreCase);
 
+                    // add all the mantra's here as none seem to be pronounced properly
+                    /* ahm,mu,ra,beh,cah,summ,om,lum */
+                    adjusted = adjusted.Replace("ahm", "<phoneme ph=\"ɑːm\" alphabet=\"ipa\">ahm</phoneme>");
+                    adjusted = adjusted.Replace("beh", "<phoneme ph=\"bɛ\" alphabet=\"ipa\">beh</phoneme>");
+                    adjusted = adjusted.Replace("cah", "<phoneme ph=\"kɑː\" alphabet=\"ipa\">cah</phoneme>");
+                    adjusted = adjusted.Replace("lum", "<phoneme ph=\"lʌm\" alphabet=\"ipa\">lum</phoneme>");
+                    string pattern;
+                    pattern = $@"\b{Regex.Escape("om")}\b";
+                    adjusted = Regex.Replace(adjusted, pattern, "<phoneme ph=\"oʊm\" alphabet=\"ipa\">om</phoneme>", RegexOptions.IgnoreCase);
+                    pattern = $@"\b{Regex.Escape("ra")}\b";
+                    adjusted = Regex.Replace(adjusted, pattern, "<phoneme ph=\"rɑː\" alphabet=\"ipa\">ra</phoneme>", RegexOptions.IgnoreCase);
+                    pattern = $@"\b{Regex.Escape("mu")}\b";
+                    adjusted = Regex.Replace(adjusted, pattern, "<phoneme ph=\"muː\" alphabet=\"ipa\">mu</phoneme>", RegexOptions.IgnoreCase);
+                    pattern = $@"\b{Regex.Escape("summ")}\b";
+                    adjusted = Regex.Replace(adjusted, pattern, "<phoneme ph=\"sʌm\" alphabet=\"ipa\">summ</phoneme>", RegexOptions.IgnoreCase);
+
+                    // this one come out wrong also
+                    adjusted = adjusted.Replace("See ya matie!", "<phoneme ph=\"siː jə ˈmæti\" alphabet=\"ipa\">See ya matie!</phoneme>");
+                    
                     // Add ssml tags to the front and back, this is always needed to support inline modifications such as <phoneme> above
                     string prepend = "<speak>";
                     string append = "</speak>";
