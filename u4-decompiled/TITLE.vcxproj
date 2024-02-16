@@ -61,6 +61,9 @@
       <PreprocessorDefinitions>SLEEPFACTOR=1;DISABLE_WINDOWS;__ANDROID_API__=$(AndroidAPILevelNumber);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>-fdeclspec -fsigned-char %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <PostBuildEvent>
+      <Command>copy "$(TargetPath)" "$(ProjectDir)..\Assets\Plugins\arm64-v8a\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <ClCompile>
