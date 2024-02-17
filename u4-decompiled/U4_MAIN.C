@@ -299,8 +299,8 @@ void Text_Dump()
 }
 
 #define MAX_TEXT 500
-#define MAX_NPC_TEXT 10
-char npc_text_buffer[10][MAX_TEXT];
+#define MAX_NPC_TEXT 20
+char npc_text_buffer[MAX_NPC_TEXT][MAX_TEXT];
 int current_npc_text_buffer_pointer = 0;
 int current_npc_text_buffer_size = 0;
 
@@ -400,6 +400,10 @@ void add_npc_talk(char npc_index, char * ch)
 
 	printf("%s", &npc_text_buffer[current_npc_text_buffer_pointer][1]);
 
+#ifndef _WINDOWS
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", &npc_text_buffer[current_npc_text_buffer_pointer][1]);
+#endif
+
 	current_npc_text_buffer_pointer++;
 	if (current_npc_text_buffer_pointer > MAX_NPC_TEXT - 1)
 	{
@@ -473,6 +477,10 @@ __declspec(dllexport) int main_NPC_Text(unsigned char buffer[], int length)
 			//printf(&npc_text_buffer[i][1]);
 			memcpy(&buffer[i * 500], npc_text_buffer[i], MAX_TEXT);
 			//printf("npc index %d says : %s\n", npc_text_buffer[i][0], &npc_text_buffer[i][1]);
+
+#ifndef _WINDOWS
+			__android_log_print(ANDROID_LOG_INFO, "ANKH", "npc index %d says : %s\n", npc_text_buffer[i][0], &npc_text_buffer[i][1]);
+#endif
 		}
 	}
 	// the text buffer is full dump from the wrap
@@ -482,6 +490,9 @@ __declspec(dllexport) int main_NPC_Text(unsigned char buffer[], int length)
 		{
 			//printf(&npc_text_buffer[current_npc_text_buffer_pointer][1]);
 			//printf("npc index %d says : %s\n", npc_text_buffer[current_npc_text_buffer_pointer][0], &npc_text_buffer[current_npc_text_buffer_pointer][1]);
+#ifndef _WINDOWS
+			__android_log_print(ANDROID_LOG_INFO, "ANKH", "npc index %d says : %s\n", npc_text_buffer[current_npc_text_buffer_pointer][0], &npc_text_buffer[current_npc_text_buffer_pointer][1]);
+#endif
 			memcpy(&buffer[i * MAX_TEXT], npc_text_buffer[current_npc_text_buffer_pointer], MAX_TEXT);
 			current_npc_text_buffer_pointer++;
 

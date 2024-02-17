@@ -4089,7 +4089,7 @@ sfx_storm:
                     //int npcIndex = buffer[i * 500];
                     //partyText.text = partyText.text + npcIndex + " : " + /* Settlements[(int)Party._loc].GetComponent<Settlement>().npcStrings[_npc[npcIndex]._tlkidx - 1][0] + " says : " + */
                     string npcTalk = enc.GetString(buffer, i * 500 + 1, 500);
-
+                    Debug.Log(npcTalk);
                     int firstNull = npcTalk.IndexOf('\0');
                     npcTalk = npcTalk.Substring(0, firstNull);
                     npcText = npcText + npcTalk;
@@ -4395,9 +4395,6 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
                     adjusted = Regex.Replace(adjusted, pattern, "<phoneme ph=\"muː\" alphabet=\"ipa\">mu</phoneme>", RegexOptions.IgnoreCase);
                     pattern = $@"\b{Regex.Escape("summ")}\b";
                     adjusted = Regex.Replace(adjusted, pattern, "<phoneme ph=\"sʌm\" alphabet=\"ipa\">summ</phoneme>", RegexOptions.IgnoreCase);
-
-                    // this one come out wrong also
-                    adjusted = adjusted.Replace("See ya matie!", "<phoneme ph=\"siː jə ˈmæti\" alphabet=\"ipa\">See ya matie!</phoneme>");
                     
                     // Add ssml tags to the front and back, this is always needed to support inline modifications such as <phoneme> above
                     string prepend = "<speak>";
