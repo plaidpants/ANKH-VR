@@ -15804,7 +15804,7 @@ MonoBehaviour:
   m_RepeatRate: 0.1
   m_TrackedDeviceDragThresholdMultiplier: 1.4
   m_TrackedScrollDeltaMultiplier: 5
-  m_ActiveInputMode: 0
+  m_ActiveInputMode: 2
   m_MaxTrackedDeviceRaycastDistance: 1000
   m_EnableXRInput: 1
   m_EnableMouseInput: 1
@@ -16224,6 +16224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f7d929a03faff94da82eb55ac699872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentTileType: 0
   lastCurrentTile: 0
   myFont: {fileID: 12800000, guid: 6a1639c5fcbb6ab42953975a5166d0e4, type: 2}
   myTransparentFont: {fileID: 12800000, guid: b8e211fb837b63846a3ffdd669460e95, type: 2}
