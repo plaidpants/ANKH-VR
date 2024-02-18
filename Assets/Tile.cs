@@ -4,6 +4,15 @@ using UnityEngine;
 
 public static class Tile
 {
+    public enum TILE_TYPE
+    {
+        CGA,
+        EGA,
+        APPLE2,
+        PNG,
+        MAX
+    };
+
     public enum TILE
     {
         /*deep water*/
@@ -397,7 +406,7 @@ public static class Tile
     public static Texture2D[] expandedTiles;
 
     public static Texture2D PNGAtlas;
-    public static string PNGFilepath = "/u4/shapes.png";
+    public static string PNGFilepath = "/u4/SHAPES.PNG";
     public static string tileApple2Filepath1 = "/u4/SHP0.B";
     public static string tileApple2Filepath2 = "/u4/SHP1.B";
     public static string tileEGAFilepath = "/u4/SHAPES.EGA";
@@ -423,6 +432,8 @@ public static class Tile
     public static int expandedTileHeight;
     public static int originalTileWidth;
     public static int originalTileHeight;
+
+    public static TILE_TYPE currentTileType;
 
     public static void ExpandTiles()
     {
@@ -1234,6 +1245,32 @@ public static class Tile
             // Actually apply all previous SetPixel and SetPixels changes from above
             currentTile.Apply();
         }
+    }
+
+    public static void LoadTiles(TILE_TYPE tileType)
+    {
+        switch (tileType)
+        {
+            case TILE_TYPE.EGA:
+                LoadTilesEGA();
+                currentTileType = TILE_TYPE.EGA;
+                break;
+            case TILE_TYPE.CGA:
+                LoadTilesCGA();
+                currentTileType = TILE_TYPE.CGA;
+                break;
+            case TILE_TYPE.APPLE2:
+                LoadTilesApple2();
+                currentTileType = TILE_TYPE.APPLE2;
+                break;
+            case TILE_TYPE.PNG:
+                LoadTilesPNG();
+                currentTileType = TILE_TYPE.PNG;
+                break;
+            default:
+                Debug.Log("LoadTiles() unknown tile type " + (int)tileType);
+                break;
+         }
     }
 
     public static void LoadTilesEGA()

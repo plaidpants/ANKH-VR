@@ -56,20 +56,8 @@ public class Title : MonoBehaviour
 
     public GameObject lookAtObject;
 
-    // Start is called before Update()
-    private void Start()
+    private void Setup()
     {
-        // initialize the palette 
-        Palette.InitializeEGAPalette();
-        Palette.InitializeCGAPalette();
-        Palette.InitializeApple2Palette();
-
-        // load the tiles
-        Tile.LoadTilesEGA();
-        //Tile.LoadTilesCGA();
-        //Tile.LoadTilesApple2();
-        //Tile.LoadTilesPNG();
-
         // fix a tile
         Tile.FixMageTile3();
 
@@ -105,6 +93,21 @@ public class Title : MonoBehaviour
                 t.font = myTransparentFont;
             }
         }
+    }
+
+    // Start is called before Update()
+    private void Start()
+    {
+        // initialize the palette 
+        Palette.InitializeEGAPalette();
+        Palette.InitializeCGAPalette();
+        Palette.InitializeApple2Palette();
+
+        // load the tiles
+        Tile.LoadTiles(Tile.TILE_TYPE.EGA);
+
+        // do the rest of the setup for the tiles and fonts
+        Setup();
 
         // get a reference to the game engine
         u4_TITLE = FindObjectOfType<U4_Decompiled_TITLE>();

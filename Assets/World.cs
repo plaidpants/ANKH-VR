@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class World : MonoBehaviour
 {
+    public Tile.TILE_TYPE currentTileType;
+
     // used for automatic klimb and decsend ladders
     public Tile.TILE lastCurrentTile = (Tile.TILE)(-1);
 
@@ -903,6 +905,21 @@ public class World : MonoBehaviour
  
     }
 
+    private void SetupTiles()
+    {
+        // fix a tile
+        Tile.FixMageTile3();
+
+        // expand the tiles
+        Tile.ExpandTiles();
+
+        // create texture atlas
+        Tile.CreateLinearTextureAtlas(ref Tile.originalTiles);
+        Tile.CreateSquareTextureAtlas(ref Tile.originalTiles);
+        Tile.CreateExpandedTextureAtlas(ref Tile.expandedTiles);
+
+    }
+
     private void Start()
     {
         // this object needs to move around so it needs to be above the other which are based on the whole world map
@@ -959,25 +976,14 @@ public class World : MonoBehaviour
         Palette.InitializeEGAPalette();
         Palette.InitializeCGAPalette();
         Palette.InitializeApple2Palette();
-        Tile.LoadTilesEGA();
-        //Tile.LoadTilesCGA();
-        //Tile.LoadTilesApple2();
-        //Tile.LoadTilesPNG();
 
-        // fix a tile
-        Tile.FixMageTile3();
-
-        // expand the tiles
-        Tile.ExpandTiles();
-
-        // create texture atlas
-        Tile.CreateLinearTextureAtlas(ref Tile.originalTiles);
-        Tile.CreateSquareTextureAtlas(ref Tile.originalTiles);
-        Tile.CreateExpandedTextureAtlas(ref Tile.expandedTiles);
+        Tile.LoadTiles(Tile.TILE_TYPE.EGA);
+        currentTileType = Tile.TILE_TYPE.EGA;
+        SetupTiles();
 
         // get the font
         GameFont.LoadCharSetEGA();
-        //LoadCharSetCGA();
+        //GameFont.LoadCharSetCGA();
         GameFont.ImportFontFromTexture(myFont, myTransparentFont, GameFont.fontAtlas, GameFont.fontTransparentAtlas);
 
         // set all the text objects to myFont in the input panel
@@ -3269,6 +3275,21 @@ public class World : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetButtonDown("Fire1") == true)
+        {
+            Debug.Log("Fire1 pressed");
+            currentTileType = (Tile.TILE_TYPE)(((int)currentTileType + 1) % ((int)Tile.TILE_TYPE.MAX));
+
+            Tile.LoadTiles(currentTileType);
+            currentTileType = Tile.currentTileType;
+            SetupTiles();
+
+            Combat.CreateCombatTerrains(Outdoor.outdoorMap.GetLength(1));
+
+            // force an update
+            lastModeCheck = (U4_Decompiled_AVATAR.MODE)(-1);
+        }
+
         // update the timer
         flagTimer += Time.deltaTime;
 
