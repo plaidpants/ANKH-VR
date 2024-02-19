@@ -220,16 +220,16 @@ D-Spider Silk\n\
 E-Blood Moss\n\
 F-Black Pearl\n" */
 			);
-			add_npc_talk(VENDOR_REAGENT, &AVATAR[0x1328F + 0x002e] /* "I have \
+			add_npc_talk(VENDOR_REAGENT, /* &AVATAR[0x1328F + 0x002e] */ "I have \
 Sulfurous Ash, \
 Ginseng, \
 Garlic, \
 Spider Silk, \
 Blood Moss and \
-Black Pearls.\n" */);
+Black Pearls.\n");
 			set_input_mode(INPUT_MODE_GENERAL_ASK_LETTER_REAGENT);
-			loc_B = AskLetter(/*D_4068*/&AVATAR[0x132E3 + 0x002e] /* "Your Interest:\x12\x12\b" */, 'A', 'F');
 			add_npc_talk(VENDOR_REAGENT, &AVATAR[0x139B2 + 0x002e] /* "Your Interest?" */);
+			loc_B = AskLetter(/*D_4068*/&AVATAR[0x132E3 + 0x002e] /* "Your Interest:\x12\x12\b" */, 'A', 'F');
 			loc_B -= 'A';
 			if(loc_B < 0)
 				break;
@@ -298,7 +298,7 @@ Black Pearls.\n" */);
 	Gra_CR();
 	u4_puts(D_4188[D_9142]);
 	u4_puts(/*D_4133*/&AVATAR[0x133AE + 0x002e] /* " says: Perhaps another time then.... and slowly turns away.\n" */);
-	add_npc_talk(VENDOR_REAGENT, &AVATAR[0x133B5 + 0x002e] /* "Perhaps another time then.\n" */);
+	add_npc_talk(VENDOR_REAGENT, /* &AVATAR[0x133B5 + 0x002e] */ "Perhaps another time then.\n");
 	add_npc_talk(VENDOR_INVALID, "" );
 }
 
@@ -1874,11 +1874,12 @@ char *D_6390[] = {
 	char bp_04;
 
 	D_9142 = D_636C[Party._loc - 1] - 1;
-	u4_puts(/*D_620D*/&AVATAR[0x13B42 + 0x002e] /* "\n\n\n\nWelcome to " */);
-	add_npc_talk(VENDOR_FOOD, &AVATAR[0x1324E + 0x002e] /* "Welcome to " */);
+	u4_puts(/*D_620D*/&AVATAR[0x15480 + 0x0036] /* "\n\n\n\nWelcome to " */);
+	add_npc_talk(VENDOR_FOOD, &AVATAR[0x15480 + 0x0036] /* "Welcome to " */);
 	u4_puts(D_6386[D_9142]);
 	add_npc_talk(VENDOR_FOOD, D_6386[D_9142]);
-	u4_puts(/*D_621D*/&AVATAR[0x15490 + 0x002e] /* "\n\n" */);
+	add_npc_talk(VENDOR_FOOD, ". ");
+	u4_puts(/*D_621D*/&AVATAR[0x15490 + 0x0036] /* "\n\n" */);
 	u4_puts(D_6390[D_9142]);
 	u4_puts(/*D_6220*/&AVATAR[0x15493 + 0x0036] /* " says: Good day, and Welcome friend.\n\nMay I interest you in some rations?\x12\x12\b" */);
 	add_npc_talk(VENDOR_FOOD, &AVATAR[0x15493 + 0x0036] /* "Good day, and Welcome friend. May I interest you in some rations?" */);
@@ -1897,16 +1898,16 @@ char *D_6390[] = {
 	add_npc_talk(VENDOR_FOOD, &AVATAR[0x154F6 + 0x0036] /* "We have the best adventure rations, 25 for only " */);
 	u4_putl(D_637C[D_9142], 1, '0');
 	add_npc_talk_long(VENDOR_FOOD, D_637C[D_9142]);
-	u4_puts(/*D_62B4*/&AVATAR[0x13310 + 0x002e] /* "gp." */);
-	add_npc_talk(VENDOR_FOOD, &AVATAR[0x13310 + 0x002e] /* "gold pieces." */);
+	u4_puts(/*D_62B4*/&AVATAR[0x15527 + 0x0036] /* "gp." */);
+	add_npc_talk(VENDOR_FOOD, &AVATAR[0x15527 + 0x0036] /* "gold pieces." */);
 	do {
 		u4_puts(/*D_62B8*/&AVATAR[0x1552B + 0x0036] /* "\nHow many packs of 25 would you like?\x12\x12\x12\x12\b\b\b" */);
-		add_npc_talk(VENDOR_FOOD, &AVATAR[0x1552C + 0x0036] /* "How many packs of 25 would you like?" */);
+		add_npc_talk(VENDOR_FOOD, &AVATAR[0x1552B + 0x0036] /* "How many packs of 25 would you like?" */);
 		set_input_mode(INPUT_MODE_NUMBER_INPUT_3_DIGITS);
 		bp_02 = AskInt(3);
 		if(bp_02 <= 0) {
 			u4_puts(/*D_62E5*/&AVATAR[0x15558 + 0x0036] /* "\nToo bad. Maybe next time.\n" */);
-			add_npc_talk(VENDOR_FOOD, &AVATAR[0x15559 + 0x0036] /* "Too bad. Maybe next time." */);
+			add_npc_talk(VENDOR_FOOD, &AVATAR[0x15558 + 0x0036] /* "Too bad. Maybe next time." */);
 			bp_04 = 'N';
 			continue;
 		}
@@ -1931,11 +1932,11 @@ char *D_6390[] = {
 		Party._gold -= D_637C[D_9142] * bp_02;
 		dspl_Stats();
 		u4_puts(/*D_6337*/&AVATAR[0x155AA + 0x0036] /* "\nThank you. Anything else?\x12\x12\b" */);
-		add_npc_talk(VENDOR_FOOD, &AVATAR[0x155AB + 0x0036] /* "Thank you. Anything else?" */);
+		add_npc_talk(VENDOR_FOOD, &AVATAR[0x155AA + 0x0036] /* "Thank you. Anything else?" */);
 		set_input_mode(INPUT_MODE_GENERAL_YES_NO);
 		bp_04 = AskY_N();
 	} while(bp_04 == 'Y');
 	u4_puts(/*D_6355*/&AVATAR[0x155C8 + 0x0036] /* "\nGoodbye. Come again!\n" */);
-	add_npc_talk(VENDOR_FOOD, &AVATAR[0x155C9 + 0x0036] /* "Goodbye. Come again" */);
+	add_npc_talk(VENDOR_FOOD, &AVATAR[0x155C8 + 0x0036] /* "Goodbye. Come again" */);
 	add_npc_talk(VENDOR_INVALID, "");
 }
