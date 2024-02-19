@@ -1092,6 +1092,48 @@ public static class Tile
         }
     }
 
+    public static void PaintTile(TILE tile, Texture2D currentTileTexture, int x, int y, Color color)
+    {
+        Color alpha = new Color(0, 0, 0, 0);
+
+        // check if these are people/creatures/ladders/anhk and use black as alpha channel
+        if (color.Equals(Color.black) && (tile == Tile.TILE.ANKH ||
+            tile == Tile.TILE.LADDER_UP ||
+            tile == Tile.TILE.LADDER_DOWN ||
+            tile == Tile.TILE.FOREST ||
+            tile == Tile.TILE.COOKING_FIRE ||
+            tile == Tile.TILE.SHRINE ||
+            tile == Tile.TILE.ALTAR ||
+            tile == Tile.TILE.BALOON ||
+            //tile == U4_Decompiled.TILE.CHEST ||
+            tile == Tile.TILE.CASTLE ||
+            tile == Tile.TILE.CASTLE_LEFT ||
+            tile == Tile.TILE.CASTLE_ENTRANCE ||
+            tile == Tile.TILE.CASTLE_RIGHT ||
+            tile == Tile.TILE.VILLAGE ||
+            tile == Tile.TILE.BRIDGE ||
+            tile == Tile.TILE.BRIDGE_BOTTOM ||
+            tile == Tile.TILE.BRIDGE_TOP ||
+            tile == Tile.TILE.NIXIE ||
+            tile == Tile.TILE.NIXIE2 ||
+            (tile >= Tile.TILE.MISSLE_ATTACK_SMALL && tile <= Tile.TILE.MISSLE_ATTACK_RED) ||
+            (tile >= Tile.TILE.PARTY && tile <= Tile.TILE.SHEPHERD2) ||
+            (tile >= Tile.TILE.GUARD && tile <= Tile.TILE.LORD_BRITISH2) ||
+            (tile >= Tile.TILE.SERPENT && tile <= Tile.TILE.WATER_SPOUT2) ||
+            (tile >= Tile.TILE.BAT && tile <= Tile.TILE.TROLL4) ||
+            (tile >= Tile.TILE.INSECTS && tile <= Tile.TILE.INSECTS4) ||
+            (tile >= Tile.TILE.PHANTOM && tile <= Tile.TILE.MAGE_NPC4) ||
+            (tile >= Tile.TILE.LAVA_LIZARD && tile <= Tile.TILE.ZORN4) ||
+            (tile >= Tile.TILE.HYDRA && tile <= Tile.TILE.BALRON4)))
+        {
+            currentTileTexture.SetPixel(x, y, alpha);
+        }
+        else
+        {
+            currentTileTexture.SetPixel(x, y, color);
+        }
+    }
+
     public static void LoadTilesApple2()
     {
         if (!System.IO.File.Exists(Application.persistentDataPath + tileApple2Filepath1))
@@ -1166,39 +1208,39 @@ public static class Tile
                     pixel = (pixelBlock & 0x01) != 0;
                     nextPixel = (pixelBlock & 0x02) != 0;
                     color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x04) != 0;
                     color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x08) != 0;
                     color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x10) != 0;
                     color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x20) != 0;
                     color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x40) != 0;
                     color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     // next pixel is in the other file
                     pixelBlock = fileData2[index];
                     nextPixel = (pixelBlock & 0x01) != 0;
                     color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
 
                     // do the second half of the tile from the other file
                     highBitSet = (pixelBlock & 0x80) != 0;
@@ -1207,38 +1249,38 @@ public static class Tile
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x02) != 0;
                     color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x04) != 0;
                     color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x08) != 0;
                     color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x10) != 0;
                     color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x20) != 0;
                     color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     nextPixel = (pixelBlock & 0x40) != 0;
                     color = Palette.Apple2ColorEven(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
                     previousPixel = pixel;
                     pixel = nextPixel;
                     // assume no tiling on the side of the tile
                     nextPixel = false;
                     color = Palette.Apple2ColorOdd(highBitSet, previousPixel, pixel, nextPixel);
-                    currentTile.SetPixel(width++, y, color);
+                    PaintTile((TILE)tile, currentTile, width++, y, color);
                 }
             }
 
