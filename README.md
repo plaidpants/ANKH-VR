@@ -1,7 +1,7 @@
 # ANKH VR
 <img src="https://user-images.githubusercontent.com/8979271/177441885-38f6dcca-48a4-4bd2-8031-42c6c518364e.png" width=50% height=50%>
 
-This project runs the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift or Oculus Quest using a link connection or natively on the oculus quest, other systems may be supported in the future. It is functionally complete but there are bugs and minor stuff and improvements to make but I would consider it alpha on the oculus quest and Beta on the PC at this point.
+This project runs the original Ultima 4 in VR using the Unity3D game engine. Currently it will run on the Windows PC with an Oculus Rift or Oculus Quest using a link connection or natively on the oculus quest, other systems may be supported in the future. It is functionally complete but there are bugs and minor stuff and improvements to make but I would consider it alpha on the oculus quest and Beta on the PC at this point. It also supports Text to Speech (TTS) using Wit.AI, however you must be connected to a nework for this to work.
 
 The oculus quest version does not rely on patching the original EXE into a modern shared library like the PC version and instead references all internal text and data from the original EXE's. The Android OS current does not allow dynamic linking with non-NDK native libraries 
 https://developer.android.com/about/versions/nougat/android-7.0-changes#ndk
@@ -67,7 +67,14 @@ Extra step is required on the Oculus Quest, if you copy any save game files, the
 
   adb shell chmod 666  /sdcard/Android/data/com.SwivelChairGames.ANKHVR/files/u4/*.SAV
   
-<img width="717" alt="snap3" src="https://github.com/plaidpants/ANKH-VR/assets/8979271/01efaa7a-1799-4406-8f21-6229894f48d8">
+<img width="717" alt="snap3" src="https://github.com/plaidpants/ANKH-VR/assets/8979271/01efaa7a-1799-4406-8f21-6229894f48d8"> <br />
+
+The Quest version now supports dynamically changing the tile set while playing the game. Press the primary button on your controller to switch between the different tile sets. It supports the CGA, EGA, Apple2 and a custom PNG file. You need to copy the following files to your Quest for this to function, remember filenames are case sensitive on the Quest.
+
+SHAPES.CGA - for CGA graphics - already included in the PC DOS version <br />
+SHAPES.EGA - for EGA graphics - already included in the PC DOS version <br />
+SHP0.B and SHP1.B - for Apple2 graphics - these must be extracted from the original Apple 2 disks using ciderpress - http://a2ciderpress.com/ and https://archive.org/details/UltimaIV4amCrack <br />
+SHAPES.PNG - for custom graphics - https://ultima4.ultimacodex.com/alternate-ultima-4-tileset/  <br />
 
 Note: this port of Ultima 4 does not support any modifications or patches to the AVATAR.EXE or TITLE.EXE that move any of the data around in these files so many of the randomizer or other patchers will cause trouble and make it not work. It does support patches to the other files (.TLK, .DNG, etc.) so any fixes or modifications to those files would probabaly be supported. I will try and incorperate some of the fixes from other Ultima 4 projects in the future.
 
