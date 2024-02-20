@@ -1,0 +1,34 @@
+{
+    "name": "XRInputActions",
+    "maps": [
+        {
+            "name": "XRController",
+            "id": "3c4a0f00-e8c2-4611-b9b9-ffbced9b75cb",
+            "actions": [
+                {
+                    "name": "Select",
+                    "type": "Button",
+                    "id": "b378ff35-e828-4553-b0d0-34a3e67a3081",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5e32247c-8cba-402d-bc0b-72c2579f63fe",
+                    "path": "<XRController>{RightHand}/{PrimaryButton}",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

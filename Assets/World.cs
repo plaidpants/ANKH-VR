@@ -3272,12 +3272,13 @@ public class World : MonoBehaviour
         }
     }
 
+    public bool changeTiles = false;
+
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Fire1") == true)
+        if (changeTiles == true)
         {
-            Debug.Log("Fire1 pressed");
             currentTileType = (Tile.TILE_TYPE)(((int)currentTileType + 1) % ((int)Tile.TILE_TYPE.MAX));
 
             Tile.LoadTiles(currentTileType);
@@ -3288,6 +3289,9 @@ public class World : MonoBehaviour
 
             // force an update
             lastModeCheck = (U4_Decompiled_AVATAR.MODE)(-1);
+
+            // reset flag
+            changeTiles = false;
         }
 
         // update the timer
