@@ -1111,25 +1111,25 @@ public class World : MonoBehaviour
                     }
 
                     // convert to lower
-                    string lowerKeyword = Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD1].ToLower();
+                    string lowerKeyword1 = Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD1].ToLower();
                     // trim any whitespace off the end
-                    string trimmedKeyword = lowerKeyword.TrimEnd();
+                    string trimmedKeyword1 = lowerKeyword1.TrimEnd();
                     //clip the string to a max of 4 characters
-                    string subKeyword;
-                    if (trimmedKeyword.Length > 4)
+                    string subKeyword1;
+                    if (trimmedKeyword1.Length > 4)
                     {
-                        subKeyword = trimmedKeyword.Substring(0, 4);
+                        subKeyword1 = trimmedKeyword1.Substring(0, 4);
                     }
                     else
                     {
-                        subKeyword = trimmedKeyword;
+                        subKeyword1 = trimmedKeyword1;
                     }
 
                     //Debug.Log(sub);
                     //Debug.Log(settlement);
                     //Debug.Log("u4.npcTalkIndex " + u4.npcTalkIndex);
 
-                    if (trimmed == subKeyword)
+                    if ((sub == subKeyword1) && (sub != "a"))
                     {
                         u4.keyword1 = lower;
                         lower = char.ToUpper(lower[0]) + lower.Substring(1, lower.Length - 1);
@@ -1139,20 +1139,21 @@ public class World : MonoBehaviour
                     }
 
                     // convert to lower
-                    lowerKeyword = Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD2].ToLower();
+                    string lowerKeyword2 = Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD2].ToLower();
                     // trim any whitespace off the end
-                    trimmedKeyword = lowerKeyword.TrimEnd();
+                    string trimmedKeyword2 = lowerKeyword2.TrimEnd();
                     //clip the string to a max of 4 characters
-                    if (trimmedKeyword.Length > 4)
+                    string subKeyword2;
+                    if (trimmedKeyword2.Length > 4)
                     {
-                        subKeyword = trimmedKeyword.Substring(0, 4);
+                        subKeyword2 = trimmedKeyword2.Substring(0, 4);
                     }
                     else
                     {
-                        subKeyword = trimmedKeyword;
+                        subKeyword2 = trimmedKeyword2;
                     }
 
-                    if (sub == subKeyword)
+                    if ((sub == subKeyword2) && (sub != "a"))
                     {
                         u4.keyword2 = lower;
                         lower = char.ToUpper(lower[0]) + lower.Substring(1, lower.Length - 1);
