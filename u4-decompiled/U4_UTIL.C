@@ -691,6 +691,7 @@ unsigned bp04;
 					sound(1,0);
 				} else {
 					u4_putc(8);
+					add_char_to_text_buffer(8);
 					loc_A --;
 					si[loc_A] = ' ';
 				}
