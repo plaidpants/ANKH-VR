@@ -1091,8 +1091,8 @@ public class World : MonoBehaviour
                 // only add the special keywords if we already know them
                 // TODO don't need to do this so often, only when we get new text
                 // TODO need to clear npcTalkIndex when switching levels or settlements as the index might not be valid for the other location
-                // Some keywords are just 1 or 2 characters so I need to remove this check
-                //if (word.Length >= 2)
+                // Some keywords are just 2 characters and the citizen talk only allows words up to 10 characters
+                if ((word.Length > 1) && (word.Length < 11))
                 {
                     // the talk file may have trailing spaces in the keyword if it is less than 4 characters, we need to remove them for the compare
                     // convert to lower
