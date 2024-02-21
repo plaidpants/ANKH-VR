@@ -38,6 +38,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     public string femaleWizardVoiceName;
     public string malePirateVoiceName;
     public string femalePirateVoiceName;
+    public string snakeVoiceName;
 
     public enum VOICE_CHARACTER_IDS { NONE, CHIPMUNK, MONSTER, ROBOT, DAEMON, ALIEN };
     public enum VOICE_ENVIRONMENT_IDS { NONE, REVERB, ROOM, PHONE, RADIO, PA, CATHEDRAL, HELMET };
@@ -1007,6 +1008,15 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'E');
 #endif
         lastKeyboardHit = 'E';
+    }
+    public void CommandBackspace()
+    {
+#if USE_UNITY_DLL_FUNCTION
+        main_keyboardHit((char)KEYS.VK_BACK);
+#else
+        Native.Invoke<main_keyboardHit>(U4_Decompiled_TITLE.nativeLibraryPtr2, (char)KEYS.VK_BACK);
+#endif
+        lastKeyboardHit = (char)KEYS.VK_BACK;
     }
 
     public void CommandFire()
@@ -3995,6 +4005,18 @@ sfx_storm:
                 // add the ACSII encoded text to the display text plus read the whirlpool character
                 gameText = gameText + engineText + (char)(0x1f - ((int)(Time.time * 3) % 4));
 
+                int i;
+
+                // remove any backspace characters
+                for (i = 1; i < gameText.Length; i++)
+                {
+                    // check for a backspace
+                    if (gameText[i] == (char)8)
+                    {
+                        gameText = gameText.Remove(i - 1, 2);
+                    }
+                }
+                
                 // use regex to separate words from the game engine
                 var matches = Regex.Matches(engineText, @"\w+[^\s]*\w+|\w");
 
@@ -4015,7 +4037,7 @@ sfx_storm:
 
                 // remove all but the last 20 lines of text from the text buffer
                 int newline_count = 0;
-                int i;
+
                 const int MAX_NEWLINES = 20;
                 for (i = gameText.Length - 1; (i > 0) && (newline_count < MAX_NEWLINES); i--)
                 {
@@ -4231,7 +4253,14 @@ sfx_storm:
                     string description = Settlement.settlementNPCs[(int)settlement][(int)currentTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.LOOK_DESCRIPTION];
 
                     // add jesters and ghosts?
-                    if (description.Contains("jester", System.StringComparison.CurrentCultureIgnoreCase))
+                    if (name.Contains("nate", System.StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        speaker.VoiceID = snakeVoiceName;
+                        speakerVoiceStyle = VOICE_STYLE_IDS.NONE;
+                        speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
+                        speakerCharacter = VOICE_CHARACTER_IDS.NONE;
+                    }
+                    else if(description.Contains("jester", System.StringComparison.CurrentCultureIgnoreCase))
                     {
                         if (pronoun.Contains("it", System.StringComparison.CurrentCultureIgnoreCase))
                         {
