@@ -397,8 +397,32 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     delegate void main_Set_Fighters(byte[] buffer, int length);
 #endif
 
+    string wordSaveFilePath;
+
+    public void LoadWordList()
+    {
+        if (File.Exists(wordSaveFilePath))
+        {
+            wordList = new List<string>(File.ReadAllLines(wordSaveFilePath));
+            Debug.Log("Word list loaded from " + wordSaveFilePath);
+        }
+        else
+        {
+            Debug.LogWarning("Save file not found in " + wordSaveFilePath);
+        }
+    }
+
+    public void SaveWordList()
+    {
+        File.WriteAllLines(wordSaveFilePath, wordList.ToArray());
+        Debug.Log("Word list saved to " + wordSaveFilePath);
+    }
+
     void Awake()
     {
+        wordSaveFilePath = Application.persistentDataPath + "/u4/" + "WORDS.SAV";
+        LoadWordList();
+
         //Debug.Log("Load songs");
         LoadSongs();
 
@@ -1141,6 +1165,8 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Q');
 #endif
         lastKeyboardHit = 'Q';
+
+        SaveWordList();
     }
     public void CommandReady()
     {
