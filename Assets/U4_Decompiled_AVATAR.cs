@@ -4043,6 +4043,12 @@ sfx_storm:
                     }
                 }
                 
+                // special case this two word keyword
+                if (gameText.Contains("Ho eyo", System.StringComparison.InvariantCultureIgnoreCase))
+                {
+                    wordList.Add("Ho eyo");
+                }
+
                 // use regex to separate words from the game engine
                 var matches = Regex.Matches(engineText, @"\w+[^\s]*\w+|\w");
 
@@ -4051,13 +4057,13 @@ sfx_storm:
                 {
                     var word = match.Value;
 
-                    if (wordList.Contains(word) == false)
+                    // only add if not already in list and its at least a 2 letter word
+                    if ((word.Length > 1) && (wordList.Contains(word) == false))
                     {
-                        //wordList.Add(word);
-                        // we will add the most recent words at the start of the list so when we iterate through them the most recent match will be
-                        // displayed on the keyword button, so if the keyword is knowledge and you recently talked to someone who said that word
-                        // the keyword displayed will be "knowledge" instead of an much older unrelated word such as "know"
-                        wordList.Insert(0, word);
+                        // we will add words to the end of the list, the keyword search will search all words and use the last one that
+                        // matches so we can use this method to use the most recent keyword in on the button, it will also update as you
+                        // talk to people.
+                        wordList.Add(word);
                     }
                 }
 
@@ -4450,7 +4456,12 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
                     adjusted = Regex.Replace(adjusted, pattern, "<phoneme ph=\"muː\" alphabet=\"ipa\">mu</phoneme>", RegexOptions.IgnoreCase);
                     pattern = $@"\b{Regex.Escape("summ")}\b";
                     adjusted = Regex.Replace(adjusted, pattern, "<phoneme ph=\"sʌm\" alphabet=\"ipa\">summ</phoneme>", RegexOptions.IgnoreCase);
-                    
+
+                    // fix abbreviations for longitude and latitude
+                    adjusted = adjusted.Replace("lat-", "latitude ");
+                    adjusted = adjusted.Replace("long-", "longitude ");
+
+
                     // Add ssml tags to the front and back, this is always needed to support inline modifications such as <phoneme> above
                     string prepend = "<speak>";
                     string append = "</speak>";
