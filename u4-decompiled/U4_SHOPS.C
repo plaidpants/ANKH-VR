@@ -1580,8 +1580,8 @@ C-Resurrection\n" */);
 /*----------------------------------------*/
 
 /*shops indexes*/
-unsigned char * D_5EE8 = &AVATAR[0x1515C + 0x0036] /*{0, 0, 0, 0, 0, 1, 2, 0, 0, 3, 0, 0, 4, 5, 6, 0}*/;
-
+unsigned char * D_5EE8 = &AVATAR[0x1515B + 0x0036] /*{0, 0, 0, 0, 0, 1, 2, 0, 0, 3, 0, 0, 4, 5, 6, 0}*/;
+/*bribe values*/
 short * D_5EF8 = &AVATAR[0x1516B + 0x0036] /*{20, 30, 10, 40, 99, 25}*/;
 
 char *D_5F04[] = {
@@ -1611,6 +1611,7 @@ char *D_5F1C[] = {
 	/*D_5BDD*/&AVATAR[0x14E50 + 0x0036] /* "Green Granukit" */
 };
 
+/* food costs */
 short * D_5F28 = &AVATAR[0x1519B + 0x0036] /*{4,2,3,2,4,2}*/;
 
 char *D_5F34[] = {
