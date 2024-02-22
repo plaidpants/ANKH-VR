@@ -88,7 +88,7 @@ static unsigned short D_913E;/*# of drinks in pub*/
 	u4_puts(Party.chara[0]._name);
 	add_npc_talk(VENDOR_HAWKKWIND, Party.chara[0]._name);
 	u4_puts(". ");
-	add_npc_talk(". ");
+	add_npc_talk(VENDOR_HAWKKWIND, ". ");
 	u4_puts(/*D_3D29*/ &AVATAR[0x12FA4 + 0x002e] /* ". \nI am Hawkwind, Seer of Souls. I see that which is within thee and drives thee to deeds of good or evil...\n" */);
 	add_npc_talk(VENDOR_HAWKKWIND, &AVATAR[0x12FA4 + 0x002e] /* ". \nI am Hawkwind, Seer of Souls. I see that which is within thee and drives thee to deeds of good or evil...\n" */);
 	set_input_mode(INPUT_MODE_GENERAL_CONTINUE);
@@ -148,6 +148,7 @@ static unsigned short D_913E;/*# of drinks in pub*/
 			u_kbread();
 		}
 	}
+	u4_putc(' ');
 	u4_puts(/*D_3EBC*/&AVATAR[0x13137 + 0x002e] /* "\nHawkwind says: Fare thee well and may thou complete the Quest of the Avatar!\n" */);
 	add_npc_talk(VENDOR_HAWKKWIND, &AVATAR[0x13147 + 0x002e] /* "Fare thee well and may thou complete the Quest of the Avatar!\n" */);
 	if(Party._moves / 100 != Party.f_1ea) {

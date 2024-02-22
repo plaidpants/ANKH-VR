@@ -270,6 +270,8 @@ C_E4C3() {
 			C_E498(&(Party.chara[loc_B]._int));
 			Gra_CR();
 			u4_puts(Party.chara[loc_B]._name);
+			u4_puts(". ");
+			add_npc_talk(LORD_BRITISH, ". ");
 			add_npc_talk(LORD_BRITISH, Party.chara[loc_B]._name);
 			u4_puts(/*D_78C9*/&AVATAR[0x16B3B + 0x0037] /* "\nThou art now Level " */);
 			add_npc_talk(LORD_BRITISH, &AVATAR[0x16B3B + 0x0037] /* "\nThou art now Level " */);
