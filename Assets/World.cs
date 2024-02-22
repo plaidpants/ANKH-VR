@@ -237,6 +237,16 @@ public class World : MonoBehaviour
             // get the corresponding fighters game object
             Transform childoffighters = fighters.transform.GetChild(fighterIndex);
 
+            // check it fighter is active, zero means not active
+            if (npcTile == 0)
+            {
+                childoffighters.gameObject.SetActive(false);
+            }
+            else
+            {
+                childoffighters.gameObject.SetActive(true);
+            }
+
             // update the tile of the game object
             if (currentFighters[fighterIndex]._sleeping == 0)
             {
@@ -482,8 +492,10 @@ public class World : MonoBehaviour
             Tile.TILE npcTile = currentNpcs[npcIndex]._tile;
             Tile.TILE npcCurrentTile = currentNpcs[npcIndex]._gtile;
 
-            // check if npc is active
-            if (npcTile == Tile.TILE.SHALLOW_WATER)
+            // check if npc is active, zero means inactive
+            if ((npcTile == 0) || 
+                // Special case of the water creater in LBC1 so it doesn't show up but you can still talk to it
+                (npcTile == Tile.TILE.SHALLOW_WATER))
             {
                 // disable object if not active
                 childofnpcs.gameObject.SetActive(false);
@@ -1079,77 +1091,51 @@ public class World : MonoBehaviour
 
             foreach (string word in u4.wordList)
             {
-                // only add the special keywords if we already know them
+                // the word list file may have trailing spaces in the keyword
+                // convert to lower and trim any whitespace off the end
+                string lower = word.ToLower().TrimEnd();
+                
+                // only add the special keywords to keyword buttons if we already know them
                 // TODO don't need to do this so often, only when we get new text
                 // TODO need to clear npcTalkIndex when switching levels or settlements as the index might not be valid for the other location
-                // Some keywords are just 2 characters and the citizen talk only allows words up to 10 characters
+                // Some keywords are just 2 characters and the citizen talk input only allows words up to 10 characters
                 if ((word.Length > 1) && (word.Length < 11))
                 {
-                    // the talk file may have trailing spaces in the keyword if it is less than 4 characters, we need to remove them for the compare
-                    // convert to lower
-                    string lower = word.ToLower();
-                    // trim any whitespace off the end
-                    string trimmed = lower.TrimEnd();
-                    //clip the string to a max of 4 characters
-                    string sub;
-                    if (trimmed.Length > 4)
-                    { 
-                        sub = trimmed.Substring(0, 4); 
-                    }
-                    else
-                    {
-                        sub = trimmed;
-                    }
+                    // convert keyword 1 to lower and trim any whitespace off the end
+                    string lowerKeyword1 = Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD1].ToLower().TrimEnd(); ;
 
-                    // convert to lower
-                    string lowerKeyword1 = Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD1].ToLower();
-                    // trim any whitespace off the end
-                    string trimmedKeyword1 = lowerKeyword1.TrimEnd();
-                    //clip the string to a max of 4 characters
-                    string subKeyword1;
-                    if (trimmedKeyword1.Length > 4)
+                    if ((lowerKeyword1 != "a") && // ignore the A in the talk file as they mean blank
+                        (lower.Length >= lowerKeyword1.Length) && // must be at least as long as the keyword we are looking for
+                        (lower.Substring(0, lowerKeyword1.Length) == lowerKeyword1)) // match the whole keyword to the trimmed word from the word list even though input only checks the first 4 characters
                     {
-                        subKeyword1 = trimmedKeyword1.Substring(0, 4);
-                    }
-                    else
-                    {
-                        subKeyword1 = trimmedKeyword1;
-                    }
-
-                    //Debug.Log(sub);
-                    //Debug.Log(settlement);
-                    //Debug.Log("u4.npcTalkIndex " + u4.npcTalkIndex);
-
-                    if ((sub == subKeyword1) && (sub != "a"))
-                    {
+                        // use the whole word from the word list
                         u4.keyword1 = lower;
+                        // Capatilize the first letter of the word
                         lower = char.ToUpper(lower[0]) + lower.Substring(1, lower.Length - 1);
+                        // stick it on the button
                         keyword1ButtonText.text = lower;
+                        // mark found
                         keyword1found = true;
+                        // set button active
                         keyword1Button.SetActive(true);
                     }
 
-                    // convert to lower
-                    string lowerKeyword2 = Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD2].ToLower();
-                    // trim any whitespace off the end
-                    string trimmedKeyword2 = lowerKeyword2.TrimEnd();
-                    //clip the string to a max of 4 characters
-                    string subKeyword2;
-                    if (trimmedKeyword2.Length > 4)
-                    {
-                        subKeyword2 = trimmedKeyword2.Substring(0, 4);
-                    }
-                    else
-                    {
-                        subKeyword2 = trimmedKeyword2;
-                    }
+                    // convert to lower the second keyword and trim any whitespace off the end
+                    string lowerKeyword2 = Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD2].ToLower().TrimEnd(); ;
 
-                    if ((sub == subKeyword2) && (sub != "a"))
+                    if ((lowerKeyword2 != "a") && // ignore the A in the talk file as they mean blank
+                        (lower.Length >= lowerKeyword2.Length) && // must be at least as long as the keyword we are looking for
+                        (lower.Substring(0, lowerKeyword2.Length) == lowerKeyword2)) // match the whole keyword to the trimmed word from the word list even though input only checks the first 4 characters
                     {
+                        // use the whole word from the word list
                         u4.keyword2 = lower;
+                        // Capatilize the first letter of the word
                         lower = char.ToUpper(lower[0]) + lower.Substring(1, lower.Length - 1);
+                        // stick it on the button
                         keyword2ButtonText.text = lower;
+                        // mark found
                         keyword2found = true;
+                        // set button active
                         keyword2Button.SetActive(true);
                     }
                 }
