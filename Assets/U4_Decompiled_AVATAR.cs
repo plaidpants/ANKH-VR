@@ -4461,6 +4461,8 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
                     adjusted = adjusted.Replace("lat-", "latitude ");
                     adjusted = adjusted.Replace("long-", "longitude ");
 
+                    // fix name pronoucing
+                    adjusted = adjusted.Replace("Calumny", "<phoneme ph=\"kæləmni\" alphabet=\"ipa\">Calumny</phoneme>");
 
                     // Add ssml tags to the front and back, this is always needed to support inline modifications such as <phoneme> above
                     string prepend = "<speak>";
