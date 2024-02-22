@@ -645,10 +645,15 @@ public static class Combine
                         else if ((tileIndex == Tile.TILE.FOREST) ||
                             (tileIndex == Tile.TILE.TOWN) ||
                             (tileIndex == Tile.TILE.VILLAGE) ||
+                            (tileIndex == Tile.TILE.RUINS) ||
+                            (tileIndex == Tile.TILE.SHRINE) ||
                             (tileIndex == Tile.TILE.ANKH) ||
+                            (tileIndex == Tile.TILE.ALTAR) ||
+                            // (tileIndex == U4_Decompiled.TILE.CHEST) ||
                             (tileIndex == Tile.TILE.LADDER_UP) ||
                             (tileIndex == Tile.TILE.LADDER_DOWN) ||
                             (tileIndex == Tile.TILE.COOKING_FIRE) ||
+                            (tileIndex == Tile.TILE.PARTY) || // the shrine map uses a fixed party tile instead of putting the party characters into the map
                             (tileIndex == Tile.TILE.CASTLE))
                         {
                             countBillboardTerrrain++;
@@ -719,13 +724,18 @@ public static class Combine
                         }
                         else if ((tileIndex == Tile.TILE.FOREST) ||
                             (tileIndex == Tile.TILE.TOWN) ||
-                            (tileIndex == Tile.TILE.ANKH) ||
                             (tileIndex == Tile.TILE.VILLAGE) ||
+                            (tileIndex == Tile.TILE.RUINS) ||
+                            (tileIndex == Tile.TILE.SHRINE) ||
+                            (tileIndex == Tile.TILE.ANKH) ||
+                            (tileIndex == Tile.TILE.ALTAR) ||
+                            // (tileIndex == U4_Decompiled.TILE.CHEST) ||
                             (tileIndex == Tile.TILE.LADDER_UP) ||
                             (tileIndex == Tile.TILE.LADDER_DOWN) ||
                             (tileIndex == Tile.TILE.COOKING_FIRE) ||
+                            (tileIndex == Tile.TILE.PARTY) || // the shrine map uses a fixed party tile instead of putting the party characters into the map
                             (tileIndex == Tile.TILE.CASTLE))
-                        {
+                                {
                             GameObject mapTile = mapGameObjects[x, y];
                             Vector3 saveLocalPosition = mapTile.transform.localPosition;
 
