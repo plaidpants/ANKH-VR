@@ -200,7 +200,9 @@ public static class Settlement
                     s = "";
 
                     // manually construct the string because C# doesn't work with null terminated C strings well
-                    for (int i = 0; (i < 100) && (talkFileData[talkIndex * 288 + stringBufferIndex] != 0); i++)
+                    // There is no defined max string length but structure is limited to 288 bytes, assume max
+                    // string length of 150 just to be safe.
+                    for (int i = 0; (i < 150) && (talkFileData[talkIndex * 288 + stringBufferIndex] != 0); i++)
                     {
                         s += (char)talkFileData[talkIndex * 288 + stringBufferIndex++];
                     }
