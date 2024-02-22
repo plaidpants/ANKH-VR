@@ -502,8 +502,7 @@ C_7FFD()
 	}
 	for(loc_B = 15; loc_B >= 0; loc_B--) {
 /*C_817D*/
-		if (loc_A._010[loc_B]) {
-		//if(loc_A._010/*bug?*/) {
+		if(loc_A._010/*bug?*/) {
 		/*shouldn't be "if(loc_A._010[loc_B]) {" ?*/
 			Combat._npcX[loc_B] = loc_A._020[loc_B];
 			Combat._npcY[loc_B] = loc_A._030[loc_B];

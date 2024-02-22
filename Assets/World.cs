@@ -237,15 +237,6 @@ public class World : MonoBehaviour
             // get the corresponding fighters game object
             Transform childoffighters = fighters.transform.GetChild(fighterIndex);
 
-            if (npcTile == Tile.TILE.DEEP_WATER)
-            {
-                childoffighters.gameObject.SetActive(false);
-            }
-            else
-            {
-                childoffighters.gameObject.SetActive(true);
-            }
-
             // update the tile of the game object
             if (currentFighters[fighterIndex]._sleeping == 0)
             {
@@ -492,7 +483,7 @@ public class World : MonoBehaviour
             Tile.TILE npcCurrentTile = currentNpcs[npcIndex]._gtile;
 
             // check if npc is active
-            if (npcTile == Tile.TILE.DEEP_WATER)
+            if (npcTile == Tile.TILE.SHALLOW_WATER)
             {
                 // disable object if not active
                 childofnpcs.gameObject.SetActive(false);
