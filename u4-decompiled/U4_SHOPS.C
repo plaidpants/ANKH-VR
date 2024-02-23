@@ -432,9 +432,6 @@ C_CD80()
 			add_char_to_text_buffer('-');
 			u4_puts(D_1E98[37 + D_46BA[D_9142][loc_B]]);
 			add_npc_talk(VENDOR_WEAPON, D_1E98[37 + D_46BA[D_9142][loc_B]]);
-#ifndef _WINDOWS
-			__android_log_print(ANDROID_LOG_INFO, "ANKH", D_1E98[37 + D_46BA[D_9142][loc_B]]);
-#endif
 			add_npc_talk(VENDOR_WEAPON, "s");
 			u4_putc('s');
 			add_char_to_text_buffer('s');

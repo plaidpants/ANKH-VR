@@ -401,7 +401,8 @@ void add_npc_talk(char npc_index, char * ch)
 	printf("%s", &npc_text_buffer[current_npc_text_buffer_pointer][1]);
 
 #ifndef _WINDOWS
-	__android_log_print(ANDROID_LOG_INFO, "ANKH", &npc_text_buffer[current_npc_text_buffer_pointer][1]);
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "add_npc_talk() npc index %d says : %s\n", &npc_text_buffer[current_npc_text_buffer_pointer][0] ,&npc_text_buffer[current_npc_text_buffer_pointer][1]);
+
 #endif
 
 	current_npc_text_buffer_pointer++;
@@ -479,7 +480,7 @@ __declspec(dllexport) int main_NPC_Text(unsigned char buffer[], int length)
 			//printf("npc index %d says : %s\n", npc_text_buffer[i][0], &npc_text_buffer[i][1]);
 
 #ifndef _WINDOWS
-			__android_log_print(ANDROID_LOG_INFO, "ANKH", "npc index %d says : %s\n", npc_text_buffer[i][0], &npc_text_buffer[i][1]);
+			__android_log_print(ANDROID_LOG_INFO, "ANKH", "main_NPC_Text() npc index %d says : %s\n", npc_text_buffer[i][0], &npc_text_buffer[i][1]);
 #endif
 		}
 	}
@@ -491,7 +492,7 @@ __declspec(dllexport) int main_NPC_Text(unsigned char buffer[], int length)
 			//printf(&npc_text_buffer[current_npc_text_buffer_pointer][1]);
 			//printf("npc index %d says : %s\n", npc_text_buffer[current_npc_text_buffer_pointer][0], &npc_text_buffer[current_npc_text_buffer_pointer][1]);
 #ifndef _WINDOWS
-			__android_log_print(ANDROID_LOG_INFO, "ANKH", "npc index %d says : %s\n", npc_text_buffer[current_npc_text_buffer_pointer][0], &npc_text_buffer[current_npc_text_buffer_pointer][1]);
+			__android_log_print(ANDROID_LOG_INFO, "ANKH", "main_NPC_Text() npc index %d says : %s\n", npc_text_buffer[current_npc_text_buffer_pointer][0], &npc_text_buffer[current_npc_text_buffer_pointer][1]);
 #endif
 			memcpy(&buffer[i * MAX_TEXT], npc_text_buffer[current_npc_text_buffer_pointer], MAX_TEXT);
 			current_npc_text_buffer_pointer++;
@@ -794,7 +795,7 @@ int /*C_08D1*/Save(char* filename, int file_size, char* buffer)
 	strcat(path, filename);
 
 #ifndef _WINDOWS
-	__android_log_print(ANDROID_LOG_INFO, "ANKH", "open for writing path %s", path);
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "Save %s", path);
 #endif
 
 	// Open the binary file for reading
@@ -830,7 +831,7 @@ int Load(char* filename, int file_size, char* buffer)
 	strcat(path, filename);
 
 #ifndef _WINDOWS
-	__android_log_print(ANDROID_LOG_INFO, "ANKH", "%s\n", path);
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "Load %s\n", path);
 #endif
 
 	// Open the binary file for reading
@@ -895,7 +896,7 @@ __declspec(dllexport) int /*C_191E*/ main()
 	register unsigned si = 0;
 	int bp_04;
 #ifndef _WINDOWS
-	__android_log_print(ANDROID_LOG_INFO, "ANKH", "ANKH says hello\n");
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "AVATAR says hello\n");
 #endif
 
 	// we will use this buffer to reference strings and other things originally in the EXE instead of embedding them in this code
