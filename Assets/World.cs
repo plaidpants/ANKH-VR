@@ -3257,19 +3257,28 @@ public class World : MonoBehaviour
     {
         if (changeTiles == true)
         {
-            currentTileType = (Tile.TILE_TYPE)(((int)currentTileType + 1) % ((int)Tile.TILE_TYPE.MAX));
-
-            Tile.LoadTiles(currentTileType);
-            currentTileType = Tile.currentTileType;
-            SetupTiles();
-
-            Combat.CreateCombatTerrains(Outdoor.outdoorMap.GetLength(1));
-
-            // force an update
-            lastModeCheck = (U4_Decompiled_AVATAR.MODE)(-1);
-
-            // reset flag
+            // reset flag so they have to press the button again
             changeTiles = false;
+
+            // only change tiles outdoors or in settlements, combat mode has weird effect after finishing combat
+            if ((u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS) ||
+                (u4.current_mode == U4_Decompiled_AVATAR.MODE.DUNGEON) || 
+                (u4.current_mode == U4_Decompiled_AVATAR.MODE.SETTLEMENT))
+            {
+                currentTileType = (Tile.TILE_TYPE)(((int)currentTileType + 1) % ((int)Tile.TILE_TYPE.MAX));
+
+                Tile.LoadTiles(currentTileType);
+                currentTileType = Tile.currentTileType;
+                SetupTiles();
+
+                Combat.CreateCombatTerrains(Outdoor.outdoorMap.GetLength(1));
+
+                // force an update
+                lastModeCheck = (U4_Decompiled_AVATAR.MODE)(-1);
+
+                // reset flag
+                changeTiles = false;
+            }
         }
 
         // update the timer
