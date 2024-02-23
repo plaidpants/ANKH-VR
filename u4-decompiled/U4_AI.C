@@ -6,6 +6,7 @@
 
 #include "U4.H"
 
+#include <android/log.h>
 C_93A5(bp08, bp06, bp04)
 unsigned char bp08;
 unsigned char bp06;
@@ -229,26 +230,59 @@ int bp04;
 {
 	unsigned char bp_02;
 	int bp_04;
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "C_98E4 start");
+#endif
 
-	bp_02 = Combat_MAP(bp06, bp08);
-	if(C_29EF(bp_02))
-		return 0;
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "if(bp08 >= 11 || bp06 >= 11)");
+#endif
+// Need to check if these (x,y) are out of bounds before we attempt to index into the Combat_Map() as that
+// will result in an access outside of the memory assigned, since bp08 & bp06 and can be -1 it could result in (255,255)
 	if(bp08 >= 11 || bp06 >= 11)
 		return ((unsigned char)Fighters._HP[bp04] < 24);
+
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "Combat_MAP(%d, %d)", bp06, bp08);
+#endif
+
+	bp_02 = Combat_MAP(bp06, bp08);
+
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "if(C_29EF(bp_02))");
+#endif
+	if(C_29EF(bp_02))
+		return 0;
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "if(Fighters._x[bp04] == bp08 && Fighters._y[bp04] == bp06 && U4_RND1(3))");
+#endif
 	if(Fighters._x[bp04] == bp08 && Fighters._y[bp04] == bp06 && U4_RND1(3))
 		return 0;
-
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "for(bp_04 = 15; bp_04 >= 0; bp_04 --)");
+#endif
 	for(bp_04 = 15; bp_04 >= 0; bp_04 --)
 		if(Fighters._tile[bp_04] && Combat._npcX[bp_04] == bp08 && Combat._npcY[bp_04] == bp06)
 			return 0;
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "for(bp_04 = 7; bp_04 >= 0; bp_04 --)");
+#endif
 	for(bp_04 = 7; bp_04 >= 0; bp_04 --)
 		if(Fighters._chtile[bp_04] && Combat._charaX[bp_04] == bp08 && Combat._charaY[bp_04] == bp06)
 			return 0;
-
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "if((unsigned char)Fighters._tile[bp04] < 0x80)");
+#endif
 	if((unsigned char)Fighters._tile[bp04] < 0x80)
 		return C_2999(Combat_MAP(bp06, bp08));
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "if((unsigned char)Fighters._tile[bp04] < 0x8e)");
+#endif
 	if((unsigned char)Fighters._tile[bp04] < 0x8e)
 		return (bp_02 < 3);
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "switch((unsigned char)Fighters._gtile[bp04])");
+#endif
 	switch((unsigned char)Fighters._gtile[bp04]) {
 		case TIL_B4:
 		case TIL_8E:
@@ -263,6 +297,9 @@ int bp04;
 		default:
 			return C_2999(bp_02);
 	}
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "C_98E4 end");
+#endif
 }
 
 unsigned char C_9A41(bp04)
@@ -391,6 +428,9 @@ int bp04;
 
 	loc_A = u4_sign((unsigned char)Combat._charaX[bp06] - (unsigned char)Combat._npcX[bp08]);
 	loc_C = u4_sign((unsigned char)Combat._charaY[bp06] - (unsigned char)Combat._npcY[bp08]);
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "loc_A %d loc_C %d", loc_A, loc_C);
+#endif
 	/*Mimic*/
 	if((unsigned char)Fighters._tile[bp08] == TIL_AC) {
 		Fighters._gtile[bp08] = TIL_3C;
@@ -398,6 +438,9 @@ int bp04;
 			goto C_9D51;
 		Fighters._gtile[bp08] = TIL_AC;
 	}
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "attempt projectile");
+#endif
 	/*attempt projectile*/
 	if(U4_RND1(3) == 0) {
 		int bp_0c;
@@ -410,6 +453,9 @@ int bp04;
 			}
 		}
 	}
+#ifndef WIN32
+		__android_log_print(ANDROID_LOG_INFO, "ANKH", "balron or reaper");
+#endif
 	/* */
 C_9D51:
 	/*balron or reaper*/
@@ -429,26 +475,47 @@ C_9D51:
 			}
 		}
 	}
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "check < 24");
+#endif
 	/* */
 	if((unsigned char)Fighters._HP[bp08] < 24) {
 		loc_A = -loc_A;
 		loc_C = -loc_C;
 C_9DE5:
+#ifndef WIN32
+		__android_log_print(ANDROID_LOG_INFO, "ANKH", "C_9DE5 loc_A %d loc_C %d", loc_A, loc_C);
+#endif
 		if((unsigned char)Fighters._tile[bp08] == TIL_AC || (unsigned char)Fighters._tile[bp08] == TIL_B0)
 			return 0;
 	} else if(bp04 >= 2) {
+#ifndef WIN32
+		__android_log_print(ANDROID_LOG_INFO, "ANKH", "goto C_9DE5");
+#endif
 		goto C_9DE5;
 	} else {
+#ifndef WIN32
+		__android_log_print(ANDROID_LOG_INFO, "ANKH", "contact?");
+#endif
 		/*contact?*/
 		switch((unsigned char)Fighters._tile[bp08]) {
 			case TIL_A8: C_9B6B(); break;
 			case TIL_C8: C_9BA6(); break;
 		}
+#ifndef WIN32
+		__android_log_print(ANDROID_LOG_INFO, "ANKH", "contact attack?");
+#endif
 		C_9BE5(bp08, bp06);/*contact attack?*/
 		return 0;
 	}
 	/* */
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "for(loc_B = 2; loc_B > 0; loc_B --)");
+#endif
 	for(loc_B = 2; loc_B > 0; loc_B --) {
+#ifndef WIN32
+		__android_log_print(ANDROID_LOG_INFO, "ANKH", "if(U4_RND1(1) && loc_A != 0)");
+#endif
 		if(U4_RND1(1) && loc_A != 0) {
 			loc_D = (unsigned char)Combat._npcX[bp08] + loc_A;
 			loc_E = (unsigned char)Combat._npcY[bp08];
@@ -457,6 +524,9 @@ C_9DE5:
 			if(C_98E4(loc_D, loc_E, bp08))
 				break;
 		}
+#ifndef WIN32
+		__android_log_print(ANDROID_LOG_INFO, "ANKH", "if(loc_C != 0)");
+#endif
 		if(loc_C != 0) {
 			loc_D = (unsigned char)Combat._npcX[bp08];
 			loc_E = (unsigned char)Combat._npcY[bp08] + loc_C;
@@ -465,6 +535,9 @@ C_9DE5:
 			if(C_98E4(loc_D, loc_E, bp08))
 				break;
 		}
+#ifndef WIN32
+		__android_log_print(ANDROID_LOG_INFO, "ANKH", "if(loc_A != 0)");
+#endif
 		if(loc_A != 0) {
 			loc_D = (unsigned char)Combat._npcX[bp08] + loc_A;
 			loc_E = (unsigned char)Combat._npcY[bp08];
@@ -476,6 +549,9 @@ C_9DE5:
 		loc_A = u4_sign((char)u_rand_a());
 		loc_C = u4_sign((char)u_rand_a());
 	}
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "if(loc_B != 0))");
+#endif
 	if(loc_B != 0) {
 		Fighters._x[bp08] = Combat._npcX[bp08];
 		Fighters._y[bp08] = Combat._npcY[bp08];
@@ -485,11 +561,20 @@ C_9DE5:
 			C_9C56(bp08);/*... Flees*/
 			return 0;
 		}
+#ifndef WIN32
+		__android_log_print(ANDROID_LOG_INFO, "ANKH", "C_3C54");
+#endif
 		C_3C54();
 		return 0;
 	}
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "contact attack?");
+#endif
 	if(bp04 < 2)
 		C_9BE5(bp08, bp06);/*contact attack?*/
+#ifndef WIN32
+	__android_log_print(ANDROID_LOG_INFO, "ANKH", "C_9CBC end");
+#endif
 }
 
 /*combat ai*/
