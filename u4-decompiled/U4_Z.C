@@ -12,7 +12,7 @@ C_45B5()
 {
 	for( ;txt_Y <= 8; txt_Y ++) {
 		txt_X = 24;
-		u4_puts(/*D_18C6*/"               ");
+		u4_puts(/*D_18C6*/ "               ");
 	}
 }
 
@@ -71,7 +71,7 @@ int bp04;
 	txt_X = 32; u4_puts(/*D_18DA*/&AVATAR[0x10B8D + 0x000f] /* "LV:" */); u4_putc((si->_HP[1]/100)+'0');
 	txt_X = 24;
 	txt_Y = 4; u4_puts(/*D_18DE*/&AVATAR[0x10B91 + 0x000f] /* "STR:" */); u4_putl(si->_str, 2, '0');
-	txt_X = 32; u4_puts(/*D_18E3*/&AVATAR[0xF7AE + 0x0005] /* "HP:" */); u4_putl(si->_HP[0], 4, '0');
+	txt_X = 32; u4_puts(/*D_18E3*/&AVATAR[0x10B96 + 0x000f] /* "HP:" */); u4_putl(si->_HP[0], 4, '0');
 	txt_X = 24;
 	txt_Y = 5; u4_puts(/*D_18E7*/&AVATAR[0x10B9A + 0x000f] /* "DEX:" */); u4_putl(si->_dex, 2, '0');
 	txt_X = 32; u4_puts(/*D_18EC*/&AVATAR[0x10B9F + 0x000f] /* "HM:" */); u4_putl(si->_HP[1], 4, '0');
@@ -203,11 +203,11 @@ C_4A3D()
 	if(TST_MSK(Party.mItems, ST_BELL) || TST_MSK(Party.mItems, ST_BOOK) || TST_MSK(Party.mItems, ST_CANDLE)) {
 		txt_X = 24;
 		if(TST_MSK(Party.mItems, ST_BELL))
-			u4_puts(/*D_196A*/&AVATAR[0xF56C + 0x0005] /* "Bell " */);
+			u4_puts(/*D_196A*/&AVATAR[0x10C1D + 0x000f] /* "Bell " */);
 		if(TST_MSK(Party.mItems, ST_BOOK))
 			u4_puts(/*D_1970*/&AVATAR[0x10C23 + 0x000f] /* "Book " */);
 		if(TST_MSK(Party.mItems, ST_CANDLE)) {
-			u4_puts(/*D_1976*/&AVATAR[0xF5BA + 0x0005] /* "Candl" */);
+			u4_puts(/*D_1976*/&AVATAR[0x10C29 + 0x000f] /* "Candl" */);
 			if(!TST_MSK(Party.mItems, ST_BOOK) || !TST_MSK(Party.mItems, ST_BELL))
 				u4_putc('e');
 		}
@@ -226,17 +226,17 @@ C_4A3D()
 	}
 	if(TST_MSK(Party.mItems, ST_HORN)) {
 		txt_X = 24;
-		u4_puts(/*D_1988*/&AVATAR[0xF5DA + 0x0005] /* "Horn" */);
+		u4_puts(/*D_1988*/&AVATAR[0x10C3B + 0x000f] /* "Horn" */);
 		txt_Y ++;
 	}
 	if(TST_MSK(Party.mItems, ST_WHEEL)) {
 		txt_X = 24;
-		u4_puts(/*D_198D*/&AVATAR[0xF608 + 0x0005] /* "Wheel" */);
+		u4_puts(/*D_198D*/&AVATAR[0x10C40 + 0x000f] /* "Wheel" */);
 		txt_Y ++;
 	}
 	if(TST_MSK(Party.mItems, ST_SKULL)) {
 		txt_X = 24;
-		u4_puts(/*D_1993*/&AVATAR[0xF63B + 0x0005] /* "Skull" */);
+		u4_puts(/*D_1993*/&AVATAR[0x10C46 + 0x000f] /* "Skull" */);
 	}
 }
 
