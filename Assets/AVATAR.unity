@@ -10889,6 +10889,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 878740365}
   m_CullTransparentMesh: 1
+--- !u!1 &904614127 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 268469050809000917, guid: 264ae02e2b95e0345960362312f0ab15,
+    type: 3}
+  m_PrefabInstance: {fileID: 1131267912}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &911862441
 GameObject:
   m_ObjectHideFlags: 0
@@ -13719,6 +13725,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -23
       objectReference: {fileID: 0}
+    - target: {fileID: 268469050809000917, guid: 264ae02e2b95e0345960362312f0ab15,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 298512652734719669, guid: 264ae02e2b95e0345960362312f0ab15,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -13759,6 +13770,11 @@ PrefabInstance:
       propertyPath: engine
       value: 
       objectReference: {fileID: 999847451}
+    - target: {fileID: 454513468943453789, guid: 264ae02e2b95e0345960362312f0ab15,
+        type: 3}
+      propertyPath: m_Text
+      value: "\x10Vision\x11"
+      objectReference: {fileID: 0}
     - target: {fileID: 458592782859215419, guid: 264ae02e2b95e0345960362312f0ab15,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -22720,6 +22736,7 @@ MonoBehaviour:
   TextPanel: {fileID: 5510408783203706120}
   TalkLabel: {fileID: 450558600}
   ActionLabel: {fileID: 1131267913}
+  VisionLabel: {fileID: 904614127}
   ActionMainLoopInputPanel: {fileID: 1716875115350400504}
   ActionDungeonLoopInputPanel: {fileID: 7878401099464846622}
   ActionCombatLoopInputPanel: {fileID: 7878401099093439800}

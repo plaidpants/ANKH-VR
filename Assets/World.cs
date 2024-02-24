@@ -44,6 +44,7 @@ public class World : MonoBehaviour
     public GameObject TextPanel;
     public GameObject TalkLabel;
     public GameObject ActionLabel;
+    public GameObject VisionLabel;
     public GameObject ActionMainLoopInputPanel;
     public GameObject ActionDungeonLoopInputPanel;
     public GameObject ActionCombatLoopInputPanel;
@@ -1074,6 +1075,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkCitizen.SetActive(true);
 
             bool keyword1found = false;
@@ -1165,6 +1167,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkYN.SetActive(true);
         }
         else
@@ -1177,6 +1180,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkYesNo.SetActive(true);
         }
         else
@@ -1189,6 +1193,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkHealer.SetActive(true);
         }
         else
@@ -1203,6 +1208,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkContinue.SetActive(true);
             if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.DELAY_CONTINUE)
             {
@@ -1220,6 +1226,16 @@ public class World : MonoBehaviour
             }
             else
             {
+                if (u4.current_mode == U4_Decompiled_AVATAR.MODE.VISION)
+                {
+                    TalkLabel.SetActive(false);
+                    VisionLabel.SetActive(true);
+                }
+                else
+                {
+                    TalkLabel.SetActive(true);
+                    VisionLabel.SetActive(false);
+                }
                 TalkContinueButton.gameObject.SetActive(true);
             }
         }
@@ -1233,6 +1249,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             ActionLabel.SetActive(true);
             TalkLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             ActionMainLoopInputPanel.SetActive(true);
         }
         else
@@ -1245,6 +1262,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             ActionLabel.SetActive(true);
             TalkLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             ActionDungeonLoopInputPanel.SetActive(true);
         }
         else
@@ -1258,6 +1276,7 @@ public class World : MonoBehaviour
             // TODO: need to filter buttons like citizen talk with word list
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkHawWind.SetActive(true);
         }
         else
@@ -1270,6 +1289,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkFoodAle.SetActive(true);
         }
         else
@@ -1282,6 +1302,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkBuySell.SetActive(true);
         }
         else
@@ -1294,6 +1315,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(false);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkPartyCharacter.SetActive(true);
         }
         else
@@ -1316,6 +1338,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkPubWord.SetActive(true);
         }
         else
@@ -1339,6 +1362,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkMantras.SetActive(true);
         }
         else
@@ -1384,6 +1408,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkLordBritish.SetActive(true);
         }
         else
@@ -1407,6 +1432,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkVirtue.SetActive(true);
         }
         else
@@ -1433,6 +1459,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkEndGame.SetActive(true);
         }
         else
@@ -1458,6 +1485,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkUseItem.SetActive(true);
         }
         else
@@ -1481,6 +1509,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkColors.SetActive(true);
         }
         else
@@ -1493,6 +1522,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             Talk2DigitInput.SetActive(true);
         }
         else
@@ -1505,6 +1535,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             Talk3DigitInput.SetActive(true);
         }
         else
@@ -1517,6 +1548,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             ActionLabel.SetActive(true);
             TalkLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             ActionCombatLoopInputPanel.SetActive(true);
         }
         else
@@ -1529,6 +1561,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkWeapon.SetActive(true);
         }
         else
@@ -1541,6 +1574,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkArmor.SetActive(true);
         }
         else
@@ -1553,6 +1587,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkGuild.SetActive(true);
         }
         else
@@ -1565,6 +1600,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkReagents.SetActive(true);
         }
         else
@@ -1577,6 +1613,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkSpells.SetActive(true);
         }
         else
@@ -1589,6 +1626,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             Talk1DigitInput.SetActive(true);
         }
         else
@@ -1601,6 +1639,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkEnergy.SetActive(true);
         }
         else
@@ -1613,6 +1652,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkTelescope.SetActive(true);
         }
         else
@@ -1625,6 +1665,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkPhase.SetActive(true);
         }
         else
@@ -1637,6 +1678,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(true);
             TalkLabel.SetActive(true);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkDigit0123.SetActive(true);
         }
         else
@@ -1652,6 +1694,7 @@ public class World : MonoBehaviour
             InputPanel.SetActive(false);
             TalkLabel.SetActive(false);
             ActionLabel.SetActive(false);
+            VisionLabel.SetActive(false);
             TalkDirection.SetActive(false);
         }
         else
