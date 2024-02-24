@@ -1212,20 +1212,29 @@ public class World : MonoBehaviour
             TalkContinue.SetActive(true);
             if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.DELAY_CONTINUE)
             {
+                // there is a continue button to skip the delay but also a programmed automatic delay
                 TalkContinueButton.gameObject.SetActive(true);
             }
             else if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.DELAY_NO_CONTINUE)
             {
+                // there is no continue button, just a programed delay
                 TalkContinueButton.gameObject.SetActive(false);
 
+                // If dead and being returned to LBC2 the game uses DELAY_NO_CONTINUE "all is dark..."
+                // the end of game also uses DELAY_NO_CONTINUE and will display stuff with a vision 
+                // so check if there is a sprite to differentiate between these two conditions.
                 if (vision.sprite == null)
                 {
                     // no continue button and nothing to display so just disable the panel entirely
                     InputPanel.SetActive(false);
                 }
             }
-            else
+            else if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.GENERAL_CONTINUE)
             {
+                // there is a continue button and no programmed delay
+                TalkContinueButton.gameObject.SetActive(true);
+
+                // if vision mode is active set the input panel to vision label
                 if (u4.current_mode == U4_Decompiled_AVATAR.MODE.VISION)
                 {
                     TalkLabel.SetActive(false);
@@ -1236,11 +1245,11 @@ public class World : MonoBehaviour
                     TalkLabel.SetActive(true);
                     VisionLabel.SetActive(false);
                 }
-                TalkContinueButton.gameObject.SetActive(true);
             }
         }
         else
         {
+            // disable the continue input
             TalkContinue.SetActive(false);
         }
 
@@ -2382,6 +2391,11 @@ public class World : MonoBehaviour
         dungeon.SetActive(false);
         dungeonMonsters.SetActive(false);
 
+        for (int i = 0; i < (int)Combat.COMBAT_TERRAIN.MAX; i++)
+        {
+            Combat.CombatTerrains[i].gameObject.SetActive(false);
+        }
+
         Camera.main.clearFlags = CameraClearFlags.SolidColor;
         Camera.main.backgroundColor = Color.black;
     }
@@ -2792,6 +2806,7 @@ public class World : MonoBehaviour
 
         vision.sprite = Sprite.Create(visionTexture, new Rect(0.0f, 0.0f, visionTexture.width, visionTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
         vision.color = new Color(255f, 255f, 255f, 255f);
+        Debug.Log("Generate Map");
     }
 
     // used to convert the dungeon tiles into utlima font characters for display as text that will be able to render the dungeon map
@@ -3651,6 +3666,8 @@ public class World : MonoBehaviour
             if (lastModeCheck == U4_Decompiled_AVATAR.MODE.VISION)
             {
                 Picture.ClearTexture(visionTexture, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
+                vision.sprite = null;
+                vision.color = new Color(0f, 0f, 0f, 0f);
             }
 
             lastModeCheck = u4.current_mode;
@@ -3753,36 +3770,43 @@ public class World : MonoBehaviour
             }
             else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.VISION)
             {
-                if (u4.Party._loc == U4_Decompiled_AVATAR.LOCATIONS.OUTDOORS)
+                // Map display (telescope, peer gem) always uses GENERAL_CONTINUE but other vision modes
+                // like death and the end of game use DELAY_CONTINUE & DELAY_NO_CONTINUE
+                // we don't want generate and display the map
+                // in those situations so check the input mode here
+                if (u4.inputMode == U4_Decompiled_AVATAR.INPUT_MODE.GENERAL_CONTINUE)
                 {
-                    // we are in a outdoors, show an outdoor vision
-                    vision.transform.gameObject.SetActive(true);
-                    DungeonMapText.transform.gameObject.SetActive(false);
-                    DisplayMapVision();
-                }
-                else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
-                {
-                    // we are in a dungeon, show a dungeon vision
-                    vision.transform.gameObject.SetActive(false);
-                    DungeonMapText.transform.gameObject.SetActive(true);
-                    DungeonMapText.text = DisplayDungeonVision();
-                }
-                else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.COVE))
-                {
-                    // check which castle level we are on first
-                    if ((u4.Party._loc == U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == Tile.TILE.LADDER_UP))
+                    if (u4.Party._loc == U4_Decompiled_AVATAR.LOCATIONS.OUTDOORS)
                     {
-                        settlement = Settlement.SETTLEMENT.LCB_1;
+                        // we are in a outdoors, show an outdoor vision
+                        vision.transform.gameObject.SetActive(true);
+                        DungeonMapText.transform.gameObject.SetActive(false);
+                        DisplayMapVision();
                     }
-                    else
+                    else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
                     {
-                        settlement = (Settlement.SETTLEMENT)u4.Party._loc;
+                        // we are in a dungeon, show a dungeon vision
+                        vision.transform.gameObject.SetActive(false);
+                        DungeonMapText.transform.gameObject.SetActive(true);
+                        DungeonMapText.text = DisplayDungeonVision();
                     }
+                    else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.COVE))
+                    {
+                        // check which castle level we are on first
+                        if ((u4.Party._loc == U4_Decompiled_AVATAR.LOCATIONS.BRITANNIA) && (u4.tMap32x32[3, 3] == Tile.TILE.LADDER_UP))
+                        {
+                            settlement = Settlement.SETTLEMENT.LCB_1;
+                        }
+                        else
+                        {
+                            settlement = (Settlement.SETTLEMENT)u4.Party._loc;
+                        }
 
-                    // we are in a settlement, show a settlement vision
-                    vision.transform.gameObject.SetActive(true);
-                    DungeonMapText.transform.gameObject.SetActive(false);
-                    DisplayMapVision();
+                        // we are in a settlement, show a settlement vision
+                        vision.transform.gameObject.SetActive(true);
+                        DungeonMapText.transform.gameObject.SetActive(false);
+                        DisplayMapVision();
+                    }
                 }
                 else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.HONESTY) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.HUMILITY))
                 {
