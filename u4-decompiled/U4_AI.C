@@ -622,20 +622,27 @@ C_9F7B()
 				if(loc_C != -1)
 					C_9CBC(loc_A, loc_C, loc_F);
 			}
-			switch(Combat_MAP((unsigned char)Combat._npcY[loc_A], (unsigned char)Combat._npcX[loc_A])) {
-				case TIL_46: case TIL_4C:
-					if((unsigned char)Fighters._tile[loc_A] == TIL_E8 || (unsigned char)Fighters._tile[loc_A] >= TIL_F0)
+#ifndef WIN32
+			__android_log_print(ANDROID_LOG_INFO, "ANKH", "tile effects check %d, %d", Combat._npcY[loc_A], Combat._npcX[loc_A]);
+#endif
+			// only check for tile effects if fighter is not outside combat map
+			if (((unsigned char)Combat._npcY[loc_A] < 11) && ((unsigned char)Combat._npcX[loc_A] < 11))
+			{
+				switch (Combat_MAP((unsigned char)Combat._npcY[loc_A], (unsigned char)Combat._npcX[loc_A])) {
+					case TIL_46: case TIL_4C:
+						if ((unsigned char)Fighters._tile[loc_A] == TIL_E8 || (unsigned char)Fighters._tile[loc_A] >= TIL_F0)
+							break;
+					case TIL_44:
+						sound(6, 0);
+						COM_DoDamage(loc_A, -1, U4_RND1(0x7f));
 						break;
-				case TIL_44:
-					sound(6,0);
-					COM_DoDamage(loc_A, -1, U4_RND1(0x7f));
-				break;
-				case TIL_47:
-					if(C_636D((unsigned char)Fighters._tile[loc_A]) == 0 && (unsigned char)Fighters._HP[loc_A] >= u_rand_a()) {
-						Fighters._sleeping[loc_A] = 1;
-						sound(6,0);
-					}
-				break;
+					case TIL_47:
+						if (C_636D((unsigned char)Fighters._tile[loc_A]) == 0 && (unsigned char)Fighters._HP[loc_A] >= u_rand_a()) {
+							Fighters._sleeping[loc_A] = 1;
+							sound(6, 0);
+						}
+						break;
+				}
 			}
 		}
 	}
