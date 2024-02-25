@@ -2806,7 +2806,6 @@ public class World : MonoBehaviour
 
         vision.sprite = Sprite.Create(visionTexture, new Rect(0.0f, 0.0f, visionTexture.width, visionTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
         vision.color = new Color(255f, 255f, 255f, 255f);
-        Debug.Log("Generate Map");
     }
 
     // used to convert the dungeon tiles into utlima font characters for display as text that will be able to render the dungeon map
@@ -3294,10 +3293,11 @@ public class World : MonoBehaviour
             {
                 // the game engine uses the lower quality .pic files, we will load the higher quality .EGA ones instead
                 Picture.LoadAVATAREGAFile(u4.visionFilename.Replace(".pic", ".EGA"), visionTexture);
+                Debug.Log(u4.visionFilename);
                 vision.sprite = Sprite.Create(visionTexture, new Rect(0.0f, 0.0f, visionTexture.width, visionTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
                 vision.color = new Color(255f, 255f, 255f, 255f);
 
-                lastVisionFilename = u4.visionFilename;
+                Debug.Log("load vision" + u4.visionFilename);
             }
             else
             {
@@ -3305,6 +3305,8 @@ public class World : MonoBehaviour
                 vision.color = new Color(0f, 0f, 0f, 0f);
                 Picture.ClearTexture(visionTexture, Palette.EGAColorPalette[(int)Palette.EGA_COLOR.BLACK]);
             }
+
+            lastVisionFilename = u4.visionFilename;
         }
     }
 
@@ -3770,7 +3772,7 @@ public class World : MonoBehaviour
             }
             else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.VISION)
             {
-                // Map display (telescope, peer gem) always uses GENERAL_CONTINUE but other vision modes
+                // Map display (telescope, peer gem, shrine vision) always uses GENERAL_CONTINUE but other vision modes
                 // like death and the end of game use DELAY_CONTINUE & DELAY_NO_CONTINUE
                 // we don't want generate and display the map
                 // in those situations so check the input mode here
@@ -3807,13 +3809,13 @@ public class World : MonoBehaviour
                         DungeonMapText.transform.gameObject.SetActive(false);
                         DisplayMapVision();
                     }
-                }
-                else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.HONESTY) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.HUMILITY))
-                {
-                    // we are in a shrine
-                    // TODO: should move the shrine stuff into same place as here so we handle all the vision stuff in one place
-                    vision.transform.gameObject.SetActive(true);
-                    DungeonMapText.transform.gameObject.SetActive(false);
+                    else if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.HONESTY) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.HUMILITY))
+                    {
+                        // we are in a shrine
+                        // TODO: should move the shrine stuff into same place as here so we handle all the vision stuff in one place
+                        vision.transform.gameObject.SetActive(true);
+                        DungeonMapText.transform.gameObject.SetActive(false);
+                    }
                 }
             }
 
