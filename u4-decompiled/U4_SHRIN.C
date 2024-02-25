@@ -94,6 +94,7 @@ C_E72C()
 C_E755:
 		CurMode = MOD_OUTDOORS;
 		Party._loc = 0;
+		u_kbflush();
 		return 0;
 	}
 	if(Load(/*D_83BA*/&AVATAR[0x1762C + 0x0037] /* "SHRINE.CON" */, 11 * 11, Combat._map) == -1)
@@ -128,6 +129,8 @@ C_E755:
 			add_char_to_text_buffer('.');
 		}
 		u_kbflush();
+		u4_putc('\n');
+		add_char_to_text_buffer('\n');
 		u4_puts(/*D_84C4*/&AVATAR[0x17736 + 0x0037] /* "\nMantra: " */);
 		set_input_mode(INPUT_MODE_MANTRA_WORD);
 		u4_gets(loc_D, 15);
