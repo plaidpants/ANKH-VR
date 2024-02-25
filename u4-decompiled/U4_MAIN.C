@@ -705,11 +705,17 @@ static char current_vision[256] = "";
 
 const char* get_current_vision()
 {
+#ifndef _WINDOWS
+//	__android_log_print(ANDROID_LOG_INFO, "ANKH", "get_current_vision %s", &current_vision[0]);
+#endif
 	return &current_vision[0];
 }
 
 __declspec(dllexport) void main_GetVision(unsigned char vision[], int length)
 {
+#ifndef _WINDOWS
+//	__android_log_print(ANDROID_LOG_INFO, "ANKH", "main_GetVision %s", &current_vision[0]);
+#endif
 	// is the vision too big for our buffer + null terminator?
 	if (length < 256)
 	{
@@ -1035,7 +1041,7 @@ Current output
 				case KBD_a: CMD_Attack(); break;
 				case KBD_b: CMD_Board(); break;
 				case KBD_c: CMD_Cast(); break;
-				case KBD_d: CMD_Descend();  break;
+				case KBD_d: CMD_Descend(); break;
 				case KBD_e: CMD_Enter(); break;
 				case KBD_f: CMD_Fire(); break;
 				case KBD_g: CMD_Get(); break;
@@ -1063,6 +1069,7 @@ Current output
 						C_1C21();
 						break;
 					}
+//					u4_puts("testing2");
 				default:
 					u4_puts(&AVATAR[0xF940 + 0x0005]); // "Bad command!\n"
 					sound(2,0);
