@@ -348,7 +348,9 @@ register unsigned si;
 	D_9772 = D_8742._npc._x[si];
 	D_9140 = D_8742._npc._y[si];
 	if(Party._loc == 0x00) {
-		D_946C = D_8742._map.x32x32[(D_9140 - (D_95A5.y<<4))][(D_9772 - (D_95A5.x<<4))];
+		/*MAP EDGE FIX*/
+		D_946C = D_8742._map.x32x32[u4_wrap(D_9140 - (D_95A5.y * 16))][u4_wrap(D_9772 - (D_95A5.x * 16))];
+		//D_946C = D_8742._map.x32x32[(D_9140 - (D_95A5.y<<4))][(D_9772 - (D_95A5.x<<4))];
 	} else {
 		D_946C = D_8742._map.x32x32[D_9140][D_9772];
 	}

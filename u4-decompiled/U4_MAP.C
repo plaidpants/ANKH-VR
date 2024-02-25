@@ -451,8 +451,10 @@ C_2C25()
 		}
 		/*spawn demons on verity island?*/
 		if(
-			Party._x >= 0xe5 && Party._x < 0xea &&
-			Party._y >= 0xd4 && Party._y < 0xd9
+			//Party._x >= 0xe5 && Party._x < 0xea &&
+			//Party._y >= 0xd4 && Party._y < 0xd9
+			IsBetween(Party._x, 0xe5, 0xea) &&
+			IsBetween(Party._y, 0xd4, 0xd9)
 		) C_27D9();
 	}
 }
