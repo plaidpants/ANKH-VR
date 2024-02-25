@@ -238,8 +238,9 @@ __attribute__((packed))
 #endif
 ;
 
+// added protection to access outside the map, will use Combat._map[0,0] if outside map
 
-#define Combat_MAP(a,b) (Combat._map[(a)*11+(b)])
+#define Combat_MAP(a,b) (Combat._map[(a < 11 && b < 11) ? (a)*11+(b) : 0])
 
 struct t_68 {
 	/*000*/char _x[16],_y[16];
