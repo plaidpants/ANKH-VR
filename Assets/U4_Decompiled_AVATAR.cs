@@ -13,6 +13,7 @@ using Meta.WitAi.TTS;
 using Meta.WitAi.TTS.Data;
 using System.Linq;
 using System.Text;
+using UnityEngine.Networking; // Required for UnityWebRequest
 
 public class U4_Decompiled_AVATAR : MonoBehaviour
 {
@@ -1673,63 +1674,92 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     }
 
     IEnumerator LoadSongCoroutine(string path, MUSIC index)
+{
+    string url = string.Format("file://{0}", path);
+    using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(url, DetermineAudioType(path)))
     {
-        string url = string.Format("file://{0}", path);
-        //Debug.Log("Load #" + (int)index + " " + url);
-        WWW www = new WWW(url);
-        yield return www;
-        // note the updated interface does not seem to work with local files so don't bother updating until Unity fixes this
-        //Debug.Log("Loaded #" + (int)index + " " + url);
-        try
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
         {
-            music[(int)index] = www.GetAudioClip(false, false);
+            Debug.Log("Not Loaded #" + (int)index + " " + url + ", Error: " + www.error);
         }
-        catch
+        else
         {
-            Debug.Log("Not Loaded #" + (int)index + " " + url);
+            try
+            {
+                AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
+                music[(int)index] = clip;
+                //Debug.Log("Loaded #" + (int)index + " " + url);
+            }
+            catch
+            {
+                Debug.Log("Not Loaded #" + (int)index + " " + url);
+            }
         }
     }
+}
 
-    /* 
-    sound sample information from DOS version for sound 9 & 10, measured manually
+// Helper method to determine the audio type based on file extension
+private AudioType DetermineAudioType(string path)
+{
+    if (path.EndsWith(".mp3", System.StringComparison.OrdinalIgnoreCase))
+    {
+        return AudioType.MPEG;
+    }
+    else if (path.EndsWith(".ogg", System.StringComparison.OrdinalIgnoreCase))
+    {
+        return AudioType.OGGVORBIS;
+    }
+    // Add more formats as needed
+    else
+    {
+        Debug.LogWarning("Unknown audio type for file: " + path);
+        return AudioType.UNKNOWN;
+    }
+}
 
-    40 up down cycles per random tone for sound 10
 
-    cure
-    sound 10 length 5 followed by
-    sound 9 length 98
+/* 
+sound sample information from DOS version for sound 9 & 10, measured manually
 
-    heal
-    sound 10 length 10 followed by
-    sound 9 length 103, total length 1.103s 51 pulses in .022 seconds or 2318 pulses per second for a total of 2557 pulses over 1.103s
-    103 -> 1.103s -> ratio is 93
+40 up down cycles per random tone for sound 10
 
-    moongate 
-    sound 9 lenth 160, total length 1.685s  42 pulses in .028 seconds or 1500 pulses per second or 2527.5 pulses over 1.685s
-    160 -> 1.685 -> ratio is 95
+cure
+sound 10 length 5 followed by
+sound 9 length 98
 
-    assumed 2560 total pulses over ~length/94 seconds
-    */
+heal
+sound 10 length 10 followed by
+sound 9 length 103, total length 1.103s 51 pulses in .022 seconds or 2318 pulses per second for a total of 2557 pulses over 1.103s
+103 -> 1.103s -> ratio is 93
 
-    /* from apple2 assembly
+moongate 
+sound 9 lenth 160, total length 1.685s  42 pulses in .028 seconds or 1500 pulses per second or 2527.5 pulses over 1.685s
+160 -> 1.685 -> ratio is 95
+
+assumed 2560 total pulses over ~length/94 seconds
+*/
+
+/* from apple2 assembly
 sfx_magic1:
-	stx zp_sfx_duration
+stx zp_sfx_duration
 @1:
-	jsr rand // get a random value
-	ldx #$28 // 40
+jsr rand // get a random value
+ldx #$28 // 40
 @2:
-	tay  // y = a i.e. use random value in y
+tay  // y = a i.e. use random value in y
 @3:
-	dey // y--
-	bne @3 // if y == 0, delay loop
-	bit hw_SPEAKER
-	dex // x-- count to 40
-	bne @2
-	dec zp_sfx_duration  // length
-	bne @1
-	rts
-    */
-    AudioClip CreateMagicSpecialEffectSound(int length)
+dey // y--
+bne @3 // if y == 0, delay loop
+bit hw_SPEAKER
+dex // x-- count to 40
+bne @2
+dec zp_sfx_duration  // length
+bne @1
+rts
+*/
+AudioClip CreateMagicSpecialEffectSound(int length)
     {
         float sampleRate = 44100;
         float max = 500f;
