@@ -4468,8 +4468,8 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
                     string adjusted = sentence.Replace('\n', ' ');
                     adjusted = adjusted.Replace('\r', ' ');
                     // fix the pronounciation of Thee and tsetse
-                    adjusted = adjusted.Replace("thee", "<phoneme ph=\"ði\" alphabet=\"ipa\">thee</phoneme>"); //, System.StringComparison.CurrentCultureIgnoreCase);
-                    adjusted = adjusted.Replace("tsetse", "<phoneme ph=\"tsɛt si\" alphabet=\"ipa\">tsetse</phoneme>"); //, System.StringComparison.CurrentCultureIgnoreCase);
+                    adjusted = adjusted.Replace("thee", "<phoneme ph=\"ði\" alphabet=\"ipa\">thee</phoneme>"); 
+                    adjusted = adjusted.Replace("tsetse", "<phoneme ph=\"tsɛt si\" alphabet=\"ipa\">tsetse</phoneme>");
 
                     // add all the mantra's here as none seem to be pronounced properly
                     /* ahm,mu,ra,beh,cah,summ,om,lum */
@@ -4477,6 +4477,7 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
                     adjusted = adjusted.Replace("beh", "<phoneme ph=\"bɛ\" alphabet=\"ipa\">beh</phoneme>");
                     adjusted = adjusted.Replace("cah", "<phoneme ph=\"kɑː\" alphabet=\"ipa\">cah</phoneme>");
                     adjusted = adjusted.Replace("lum", "<phoneme ph=\"lʌm\" alphabet=\"ipa\">lum</phoneme>");
+                    // these are not unique strings so we must only replace them if they are a single word.
                     string pattern;
                     pattern = $@"\b{Regex.Escape("om")}\b";
                     adjusted = Regex.Replace(adjusted, pattern, "<phoneme ph=\"oʊm\" alphabet=\"ipa\">om</phoneme>", RegexOptions.IgnoreCase);
