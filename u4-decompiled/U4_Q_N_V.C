@@ -9,6 +9,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+struct tNPC temp;
+
 /*C_6F29*/CMD_Quit()
 {
 	u4_puts(/*D_21A2*/&AVATAR[0x11455 + 0x000f] /* "Quit & Save...\n" */);
@@ -38,6 +40,11 @@
 		/*Force doors to close before saving*/
 		C_431D(); C_431D(); C_431D(); C_431D(); C_431D();
 		if(Save("TOWNMAP.SAV", sizeof(struct t_500), &D_8742) == -1)
+			exit(3);
+		// Update the outdoor map save to the latest which was saved when we entered
+		if(Load("OUTMONST.SAV", sizeof(struct tNPC), &temp) == -1)
+			exit(3);
+		if(Save("MONSTERS.SAV", sizeof(struct tNPC), &temp) == -1)
 			exit(3);
 		return 0;
 	}
