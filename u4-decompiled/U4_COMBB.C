@@ -109,32 +109,28 @@ C_79C9(bp06, bp04)
 unsigned char bp06;
 unsigned char bp04;
 {
-	if(CurMode == MOD_COM_ROOM) {
+	if (CurMode == MOD_COM_ROOM) {
 		/*-- dungeon room --*/
-		/*someone already exited W/E*/
-		if(D_96EE != 0) {
-			if(bp06 != (unsigned char)D_96EE) {
+		if (D_96EE != 0) {
+			if (bp06 == D_96EE)
+				goto C_7A0C;
 			w_SameExit();
 			return 0;
-			}
-			C_7962();
-			return 0;
 		}
-		/*someone already exited N/S*/
-		if(D_96F4 != 0) {
-			if(bp04 != (unsigned char)D_96F4) {
+		else if (D_96F4 != 0) {
+			if (bp04 == D_96F4)
+				goto C_7A0C;
 			w_SameExit();
 			return 0;
-			}
-			C_7962();
-			return 0;
 		}
-		/*-- --*/
-		if(bp06 > 10)
+		else if (bp06 > 10) {
 			D_96EE = bp06;
-		else
+		}
+		else {
 			D_96F4 = bp04;
+		}
 	}
+C_7A0C:
 	C_7962();
 }
 
@@ -145,27 +141,51 @@ unsigned char bp06;
 unsigned char bp04;
 {
 	register int /*si*/loc_A;
-	int loc_B, loc_C/*bp_04, bp_06*/;
+	int loc_B, loc_C, loc_D, loc_E, loc_AShift/*bp_04, bp_06*/;
 
-	for(loc_A = 3; loc_A >= 0; loc_A --) {
-		if(D_95B2[(loc_A << 2)]) {
-			if(
-				(bp06 << 12) == (*(U16 *)(D_95B2+(loc_A << 2)) & 0xf000) &&
-				(bp04 <<  8) == (*(U16 *)(D_95B2+(loc_A << 2)) & 0x0f00)
-			) {
-				loc_B = *(U16 *)(D_95B2+(loc_A << 2)+2) & 0xf;
-				if(
-					loc_B |
-					(loc_C = (*(U16 *)(D_95B2+(loc_A << 2)+2) >> 4) & 0xf)
-				) Combat_MAP(loc_B, loc_C) = D_95B2[(loc_A << 2)];
-				loc_B = (*(U16 *)(D_95B2+(loc_A << 2)+2) >> 8) & 0xf;
-				if(
-					loc_B |
-					(loc_C = (*(U16 *)(D_95B2+(loc_A << 2)+2) >> 12) & 0xf)
-				) Combat_MAP(loc_B, loc_C) = D_95B2[(loc_A << 2)] & 0xff;
+	for(loc_A = 12; loc_A >= 0; loc_A = loc_A - 4) {
+		if(D_95B2[loc_A]) {
+
+			if (
+				(bp06 << 12) == (*(U16 *)(D_95B2 + loc_A) & 0xf000) &&
+				(bp04 <<  8) == (*(U16 *)(D_95B2 + loc_A) & 0x0f00)
+				) {
+				loc_AShift = 0;
+				while (loc_AShift <= 8) {
+
+					loc_B = (*(U16 *)(D_95B2 + loc_A + 2) >> loc_AShift) & 0xf;
+					if (
+						loc_B |
+						(loc_C = (*(U16 *)(D_95B2 + loc_A + 2) >> (loc_AShift + 4)) & 0xf)
+						)
+					{
+						/*DAEMON TRIGGER FIX*/
+						if (U4_RND1(7) < 8 || D_95B2[loc_A] < TIL_80) {
+							Combat_MAP(loc_B, loc_C) = D_95B2[loc_A];
+						}
+						else {
+							loc_D = 15;
+							while (loc_D >= 0 && Fighters._tile[loc_D]) {
+								loc_D--;
+							}
+							if (loc_D != -1) {
+
+								PrepFighters(loc_D, D_95B2[loc_A]);
+								/*Fighters._tile[loc_D] = Fighters._gtile[loc_D] = D_95B2[loc_A];
+								loc_E = D_23D2[C_7C25(D_95B2[loc_A])];
+								Fighters._HP[loc_D] = (loc_E >> 1) | U4_RND4(loc_E);*/
+
+								Combat._npcX[loc_D] = loc_C;
+								Combat._npcY[loc_D] = loc_B;
+							}
+						}
+
+					}
+					loc_AShift = loc_AShift + 8;
+				}
 			}
 		}
-}
+	}/* while(--loc_A >= 0);*/
 }
 
 /*move [fight]*/
