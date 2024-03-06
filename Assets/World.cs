@@ -1107,8 +1107,10 @@ public class World : MonoBehaviour
                     string lowerKeyword1 = Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD1].ToLower().TrimEnd(); ;
 
                     if ((lowerKeyword1 != "a") && // ignore the A in the talk file as they mean blank
+                        (((lowerKeyword1.Length > 3) && // only match partial words if 4 or more characters
                         (lower.Length >= lowerKeyword1.Length) && // must be at least as long as the keyword we are looking for
-                        (lower.Substring(0, lowerKeyword1.Length) == lowerKeyword1)) // match the whole keyword to the trimmed word from the word list even though input only checks the first 4 characters
+                        (lower.Substring(0, lowerKeyword1.Length) == lowerKeyword1)) || // match the whole keyword to the trimmed word from the word list even though input only checks the first 4 characters
+                        ((lower == lowerKeyword1) && (lowerKeyword1.Length < 4)))) // match the whole word if less that 4 characters
                     {
                         // use the whole word from the word list
                         u4.keyword1 = lower;
@@ -1126,8 +1128,10 @@ public class World : MonoBehaviour
                     string lowerKeyword2 = Settlement.settlementNPCs[(int)settlement][(int)u4.npcTalkIndex].strings[(int)Settlement.NPC_STRING_INDEX.KEYWORD2].ToLower().TrimEnd(); ;
 
                     if ((lowerKeyword2 != "a") && // ignore the A in the talk file as they mean blank
+                        (((lowerKeyword2.Length > 3) && // only match partial words if 4 or more characters
                         (lower.Length >= lowerKeyword2.Length) && // must be at least as long as the keyword we are looking for
-                        (lower.Substring(0, lowerKeyword2.Length) == lowerKeyword2)) // match the whole keyword to the trimmed word from the word list even though input only checks the first 4 characters
+                        (lower.Substring(0, lowerKeyword2.Length) == lowerKeyword2)) || // match the whole keyword to the trimmed word from the word list even though input only checks the first 4 characters
+                        ((lower == lowerKeyword2) && (lowerKeyword2.Length < 4)))) // match the whole word if less that 4 characters
                     {
                         // use the whole word from the word list
                         u4.keyword2 = lower;
