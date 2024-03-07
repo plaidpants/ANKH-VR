@@ -49,6 +49,20 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     public VOICE_ENVIRONMENT_IDS speakerEnviorment = VOICE_ENVIRONMENT_IDS.NONE;
     public VOICE_CHARACTER_IDS speakerCharacter = VOICE_CHARACTER_IDS.NONE;
 
+    private static readonly string[] YourInterestSubstituteResponses =
+    {
+        "I'm all ears",
+        "I'm listening",
+        "You have my attention",
+        "Your interest",
+        "Go on...",
+        "Anything else",
+        "Is that all",
+        "Anything to add",
+        "Speak thine mind",
+        "Speak your piece",
+        "What say you?"
+    };
     public enum TALK_INDEX
     {
         LORD_BRITISH = 0xff,
@@ -1209,12 +1223,55 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
 
     public void CommandVolume()
     {
+        // if both sound and voice are on turn them both off
+        if (SoundFlag == 1 && VoiceFlag == 1)
+        {
 #if USE_UNITY_DLL_FUNCTION
-        main_keyboardHit('V');
+            main_keyboardHit('V'); // this will turn off the soundFlag
 #else
         Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'V');
 #endif
-        lastKeyboardHit = 'V';
+            lastKeyboardHit = 'V';
+
+            // turn this off manually
+            VoiceFlag = 0;
+        }
+        else if (SoundFlag == 0 && VoiceFlag == 0)
+        {
+#if USE_UNITY_DLL_FUNCTION
+            main_keyboardHit('V'); // this will turn on the soundFlag
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'V');
+#endif
+            lastKeyboardHit = 'V';
+
+            // leave this off
+            VoiceFlag = 0;
+        }
+        else if (SoundFlag == 1 && VoiceFlag == 0)
+        {
+#if USE_UNITY_DLL_FUNCTION
+            main_keyboardHit('V'); // this will turn off the soundFlag
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'V');
+#endif
+            lastKeyboardHit = 'V';
+
+            // turn this on manually
+            VoiceFlag = 1;
+        }
+        else if (SoundFlag == 0 && VoiceFlag == 1)
+        {
+#if USE_UNITY_DLL_FUNCTION
+            main_keyboardHit('V'); // this will turn on the soundFlag
+#else
+        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'V');
+#endif
+            lastKeyboardHit = 'V';
+
+            // leave this on
+            VoiceFlag = 1;
+        }
     }
 
     public void CommandWear()
@@ -4468,7 +4525,7 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
                     string adjusted = sentence.Replace('\n', ' ');
                     adjusted = adjusted.Replace('\r', ' ');
                     // fix the pronounciation of Thee and tsetse
-                    adjusted = adjusted.Replace("thee", "<phoneme ph=\"ði\" alphabet=\"ipa\">thee</phoneme>"); 
+                    adjusted = adjusted.Replace("thee", "<phoneme ph=\"ði\" alphabet=\"ipa\">thee</phoneme>");
                     adjusted = adjusted.Replace("tsetse", "<phoneme ph=\"tsɛt si\" alphabet=\"ipa\">tsetse</phoneme>");
 
                     // add all the mantra's here as none seem to be pronounced properly
@@ -4502,6 +4559,9 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
                     // fix conflict with html <>
                     adjusted = adjusted.Replace(">must<", "<emphasis level=\"strong\">must</emphasis>");
                     adjusted = adjusted.Replace(">often<", "<emphasis level=\"strong\">often</emphasis>");
+
+                    // change up the response text a bit
+                    //adjusted = adjusted.Replace("Your Interest", YourInterestSubstituteResponses[Random.Range(0, YourInterestSubstituteResponses.Length)]);
 
                     // Add ssml tags to the front and back, this is always needed to support inline modifications such as <phoneme> above
                     string prepend = "<speak>";
@@ -4549,11 +4609,14 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
                     speaker.AppendedText = append;
 
                     Debug.Log(prepend);
-                    Debug.Log(adjusted); 
+                    Debug.Log(adjusted);
                     Debug.Log(append);
 
                     // Speak the text
-                    speaker.SpeakQueued(adjusted);
+                    if (VoiceFlag == 1)
+                    {
+                        speaker.SpeakQueued(adjusted);
+                    }
                 }
             }
 
@@ -4998,6 +5061,7 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
     public int open_door_y;
     public int open_door_timer;
     public int SoundFlag;
+    public int VoiceFlag = 1;
     public int screen_xor_state;
     public int camera_shake; 
     public int D_1665;
