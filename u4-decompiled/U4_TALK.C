@@ -270,6 +270,28 @@ char *bp04;
 
 extern char* D_1738[];
 
+char* YourInterestSubstituteResponses[] =
+{
+	&AVATAR[0x11F18 + 0x0017], //"Your interest",
+	"\nI'm all ears?\n",
+	"\nI'm listening?\n",
+	"\nSpeak?\n",
+	"\nYou have my attention?\n",
+	"\nWhat's on your mind?\n",
+	"\nLet's hear it?\n",
+	"\nI'm waiting?\n",
+	"\nIs that all?\n",
+	"\nGo on...?\n",
+	"\nAnything else?\n",
+	"\nAnything to add?\n",
+	"\nSpeak your mind?\n",
+	"\nSpeak thine mind?\n",
+	"\nSpeak your piece?\n",
+	"\nWhat say you?\n",
+	"\nWhat would thou ask of me?\n"
+};
+
+
 /*talk to citizen*/
 C_A4B4(bp04)
 int bp04;
@@ -368,8 +390,11 @@ int bp04;
 	do {
 		register int si;
 		char bp_12[12];
-		u4_puts(/*D_2C6D*/&AVATAR[0x11F18 + 0x0017] /* "\nYour Interest:\n" */);
-		add_npc_talk(bp04, &AVATAR[0x11F18 + 0x0017] /* "Your Interest?\n" */);
+		//u4_puts(/*D_2C6D*/&AVATAR[0x11F18 + 0x0017] /* "\nYour Interest:\n" */);
+		//add_npc_talk(bp04, &AVATAR[0x11F18 + 0x0017] /* "Your Interest?\n" */);
+		si = u_rand_a() % 16;
+		u4_puts(YourInterestSubstituteResponses[si]);
+		add_npc_talk(bp04, YourInterestSubstituteResponses[si]);
 		set_input_mode(INPUT_MODE_CITIZEN_WORD);
 		u4_gets(bp_12, 11);
 		Gra_CR();
