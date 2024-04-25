@@ -365,53 +365,6 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         RUNG_BELL = 0x1000 // The Bell rings on and on!
     }
 
-#if !USE_UNITY_DLL_FUNCTION
-    static System.IntPtr nativeLibraryPtr;
-
-    delegate void main();
-    delegate MODE main_CurMode();
-    delegate Tile.TILE main_D_96F8();
-    delegate Tile.TILE main_D_946C();
-    delegate int main_D_95A5_x();
-    delegate int main_D_95A5_y();
-    delegate void main_keyboardHit(char key);
-    delegate void main_CurMap(byte[] buffer, int length);
-    delegate void main_Combat(byte[] buffer, int length);
-    delegate void main_Fighters(byte[] buffer, int length);
-    delegate void main_D_96F9(byte[] buffer, int length);
-    delegate void main_Party(byte[] buffer, int length);
-    delegate void main_Hit(byte[] buffer, int length);
-    delegate void main_ActiveChar(byte[] buffer, int length);
-    delegate Tile.TILE main_tile_cur();
-    delegate DIRECTION main_WindDir();
-    delegate int main_spell_sta();
-    delegate int main_Text(byte[] buffer, int length);
-    delegate int main_D_9445(); // moongate x
-    delegate int main_D_9448(); // moongate y
-    delegate Tile.TILE main_D_9141(); // moongate tile
-    delegate int main_NPC_Text(byte[] buffer, int length);
-    delegate int main_D_17FA();
-    delegate int main_D_17FC();
-    delegate int main_D_17FE();
-    delegate int main_SoundFlag();
-    delegate void main_SetDataPath(byte[] buffer, int length);
-    delegate void main_char_highlight(byte[] buffer, int length);
-    delegate int main_sound_effect();
-    delegate int main_sound_effect_length();
-    delegate void main_sound_effect_done();
-    delegate int main_screen_xor_state();
-    delegate int main_camera_shake_accumulator();
-    delegate int main_D_1665();
-    delegate int main_D_1666();
-    delegate INPUT_MODE main_input_mode();
-    delegate ZSTATS_MODE main_zstats_mode();
-    delegate int main_zstats_character();
-    delegate void main_set_dir(DIRECTION direction);
-    delegate void main_GetVision(byte[] buffer, int length);
-    delegate void main_Set_Combat(byte[] buffer, int length);
-    delegate void main_Set_Fighters(byte[] buffer, int length);
-#endif
-
     string wordSaveFilePath;
 
     public void LoadWordList()
@@ -441,38 +394,6 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         //Debug.Log("Load songs");
         LoadSongs();
 
-#if !USE_UNITY_DLL_FUNCTION
-        //Debug.Log("Patch AVATAR.EXE to AVATAR.DLL");
-        // create a DLL file from the original DOS AVATAR.EXE file by patching it
-        var sourceFile = new FileInfo(Application.persistentDataPath + "/u4/AVATAR.EXE");
-        var patchFile = new FileInfo(Application.persistentDataPath + "/u4/AVATAR.bps");
-#if PLATFORM_ANDROID && !UNITY_EDITOR
-        var targetFile = new FileInfo(Application.persistentDataPath + "/u4/AVATAR.so");
-#else
-        var targetFile = new FileInfo(Application.persistentDataPath + "/u4/AVATAR.DLL");
-#endif
-
-        DecoderBSP.ApplyPatch(sourceFile, patchFile, targetFile);
-
-
-        //Debug.Log("Load AVATAR library");
-        // now attempt to load this DLL
-        if (nativeLibraryPtr != System.IntPtr.Zero)
-        {
-            return;
-        }
-
-#if PLATFORM_ANDROID && !UNITY_EDITOR
-        nativeLibraryPtr = Native.dlopen(Application.persistentDataPath + "/u4/AVATAR", (int)Native.PosixDlopenFlags.Now);
-#else
-        nativeLibraryPtr = Native.LoadLibrary(Application.persistentDataPath + "/u4/AVATAR.DLL");
-#endif
-        if (nativeLibraryPtr == System.IntPtr.Zero)
-        {
-            Debug.LogError("Failed to load native library");
-        }
-#endif
-
         // Set the data path for the DLL before we start the thread,
         // cstring are hard so we will just send the string buffer and a length.
         string path = Application.persistentDataPath + "/u4/";
@@ -481,14 +402,9 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
             buffer[i] = (byte)path[i];
         }
         buffer[path.Length] = 0;
-#if USE_UNITY_DLL_FUNCTION
         main_SetDataPath(buffer, path.Length);
-#else
-        Native.Invoke<main_SetDataPath>(nativeLibraryPtr, buffer, path.Length); 
-#endif
     }
 
-#if USE_UNITY_DLL_FUNCTION
 #if PLATFORM_ANDROID && !UNITY_EDITOR
     // interface to the game engine
     [DllImport("libAVATAR")]
@@ -661,7 +577,6 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     public static extern void main_Set_Combat(byte[] buffer, int length);
     [DllImport("AVATAR")]
     public static extern void main_Set_Fighters(byte[] buffer, int length);
-#endif
 #endif
 
     float timer = 0.0f;
@@ -877,11 +792,7 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     private void ThreadTask()
     {
         // start the DLL main thread
-#if USE_UNITY_DLL_FUNCTION
         main();
-#else
-        Native.Invoke<main>(nativeLibraryPtr);
-#endif
     }
 
 
@@ -920,304 +831,207 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
 
     public void CommandAttack()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('A');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'A');
-#endif
         lastKeyboardHit = 'A';
     }
 
     public void CommandCharacter1()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('1');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'1');
-#endif
+
         lastKeyboardHit = '1';
     }
 
     public void CommandCharacter2()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('2');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'2');
-#endif
+
         lastKeyboardHit = '2';
     }
     public void CommandCharacter3()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('3');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'3');
-#endif
+
         lastKeyboardHit = '3';
     }
     public void CommandCharacter4()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('4');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'4');
-#endif
+
         lastKeyboardHit = '4';
     }
     public void CommandCharacter5()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('5');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'5');
-#endif
+
         lastKeyboardHit = '5';
     }
     public void CommandCharacter6()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('6');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'6');
-#endif
+
         lastKeyboardHit = '6';
     }
     public void CommandCharacter7()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('7');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'7');
-#endif
+
         lastKeyboardHit = '7';
     }
     public void CommandCharacter8()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('8');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'8');
-#endif
+
         lastKeyboardHit = '8';
     }
     public void CommandCharacter9()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('9');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'9');
-#endif
+
         lastKeyboardHit = '9';
     }
     public void CommandBoard()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('B');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'B');
-#endif
+
         lastKeyboardHit = 'B';
     }
 
     public void CommandCast()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('C');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'C');
-#endif
+
         lastKeyboardHit = 'C';
     }
 
     public void CommandDecsend()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('D');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'D');
-#endif
+
         lastKeyboardHit = 'D';
     }
     public void CommandEnter()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('E');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'E');
-#endif
+
         lastKeyboardHit = 'E';
     }
     public void CommandBackspace()
-    {
-#if USE_UNITY_DLL_FUNCTION
+    {  
         main_keyboardHit((char)KEYS.VK_BACK);
-#else
-        Native.Invoke<main_keyboardHit>(U4_Decompiled_TITLE.nativeLibraryPtr2, (char)KEYS.VK_BACK);
-#endif
+
         lastKeyboardHit = (char)KEYS.VK_BACK;
     }
 
     public void CommandFire()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('F');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'F');
-#endif
+
         lastKeyboardHit = 'F';
     }
     public void CommandGet()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('G');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'G');
-#endif
+
         lastKeyboardHit = 'G';
     }
     public void CommandHoleUp()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('H');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'H');
-#endif
+
         lastKeyboardHit = 'H';
     }
     public void CommandIgnight()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('I');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'I');
-#endif
+
         lastKeyboardHit = 'I';
     }
     public void CommandJimmy()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('J');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'J');
-#endif
+
         lastKeyboardHit = 'J';
     }
 
     public void CommandKlimb()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('K');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'K');
-#endif
+
         lastKeyboardHit = 'K';
     }
 
     public void CommandLocate()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('L');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'L');
-#endif
+
         lastKeyboardHit = 'L';
     }
 
     public void CommandMix()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('M');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'M');
-#endif
+
         lastKeyboardHit = 'M';
     }
 
     public void CommandNewOrder()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('N');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'N');
-#endif
+
         lastKeyboardHit = 'N';
     }
     public void CommandOpen()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('O');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'O');
-#endif
+
         lastKeyboardHit = 'O';
     }
     public void CommandPeer()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('P');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'P');
-#endif
+
         lastKeyboardHit = 'P';
     }
 
     public void CommandPass()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit(' ');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, ' ');
-#endif
+
         lastKeyboardHit = ' ';
     }
 
     public void CommandQuit()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('Q');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Q');
-#endif
+
         lastKeyboardHit = 'Q';
 
         SaveWordList();
     }
     public void CommandReady()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('R');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'R');
-#endif
+
         lastKeyboardHit = 'R';
     }
     public void CommandSearch()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('S');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'S');
-#endif
+
         lastKeyboardHit = 'S';
     }
     public void CommandTalk()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('T');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'T');
-#endif
+
         lastKeyboardHit = 'T';
     }
 
     public void CommandUse()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('U');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'U');
-#endif
+
         lastKeyboardHit = 'U';
     }
 
@@ -1226,11 +1040,8 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         // if both sound and voice are on turn them both off
         if (SoundFlag == 1 && VoiceFlag == 1)
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit('V'); // this will turn off the soundFlag
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'V');
-#endif
+
             lastKeyboardHit = 'V';
 
             // turn this off manually
@@ -1238,11 +1049,8 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         }
         else if (SoundFlag == 0 && VoiceFlag == 0)
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit('V'); // this will turn on the soundFlag
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'V');
-#endif
+
             lastKeyboardHit = 'V';
 
             // leave this off
@@ -1250,11 +1058,8 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         }
         else if (SoundFlag == 1 && VoiceFlag == 0)
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit('V'); // this will turn off the soundFlag
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'V');
-#endif
+
             lastKeyboardHit = 'V';
 
             // turn this on manually
@@ -1262,11 +1067,8 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         }
         else if (SoundFlag == 0 && VoiceFlag == 1)
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit('V'); // this will turn on the soundFlag
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'V');
-#endif
+
             lastKeyboardHit = 'V';
 
             // leave this on
@@ -1276,41 +1078,29 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
 
     public void CommandWear()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('W');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'W');
-#endif
+
         lastKeyboardHit = 'W';
     }
 
     public void CommandXit()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('X');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'X');
-#endif
+
         lastKeyboardHit = 'X';
     }
 
     public void CommandYell()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('Y');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Y');
-#endif
+
         lastKeyboardHit = 'Y';
     }
 
     public void CommandZStas()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('Z');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Z');
-#endif
+
         lastKeyboardHit = 'Z';
     }
 
@@ -1320,21 +1110,15 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
 
         for (int i = 0; i < upper.Length; i++)
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)upper[i]);
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)upper[i]);
-#endif
+
             lastKeyboardHit = upper[i];
             //yield on a new YieldInstruction that waits for 5 seconds.
             yield return new WaitForSeconds(0.15f);
         }
 
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit((char)KEYS.VK_RETURN);
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
-#endif
+
         lastKeyboardHit = (char)KEYS.VK_RETURN;
     }
 
@@ -1357,11 +1141,8 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     }
     public void CommandSayCharacter(char character)
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit(character);
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, character);
-#endif
+
         lastKeyboardHit = character;
     }
 
@@ -1402,11 +1183,8 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
 
     public void CommandSayContinue()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit((char)KEYS.VK_RETURN);
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
-#endif
+
         lastKeyboardHit = (char)KEYS.VK_RETURN;
     }
 
@@ -1481,87 +1259,60 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
 
     public void CommandSayY()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('Y');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Y');
-#endif
+
         lastKeyboardHit = 'Y';
     }
     public void CommandSayFood()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('F');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'F');
-#endif
+
         lastKeyboardHit = 'F';
     }
 
     public void CommandSayAle()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('A');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'A');
-#endif
+
         lastKeyboardHit = 'A';
     }
     public void CommandSayBuy()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('B');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'B');
-#endif
+
         lastKeyboardHit = 'B';
     }
 
     public void CommandSaySell()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('S');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'S');
-#endif
+
         lastKeyboardHit = 'S';
     }
 
     public void CommandSayCuring()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('A');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'A');
-#endif
+
         lastKeyboardHit = 'A';
     }
 
     public void CommandSayHealing()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('B');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'B');
-#endif
+
         lastKeyboardHit = 'B';
     }
     public void CommandSayResurection()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('C');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'C');
-#endif
+
         lastKeyboardHit = 'C';
     }
     public void CommandSayN()
     {
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit('N');
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'N');
-#endif
+
         lastKeyboardHit = 'N';
     }
 
@@ -1587,42 +1338,9 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
         */
 
         // signal to the game engine thread to exit all forever loops and return
-#if USE_UNITY_DLL_FUNCTION
         main_keyboardHit((char)KEYS.VK_ESCAPE);
-#else
-        Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_ESCAPE);
-#endif
 
         lastKeyboardHit = (char)KEYS.VK_ESCAPE;
-
-#if !USE_UNITY_DLL_FUNCTION
-        // It is now safe to unload the DLL
-        if (nativeLibraryPtr != System.IntPtr.Zero)
-        {
-#if UNITY_EDITOR
-            // wait for the game engine thread to complete/return
-            while (trd.IsAlive == true)
-            {
-                ;
-            }
-#endif
-
-            // It is now safe to unload the DLL
-            if (nativeLibraryPtr != System.IntPtr.Zero)
-            {
-                //Debug.Log("Unload AVATAR library");
-#if PLATFORM_ANDROID && !UNITY_EDITOR
-                Debug.Log(Native.dlclose(nativeLibraryPtr) == 0
-                    ? "Native library successfully unloaded."
-                    : "Native library could not be unloaded.");
-#else
-                Debug.Log(Native.FreeLibrary(nativeLibraryPtr)
-                    ? "Native library successfully unloaded."
-                    : "Native library could not be unloaded.");
-#endif
-            }
-        }
-#endif
     }
 
     public enum KEYS
@@ -2844,11 +2562,8 @@ sfx_storm:
         }
 
         // write the Combat global
-#if USE_UNITY_DLL_FUNCTION
-            main_Set_Combat(buffer, buffer.Length);
-#else
-        Native.Invoke<main_Set_Combat>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
+        main_Set_Combat(buffer, buffer.Length);
+
 
         // write the fighter data
         for (int i = 0; i < 16; i++)
@@ -2863,11 +2578,7 @@ sfx_storm:
         }
 
         // write the Fighters global
-#if USE_UNITY_DLL_FUNCTION
         main_Set_Fighters(buffer, buffer.Length);
-#else
-        Native.Invoke<main_Set_Fighters>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
     }
 
     // used to detect game mode changes and change the music
@@ -2958,39 +2669,26 @@ sfx_storm:
         // Unity keydown is only active for a single frame so it cannot be in the timer check if
         if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && Input.GetKeyDown(KeyCode.Z)) // need to check this first as it overrides the normal Z keypress
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'9'); // currently the windows implementation of this engine does not support this
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'9');
-#endif
+
             lastKeyboardHit = '9';
         }
         else if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.S)) // need to check this first as it overrides the normal S keypress
         {
-
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'9'); // currently the windows implementation of this engine does not support this
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'9');
-#endif
+
             lastKeyboardHit = '9';
         }
         else if (Input.GetKeyDown(KeyCode.End))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_END);
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_END);
-#endif
+
             lastKeyboardHit = (char)KEYS.VK_END;
         }
         else if (Input.GetKeyDown(KeyCode.Home))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_HOME);
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_HOME);
-#endif
+
             lastKeyboardHit = (char)KEYS.VK_HOME;
         }
         //else if (Input.GetKeyDown(KeyCode.PageUp))
@@ -3003,11 +2701,8 @@ sfx_storm:
         //}
         else if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_RETURN);
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
-#endif
+
             lastKeyboardHit = (char)KEYS.VK_RETURN;
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow) || (Input.GetAxis("Vertical 2") > 0.99f && (resetJoystick2 < Time.time)) || Input.GetAxis("Vertical 1") > 0.99f && (resetJoystick1 < Time.time))
@@ -3020,39 +2715,26 @@ sfx_storm:
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
-
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_DOWN);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
                 else if (Party._dir == DIRECTION.EAST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_LEFT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
                 else if (Party._dir == DIRECTION.SOUTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_UP);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_UP;
                 }
                 else if (Party._dir == DIRECTION.WEST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_RIGHT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
             }
@@ -3060,48 +2742,33 @@ sfx_storm:
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_DOWN);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
                 else if (surface_party_direction == DIRECTION.EAST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_LEFT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
                 else if (surface_party_direction == DIRECTION.SOUTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_UP);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_UP;
                 }
                 else if (surface_party_direction == DIRECTION.WEST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_RIGHT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
             }
             else
             {
-#if USE_UNITY_DLL_FUNCTION
                 main_keyboardHit((char)KEYS.VK_DOWN);
-#else
-                Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
-#endif
+
                 lastKeyboardHit = (char)KEYS.VK_DOWN;
             }
         }
@@ -3115,38 +2782,26 @@ sfx_storm:
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_UP);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_UP;
                 }
                 else if (Party._dir == DIRECTION.EAST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_RIGHT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
                 else if (Party._dir == DIRECTION.SOUTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_DOWN);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
                 else if (Party._dir == DIRECTION.WEST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_LEFT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
             }
@@ -3154,48 +2809,33 @@ sfx_storm:
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_UP);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_UP;
                 }
                 else if (surface_party_direction == DIRECTION.EAST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_RIGHT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
                 else if (surface_party_direction == DIRECTION.SOUTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_DOWN);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
                 else if (surface_party_direction == DIRECTION.WEST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_LEFT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
             }
             else
             {
-#if USE_UNITY_DLL_FUNCTION
                 main_keyboardHit((char)KEYS.VK_UP);
-#else
-                Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
-#endif
+
                 lastKeyboardHit = (char)KEYS.VK_UP;
             }
         }
@@ -3208,38 +2848,26 @@ sfx_storm:
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_LEFT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
                 else if (Party._dir == DIRECTION.EAST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_UP);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_UP;
                 }
                 else if (Party._dir == DIRECTION.SOUTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_RIGHT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
                 else if (Party._dir == DIRECTION.WEST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_DOWN);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
             }
@@ -3247,38 +2875,26 @@ sfx_storm:
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_LEFT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
                 else if (surface_party_direction == DIRECTION.EAST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_UP);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_UP;
                 }
                 else if (surface_party_direction == DIRECTION.SOUTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_RIGHT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
                 else if (surface_party_direction == DIRECTION.WEST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_DOWN);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
             }
@@ -3288,11 +2904,8 @@ sfx_storm:
             }
             else
             {
-#if USE_UNITY_DLL_FUNCTION
                 main_keyboardHit((char)KEYS.VK_LEFT);
-#else
-                Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
-#endif
+
                 lastKeyboardHit = (char)KEYS.VK_LEFT;
             }
         }
@@ -3305,38 +2918,26 @@ sfx_storm:
             {
                 if (Party._dir == DIRECTION.NORTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_RIGHT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
                 else if (Party._dir == DIRECTION.EAST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_DOWN);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
                 else if (Party._dir == DIRECTION.SOUTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_LEFT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
                 else if (Party._dir == DIRECTION.WEST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_UP);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_UP;
                 }
             }
@@ -3344,38 +2945,26 @@ sfx_storm:
             {
                 if (surface_party_direction == DIRECTION.NORTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_RIGHT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_RIGHT;
                 }
                 else if (surface_party_direction == DIRECTION.EAST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_DOWN);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_DOWN);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_DOWN;
                 }
                 else if (surface_party_direction == DIRECTION.SOUTH)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_LEFT);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_LEFT);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_LEFT;
                 }
                 else if (surface_party_direction == DIRECTION.WEST)
                 {
-#if USE_UNITY_DLL_FUNCTION
                     main_keyboardHit((char)KEYS.VK_UP);
-#else
-                    Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_UP);
-#endif
+
                     lastKeyboardHit = (char)KEYS.VK_UP;
                 }
             }
@@ -3385,381 +2974,254 @@ sfx_storm:
             }
             else
             {
-#if USE_UNITY_DLL_FUNCTION
                 //main_keyboardHit((char)KEYS.VK_RIGHT);
-#else
-                Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RIGHT);
-#endif
-                lastKeyboardHit = (char)KEYS.VK_RIGHT;
+
+                //lastKeyboardHit = (char)KEYS.VK_RIGHT;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_ESCAPE);
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_ESCAPE);
-#endif
+
             lastKeyboardHit = (char)KEYS.VK_ESCAPE;
             Application.Quit();
         }
         else if (Input.GetKeyDown(KeyCode.Return))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_RETURN);
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_RETURN);
-#endif
+
             lastKeyboardHit = (char)KEYS.VK_RETURN;
         }
         else if (Input.GetKeyDown(KeyCode.Backspace))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_BACK);
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_BACK);
-#endif
+
             lastKeyboardHit = (char)KEYS.VK_BACK;
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_SPACE);
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)KEYS.VK_SPACE);
-#endif
+
             lastKeyboardHit = (char)KEYS.VK_SPACE;
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'A');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'A');
-#endif
+
             lastKeyboardHit = 'A';
         }
         else if (Input.GetKeyDown(KeyCode.B))
         {
-#if USE_UNITY_DLL_FUNCTION
             //main_keyboardHit((char)'B');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'B');
-#endif
-            lastKeyboardHit = 'B';
+
+            //lastKeyboardHit = 'B';
         }
         else if (Input.GetKeyDown(KeyCode.C))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'C');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'C');
-#endif
+
             lastKeyboardHit = 'C';
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'D');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'D');
-#endif
+
             lastKeyboardHit = 'D';
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'E');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'E');
-#endif
+
             lastKeyboardHit = 'E';
         }
         else if (Input.GetKeyDown(KeyCode.F))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'F');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'F');
-#endif
+
             lastKeyboardHit = 'F';
         }
         else if (Input.GetKeyDown(KeyCode.G))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'G');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'G');
-#endif
+
             lastKeyboardHit = 'G';
         }
         else if (Input.GetKeyDown(KeyCode.H))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'H');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'H');
-#endif
+
             lastKeyboardHit = 'H';
         }
         else if (Input.GetKeyDown(KeyCode.I))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'I');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'I');
-#endif
+
             lastKeyboardHit = 'I';
         }
         else if (Input.GetKeyDown(KeyCode.J))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'J');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'J');
-#endif
+
             lastKeyboardHit = 'J';
         }
         else if (Input.GetKeyDown(KeyCode.K))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'K');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'K');
-#endif
+
             lastKeyboardHit = 'K';
         }
         else if (Input.GetKeyDown(KeyCode.L))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'L');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'L');
-#endif
+
             lastKeyboardHit = 'L';
         }
         else if (Input.GetKeyDown(KeyCode.M))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'M');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'M');
-#endif
+
             lastKeyboardHit = 'M';
         }
         else if (Input.GetKeyDown(KeyCode.N))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'N');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'N');
-#endif
+
             lastKeyboardHit = 'N';
         }
         else if (Input.GetKeyDown(KeyCode.O))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'O');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'O');
-#endif
+
             lastKeyboardHit = 'O';
         }
         else if (Input.GetKeyDown(KeyCode.P))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'P');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'P');
-#endif
+
             lastKeyboardHit = 'P';
         }
         else if (Input.GetKeyDown(KeyCode.Q))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'Q');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Q');
-#endif
+
             lastKeyboardHit = 'Q';
         }
         else if (Input.GetKeyDown(KeyCode.R))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'R');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'R');
-#endif
+
             lastKeyboardHit = 'R';
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'S');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'S');
-#endif
+
             lastKeyboardHit = 'S';
         }
         else if (Input.GetKeyDown(KeyCode.T))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'T');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'T');
-#endif
+
             lastKeyboardHit = 'T';
         }
         else if (Input.GetKeyDown(KeyCode.U))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'U');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'U');
-#endif
+
             lastKeyboardHit = 'U';
         }
         else if (Input.GetKeyDown(KeyCode.V))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'V');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'V');
-#endif
+
             lastKeyboardHit = 'V';
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'W');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'W');
-#endif
+
             lastKeyboardHit = 'W';
         }
         else if (Input.GetKeyDown(KeyCode.X))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'X');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'X');
-#endif
+
             lastKeyboardHit = 'X';
         }
         else if (Input.GetKeyDown(KeyCode.Y))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'Y');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Y');
-#endif
+
             lastKeyboardHit = 'Y';
         }
         else if (Input.GetKeyDown(KeyCode.Z))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'Z');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'Z');
-#endif
+
             lastKeyboardHit = 'Z';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'0');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'0');
-#endif
+
             lastKeyboardHit = '0';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'1');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'1');
-#endif
+
             lastKeyboardHit = '1';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'2');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'2');
-#endif
+
             lastKeyboardHit = '2';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'3');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'3');
-#endif
+
             lastKeyboardHit = '3';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'4');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'4');
-#endif
+
             lastKeyboardHit = '4';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'5');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'5');
-#endif
+
             lastKeyboardHit = '5';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'6');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'6');
-#endif
+
             lastKeyboardHit = '6';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'7');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'7');
-#endif
+
             lastKeyboardHit = '7';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8) || Input.GetKeyDown(KeyCode.Keypad8))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'8');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'8');
-#endif
+
             lastKeyboardHit = '8';
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9))
         {
-#if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'9');
-#else
-            Native.Invoke<main_keyboardHit>(nativeLibraryPtr, (char)'9');
-#endif
+
             lastKeyboardHit = '9';
         }
 
-#if USE_UNITY_DLL_FUNCTION
         main_set_dir(surface_party_direction);
-#else
-        Native.Invoke<main_set_dir>(nativeLibraryPtr, surface_party_direction);
-#endif
 
         // check if we just finished playing a sound effect
         if (started_playing_sound_effect == true && specialEffectAudioSource.isPlaying == false)
@@ -3768,11 +3230,7 @@ sfx_storm:
             started_playing_sound_effect = false;
 
             // let the game engine we finished playing the sound effect
-#if USE_UNITY_DLL_FUNCTION
             main_sound_effect_done();
-#else
-            Native.Invoke<main_sound_effect_done>(nativeLibraryPtr);
-#endif
         }
 
         // TODO move this out of the game engine interface
@@ -3787,13 +3245,9 @@ sfx_storm:
             if (started_playing_sound_effect == false)
             {
                 // get if any sound effects are active from the game engine
-#if USE_UNITY_DLL_FUNCTION
-                    int sound = main_sound_effect();
-                    int length = main_sound_effect_length();
-#else
-                int sound = Native.Invoke<int, main_sound_effect>(nativeLibraryPtr);
-                int length = Native.Invoke<int, main_sound_effect_length>(nativeLibraryPtr);
-#endif
+                int sound = main_sound_effect();
+                int length = main_sound_effect_length();
+
                 // see if the sound effect from the game engine is valid
                 if (sound != -1)
                 {
@@ -3876,21 +3330,13 @@ sfx_storm:
         // we still need to respond to sound calls even if sound is off otherwise the game engine will pend
         else
         {
-#if USE_UNITY_DLL_FUNCTION
             int sound = main_sound_effect();
             int length = main_sound_effect_length();
-#else
-            int sound = Native.Invoke<int, main_sound_effect>(nativeLibraryPtr);
-            int length = Native.Invoke<int, main_sound_effect_length>(nativeLibraryPtr);
-#endif
+
             // immediately respond to the game engine as if the sound has been played for now
             if (sound != -1)
             {
-#if USE_UNITY_DLL_FUNCTION
                 main_sound_effect_done();
-#else
-                Native.Invoke<main_sound_effect_done>(nativeLibraryPtr);
-#endif
             }
         }
 
@@ -3902,30 +3348,14 @@ sfx_storm:
             timerExpired = timerPeriod;
 
             // read the input mode
-#if USE_UNITY_DLL_FUNCTION
             inputMode = main_input_mode();
-#else
-            inputMode = Native.Invoke<INPUT_MODE, main_input_mode>(nativeLibraryPtr);
-#endif
-#if USE_UNITY_DLL_FUNCTION
+
             zstats_mode = main_zstats_mode();
-#else
-            zstats_mode = Native.Invoke<ZSTATS_MODE, main_zstats_mode>(nativeLibraryPtr);
-#endif
 
-#if USE_UNITY_DLL_FUNCTION
             zstats_character = main_zstats_character();
-#else
-            zstats_character = Native.Invoke<int, main_zstats_character>(nativeLibraryPtr);
-#endif
-
 
             // read the sound flag
-#if USE_UNITY_DLL_FUNCTION
             SoundFlag = main_SoundFlag();
-#else
-            SoundFlag = Native.Invoke<int, main_SoundFlag>(nativeLibraryPtr);
-#endif
 
             AudioSource musicSource = Camera.main.GetComponent<AudioSource>();
             if (musicSource != null)
@@ -4099,11 +3529,8 @@ sfx_storm:
             }
 
             // read the circular text buffer from the game engine
-#if USE_UNITY_DLL_FUNCTION
             int text_size = main_Text(buffer, buffer.Length);
-#else
-            int text_size = Native.Invoke<int, main_Text>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
+
             // check if we have any new text to add
             if (text_size != 0)
             {
@@ -4187,11 +3614,8 @@ sfx_storm:
 
             System.Array.Clear(buffer, 0, buffer.Length);
 
-#if USE_UNITY_DLL_FUNCTION
             main_GetVision(buffer, buffer.Length);
-#else
-            Native.Invoke<main_GetVision>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
+
             int len;
             for (len = 0; len < 255; len++)
             {
@@ -4206,11 +3630,7 @@ sfx_storm:
             // read the circular npc text buffer from the game engine
             // this is different than the text above as it has speaking information
             // and inside the game engine it has been modified to remove first person references like "he says..."
-#if USE_UNITY_DLL_FUNCTION
             text_size = main_NPC_Text(buffer, buffer.Length);
-#else
-            text_size = Native.Invoke<int, main_NPC_Text>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
 
             // check if we have any new npc text to add
             if (text_size != 0)
@@ -4351,7 +3771,6 @@ sfx_storm:
                 }
                 else
                 {
-
                     Settlement.SETTLEMENT settlement;
 
                     // get the current settlement, need to special case BRITANNIA as the castle has two levels, use the ladder to determine which level
@@ -4621,57 +4040,20 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
             }
 
             // attacker tile and tile under attacker (used to determine combat map to use when pirates attack)
-#if USE_UNITY_DLL_FUNCTION
             D_96F8 = main_D_96F8();
-#else
-            D_96F8 = Native.Invoke<Tile.TILE, main_D_96F8>(nativeLibraryPtr);
-#endif
-
-#if USE_UNITY_DLL_FUNCTION
             D_946C = main_D_946C();
-#else
-            D_946C = Native.Invoke<Tile.TILE, main_D_946C>(nativeLibraryPtr);
-#endif
-
 
             // 8x8? chunk tile location on main map
-#if USE_UNITY_DLL_FUNCTION
             D_95A5.x = (byte)main_D_95A5_x();
-#else
-            D_95A5.x = (byte)Native.Invoke<int, main_D_95A5_x>(nativeLibraryPtr);
-#endif
-
-#if USE_UNITY_DLL_FUNCTION
             D_95A5.y = (byte)main_D_95A5_y();
-#else
-            D_95A5.y = (byte)Native.Invoke<int, main_D_95A5_y>(nativeLibraryPtr);
-#endif
-
 
             // read current moongate information
-#if USE_UNITY_DLL_FUNCTION
             moongate_tile = main_D_9141();
-#else
-            moongate_tile = Native.Invoke<Tile.TILE, main_D_9141>(nativeLibraryPtr);
-#endif
-
-#if USE_UNITY_DLL_FUNCTION
             moongate_x = main_D_9445();
-#else
-            moongate_x = Native.Invoke<int, main_D_9445>(nativeLibraryPtr);
-#endif
-#if USE_UNITY_DLL_FUNCTION
             moongate_y = main_D_9448();
-#else
-            moongate_y = Native.Invoke<int, main_D_9448>(nativeLibraryPtr);
-#endif
 
             // get any hilighted character, used during combat
-#if USE_UNITY_DLL_FUNCTION
             main_ActiveChar(buffer, buffer.Length);
-#else
-            Native.Invoke<main_ActiveChar>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
 
             // check if active
             if (buffer[1] != 0xff)
@@ -4688,20 +4070,12 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
             }
 
             // get the current tile under the party
-#if USE_UNITY_DLL_FUNCTION
             current_tile = main_tile_cur();
-#else
-            current_tile = Native.Invoke<Tile.TILE, main_tile_cur>(nativeLibraryPtr);
-#endif
 
             // read in current hit info list, the tile draws occurr out of the main draw sequence
             // and for only a short time before the playfield is repainted
             // the DLL saves the list of hits and coords to display later
-#if USE_UNITY_DLL_FUNCTION
             main_Hit(buffer, buffer.Length);
-#else
-            Native.Invoke<main_Hit>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
 
             // get the hit list length from the buffer
             int hit_length = buffer[0];
@@ -4753,18 +4127,10 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
             }
 
             // get the current map and npc data
-#if USE_UNITY_DLL_FUNCTION
             main_CurMap(buffer, buffer.Length);
-#else
-            Native.Invoke<main_CurMap>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
 
             // get the current game mode;
-#if USE_UNITY_DLL_FUNCTION
             current_mode = main_CurMode();
-#else
-            current_mode = Native.Invoke<U4_Decompiled_AVATAR.MODE, main_CurMode>(nativeLibraryPtr);
-#endif
 
             if (current_mode != lastMode)
             {
@@ -4815,11 +4181,8 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
             }
 
             // get the current party data
-#if USE_UNITY_DLL_FUNCTION
             main_Party(buffer, buffer.Length);
-#else
-            Native.Invoke<main_Party>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
+
             //System.IO.File.WriteAllBytes("Asset/partybuffer.bin", buffer);
 
             Party.f_000 = System.BitConverter.ToUInt32(buffer, 0x000);
@@ -4912,11 +4275,7 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
             Party._loc = (LOCATIONS)(System.BitConverter.ToUInt16(buffer, 0x1f4));
 
             // read in the Combat global
-#if USE_UNITY_DLL_FUNCTION
             main_Combat(buffer, buffer.Length);
-#else
-            Native.Invoke<main_Combat>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
 
             // read the npc positions
             for (int i = 0; i < 16; i++)
@@ -4941,11 +4300,7 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
             }
 
             // read in the Fighters global
-#if USE_UNITY_DLL_FUNCTION
             main_Fighters(buffer, buffer.Length);
-#else
-            Native.Invoke<main_Fighters>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
 
             // extract the fighter data
             for (int i = 0; i < 16; i++)
@@ -4960,11 +4315,7 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
             }
 
             // read in the main_D_96F9 global
-#if USE_UNITY_DLL_FUNCTION
             main_D_96F9(buffer, buffer.Length);
-#else
-            Native.Invoke<main_D_96F9>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
 
             // read the main display tile buffer
             buffer_index = 0;
@@ -4977,50 +4328,22 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
             }
 
             // read the current open door information
-#if USE_UNITY_DLL_FUNCTION
             open_door_x = main_D_17FA();
-#else
-            open_door_x = Native.Invoke<int, main_D_17FA>(nativeLibraryPtr);
-#endif
-#if USE_UNITY_DLL_FUNCTION
             open_door_y =  main_D_17FC();
-#else
-            open_door_y = Native.Invoke<int, main_D_17FC>(nativeLibraryPtr);
-#endif
-#if USE_UNITY_DLL_FUNCTION
             open_door_timer = main_D_17FE();
-#else
-            open_door_timer = Native.Invoke<int, main_D_17FE>(nativeLibraryPtr);
-#endif
 
-#if USE_UNITY_DLL_FUNCTION
             WindDir = main_WindDir();
-#else
-            WindDir = Native.Invoke<DIRECTION, main_WindDir>(nativeLibraryPtr);
-#endif
 
-#if USE_UNITY_DLL_FUNCTION
             spell_sta = main_spell_sta();
-#else
-            spell_sta = Native.Invoke<int, main_spell_sta>(nativeLibraryPtr);
-#endif
 
-#if USE_UNITY_DLL_FUNCTION
             main_char_highlight(buffer, buffer.Length);
-#else
-            Native.Invoke<main_char_highlight>(nativeLibraryPtr, buffer, buffer.Length);
-#endif
 
             for (int i = 0; i < 8; i++)
             {
                 Party.chara[i].highlight = (buffer[i] == 1);
             }
 
-#if USE_UNITY_DLL_FUNCTION
             screen_xor_state = main_screen_xor_state();
-#else
-            screen_xor_state = Native.Invoke<int, main_screen_xor_state>(nativeLibraryPtr);
-#endif
 
             if (screen_xor_state == 1)
             {
@@ -5031,28 +4354,15 @@ More?   "https://api.wit.ai/message?v=20240210&q=Even%20though%20the%20Great%20E
                 Camera.main.GetComponent<ScreenInvertVR>().enabled = false;
             }
 
-#if USE_UNITY_DLL_FUNCTION
             camera_shake = main_camera_shake_accumulator();
-#else
-            camera_shake = Native.Invoke<int, main_camera_shake_accumulator>(nativeLibraryPtr);
-#endif
 
             if (camera_shake > 0)
             {
                 Camera.main.GetComponent<ScreenShakeVR>().Shake((float)camera_shake / 8f, (float)camera_shake/8f);
             }
 
-
-#if USE_UNITY_DLL_FUNCTION
             D_1665 = main_D_1665();
-#else
-            D_1665 = Native.Invoke<int, main_D_1665>(nativeLibraryPtr);
-#endif
-#if USE_UNITY_DLL_FUNCTION
             D_1666 = main_D_1666();
-#else
-            D_1666 = Native.Invoke<int, main_D_1666>(nativeLibraryPtr);
-#endif
         }
     }
 
