@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="U4.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="U4_DOS.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="U4_FILE.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="U4_GRAPH.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="U4_LOC.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="U4_SCAN.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="U4_SHAPE.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="common.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ERRMSG.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_3D.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_AI.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_ANIM.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_COMBA.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_COMBB.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_COMBC.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_CSTES.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_DNG.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_END.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_EVT.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_EXPLO.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_FILE.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="u4_forWin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_GET.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_HOLE.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_INIT.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_LB.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_LOCAT.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_MAIN.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_MAIN2.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_MAP.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_MIX.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_NPC.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_PEER.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_Q_N_V.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_SHOPS.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_SHRIN.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_SPELL.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_SRCH.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_SRCH2.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_TALK.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_USE.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_UTIL.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_VAR.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="U4_Z.C">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

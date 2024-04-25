@@ -6,7 +6,9 @@
 
 #include "U4.H"
 
+#ifndef WIN32
 #include <android/log.h>
+#endif
 C_93A5(bp08, bp06, bp04)
 unsigned char bp08;
 unsigned char bp06;

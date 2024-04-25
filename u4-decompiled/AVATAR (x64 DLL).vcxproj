@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="U4.H" />
+    <ClInclude Include="U4_DOS.H" />
+    <ClInclude Include="U4_FILE.H" />
+    <ClInclude Include="U4_GRAPH.H" />
+    <ClInclude Include="U4_LOC.H" />
+    <ClInclude Include="U4_SCAN.H" />
+    <ClInclude Include="U4_SHAPE.H" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="common.c" />
+    <ClCompile Include="ERRMSG.C" />
+    <ClCompile Include="U4_3D.C" />
+    <ClCompile Include="U4_AI.C" />
+    <ClCompile Include="U4_ANIM.C" />
+    <ClCompile Include="U4_COMBA.C" />
+    <ClCompile Include="U4_COMBB.C" />
+    <ClCompile Include="U4_COMBC.C" />
+    <ClCompile Include="U4_CSTES.C" />
+    <ClCompile Include="U4_DNG.C" />
+    <ClCompile Include="U4_END.C" />
+    <ClCompile Include="U4_EVT.C" />
+    <ClCompile Include="U4_EXPLO.C" />
+    <ClCompile Include="U4_FILE.C" />
+    <ClCompile Include="u4_forWin.c" />
+    <ClCompile Include="U4_GET.C" />
+    <ClCompile Include="U4_HOLE.C" />
+    <ClCompile Include="U4_INIT.C" />
+    <ClCompile Include="U4_LB.C" />
+    <ClCompile Include="U4_LOCAT.C" />
+    <ClCompile Include="U4_MAIN.C" />
+    <ClCompile Include="U4_MAIN2.C" />
+    <ClCompile Include="U4_MAP.C" />
+    <ClCompile Include="U4_MIX.C" />
+    <ClCompile Include="U4_NPC.C" />
+    <ClCompile Include="U4_PEER.C" />
+    <ClCompile Include="U4_Q_N_V.C" />
+    <ClCompile Include="U4_SHOPS.C" />
+    <ClCompile Include="U4_SHRIN.C" />
+    <ClCompile Include="U4_SPELL.C" />
+    <ClCompile Include="U4_SRCH.C" />
+    <ClCompile Include="U4_SRCH2.C" />
+    <ClCompile Include="U4_TALK.C" />
+    <ClCompile Include="U4_USE.C" />
+    <ClCompile Include="U4_UTIL.C" />
+    <ClCompile Include="U4_VAR.C" />
+    <ClCompile Include="U4_Z.C" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{c4372462-df13-43a5-9f02-4fe31bb08953}</ProjectGuid>
+    <RootNamespace>AVATAR</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;SLEEPFACTOR=1;DISABLE_WINDOWS;_CRT_SECURE_NO_WARNINGS;SLEEPFACTOR=1;_DEBUG;AVATARX64DLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SLEEPFACTOR=1;NDEBUG;AVATARX64DLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
