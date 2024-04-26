@@ -2,6 +2,9 @@
 #define __TITLE_H__
 
 
+#include <stdint.h>
+#include <setjmp.h>
+
 #define INPUT_MODE_M_OR_F 1
 #define INPUT_MODE_NAME 2
 #define INPUT_MODE_A_OR_B_CHOICE 3
@@ -17,15 +20,16 @@ extern void set_input_mode(int mode);
 extern char AVATAR[];
 
 #ifdef WIN32
+	#define cdecl
 	#define far
 	#pragma pack(1)
 	typedef unsigned short U16;
 	typedef signed short S16;
 #else
-	#define far
 	#define cdecl
-	typedef unsigned short U16;
-	typedef signed short S16;
+	#define far
+	typedef uint16_t U16;
+	typedef int16_t S16;
 #endif
 
 #include "U4_SCAN.H"
@@ -74,7 +78,11 @@ struct tNPC {
 	unsigned char _0A0[32];/*__6E16*/
 	unsigned char _0C0[32];/*__6E36*/
 	unsigned char _0E0[32];/*__6E56*/
-} __attribute__((packed));;
+} 
+#ifndef _WINDOWS
+__attribute__((packed));
+#endif
+;
 
 typedef unsigned char tMap32x32[32][32];
 typedef unsigned char tMap8x8x8[8][8][8];
@@ -88,8 +96,11 @@ struct t_500 {
 	} /*__6976.__000*/_map;
 	/*MONSTERS.SAV or OUTMONST.SAV or *.ULT(last 0x100 bytes)*/
 	struct tNPC /*__6D76/__6976.__400*/_npc;
-} __attribute__((packed));
-
+}
+#ifndef _WINDOWS
+__attribute__((packed));
+#endif
+;
 extern struct t_500 D_6976;
 
 /*====---- c_common ----====*/
@@ -110,7 +121,11 @@ struct tChara /*size:0x27*/ {
 	/*+24*/char p_24;/*sex char*/
 	/*+25*/char _class;
 	/*+26*/char _stat;
-} __attribute__((packed));;
+}
+#ifndef _WINDOWS
+__attribute__((packed));
+#endif
+;
 
 struct tParty /*size:0x1f6*/ {
 	//	/*+000*/unsigned long f_000;/*a counter*/
@@ -158,7 +173,11 @@ struct tParty /*size:0x1f6*/ {
 	/*+1f0*/U16 _dir;/*[dungeon]*/
 	/*+1f2*/S16 _z;/*[dungeon]*/
 	/*+1f4*/U16 _loc;
-} __attribute__((__packed__));
+}
+#ifndef _WINDOWS
+__attribute__((packed));
+#endif
+;
 
 #ifdef WIN32
 	#pragma pack()

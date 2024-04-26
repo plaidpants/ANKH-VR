@@ -8,7 +8,9 @@
 
 #include <malloc.h>
 
+#ifndef WIN32
 #include <android/log.h>
+#endif
 
 extern void* _fmalloc(int sz);
 
@@ -311,7 +313,7 @@ register char *si;
 
 extern char TITLE[];
 #include <stdlib.h>
-#include <strings.h>
+//#include <strings.h>
 
 void C_0B45()
 {

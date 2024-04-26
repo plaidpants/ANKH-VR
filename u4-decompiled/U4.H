@@ -14,7 +14,7 @@
 	#define far
 	#pragma pack(1)
 	typedef unsigned short U16;
-	typedef short S16;
+	typedef signed short S16;
 #else
 	#define far
 	typedef uint16_t U16;

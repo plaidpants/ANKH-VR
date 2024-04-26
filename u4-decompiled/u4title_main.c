@@ -191,8 +191,10 @@ Gra_animFlag() {
 
 extern int get_the_view_mutex();
 extern void set_the_view_mutex();
-
+#ifndef WIN32
 #include <android/log.h>
+#endif
+
 int __cdecl Gra_0(
 	int height/*bp04*/, int width/*bp06*/, unsigned char *pSrc_0/*bp08*/,
 	int dst_y/*bp0a*/,
@@ -494,9 +496,9 @@ void C_3299(int num) {
 }
 
 extern const char* getDataPath();
-
+#ifndef WIN32
 #include <android/log.h>
-
+#endif
 int /*C_08D1*/Save(char* filename, int file_size, char* buffer)
 {
 	// Define the file pointer and the buffer size
@@ -560,12 +562,13 @@ int Load(char* filename, int file_size, char* buffer)
 
 	return 0;
 }
-
+#ifndef WIN32
 int Sleep(int time)
 {
 	usleep(time * 1000);
 	return 0;
 }
+#endif
 #if DISABLED
 int Load(char *fname, unsigned size, void *buff) {
 	int fd;

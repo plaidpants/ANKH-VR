@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TITLE", "TITLE.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AVATAR (x64 DLL)", "AVATAR (x64 DLL).vcxproj", "{C4372462-DF13-43A5-9F02-4FE31BB08953}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TITLE (x64 DLL)", "TITLE (x64 DLL).vcxproj", "{0DF3CA98-0991-4544-A92B-D4BC0290D7CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -51,6 +53,16 @@ Global
 		{C4372462-DF13-43A5-9F02-4FE31BB08953}.Release|x64.ActiveCfg = Release|x64
 		{C4372462-DF13-43A5-9F02-4FE31BB08953}.Release|x64.Build.0 = Release|x64
 		{C4372462-DF13-43A5-9F02-4FE31BB08953}.Release|x86.ActiveCfg = Release|x64
+		{0DF3CA98-0991-4544-A92B-D4BC0290D7CF}.Debug|ARM.ActiveCfg = Debug|x64
+		{0DF3CA98-0991-4544-A92B-D4BC0290D7CF}.Debug|ARM64.ActiveCfg = Debug|x64
+		{0DF3CA98-0991-4544-A92B-D4BC0290D7CF}.Debug|x64.ActiveCfg = Debug|x64
+		{0DF3CA98-0991-4544-A92B-D4BC0290D7CF}.Debug|x64.Build.0 = Debug|x64
+		{0DF3CA98-0991-4544-A92B-D4BC0290D7CF}.Debug|x86.ActiveCfg = Debug|x64
+		{0DF3CA98-0991-4544-A92B-D4BC0290D7CF}.Release|ARM.ActiveCfg = Release|x64
+		{0DF3CA98-0991-4544-A92B-D4BC0290D7CF}.Release|ARM64.ActiveCfg = Release|x64
+		{0DF3CA98-0991-4544-A92B-D4BC0290D7CF}.Release|x64.ActiveCfg = Release|x64
+		{0DF3CA98-0991-4544-A92B-D4BC0290D7CF}.Release|x64.Build.0 = Release|x64
+		{0DF3CA98-0991-4544-A92B-D4BC0290D7CF}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
