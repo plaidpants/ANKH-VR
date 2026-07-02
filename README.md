@@ -76,6 +76,8 @@ SHAPES.EGA - for EGA graphics - already included in the PC DOS version <br />
 SHP0.B and SHP1.B - for Apple2 graphics - these must be extracted from the original Apple 2 disks using ciderpress - http://a2ciderpress.com/ and https://archive.org/details/UltimaIV4amCrack <br />
 SHAPES.PNG - for custom graphics - https://ultima4.ultimacodex.com/alternate-ultima-4-tileset/  <br />
 
+You can disable the text to speech (TTS) by clicking the volume command in the main menu, it cycles through different combinations of music, sound and speech.
+
 Note: this port of Ultima 4 does not support any modifications or patches to the AVATAR.EXE or TITLE.EXE that move any of the data around in these files so many of the randomizer or other patchers will cause trouble and make it not work. It does support patches to the other files (.TLK, .DNG, etc.) so any fixes or modifications to those files would probabaly be supported. I will try and incorperate some of the fixes from other Ultima 4 projects in the future.
 
 This project does not contain any copyrighted game assets or code or data or text or graphics or fonts or any other intellectual property related to Ultima 4 it relies completely on the files from the original game. This project is not licensed by Origin Systems or Electronic Arts.
