@@ -5,6 +5,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 [ExecuteInEditMode]
 public class ScreenShakeVR : MonoBehaviour
@@ -102,7 +103,7 @@ public class ScreenShakeVR : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && debug)
+        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame && debug)
         {
             Shake(0.5f, 1.0f);
         }

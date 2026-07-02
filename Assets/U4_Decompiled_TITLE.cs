@@ -12,6 +12,7 @@ using Meta.WitAi.TTS.Utilities;
 using Meta.WitAi.TTS;
 using Meta.WitAi.TTS.Data;
 using System.Linq;
+using UnityEngine.InputSystem; // Added for Modern Input Handling
 
 public class U4_Decompiled_TITLE : MonoBehaviour
 {
@@ -748,10 +749,13 @@ blit_mask_table:
 
         timer += Time.deltaTime;
 
+        // need to read the keyboard using the new input method
+        var kb = Keyboard.current;
+
         // send some keyboard codes down to the engine,
         // Unity keydown is only active for a single frame so it cannot be in the timer check if
   
-        if (Input.GetKeyDown(KeyCode.End))
+        if (kb != null && kb.endKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_END);
@@ -760,7 +764,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = (char)KEYS.VK_END;
         }
-        else if (Input.GetKeyDown(KeyCode.Home))
+        else if (kb != null && kb.homeKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_HOME);
@@ -769,15 +773,15 @@ blit_mask_table:
 #endif
             lastKeyboardHit = (char)KEYS.VK_HOME;
         }
-        //else if (Input.GetKeyDown(KeyCode.PageUp))
+        //else if (kb != null && kb.pageUpKey.wasPressedThisFrame)
         //{
         //    main_keyboardHit((char)KEYS.VK_PGUP);
         //}
-        //else if (Input.GetKeyDown(KeyCode.PageDown))
+        //else if (kb != null && kb.pageDownKey.wasPressedThisFrame)
         //{
         //    main_keyboardHit((char)KEYS.VK_PGDN);
         //}
-        else if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        else if (kb != null && kb.numpadEnterKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_RETURN);
@@ -786,7 +790,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = (char)KEYS.VK_RETURN;
         }
-        else if (Input.GetKeyDown(KeyCode.Escape))
+        else if (kb != null && kb.escapeKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_ESCAPE);
@@ -796,7 +800,7 @@ blit_mask_table:
             lastKeyboardHit = (char)KEYS.VK_ESCAPE;
             Application.Quit();
         }
-        else if (Input.GetKeyDown(KeyCode.Return))
+        else if (kb != null && kb.enterKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_RETURN);
@@ -805,7 +809,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = (char)KEYS.VK_RETURN;
         }
-        else if (Input.GetKeyDown(KeyCode.Backspace))
+        else if (kb != null && kb.backspaceKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_BACK);
@@ -814,7 +818,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = (char)KEYS.VK_BACK;
         }
-        else if (Input.GetKeyDown(KeyCode.Space))
+        else if (kb != null && kb.spaceKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)KEYS.VK_SPACE);
@@ -823,7 +827,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = (char)KEYS.VK_SPACE;
         }
-        else if (Input.GetKeyDown(KeyCode.A))
+        else if (kb != null && kb.aKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'A');
@@ -832,7 +836,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'A';
         }
-        else if (Input.GetKeyDown(KeyCode.B))
+        else if (kb != null && kb.bKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'B');
@@ -841,7 +845,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'B';
         }
-        else if (Input.GetKeyDown(KeyCode.C))
+        else if (kb != null && kb.cKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'C');
@@ -850,7 +854,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'C';
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (kb != null && kb.dKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'D');
@@ -859,7 +863,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'D';
         }
-        else if (Input.GetKeyDown(KeyCode.E))
+        else if (kb != null && kb.eKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'E');
@@ -868,7 +872,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'E';
         }
-        else if (Input.GetKeyDown(KeyCode.F))
+        else if (kb != null && kb.fKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'F');
@@ -877,7 +881,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'F';
         }
-        else if (Input.GetKeyDown(KeyCode.G))
+        else if (kb != null && kb.gKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'G');
@@ -886,7 +890,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'G';
         }
-        else if (Input.GetKeyDown(KeyCode.H))
+        else if (kb != null && kb.hKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'H');
@@ -895,7 +899,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'H';
         }
-        else if (Input.GetKeyDown(KeyCode.I))
+        else if (kb != null && kb.iKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'I');
@@ -904,7 +908,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'I';
         }
-        else if (Input.GetKeyDown(KeyCode.J))
+        else if (kb != null && kb.jKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'J');
@@ -913,7 +917,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'J';
         }
-        else if (Input.GetKeyDown(KeyCode.K))
+        else if (kb != null && kb.kKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'K');
@@ -922,7 +926,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'K';
         }
-        else if (Input.GetKeyDown(KeyCode.L))
+        else if (kb != null && kb.lKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'L');
@@ -931,7 +935,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'L';
         }
-        else if (Input.GetKeyDown(KeyCode.M))
+        else if (kb != null && kb.mKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'M');
@@ -940,7 +944,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'M';
         }
-        else if (Input.GetKeyDown(KeyCode.N))
+        else if (kb != null && kb.nKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'N');
@@ -949,7 +953,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'N';
         }
-        else if (Input.GetKeyDown(KeyCode.O))
+        else if (kb != null && kb.oKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'O');
@@ -958,7 +962,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'O';
         }
-        else if (Input.GetKeyDown(KeyCode.P))
+        else if (kb != null && kb.pKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'P');
@@ -967,7 +971,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'P';
         }
-        else if (Input.GetKeyDown(KeyCode.Q))
+        else if (kb != null && kb.qKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'Q');
@@ -976,7 +980,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'Q';
         }
-        else if (Input.GetKeyDown(KeyCode.R))
+        else if (kb != null && kb.rKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'R');
@@ -985,7 +989,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'R';
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (kb != null && kb.sKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'S');
@@ -994,7 +998,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'S';
         }
-        else if (Input.GetKeyDown(KeyCode.T))
+        else if (kb != null && kb.tKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'T');
@@ -1003,7 +1007,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'T';
         }
-        else if (Input.GetKeyDown(KeyCode.U))
+        else if (kb != null && kb.uKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'U');
@@ -1012,7 +1016,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'U';
         }
-        else if (Input.GetKeyDown(KeyCode.V))
+        else if (kb != null && kb.vKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'V');
@@ -1021,7 +1025,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'V';
         }
-        else if (Input.GetKeyDown(KeyCode.W))
+        else if (kb != null && kb.wKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'W');
@@ -1030,7 +1034,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'W';
         }
-        else if (Input.GetKeyDown(KeyCode.X))
+        else if (kb != null && kb.xKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'X');
@@ -1039,7 +1043,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'X';
         }
-        else if (Input.GetKeyDown(KeyCode.Y))
+        else if (kb != null && kb.yKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'Y');
@@ -1048,7 +1052,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'Y';
         }
-        else if (Input.GetKeyDown(KeyCode.Z))
+        else if (kb != null && kb.zKey.wasPressedThisFrame)
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'Z');
@@ -1057,7 +1061,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = 'Z';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0))
+        else if (kb != null && (kb.digit0Key.wasPressedThisFrame || kb.numpad0Key.wasPressedThisFrame))
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'0');
@@ -1066,7 +1070,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = '0';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+        else if (kb != null && (kb.digit1Key.wasPressedThisFrame || kb.numpad1Key.wasPressedThisFrame))
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'1');
@@ -1075,7 +1079,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = '1';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+        else if (kb != null && (kb.digit2Key.wasPressedThisFrame || kb.numpad2Key.wasPressedThisFrame))
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'2');
@@ -1084,7 +1088,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = '2';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
+        else if (kb != null && (kb.digit3Key.wasPressedThisFrame || kb.numpad3Key.wasPressedThisFrame))
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'3');
@@ -1093,7 +1097,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = '3';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
+        else if (kb != null && (kb.digit4Key.wasPressedThisFrame || kb.numpad4Key.wasPressedThisFrame))
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'4');
@@ -1102,7 +1106,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = '4';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
+        else if (kb != null && (kb.digit5Key.wasPressedThisFrame || kb.numpad5Key.wasPressedThisFrame))
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'5');
@@ -1111,7 +1115,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = '5';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
+        else if (kb != null && (kb.digit6Key.wasPressedThisFrame || kb.numpad6Key.wasPressedThisFrame))
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'6');
@@ -1120,7 +1124,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = '6';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
+        else if (kb != null && (kb.digit7Key.wasPressedThisFrame || kb.numpad7Key.wasPressedThisFrame))
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'7');
@@ -1129,7 +1133,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = '7';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha8) || Input.GetKeyDown(KeyCode.Keypad8))
+        else if (kb != null && (kb.digit8Key.wasPressedThisFrame || kb.numpad8Key.wasPressedThisFrame))
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'8');
@@ -1138,7 +1142,7 @@ blit_mask_table:
 #endif
             lastKeyboardHit = '8';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9))
+        else if (kb != null && (kb.digit9Key.wasPressedThisFrame || kb.numpad9Key.wasPressedThisFrame))
         {
 #if USE_UNITY_DLL_FUNCTION
             main_keyboardHit((char)'9');

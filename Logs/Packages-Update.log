@@ -98,3 +98,20 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.xr.openxr from version 1.9.1 to 1.10.0
+
+=== Thu Jul  2 15:06:32 2026
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.ai.navigation from version 1.1.5 to 1.1.6
+  com.unity.collab-proxy from version 2.2.0 to 2.7.1
+  com.unity.ide.rider from version 3.0.27 to 3.0.36
+  com.unity.mobile.android-logcat from version 1.4.0 to 1.4.5
+  com.unity.timeline from version 1.7.6 to 1.7.7
+  com.unity.xr.arfoundation from version 5.1.2 to 5.2.0
+  com.unity.xr.interaction.toolkit from version 2.5.2 to 2.6.4
+  com.unity.xr.meta-openxr from version 1.0.1 to 1.0.4
+  com.unity.xr.oculus from version 4.1.2 to 4.5.1
+  com.unity.xr.openxr from version 1.10.0 to 1.14.3

@@ -14,6 +14,7 @@ using Meta.WitAi.TTS.Data;
 using System.Linq;
 using System.Text;
 using UnityEngine.Networking; // Required for UnityWebRequest
+using UnityEngine.InputSystem; // Added for Modern Input Handling
 
 public class U4_Decompiled_AVATAR : MonoBehaviour
 {
@@ -799,6 +800,10 @@ public class U4_Decompiled_AVATAR : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Listen for devices connecting while the app is already running
+        UnityEngine.XR.InputDevices.deviceConnected += OnDeviceConnected;
+        InitializeXRDevices();
+
         // allocate storage for Party globals
         Party.chara = new Character[8];
         for (int i = 0; i < 8; i++)
@@ -2595,6 +2600,50 @@ sfx_storm:
     public float resetJoystick2 = 0f;
     public float joystickResetTime = 0.25f;
 
+    // need to manually read the joysticks using the new input system, store them here to avoid creating the list all the time
+    private System.Collections.Generic.List<UnityEngine.XR.InputDevice> leftDevices = new System.Collections.Generic.List<UnityEngine.XR.InputDevice>();
+    private System.Collections.Generic.List<UnityEngine.XR.InputDevice> rightDevices = new System.Collections.Generic.List<UnityEngine.XR.InputDevice>();
+
+    private UnityEngine.XR.InputDevice cachedLeftDevice;
+    private UnityEngine.XR.InputDevice cachedRightDevice;
+    private bool leftDeviceFound = false;
+    private bool rightDeviceFound = false;
+
+    private void OnDestroy()
+    {
+        UnityEngine.XR.InputDevices.deviceConnected -= OnDeviceConnected;
+    }
+
+    private void OnDeviceConnected(UnityEngine.XR.InputDevice device)
+    {
+        InitializeXRDevices();
+    }
+
+    private void InitializeXRDevices()
+    {
+        var leftHandDevices = new System.Collections.Generic.List<UnityEngine.XR.InputDevice>();
+        var rightHandDevices = new System.Collections.Generic.List<UnityEngine.XR.InputDevice>();
+
+        UnityEngine.XR.InputDevices.GetDevicesAtXRNode(UnityEngine.XR.XRNode.LeftHand, leftHandDevices);
+        UnityEngine.XR.InputDevices.GetDevicesAtXRNode(UnityEngine.XR.XRNode.RightHand, rightHandDevices);
+
+        if (leftHandDevices.Count > 0)
+        {
+            cachedLeftDevice = leftHandDevices[0];
+            leftDeviceFound = cachedLeftDevice.isValid;
+        }
+        if (rightHandDevices.Count > 0)
+        {
+            cachedRightDevice = rightHandDevices[0];
+            rightDeviceFound = cachedRightDevice.isValid;
+        }
+    }
+
+    // manual reading of the joysticks is not calibrated like the old input method so we need to widen our ranges
+    const float DEAD_ZONE = 0.10f; //0.05f
+    const float MAX_ZONE = 0.85f; //0.99f
+    const float HALF_ZONE = 0.5f;
+
     // Update is called once per frame
     void Update()
     {
@@ -2602,28 +2651,83 @@ sfx_storm:
 
         timer += Time.deltaTime;
 
-        // reset the joysticks if they are idle
-        if ((Input.GetAxis("Horizontal 1") < 0.05f) && (Input.GetAxis("Horizontal 1") > -0.05f) && (Input.GetAxis("Vertical 1") < 0.05f) && (Input.GetAxis("Vertical 1") > -0.05f))
+        // Pull layout systems cleanly via InputSystem APIs
+        float h1 = 0f, v1 = 0f, h2 = 0f, v2 = 0f, g1 = 0f, g2 = 0f;
+
+        if (Gamepad.current != null)
+        {
+            h1 = Gamepad.current.leftStick.x.ReadValue();
+            v1 = Gamepad.current.leftStick.y.ReadValue();
+            h2 = Gamepad.current.rightStick.x.ReadValue();
+            v2 = Gamepad.current.rightStick.y.ReadValue();
+            g1 = Gamepad.current.leftShoulder.ReadValue();
+            g2 = Gamepad.current.rightShoulder.ReadValue();
+        }
+        else
+        {
+            // Read Left Hand directly from cache
+            if (leftDeviceFound && cachedLeftDevice.isValid)
+            {
+                if (cachedLeftDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 leftStick))
+                {
+                    h1 = leftStick.x;
+                    v1 = -leftStick.y;
+                }
+                if (cachedLeftDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.grip, out float leftGrip))
+                {
+                    g1 = leftGrip;
+                }
+            }
+            else if (!leftDeviceFound)
+            {
+                // Safety check if controllers went to sleep and woke back up
+                InitializeXRDevices();
+            }
+
+            // Read Right Hand directly from cache
+            if (rightDeviceFound && cachedRightDevice.isValid)
+            {
+                if (cachedRightDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 rightStick))
+                {
+                    h2 = rightStick.x;
+                    v2 = -rightStick.y;
+                }
+                if (cachedRightDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.grip, out float rightGrip))
+                {
+                    g2 = rightGrip;
+                }
+            }
+            else if (!rightDeviceFound)
+            {
+                // Safety check if controllers went to sleep and woke back up
+                InitializeXRDevices();
+            }
+        }
+
+        // Reset the joysticks if they are idle
+        if ((h1 < DEAD_ZONE) && (h1 > -DEAD_ZONE) && (v1 < DEAD_ZONE) && (v1 > -DEAD_ZONE))
         {
             resetJoystick1 = Time.time;
         }
-        if ((Input.GetAxis("Horizontal 2") < 0.05f) && (Input.GetAxis("Horizontal 2") > -0.05f) && (Input.GetAxis("Vertical 2") < 0.05f) && (Input.GetAxis("Vertical 2") > -0.05f))
+        if ((h2 < DEAD_ZONE) && (h2 > -DEAD_ZONE) && (v2 < DEAD_ZONE) && (v2 > -DEAD_ZONE))
         {
             resetJoystick2 = Time.time;
         }
 
-        // ignore joystick input if we are using the grip to do VR interactions
-        if (Input.GetAxis("Grip 1") > 0.5)
+        // Ignore joystick input if we are using the grip to do VR interactions
+        if (g1 > HALF_ZONE)
         {
             resetJoystick1 = Time.time + joystickResetTime;
         }
-        if (Input.GetAxis("Grip 2") > 0.5)
+        if (g2 > HALF_ZONE)
         {
             resetJoystick2 = Time.time + joystickResetTime;
         }
 
+        // need to read the keyboard using the new input method
+        var kb = Keyboard.current;
         // check input
-        if (Input.GetKeyDown(KeyCode.PageDown) || (Input.GetAxis("Horizontal 1") > 0.99f && (resetJoystick1 < Time.time)))
+        if ((kb != null && kb.pageDownKey.wasPressedThisFrame) || (h1 > MAX_ZONE && (resetJoystick1 < Time.time)))
         {
             resetJoystick1 = Time.time + joystickResetTime;
             if (surface_party_direction == DIRECTION.NORTH)
@@ -2643,7 +2747,7 @@ sfx_storm:
                 surface_party_direction = DIRECTION.NORTH;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.PageUp) || Input.GetAxis("Horizontal 1") < -0.99f && (resetJoystick1 < Time.time))
+        else if ((kb != null && kb.pageUpKey.wasPressedThisFrame) || (h1 < -MAX_ZONE && (resetJoystick1 < Time.time)))
         {
             resetJoystick1 = Time.time + joystickResetTime;
             if (surface_party_direction == DIRECTION.NORTH)
@@ -2667,45 +2771,45 @@ sfx_storm:
 
         // send some keyboard codes down to the engine,
         // Unity keydown is only active for a single frame so it cannot be in the timer check if
-        if ((Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) && Input.GetKeyDown(KeyCode.Z)) // need to check this first as it overrides the normal Z keypress
+        if (kb != null && (kb.leftAltKey.wasPressedThisFrame || kb.rightAltKey.wasPressedThisFrame) && kb.zKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'9'); // currently the windows implementation of this engine does not support this
 
             lastKeyboardHit = '9';
         }
-        else if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.S)) // need to check this first as it overrides the normal S keypress
+        else if (kb != null && (kb.leftCtrlKey.wasPressedThisFrame || kb.rightCtrlKey.wasPressedThisFrame) && kb.sKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'9'); // currently the windows implementation of this engine does not support this
 
             lastKeyboardHit = '9';
         }
-        else if (Input.GetKeyDown(KeyCode.End))
+        else if (kb != null && kb.endKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)KEYS.VK_END);
 
             lastKeyboardHit = (char)KEYS.VK_END;
         }
-        else if (Input.GetKeyDown(KeyCode.Home))
+        else if (kb != null && kb.homeKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)KEYS.VK_HOME);
 
             lastKeyboardHit = (char)KEYS.VK_HOME;
         }
-        //else if (Input.GetKeyDown(KeyCode.PageUp))
+        //else if (kb != null && kb.pageUpKey.wasPressedThisFrame)
         //{
         //    main_keyboardHit((char)KEYS.VK_PGUP);
         //}
-        //else if (Input.GetKeyDown(KeyCode.PageDown))
+        //else if (kb != null && kb.pageDownKey.wasPressedThisFrame)
         //{
         //    main_keyboardHit((char)KEYS.VK_PGDN);
         //}
-        else if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        else if (kb != null && kb.enterKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)KEYS.VK_RETURN);
 
             lastKeyboardHit = (char)KEYS.VK_RETURN;
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow) || (Input.GetAxis("Vertical 2") > 0.99f && (resetJoystick2 < Time.time)) || Input.GetAxis("Vertical 1") > 0.99f && (resetJoystick1 < Time.time))
+        else if ((kb != null && kb.downArrowKey.wasPressedThisFrame) || (v2 > MAX_ZONE && (resetJoystick2 < Time.time)) || v1 > MAX_ZONE && (resetJoystick1 < Time.time))
         {
             resetJoystick1 = Time.time + joystickResetTime;
             resetJoystick2 = Time.time + joystickResetTime;
@@ -2772,7 +2876,7 @@ sfx_storm:
                 lastKeyboardHit = (char)KEYS.VK_DOWN;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow) || (Input.GetAxis("Vertical 2") < -0.99f && (resetJoystick2 < Time.time)) || (Input.GetAxis("Vertical 1") < -0.99f && (resetJoystick1 < Time.time)))
+        else if (((kb != null && kb.upArrowKey.wasPressedThisFrame) || (v2 < -MAX_ZONE && (resetJoystick2 < Time.time)) || v1 < -MAX_ZONE && (resetJoystick1 < Time.time)))
         {
             resetJoystick1 = Time.time + joystickResetTime;
             resetJoystick2 = Time.time + joystickResetTime;
@@ -2839,7 +2943,7 @@ sfx_storm:
                 lastKeyboardHit = (char)KEYS.VK_UP;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetAxis("Horizontal 2") < -0.99f && (resetJoystick2 < Time.time))
+        else if ((kb != null && kb.leftArrowKey.wasPressedThisFrame) || h2 < -MAX_ZONE && (resetJoystick2 < Time.time))
         {
             resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
@@ -2909,7 +3013,7 @@ sfx_storm:
                 lastKeyboardHit = (char)KEYS.VK_LEFT;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetAxis("Horizontal 2") > 0.99f && (resetJoystick2 < Time.time))
+        else if ((kb != null && kb.rightArrowKey.wasPressedThisFrame) || h2 > MAX_ZONE && (resetJoystick2 < Time.time))
         {
             resetJoystick2 = Time.time + joystickResetTime;
             if ((current_mode == MODE.COMBAT_ROOM) ||
@@ -2979,242 +3083,242 @@ sfx_storm:
                 //lastKeyboardHit = (char)KEYS.VK_RIGHT;
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Escape))
+        else if (kb != null && kb.escapeKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)KEYS.VK_ESCAPE);
 
             lastKeyboardHit = (char)KEYS.VK_ESCAPE;
             Application.Quit();
         }
-        else if (Input.GetKeyDown(KeyCode.Return))
+        else if (kb != null && kb.enterKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)KEYS.VK_RETURN);
 
             lastKeyboardHit = (char)KEYS.VK_RETURN;
         }
-        else if (Input.GetKeyDown(KeyCode.Backspace))
+        else if (kb != null && kb.backspaceKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)KEYS.VK_BACK);
 
             lastKeyboardHit = (char)KEYS.VK_BACK;
         }
-        else if (Input.GetKeyDown(KeyCode.Space))
+        else if (kb != null && kb.spaceKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)KEYS.VK_SPACE);
 
             lastKeyboardHit = (char)KEYS.VK_SPACE;
         }
-        else if (Input.GetKeyDown(KeyCode.A))
+        else if (kb != null && kb.aKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'A');
 
             lastKeyboardHit = 'A';
         }
-        else if (Input.GetKeyDown(KeyCode.B))
+        else if (kb != null && kb.bKey.wasPressedThisFrame)
         {
             //main_keyboardHit((char)'B');
 
             //lastKeyboardHit = 'B';
         }
-        else if (Input.GetKeyDown(KeyCode.C))
+        else if (kb != null && kb.cKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'C');
 
             lastKeyboardHit = 'C';
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (kb != null && kb.dKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'D');
 
             lastKeyboardHit = 'D';
         }
-        else if (Input.GetKeyDown(KeyCode.E))
+        else if (kb != null && kb.eKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'E');
 
             lastKeyboardHit = 'E';
         }
-        else if (Input.GetKeyDown(KeyCode.F))
+        else if (kb != null && kb.fKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'F');
 
             lastKeyboardHit = 'F';
         }
-        else if (Input.GetKeyDown(KeyCode.G))
+        else if (kb != null && kb.gKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'G');
 
             lastKeyboardHit = 'G';
         }
-        else if (Input.GetKeyDown(KeyCode.H))
+        else if (kb != null && kb.hKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'H');
 
             lastKeyboardHit = 'H';
         }
-        else if (Input.GetKeyDown(KeyCode.I))
+        else if (kb != null && kb.iKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'I');
 
             lastKeyboardHit = 'I';
         }
-        else if (Input.GetKeyDown(KeyCode.J))
+        else if (kb != null && kb.jKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'J');
 
             lastKeyboardHit = 'J';
         }
-        else if (Input.GetKeyDown(KeyCode.K))
+        else if (kb != null && kb.kKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'K');
 
             lastKeyboardHit = 'K';
         }
-        else if (Input.GetKeyDown(KeyCode.L))
+        else if (kb != null && kb.lKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'L');
 
             lastKeyboardHit = 'L';
         }
-        else if (Input.GetKeyDown(KeyCode.M))
+        else if (kb != null && kb.mKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'M');
 
             lastKeyboardHit = 'M';
         }
-        else if (Input.GetKeyDown(KeyCode.N))
+        else if (kb != null && kb.nKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'N');
 
             lastKeyboardHit = 'N';
         }
-        else if (Input.GetKeyDown(KeyCode.O))
+        else if (kb != null && kb.oKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'O');
 
             lastKeyboardHit = 'O';
         }
-        else if (Input.GetKeyDown(KeyCode.P))
+        else if (kb != null && kb.pKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'P');
 
             lastKeyboardHit = 'P';
         }
-        else if (Input.GetKeyDown(KeyCode.Q))
+        else if (kb != null && kb.qKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'Q');
 
             lastKeyboardHit = 'Q';
         }
-        else if (Input.GetKeyDown(KeyCode.R))
+        else if (kb != null && kb.rKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'R');
 
             lastKeyboardHit = 'R';
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (kb != null && kb.sKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'S');
 
             lastKeyboardHit = 'S';
         }
-        else if (Input.GetKeyDown(KeyCode.T))
+        else if (kb != null && kb.tKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'T');
 
             lastKeyboardHit = 'T';
         }
-        else if (Input.GetKeyDown(KeyCode.U))
+        else if (kb != null && kb.uKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'U');
 
             lastKeyboardHit = 'U';
         }
-        else if (Input.GetKeyDown(KeyCode.V))
+        else if (kb != null && kb.vKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'V');
 
             lastKeyboardHit = 'V';
         }
-        else if (Input.GetKeyDown(KeyCode.W))
+        else if (kb != null && kb.wKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'W');
 
             lastKeyboardHit = 'W';
         }
-        else if (Input.GetKeyDown(KeyCode.X))
+        else if (kb != null && kb.xKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'X');
 
             lastKeyboardHit = 'X';
         }
-        else if (Input.GetKeyDown(KeyCode.Y))
+        else if (kb != null && kb.yKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'Y');
 
             lastKeyboardHit = 'Y';
         }
-        else if (Input.GetKeyDown(KeyCode.Z))
+        else if (kb != null && kb.zKey.wasPressedThisFrame)
         {
             main_keyboardHit((char)'Z');
 
             lastKeyboardHit = 'Z';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0))
+        else if (kb != null && (kb.digit0Key.wasPressedThisFrame || kb.numpad0Key.wasPressedThisFrame))
         {
             main_keyboardHit((char)'0');
 
             lastKeyboardHit = '0';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+        else if (kb != null && (kb.digit1Key.wasPressedThisFrame || kb.numpad1Key.wasPressedThisFrame))
         {
             main_keyboardHit((char)'1');
 
             lastKeyboardHit = '1';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+        else if (kb != null && (kb.digit2Key.wasPressedThisFrame || kb.numpad2Key.wasPressedThisFrame))
         {
             main_keyboardHit((char)'2');
 
             lastKeyboardHit = '2';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
+        else if (kb != null && (kb.digit3Key.wasPressedThisFrame || kb.numpad3Key.wasPressedThisFrame))
         {
             main_keyboardHit((char)'3');
 
             lastKeyboardHit = '3';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
+        else if (kb != null && (kb.digit4Key.wasPressedThisFrame || kb.numpad4Key.wasPressedThisFrame))
         {
             main_keyboardHit((char)'4');
 
             lastKeyboardHit = '4';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
+        else if (kb != null && (kb.digit5Key.wasPressedThisFrame || kb.numpad5Key.wasPressedThisFrame))
         {
             main_keyboardHit((char)'5');
 
             lastKeyboardHit = '5';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6))
+        else if (kb != null && (kb.digit6Key.wasPressedThisFrame || kb.numpad6Key.wasPressedThisFrame))
         {
             main_keyboardHit((char)'6');
 
             lastKeyboardHit = '6';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7))
+        else if (kb != null && (kb.digit7Key.wasPressedThisFrame || kb.numpad7Key.wasPressedThisFrame))
         {
             main_keyboardHit((char)'7');
 
             lastKeyboardHit = '7';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha8) || Input.GetKeyDown(KeyCode.Keypad8))
+        else if (kb != null && (kb.digit8Key.wasPressedThisFrame || kb.numpad8Key.wasPressedThisFrame))
         {
             main_keyboardHit((char)'8');
 
             lastKeyboardHit = '8';
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9))
+        else if (kb != null && (kb.digit9Key.wasPressedThisFrame || kb.numpad9Key.wasPressedThisFrame))
         {
             main_keyboardHit((char)'9');
 
