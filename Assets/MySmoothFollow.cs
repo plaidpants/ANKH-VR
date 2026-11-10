@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 	public class MySmoothFollow : MonoBehaviour
 	{
@@ -24,6 +24,9 @@
 		// Update is called once per frame
 		void LateUpdate()
 		{
+			if (TabletopController.IsTabletopMode)
+				return;
+
 			// Early out if we don't have a target
 			if (!target)
 				return;

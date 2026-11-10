@@ -38,6 +38,7 @@ SubShader {
                 float4 vertex : SV_POSITION;
                 float2 texcoord : TEXCOORD0;
                 UNITY_FOG_COORDS(1)
+                float3 worldPos : TEXCOORD2;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
@@ -46,6 +47,10 @@ SubShader {
             fixed4 _Color;
             fixed _Cutoff;
 
+            float _TabletopClipEnabled;
+            float4x4 _TabletopWorldToLocal;
+            float4 _TabletopClipHalfSize;
+
             v2f vert (appdata_t v)
             {
                 v2f o;
@@ -53,6 +58,7 @@ SubShader {
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
@@ -62,7 +68,20 @@ SubShader {
                 //fixed4 col = tex2D(_MainTex, i.texcoord);
                 fixed4 col = tex2D(_MainTex, i.texcoord) * _Color;
                 clip(col.a - _Cutoff);
-                UNITY_APPLY_FOG(i.fogCoord, col);
+                if (_TabletopClipEnabled > 0.5)
+                {
+                    float3 boardPos = mul(_TabletopWorldToLocal, float4(i.worldPos, 1.0)).xyz;
+                    float distX = _TabletopClipHalfSize.x - abs(boardPos.x);
+                    float distZ = _TabletopClipHalfSize.z - abs(boardPos.z);
+                    clip(min(distX, distZ));
+                    clip(boardPos.y - _TabletopClipHalfSize.y);
+                    float edgeFade = saturate(min(distX, distZ) / max(_TabletopClipHalfSize.w, 0.0001));
+                    col.rgb *= edgeFade;
+                }
+                else
+                {
+                    UNITY_APPLY_FOG(i.fogCoord, col);
+                }
                 return col;
             }
         ENDCG

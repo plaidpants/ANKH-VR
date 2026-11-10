@@ -188,11 +188,11 @@ public static class Combine
         GameObject[] objectsToCombine = GetAllChildrenWithMeshRenderers(gameObject);
 
         // save current position so we can set it to zero so the localToWorldMatrix works correctly below
-        Vector3 position = gameObject.transform.position;
-        Quaternion rotation = gameObject.transform.rotation;
+        Transform savedParent = gameObject.transform.parent; Vector3 position = gameObject.transform.localPosition;
+        Quaternion rotation = gameObject.transform.localRotation; Vector3 scale = gameObject.transform.localScale; gameObject.transform.SetParent(null, false);
 
         gameObject.transform.position = Vector3.zero;
-        gameObject.transform.rotation = Quaternion.identity;
+        gameObject.transform.rotation = Quaternion.identity; gameObject.transform.localScale = Vector3.one;
 
         // Create a mesh filter and renderer if needed
         MeshFilter filter = gameObject.GetComponent<MeshFilter>();
@@ -327,8 +327,8 @@ public static class Combine
         }
 
         // Restore position
-        gameObject.transform.position = position;
-        gameObject.transform.rotation = rotation;
+        gameObject.transform.SetParent(savedParent, false); gameObject.transform.localPosition = position;
+        gameObject.transform.localRotation = rotation; gameObject.transform.localScale = scale;
     }
 
     // This version creates a horizontal texture atlas instead of a square one so we can do UV animation for things like water and lava.
@@ -346,11 +346,11 @@ public static class Combine
         GameObject[] objectsToCombine = GetAllChildrenWithMeshRenderers(gameObject);
 
         // save current position so we can set it to zero so the localToWorldMatrix works correctly below
-        Vector3 position = gameObject.transform.position;
-        Quaternion rotation = gameObject.transform.rotation;
+        Transform savedParent = gameObject.transform.parent; Vector3 position = gameObject.transform.localPosition;
+        Quaternion rotation = gameObject.transform.localRotation; Vector3 scale = gameObject.transform.localScale; gameObject.transform.SetParent(null, false);
 
         gameObject.transform.position = Vector3.zero;
-        gameObject.transform.rotation = Quaternion.identity;
+        gameObject.transform.rotation = Quaternion.identity; gameObject.transform.localScale = Vector3.one;
 
         // Create a mesh filter and renderer if needed
         MeshFilter filter = gameObject.GetComponent<MeshFilter>();
@@ -481,8 +481,8 @@ public static class Combine
         }
 
         // Restore position
-        gameObject.transform.position = position;
-        gameObject.transform.rotation = rotation;
+        gameObject.transform.SetParent(savedParent, false); gameObject.transform.localPosition = position;
+        gameObject.transform.localRotation = rotation; gameObject.transform.localScale = scale;
     }
 
     public static void Combine3(GameObject mapGameObject,
@@ -519,7 +519,7 @@ public static class Combine
         if (terrainTransform == null)
         {
             terrainGameObject = new GameObject("terrain");
-            terrainGameObject.transform.SetParent(mapGameObject.transform);
+            terrainGameObject.transform.SetParent(mapGameObject.transform, false);
             terrainGameObject.transform.localPosition = Vector3.zero;
             terrainGameObject.transform.localRotation = Quaternion.identity;
         }
@@ -533,7 +533,7 @@ public static class Combine
         if (waterTransform == null)
         {
             animatedTerrrainGameObject = new GameObject("water");
-            animatedTerrrainGameObject.transform.SetParent(mapGameObject.transform);
+            animatedTerrrainGameObject.transform.SetParent(mapGameObject.transform, false);
             animatedTerrrainGameObject.transform.localPosition = Vector3.zero;
             animatedTerrrainGameObject.transform.localRotation = Quaternion.identity;
         }
@@ -547,7 +547,7 @@ public static class Combine
         if (billboardTransform == null)
         {
             billboardTerrrainGameObject = new GameObject("billboard");
-            billboardTerrrainGameObject.transform.SetParent(mapGameObject.transform);
+            billboardTerrrainGameObject.transform.SetParent(mapGameObject.transform, false);
             billboardTerrrainGameObject.transform.localPosition = Vector3.zero;
             billboardTerrrainGameObject.transform.localRotation = Quaternion.identity;
         }

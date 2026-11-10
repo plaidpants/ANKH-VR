@@ -149,7 +149,8 @@ public class World : MonoBehaviour
     {
         // create player/party object to display texture
         partyGameObject = Primitive.CreateQuad();
-        partyGameObject.transform.SetParent(party.transform);
+        partyGameObject.transform.SetParent(party.transform, false);
+        partyGameObject.transform.localScale = Vector3.one;
         
         // rotate the npc game object after creating and addition of child
         partyGameObject.transform.localPosition = new Vector3(0, 0, 0); 
@@ -218,14 +219,15 @@ public class World : MonoBehaviour
                 fighterGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
 
                 // set this as a parent of the fighters game object
-                fighterGameObject.transform.SetParent(fighters.transform);
+                fighterGameObject.transform.SetParent(fighters.transform, false);
+                fighterGameObject.transform.localScale = Vector3.one;
 
                 // set as intially disabled
                 fighterGameObject.SetActive(false);
             }
 
             // rotate characters into place
-            fighters.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+            fighters.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
         }
 
         // update all fighters in the table
@@ -237,6 +239,7 @@ public class World : MonoBehaviour
 
             // get the corresponding fighters game object
             Transform childoffighters = fighters.transform.GetChild(fighterIndex);
+            childoffighters.localScale = Vector3.one;
 
             // check it fighter is active, zero means not active
             if (npcTile == 0)
@@ -264,8 +267,8 @@ public class World : MonoBehaviour
 
             // make it billboard
             Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
-            look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-            childoffighters.transform.LookAt(look.transform);
+            Vector3 lookPos = new Vector3(look.position.x, childoffighters.transform.position.y, look.position.z);
+            childoffighters.transform.LookAt(lookPos);
             Vector3 rot = childoffighters.transform.eulerAngles;
             childoffighters.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
         }
@@ -308,14 +311,15 @@ public class World : MonoBehaviour
                 characterGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
 
                 // set this as a parent of the fighters game object
-                characterGameObject.transform.SetParent(characters.transform);
+                characterGameObject.transform.SetParent(characters.transform, false);
+                characterGameObject.transform.localScale = Vector3.one;
 
                 // set as intially disabled
                 characterGameObject.SetActive(false);
             }
 
             // rotate characters into place
-            characters.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+            characters.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
         }
 
         // update all characters in the party table
@@ -336,6 +340,7 @@ public class World : MonoBehaviour
 
             // get the corresponding character game object
             Transform childofcharacters = characters.transform.GetChild(characterIndex);
+            childofcharacters.localScale = Vector3.one;
 
             if (npcTile == Tile.TILE.DEEP_WATER)
             {
@@ -355,8 +360,8 @@ public class World : MonoBehaviour
 
             // make it billboard
             Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
-            look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-            childofcharacters.transform.LookAt(look.transform);
+            Vector3 lookPos = new Vector3(look.position.x, childofcharacters.transform.position.y, look.position.z);
+            childofcharacters.transform.LookAt(lookPos);
             Vector3 rot = childofcharacters.transform.eulerAngles;
             childofcharacters.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
         }
@@ -395,14 +400,16 @@ public class World : MonoBehaviour
             moongateGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
 
             // set this as a parent of the moongate game object
-            moongateGameObject.transform.SetParent(moongate.transform);
+            moongateGameObject.transform.SetParent(moongate.transform, false);
+            moongateGameObject.transform.localScale = Vector3.one;
 
             // rotate moongate into place
-            moongate.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+            moongate.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
         }
 
         // get the corresponding moongate game object
         Transform childofmoongate = moongate.transform.GetChild(0);
+        childofmoongate.localScale = Vector3.one;
 
         renderer = childofmoongate.GetComponent<MeshRenderer>();
 
@@ -430,8 +437,8 @@ public class World : MonoBehaviour
         //childofmoongate.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
         // make it billboard
         Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
-        look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-        childofmoongate.transform.LookAt(look.transform);
+        Vector3 lookPos = new Vector3(look.position.x, childofmoongate.transform.position.y, look.position.z);
+        childofmoongate.transform.LookAt(lookPos);
         Vector3 rot = childofmoongate.transform.eulerAngles;
         childofmoongate.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
     }
@@ -473,14 +480,15 @@ public class World : MonoBehaviour
                 npcGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
 
                 // set this as a parent of the npcs game object
-                npcGameObject.transform.SetParent(npcs.transform);
+                npcGameObject.transform.SetParent(npcs.transform, false);
+                npcGameObject.transform.localScale = Vector3.one;
 
                 // set as intially disabled
                 npcGameObject.SetActive(false);
             }
 
             // rotate npcs into place
-            npcs.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+            npcs.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
         }
 
         // update all npcs in the table
@@ -488,6 +496,7 @@ public class World : MonoBehaviour
         {
             // get the corresponding npc game object
             Transform childofnpcs = npcs.transform.GetChild(npcIndex);
+            childofnpcs.localScale = Vector3.one;
 
             // get the npc tile
             Tile.TILE npcTile = currentNpcs[npcIndex]._tile;
@@ -573,8 +582,8 @@ public class World : MonoBehaviour
 
                 // make it billboard
                 Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
-                look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-                childofnpcs.transform.LookAt(look.transform);
+                Vector3 lookPos = new Vector3(look.position.x, childofnpcs.transform.position.y, look.position.z);
+                childofnpcs.transform.LookAt(lookPos);
                 Vector3 rot = childofnpcs.transform.eulerAngles;
                 childofnpcs.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y , rot.z + 180.0f);
             }
@@ -613,14 +622,15 @@ public class World : MonoBehaviour
                 hitGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
 
                 // set this as a parent of the hits game object
-                hitGameObject.transform.SetParent(hits.transform);
+                hitGameObject.transform.SetParent(hits.transform, false);
+                hitGameObject.transform.localScale = Vector3.one;
 
                 // set as intially disabled
                 hitGameObject.SetActive(false);
             }
 
             // rotate npcs into place
-            hits.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+            hits.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
         }
 
         // update all hit games with data from the table
@@ -628,6 +638,7 @@ public class World : MonoBehaviour
         {
             // get the corresponding hit game object
             Transform childofhits = hits.transform.GetChild(hitIndex);
+            childofhits.localScale = Vector3.one;
             
             // do we need to use the pool game object
             if (hitIndex < currentHitList.Count)
@@ -647,8 +658,8 @@ public class World : MonoBehaviour
 
                 // make it billboard
                 Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
-                look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-                childofhits.transform.LookAt(look.transform);
+                Vector3 lookPos = new Vector3(look.position.x, childofhits.transform.position.y, look.position.z);
+                childofhits.transform.LookAt(lookPos);
                 Vector3 rot = childofhits.transform.eulerAngles;
                 childofhits.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
 
@@ -668,9 +679,10 @@ public class World : MonoBehaviour
         if (activeCharacter == null)
         {
             activeCharacter = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            activeCharacter.transform.SetParent(transform);
+            activeCharacter.transform.SetParent(transform, false);
             activeCharacter.transform.localPosition = Vector3.zero;
             activeCharacter.transform.localRotation = Quaternion.identity;
+            activeCharacter.transform.localScale = Vector3.one;
             activeCharacter.name = "Active Character";
             MeshRenderer renderer = activeCharacter.GetComponent<MeshRenderer>();
             // set the shader
@@ -682,8 +694,10 @@ public class World : MonoBehaviour
             renderer.material.SetColor("_BackColor", Color.yellow);
 
             // rotate active character box into place
-            characters.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+            characters.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
         }
+
+        activeCharacter.transform.localScale = Vector3.one;
 
         if (currentActiveCharacter.active)
         {
@@ -700,7 +714,7 @@ public class World : MonoBehaviour
     public static void AddDungeonRoomMonsters(GameObject dungeonRoomGameObject, ref Dungeon.DUNGEON_ROOM dungeonRoom)
     {
         GameObject monstersGameObject = new GameObject("Monsters");
-        monstersGameObject.transform.SetParent(dungeonRoomGameObject.transform);
+        monstersGameObject.transform.SetParent(dungeonRoomGameObject.transform, false);
 
         // add all the monsters
         for (int i = 0; i < Dungeon.MAX_DUNGEON_ROOM_MONSTERS; i++)
@@ -754,7 +768,8 @@ public class World : MonoBehaviour
                 //monsterGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
 
                 // set this as a parent of the monsters game object
-                monsterGameObject.transform.SetParent(monstersGameObject.transform);
+                monsterGameObject.transform.SetParent(monstersGameObject.transform, false);
+                monsterGameObject.transform.localScale = Vector3.one;
             }
         }
     }
@@ -795,14 +810,15 @@ public class World : MonoBehaviour
                 dungeonMonsterGameObject.transform.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
 
                 // set this as a parent of the fighters game object
-                dungeonMonsterGameObject.transform.SetParent(dungeonMonsters.transform);
+                dungeonMonsterGameObject.transform.SetParent(dungeonMonsters.transform, false);
+                dungeonMonsterGameObject.transform.localScale = Vector3.one;
 
                 // set as intially disabled
                 dungeonMonsterGameObject.SetActive(false);
             }
 
             // rotate characters into place
-            dungeonMonsters.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+            dungeonMonsters.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
         }
 
         int monsterIndex = 0;
@@ -845,6 +861,7 @@ public class World : MonoBehaviour
                 {
                     // get the corresponding monster game object
                     Transform childofmonsters = dungeonMonsters.transform.GetChild(monsterIndex++);
+                    childofmonsters.localScale = Vector3.one;
 
                     // set it active
                     childofmonsters.gameObject.SetActive(true);
@@ -878,16 +895,18 @@ public class World : MonoBehaviour
                     childofmonsters.localPosition = new Vector3(xx * 11 + 5, (7 - yy) * 11 + 5, 0);
                     childofmonsters.localEulerAngles = new Vector3(-90.0f, 180.0f, 180.0f);
 
-                    // simple lighting
+                    // simple lighting with torch flicker and local-space distance so tabletop scaling works
                     Renderer renderer = childofmonsters.GetComponent<Renderer>();
                     renderer.material.color = Color.white;
-                    float value = ((5f * 11f) - Vector3.Distance(childofmonsters.transform.position, new Vector3(u4.Party._x * 11, 0, (7 - u4.Party._y) * 11))) / (5f * 11f);
+                    float dist = Vector3.Distance(childofmonsters.localPosition, new Vector3(u4.Party._x * 11 + 5, (7 - u4.Party._y) * 11 + 5, 0));
+                    float flicker = 0.90f + 0.14f * Mathf.PerlinNoise(Time.time * 8.5f, 1.3f);
+                    float value = Mathf.Clamp01((((5f * 11f) - dist) / (5f * 11f)) * flicker);
                     renderer.material.color = new Color(value, value, value, 1);
 
                     // make it billboard
                     Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
-                    look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-                    childofmonsters.transform.LookAt(look.transform);
+                    Vector3 lookPos = new Vector3(look.position.x, childofmonsters.transform.position.y, look.position.z);
+                    childofmonsters.transform.LookAt(lookPos);
                     Vector3 rot = childofmonsters.transform.eulerAngles;
                     childofmonsters.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
                 }
@@ -928,51 +947,53 @@ public class World : MonoBehaviour
     {
         // this object needs to move around so it needs to be above the other which are based on the whole world map
         mainTerrain = new GameObject("Main Terrain");
+        mainTerrain.transform.SetParent(transform, false);
 
         // create game object under us to hold these sub categories of things
         terrain = new GameObject("terrain");
-        terrain.transform.SetParent(mainTerrain.transform);
+        terrain.transform.SetParent(mainTerrain.transform, false);
         terrain.transform.localPosition = Vector3.zero;
         terrain.transform.localRotation = Quaternion.identity;
         animatedTerrrain = new GameObject("water");
-        animatedTerrrain.transform.SetParent(mainTerrain.transform);
+        animatedTerrrain.transform.SetParent(mainTerrain.transform, false);
         animatedTerrrain.transform.localPosition = Vector3.zero;
         animatedTerrrain.transform.localRotation = Quaternion.identity;
         billboardTerrrain = new GameObject("billboard");
-        billboardTerrrain.transform.SetParent(mainTerrain.transform);
+        billboardTerrrain.transform.SetParent(mainTerrain.transform, false);
         billboardTerrrain.transform.localPosition = Vector3.zero;
         billboardTerrrain.transform.localRotation = Quaternion.identity;
 
         npcs = new GameObject("npc");
-        npcs.transform.SetParent(transform);
+        npcs.transform.SetParent(transform, false);
         npcs.transform.localPosition = Vector3.zero;
         npcs.transform.localRotation = Quaternion.identity;
         party = new GameObject("party");
+        party.transform.SetParent(transform, false);
         party.transform.localPosition = new Vector3(0.0f, 0.0f, -0.02f);// move it out a bit so it overlaps horses, chests etc.
         party.transform.localRotation = Quaternion.identity;
-        party.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+        party.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
         fighters = new GameObject("fighters");
-        fighters.transform.SetParent(transform);
+        fighters.transform.SetParent(transform, false);
         fighters.transform.localPosition = Vector3.zero;
         fighters.transform.localRotation = Quaternion.identity;
         characters = new GameObject("characters");
-        characters.transform.SetParent(transform);
+        characters.transform.SetParent(transform, false);
         characters.transform.localPosition = Vector3.zero;
         characters.transform.localRotation = Quaternion.identity;
         hits = new GameObject("hits");
-        hits.transform.SetParent(transform);
+        hits.transform.SetParent(transform, false);
         hits.transform.localPosition = Vector3.zero;
         hits.transform.localRotation = Quaternion.identity;
         moongate = new GameObject("moongate");
-        moongate.transform.SetParent(transform);
+        moongate.transform.SetParent(transform, false);
         moongate.transform.localPosition = Vector3.zero;
         moongate.transform.localRotation = Quaternion.identity;
         dungeon = new GameObject("dungeon");
-        dungeon.transform.SetParent(transform);
+        dungeon.transform.SetParent(transform, false);
         dungeon.transform.localPosition = Vector3.zero;
         dungeon.transform.localRotation = Quaternion.identity;
         dungeonMonsters = new GameObject("dungeon monsters");
-        dungeonMonsters.transform.SetParent(transform);
+        dungeonMonsters.transform.SetParent(transform, false);
         dungeonMonsters.transform.localPosition = Vector3.zero;
         dungeonMonsters.transform.localRotation = Quaternion.identity;
 
@@ -1066,6 +1087,11 @@ public class World : MonoBehaviour
 
         // everything I need it now loaded, start the game engine thread
         u4.StartThread();
+
+        if (GetComponent<TabletopController>() == null)
+        {
+            gameObject.AddComponent<TabletopController>();
+        }
     }
 
     void UpdateInputPanelState()
@@ -1790,7 +1816,7 @@ public class World : MonoBehaviour
         // update last tile so we don't get stuck in a loop
         lastCurrentTile = u4.current_tile;
 
-        if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+        if (!TabletopController.IsTabletopMode && Camera.main.clearFlags != CameraClearFlags.Skybox)
         {
             Camera.main.clearFlags = CameraClearFlags.Skybox;
         }
@@ -1849,7 +1875,7 @@ public class World : MonoBehaviour
         // update last tile so we don't get stuck in a loop
         lastCurrentTile = u4.current_tile;
 
-        if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+        if (!TabletopController.IsTabletopMode && Camera.main.clearFlags != CameraClearFlags.Skybox)
         {
             Camera.main.clearFlags = CameraClearFlags.Skybox;
         }
@@ -1883,6 +1909,7 @@ public class World : MonoBehaviour
             {
                 Destroy(dungeon);
                 dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, Combat.combatMaps);
+                dungeon.transform.SetParent(transform, false);
             }
             dungeon.SetActive(true);
 
@@ -1891,7 +1918,7 @@ public class World : MonoBehaviour
                 Combat.CombatTerrains[i].gameObject.SetActive(false);
             }
 
-            if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
+            if (!TabletopController.IsTabletopMode && Camera.main.clearFlags != CameraClearFlags.SolidColor)
             {
                 Camera.main.clearFlags = CameraClearFlags.SolidColor;
                 Camera.main.backgroundColor = Color.black;
@@ -2014,7 +2041,7 @@ public class World : MonoBehaviour
                 }
             }
 
-            if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+            if (!TabletopController.IsTabletopMode && Camera.main.clearFlags != CameraClearFlags.Skybox)
             {
                 Camera.main.clearFlags = CameraClearFlags.Skybox;
             }
@@ -2045,6 +2072,7 @@ public class World : MonoBehaviour
         {
             Destroy(dungeon);
             dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, Combat.combatMaps);
+            dungeon.transform.SetParent(transform, false);
         }
         dungeon.SetActive(true);
 
@@ -2053,7 +2081,7 @@ public class World : MonoBehaviour
             Combat.CombatTerrains[i].gameObject.SetActive(false);
         }
 
-        if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
+        if (!TabletopController.IsTabletopMode && Camera.main.clearFlags != CameraClearFlags.SolidColor)
         {
             Camera.main.clearFlags = CameraClearFlags.SolidColor;
             Camera.main.backgroundColor = Color.black;
@@ -2145,8 +2173,10 @@ public class World : MonoBehaviour
                     // adjust the position for wrapping
                     dungeonBlock.dungeonGameObject.transform.localPosition = new Vector3((i + offset_x) * 11, (j + offset_y - Dungeon.currentDungeonBlockLevel.GetLength(1)) * 11, 0);
                     
-                    // get a value for distance
-                    float value = ((5f * 11f) - Vector3.Distance(dungeonBlock.dungeonGameObject.transform.position, new Vector3(u4.Party._x * 11, 0, (7 - u4.Party._y) * 11))) / (5f * 11f);
+                    // get a value for distance in local tile coordinates with subtle torch flicker
+                    float dist = Vector3.Distance(dungeonBlock.dungeonGameObject.transform.localPosition, new Vector3(u4.Party._x * 11, (7 - u4.Party._y) * 11, 0));
+                    float flicker = 0.90f + 0.14f * Mathf.PerlinNoise(Time.time * 8.5f, 0.3f);
+                    float value = Mathf.Clamp01((((5f * 11f) - dist) / (5f * 11f)) * flicker);
 
                     // apply this as a color tint to all children of the dungeon block
                     // TODO: we could also apply this lighting color tint based on a raytrace or some other algorithm
@@ -2196,6 +2226,7 @@ public class World : MonoBehaviour
             // not the right dungeon, create a new dungeon
             Destroy(dungeon);
             dungeon = Dungeon.CreateDungeonExpandedLevel(dun, u4.Party._z, Combat.combatMaps);
+            dungeon.transform.SetParent(transform, false);
         }
 
         if (u4.Party.f_1dc > 0) // torch active
@@ -2214,7 +2245,7 @@ public class World : MonoBehaviour
             Combat.CombatTerrains[i].gameObject.SetActive(false);
         }
 
-        if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
+        if (!TabletopController.IsTabletopMode && Camera.main.clearFlags != CameraClearFlags.SolidColor)
         {
             Camera.main.clearFlags = CameraClearFlags.SolidColor;
             Camera.main.backgroundColor = Color.black;
@@ -2374,7 +2405,7 @@ public class World : MonoBehaviour
             }
         }
 
-        if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+        if (!TabletopController.IsTabletopMode && Camera.main.clearFlags != CameraClearFlags.Skybox)
         {
             Camera.main.clearFlags = CameraClearFlags.Skybox;
         }
@@ -2400,8 +2431,11 @@ public class World : MonoBehaviour
             Combat.CombatTerrains[i].gameObject.SetActive(false);
         }
 
-        Camera.main.clearFlags = CameraClearFlags.SolidColor;
-        Camera.main.backgroundColor = Color.black;
+        if (!TabletopController.IsTabletopMode)
+        {
+            Camera.main.clearFlags = CameraClearFlags.SolidColor;
+            Camera.main.backgroundColor = Color.black;
+        }
     }
 
     void UpdateCombatCamp()
@@ -2429,7 +2463,7 @@ public class World : MonoBehaviour
         {
             currentCombatTerrain = (int)Combat.COMBAT_TERRAIN.INN;
             skyGameObject.SetActive(true);
-            if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+            if (!TabletopController.IsTabletopMode && Camera.main.clearFlags != CameraClearFlags.Skybox)
             {
                 Camera.main.clearFlags = CameraClearFlags.Skybox;
             }
@@ -2438,7 +2472,7 @@ public class World : MonoBehaviour
         {
             currentCombatTerrain = (int)Combat.COMBAT_TERRAIN.CAMP_DNG;
             skyGameObject.SetActive(false);
-            if (Camera.main.clearFlags != CameraClearFlags.SolidColor)
+            if (!TabletopController.IsTabletopMode && Camera.main.clearFlags != CameraClearFlags.SolidColor)
             {
                 Camera.main.clearFlags = CameraClearFlags.SolidColor;
                 Camera.main.backgroundColor = Color.black;
@@ -2448,7 +2482,7 @@ public class World : MonoBehaviour
         {
             currentCombatTerrain = (int)Combat.COMBAT_TERRAIN.CAMP;
             skyGameObject.SetActive(true);
-            if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+            if (!TabletopController.IsTabletopMode && Camera.main.clearFlags != CameraClearFlags.Skybox)
             {
                 Camera.main.clearFlags = CameraClearFlags.Skybox;
             }
@@ -2457,7 +2491,7 @@ public class World : MonoBehaviour
         {
             currentCombatTerrain = (int)Combat.COMBAT_TERRAIN.CAMP;
             skyGameObject.SetActive(true);
-            if (Camera.main.clearFlags != CameraClearFlags.Skybox)
+            if (!TabletopController.IsTabletopMode && Camera.main.clearFlags != CameraClearFlags.Skybox)
             {
                 Camera.main.clearFlags = CameraClearFlags.Skybox;
             }
@@ -3431,7 +3465,7 @@ public class World : MonoBehaviour
             }
 
             // keep the sky game objects in sync with the game
-            if (skyGameObject)
+            if (skyGameObject && !TabletopController.IsTabletopMode)
             {
                 if ((u4.current_mode == U4_Decompiled_AVATAR.MODE.OUTDOORS) || (u4.current_mode == U4_Decompiled_AVATAR.MODE.SETTLEMENT))
                 {
@@ -3468,11 +3502,11 @@ public class World : MonoBehaviour
 
                     if ((u4.Party._tile == Tile.TILE.BALOON) && (u4.Party.f_1dc == 1))
                     {
-                        party.transform.position = new Vector3(party.transform.position.x, 1, party.transform.position.z);
+                        party.transform.localPosition = new Vector3(party.transform.localPosition.x, 1, party.transform.localPosition.z);
                     }
                     else
                     {
-                        party.transform.position = new Vector3(party.transform.position.x, 0, party.transform.position.z);
+                        party.transform.localPosition = new Vector3(party.transform.localPosition.x, 0, party.transform.localPosition.z);
                     }
                 }
             }
@@ -3485,7 +3519,7 @@ public class World : MonoBehaviour
                     (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT_CAMP))
                 {
                     partyGameObject.transform.localPosition = new Vector3(u4.Party._x, 255 - u4.Party._y, 0);
-                    if (Camera.main.transform.eulerAngles.y != 0)
+                    if (!TabletopController.IsTabletopMode && Camera.main.transform.eulerAngles.y != 0)
                     {
                         if (rotateTransform)
                         {
@@ -3513,7 +3547,7 @@ public class World : MonoBehaviour
                     if ((u4.Party._loc >= U4_Decompiled_AVATAR.LOCATIONS.DECEIT) && (u4.Party._loc <= U4_Decompiled_AVATAR.LOCATIONS.THE_GREAT_STYGIAN_ABYSS))
                     {
                         // if we are going to do rotation then we need to adjust the directional controls when in combat in the dungeon also
-                        if (rotateTransform)
+                        if (rotateTransform && !TabletopController.IsTabletopMode)
                         {
                             if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.WEST && rotateTransform.transform.eulerAngles.y != 270)
                             {
@@ -3535,7 +3569,7 @@ public class World : MonoBehaviour
                     }
                     else
                     {
-                        if (rotateTransform)
+                        if (rotateTransform && !TabletopController.IsTabletopMode)
                         {
                             if (u4.surface_party_direction == U4_Decompiled_AVATAR.DIRECTION.WEST && rotateTransform.transform.eulerAngles.y != 270)
                             {
@@ -3558,7 +3592,7 @@ public class World : MonoBehaviour
                 }
                 else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.COMBAT_ROOM)
                 {
-                    if (rotateTransform)
+                    if (rotateTransform && !TabletopController.IsTabletopMode)
                     {
                         if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.WEST && rotateTransform.transform.eulerAngles.y != 270)
                         {
@@ -3581,7 +3615,7 @@ public class World : MonoBehaviour
                 else if (u4.current_mode == U4_Decompiled_AVATAR.MODE.DUNGEON)
                 {
                     partyGameObject.transform.localPosition = new Vector3(u4.Party._x * 11 + 5, (7 - u4.Party._y) * 11 + 5, 0);
-                    if (rotateTransform)
+                    if (rotateTransform && !TabletopController.IsTabletopMode)
                     {
                         if (u4.Party._dir == U4_Decompiled_AVATAR.DIRECTION.WEST && rotateTransform.transform.eulerAngles.y != 270)
                         {
@@ -3650,8 +3684,8 @@ public class World : MonoBehaviour
 
         // make party a billboard
         Transform look = Camera.main.transform;
-        look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-        partyGameObject.transform.LookAt(look.transform);
+        Vector3 lookPos = new Vector3(look.position.x, partyGameObject.transform.position.y, look.position.z);
+        partyGameObject.transform.LookAt(lookPos);
         Vector3 rot = partyGameObject.transform.eulerAngles;
         partyGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
 
@@ -3824,10 +3858,10 @@ public class World : MonoBehaviour
             }
 
             // Position the map in place
-            mainTerrain.transform.position = location;
+            mainTerrain.transform.localPosition = location;
 
             // rotate map into place
-            mainTerrain.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+            mainTerrain.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
 
             /* used to manually create meshes
             if (once)

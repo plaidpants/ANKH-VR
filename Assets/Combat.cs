@@ -40,6 +40,8 @@ public static class Combat
 
     public static GameObject CenterOfCombatTerrain;
 
+    public static GameObject combatTerrainsRoot;
+
     // create a temp TILE map array to hold the combat terrains as we load them
     public static Tile.TILE[][,] combatMaps = new Tile.TILE[(int)COMBAT_TERRAIN.MAX][,];
     public static CombatMonsterStartPositions[][] combatMonsterStartPositions = new CombatMonsterStartPositions[(int)COMBAT_TERRAIN.MAX][];
@@ -239,9 +241,15 @@ public static class Combat
 
     public static void CreateCombatTerrains(int offset_z)
     {
+        if (combatTerrainsRoot != null)
+        {
+            Object.Destroy(combatTerrainsRoot);
+        }
+
         // create a game object to store the combat terrain game objects, this should be at the top with no parent same as the world
         GameObject combatTerrainsObject = new GameObject();
         combatTerrainsObject.name = "Combat Terrains";
+        combatTerrainsRoot = combatTerrainsObject;
 
         CombatTerrains = new GameObject[(int)COMBAT_TERRAIN.MAX];
 
@@ -274,7 +282,7 @@ public static class Combat
 
             // create a game object to hold it and set it as a child of the combat terrains game object
             GameObject gameObject = new GameObject();
-            gameObject.transform.SetParent(combatTerrainsObject.transform);
+            gameObject.transform.SetParent(combatTerrainsObject.transform, false);
 
             // set it's name to match the combat terrain being created
             gameObject.name = ((COMBAT_TERRAIN)i).ToString();
@@ -296,8 +304,8 @@ public static class Combat
         }
 
         CenterOfCombatTerrain = new GameObject();
-        CenterOfCombatTerrain.transform.position = new Vector3(5f, 0, 250f);
-        CenterOfCombatTerrain.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
-        CenterOfCombatTerrain.transform.SetParent(combatTerrainsObject.transform);
+        CenterOfCombatTerrain.transform.SetParent(combatTerrainsObject.transform, false);
+        CenterOfCombatTerrain.transform.localPosition = new Vector3(5f, 0, 250f);
+        CenterOfCombatTerrain.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
     }
 }

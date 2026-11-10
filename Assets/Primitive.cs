@@ -50,41 +50,41 @@ public static class Primitive
         int index = 0;
 
         // top 
-        verts[index++] = new Vector3(-0.5f, -0.5f, -0.5f);
-        verts[index++] = new Vector3(0.5f, -0.5f, -0.5f);
-        verts[index++] = new Vector3(-0.5f, 0.5f, -0.5f);
-        verts[index++] = new Vector3(0.5f, 0.5f, -0.5f);
+        verts[index++] = new Vector3(-0.499f, -0.499f, -0.5f);
+        verts[index++] = new Vector3(0.499f, -0.499f, -0.5f);
+        verts[index++] = new Vector3(-0.499f, 0.499f, -0.5f);
+        verts[index++] = new Vector3(0.499f, 0.499f, -0.5f);
 
         if (leftside)
         {
-            verts[index++] = new Vector3(-0.5f, 0.5f, 0.5f);
-            verts[index++] = new Vector3(-0.5f, -0.5f, 0.5f);
-            verts[index++] = new Vector3(-0.5f, 0.5f, -0.5f);
-            verts[index++] = new Vector3(-0.5f, -0.5f, -0.5f);
+            verts[index++] = new Vector3(-0.499f, 0.499f, 0.5f);
+            verts[index++] = new Vector3(-0.499f, -0.499f, 0.5f);
+            verts[index++] = new Vector3(-0.499f, 0.499f, -0.5f);
+            verts[index++] = new Vector3(-0.499f, -0.499f, -0.5f);
         }
 
         if (rightside)
         {
-            verts[index++] = new Vector3(0.5f, -0.5f, 0.5f);
-            verts[index++] = new Vector3(0.5f, 0.5f, 0.5f);
-            verts[index++] = new Vector3(0.5f, -0.5f, -0.5f);
-            verts[index++] = new Vector3(0.5f, 0.5f, -0.5f);
+            verts[index++] = new Vector3(0.499f, -0.499f, 0.5f);
+            verts[index++] = new Vector3(0.499f, 0.499f, 0.5f);
+            verts[index++] = new Vector3(0.499f, -0.499f, -0.5f);
+            verts[index++] = new Vector3(0.499f, 0.499f, -0.5f);
         }
 
         if (front)
         {
-            verts[index++] = new Vector3(-0.5f, -0.5f, 0.5f);
-            verts[index++] = new Vector3(0.5f, -0.5f, 0.5f);
-            verts[index++] = new Vector3(-0.5f, -0.5f, -0.5f);
-            verts[index++] = new Vector3(0.5f, -0.5f, -0.5f);
+            verts[index++] = new Vector3(-0.499f, -0.499f, 0.5f);
+            verts[index++] = new Vector3(0.499f, -0.499f, 0.5f);
+            verts[index++] = new Vector3(-0.499f, -0.499f, -0.5f);
+            verts[index++] = new Vector3(0.499f, -0.499f, -0.5f);
         }
 
         if (back)
         {
-            verts[index++] = new Vector3(0.5f, 0.5f, 0.5f);
-            verts[index++] = new Vector3(-0.5f, 0.5f, 0.5f);
-            verts[index++] = new Vector3(0.5f, 0.5f, -0.5f);
-            verts[index++] = new Vector3(-0.5f, 0.5f, -0.5f);
+            verts[index++] = new Vector3(0.499f, 0.499f, 0.5f);
+            verts[index++] = new Vector3(-0.499f, 0.499f, 0.5f);
+            verts[index++] = new Vector3(0.499f, 0.499f, -0.5f);
+            verts[index++] = new Vector3(-0.499f, 0.499f, -0.5f);
         }
 
         // get the current mesh

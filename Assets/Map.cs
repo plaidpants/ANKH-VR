@@ -40,7 +40,7 @@ public static class Map
         if (terrainTransform == null)
         {
             terrainGameObject = new GameObject("terrain");
-            terrainGameObject.transform.SetParent(mapGameObject.transform);
+            terrainGameObject.transform.SetParent(mapGameObject.transform, false);
             terrainGameObject.transform.localPosition = Vector3.zero;
             terrainGameObject.transform.localRotation = Quaternion.identity;
         }
@@ -48,13 +48,14 @@ public static class Map
         {
             terrainGameObject = terrainTransform.gameObject;
         }
+        terrainGameObject.transform.localScale = Vector3.one;
 
         // create the water child object if it does not exist
         Transform waterTransform = mapGameObject.transform.Find("water");
         if (waterTransform == null)
         {
             animatedTerrrainGameObject = new GameObject("water");
-            animatedTerrrainGameObject.transform.SetParent(mapGameObject.transform);
+            animatedTerrrainGameObject.transform.SetParent(mapGameObject.transform, false);
             animatedTerrrainGameObject.transform.localPosition = Vector3.zero;
             animatedTerrrainGameObject.transform.localRotation = Quaternion.identity;
         }
@@ -62,13 +63,14 @@ public static class Map
         {
             animatedTerrrainGameObject = waterTransform.gameObject;
         }
+        animatedTerrrainGameObject.transform.localScale = Vector3.one;
 
         // create the billboard child object if it does not exist
         Transform billboardTransform = mapGameObject.transform.Find("billboard");
         if (billboardTransform == null)
         {
             billboardTerrrainGameObject = new GameObject("billboard");
-            billboardTerrrainGameObject.transform.SetParent(mapGameObject.transform);
+            billboardTerrrainGameObject.transform.SetParent(mapGameObject.transform, false);
             billboardTerrrainGameObject.transform.localPosition = Vector3.zero;
             billboardTerrrainGameObject.transform.localRotation = Quaternion.identity;
         }
@@ -76,6 +78,7 @@ public static class Map
         {
             billboardTerrrainGameObject = billboardTransform.gameObject;
         }
+        billboardTerrrainGameObject.transform.localScale = Vector3.one;
 
         // remove any children if present
         foreach (Transform child in terrainGameObject.transform)
@@ -127,7 +130,7 @@ public static class Map
                     if (x < map.GetLength(0) - 1)
                         rightTile = map[x + 1, y];
 
-                    mapTile = Primitive.CreatePartialCube(!CheckTileForOpacity(leftTile), !CheckTileForOpacity(rightTile), !CheckTileForOpacity(aboveTile), !CheckTileForOpacity(belowTile));
+                    mapTile = Primitive.CreatePartialCube(true, true, true, true);
                     mapTile.transform.SetParent(terrainGameObject.transform);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     rotation = Vector3.zero;
@@ -151,7 +154,7 @@ public static class Map
                     if (x < map.GetLength(0) - 1)
                         rightTile = map[x + 1, y];
 
-                    mapTile = Primitive.CreatePartialCube(!CheckShortTileForOpacity(leftTile), !CheckShortTileForOpacity(rightTile), !CheckShortTileForOpacity(aboveTile), !CheckShortTileForOpacity(belowTile));
+                    mapTile = Primitive.CreatePartialCube(true, true, true, true);
                     mapTile.transform.SetParent(terrainGameObject.transform);
                     mapTile.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.25f);
@@ -221,7 +224,8 @@ public static class Map
                     //mapTile = GameObject.CreatePrimitive(PrimitiveType.Quad); 
                     mapTile = Primitive.CreateQuad();
                     mapTile.name = tileIndex.ToString();
-                    mapTile.transform.SetParent(billboardTerrrainGameObject.transform);
+                    mapTile.transform.SetParent(billboardTerrrainGameObject.transform, false);
+                    mapTile.transform.localScale = Vector3.one;
                     location = new Vector3(x, map.GetLength(1) - 1 - y + 0.001f, 0.0f); // move it just a bit into the back
                     // need to move it here first and rotate it into place before we can get the results of LookAt()
                     mapTile.transform.localPosition = location;
@@ -231,8 +235,8 @@ public static class Map
                     if (lookAtObject)
                     {
                         Transform look = lookAtObject.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these bulboards
-                        look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-                        mapTile.transform.LookAt(look.transform);
+                        Vector3 lookPos = new Vector3(look.position.x, mapTile.transform.position.y, look.position.z);
+                        mapTile.transform.LookAt(lookPos);
                         //mapTile.transform.forward = new Vector3(Camera.main.transform.forward.x, transform.forward.y, Camera.main.transform.forward.z);
                         rotation = mapTile.transform.localEulerAngles; // new Vector3(rotx, -90f, 90.0f);
                         rotation.x = rotation.x - 180.0f;
@@ -411,7 +415,7 @@ public static class Map
         if (billboardTransform == null)
         {
             billboardTerrrainGameObject = new GameObject("billboard");
-            billboardTerrrainGameObject.transform.SetParent(mapGameObject.transform);
+            billboardTerrrainGameObject.transform.SetParent(mapGameObject.transform, false);
             billboardTerrrainGameObject.transform.localPosition = Vector3.zero;
             billboardTerrrainGameObject.transform.localRotation = Quaternion.identity;
         }
@@ -423,10 +427,11 @@ public static class Map
         // update any children
         foreach (Transform child in billboardTerrrainGameObject.transform)
         {
+            child.localScale = Vector3.one;
             // make it billboard
             Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
-            look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-            child.transform.LookAt(look.transform);
+            Vector3 lookPos = new Vector3(look.position.x, child.transform.position.y, look.position.z);
+            child.transform.LookAt(lookPos);
             Vector3 rot = child.transform.eulerAngles;
             child.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
         }
@@ -468,7 +473,7 @@ public static class Map
                     if (x < map.GetLength(0) - 1)
                         rightTile = map[x + 1, y];
 
-                    mapTile = Primitive.CreatePartialCube(!CheckTileForOpacity(leftTile), !CheckTileForOpacity(rightTile), !CheckTileForOpacity(aboveTile), !CheckTileForOpacity(belowTile));
+                    mapTile = Primitive.CreatePartialCube(true, true, true, true);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.0f);
                     rotation = Vector3.zero;
                 }
@@ -490,7 +495,7 @@ public static class Map
                     if (x < map.GetLength(0) - 1)
                         rightTile = map[x + 1, y];
 
-                    mapTile = Primitive.CreatePartialCube(!CheckShortTileForOpacity(leftTile), !CheckShortTileForOpacity(rightTile), !CheckShortTileForOpacity(aboveTile), !CheckShortTileForOpacity(belowTile));
+                    mapTile = Primitive.CreatePartialCube(true, true, true, true);
                     mapTile.transform.localScale = new Vector3(1.0f, 1.0f, 0.5f);
                     location = new Vector3(x, map.GetLength(1) - 1 - y, 0.25f);
                     rotation = Vector3.zero;
@@ -547,8 +552,8 @@ public static class Map
                     mapTile.transform.localPosition = location;
                     mapTile.transform.localEulerAngles = new Vector3(-180.0f, -90.0f, 90.0f);
                     Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these bulboards
-                    look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-                    mapTile.transform.LookAt(look.transform);
+                    Vector3 lookPos = new Vector3(look.position.x, mapTile.transform.position.y, look.position.z);
+                    mapTile.transform.LookAt(lookPos);
                     //mapTile.transform.forward = new Vector3(Camera.main.transform.forward.x, transform.forward.y, Camera.main.transform.forward.z);
                     rotation = mapTile.transform.localEulerAngles; // new Vector3(rotx, -90f, 90.0f);
                     rotation.x = rotation.x - 180.0f;
@@ -958,7 +963,7 @@ public static class Map
         if (terrainTransform == null)
         {
             terrainGameObject = new GameObject("terrain");
-            terrainGameObject.transform.SetParent(mapGameObject.transform);
+            terrainGameObject.transform.SetParent(mapGameObject.transform, false);
             terrainGameObject.transform.localPosition = Vector3.zero;
             terrainGameObject.transform.localRotation = Quaternion.identity;
         }
@@ -966,13 +971,14 @@ public static class Map
         {
             terrainGameObject = terrainTransform.gameObject;
         }
+        terrainGameObject.transform.localScale = Vector3.one;
 
         // create the water child object if it does not exist
         Transform waterTransform = mapGameObject.transform.Find("water");
         if (waterTransform == null)
         {
             animatedTerrrainGameObject = new GameObject("water");
-            animatedTerrrainGameObject.transform.SetParent(mapGameObject.transform);
+            animatedTerrrainGameObject.transform.SetParent(mapGameObject.transform, false);
             animatedTerrrainGameObject.transform.localPosition = Vector3.zero;
             animatedTerrrainGameObject.transform.localRotation = Quaternion.identity;
         }
@@ -980,13 +986,14 @@ public static class Map
         {
             animatedTerrrainGameObject = waterTransform.gameObject;
         }
+        animatedTerrrainGameObject.transform.localScale = Vector3.one;
 
         // create the billboard child object if it does not exist
         Transform billboardTransform = mapGameObject.transform.Find("billboard");
         if (billboardTransform == null)
         {
             billboardTerrrainGameObject = new GameObject("billboard");
-            billboardTerrrainGameObject.transform.SetParent(mapGameObject.transform);
+            billboardTerrrainGameObject.transform.SetParent(mapGameObject.transform, false);
             billboardTerrrainGameObject.transform.localPosition = Vector3.zero;
             billboardTerrrainGameObject.transform.localRotation = Quaternion.identity;
         }
@@ -994,6 +1001,7 @@ public static class Map
         {
             billboardTerrrainGameObject = billboardTransform.gameObject;
         }
+        billboardTerrrainGameObject.transform.localScale = Vector3.one;
 
         // remove any children if present
         foreach (Transform child in terrainGameObject.transform)

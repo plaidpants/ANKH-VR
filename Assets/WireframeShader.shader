@@ -35,6 +35,7 @@ Shader "Custom/Geometry/Wireframe"
 			struct g2f {
 				float4 pos : SV_POSITION;
 				float3 bary : TEXCOORD0;
+				float3 worldPos : TEXCOORD1;
 			};
 
 			v2g vert(appdata_base v) {
@@ -61,21 +62,35 @@ Shader "Custom/Geometry/Wireframe"
 				g2f o;
 				o.pos = mul(UNITY_MATRIX_VP, IN[0].worldPos);
 				o.bary = float3(1., 0., 0.) + param;
+				o.worldPos = IN[0].worldPos.xyz;
 				triStream.Append(o);
 				o.pos = mul(UNITY_MATRIX_VP, IN[1].worldPos);
 				o.bary = float3(0., 0., 1.) + param;
+				o.worldPos = IN[1].worldPos.xyz;
 				triStream.Append(o);
 				o.pos = mul(UNITY_MATRIX_VP, IN[2].worldPos);
 				o.bary = float3(0., 1., 0.) + param;
+				o.worldPos = IN[2].worldPos.xyz;
 				triStream.Append(o);
 			}
 
 			float _WireframeVal;
 			fixed4 _BackColor;
+			float _TabletopClipEnabled;
+			float4x4 _TabletopWorldToLocal;
+			float4 _TabletopClipHalfSize;
 
 			fixed4 frag(g2f i) : SV_Target {
 			if (!any(bool3(i.bary.x < _WireframeVal, i.bary.y < _WireframeVal, i.bary.z < _WireframeVal)))
 				 discard;
+			if (_TabletopClipEnabled > 0.5)
+			{
+				float3 boardPos = mul(_TabletopWorldToLocal, float4(i.worldPos, 1.0)).xyz;
+				float distX = _TabletopClipHalfSize.x - abs(boardPos.x);
+				float distZ = _TabletopClipHalfSize.z - abs(boardPos.z);
+				clip(min(distX, distZ));
+				clip(boardPos.y - _TabletopClipHalfSize.y);
+			}
 
 				return _BackColor;
 			}
@@ -100,6 +115,7 @@ Shader "Custom/Geometry/Wireframe"
 				struct g2f {
 					float4 pos : SV_POSITION;
 					float3 bary : TEXCOORD0;
+					float3 worldPos : TEXCOORD1;
 				};
 
 				v2g vert(appdata_base v) {
@@ -126,21 +142,35 @@ Shader "Custom/Geometry/Wireframe"
 					g2f o;
 					o.pos = mul(UNITY_MATRIX_VP, IN[0].worldPos);
 					o.bary = float3(1., 0., 0.) + param;
+					o.worldPos = IN[0].worldPos.xyz;
 					triStream.Append(o);
 					o.pos = mul(UNITY_MATRIX_VP, IN[1].worldPos);
 					o.bary = float3(0., 0., 1.) + param;
+					o.worldPos = IN[1].worldPos.xyz;
 					triStream.Append(o);
 					o.pos = mul(UNITY_MATRIX_VP, IN[2].worldPos);
 					o.bary = float3(0., 1., 0.) + param;
+					o.worldPos = IN[2].worldPos.xyz;
 					triStream.Append(o);
 				}
 
 				float _WireframeVal;
 				fixed4 _FrontColor;
+				float _TabletopClipEnabled;
+				float4x4 _TabletopWorldToLocal;
+				float4 _TabletopClipHalfSize;
 
 				fixed4 frag(g2f i) : SV_Target {
 				if (!any(bool3(i.bary.x <= _WireframeVal, i.bary.y <= _WireframeVal, i.bary.z <= _WireframeVal)))
 					 discard;
+				if (_TabletopClipEnabled > 0.5)
+				{
+					float3 boardPos = mul(_TabletopWorldToLocal, float4(i.worldPos, 1.0)).xyz;
+					float distX = _TabletopClipHalfSize.x - abs(boardPos.x);
+					float distZ = _TabletopClipHalfSize.z - abs(boardPos.z);
+					clip(min(distX, distZ));
+					clip(boardPos.y - _TabletopClipHalfSize.y);
+				}
 
 					return _FrontColor;
 				}

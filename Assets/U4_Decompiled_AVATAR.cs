@@ -1,4 +1,4 @@
-﻿#define USE_UNITY_DLL_FUNCTION
+#define USE_UNITY_DLL_FUNCTION
 
 using System.Collections;
 using System.Collections.Generic;
@@ -2727,7 +2727,85 @@ sfx_storm:
         // need to read the keyboard using the new input method
         var kb = Keyboard.current;
         // check input
-        if ((kb != null && kb.pageDownKey.wasPressedThisFrame) || (h1 > MAX_ZONE && (resetJoystick1 < Time.time)))
+        if (TabletopController.IsTabletopMode &&
+            ((kb != null && kb.upArrowKey.wasPressedThisFrame) ||
+             (v2 < -MAX_ZONE && (resetJoystick2 < Time.time)) ||
+             (v1 < -MAX_ZONE && (resetJoystick1 < Time.time))))
+        {
+            resetJoystick1 = Time.time + joystickResetTime;
+            resetJoystick2 = Time.time + joystickResetTime;
+            surface_party_direction = DIRECTION.NORTH;
+            main_set_dir(surface_party_direction);
+            main_keyboardHit((char)KEYS.VK_UP);
+            lastKeyboardHit = (char)KEYS.VK_UP;
+        }
+        else if (TabletopController.IsTabletopMode &&
+            ((kb != null && kb.downArrowKey.wasPressedThisFrame) ||
+             (v2 > MAX_ZONE && (resetJoystick2 < Time.time)) ||
+             (v1 > MAX_ZONE && (resetJoystick1 < Time.time))))
+        {
+            resetJoystick1 = Time.time + joystickResetTime;
+            resetJoystick2 = Time.time + joystickResetTime;
+            if (current_mode == MODE.DUNGEON)
+            {
+                surface_party_direction = DIRECTION.SOUTH;
+                main_set_dir(surface_party_direction);
+                main_keyboardHit((char)KEYS.VK_UP);
+                lastKeyboardHit = (char)KEYS.VK_UP;
+            }
+            else
+            {
+                surface_party_direction = DIRECTION.NORTH;
+                main_set_dir(surface_party_direction);
+                main_keyboardHit((char)KEYS.VK_DOWN);
+                lastKeyboardHit = (char)KEYS.VK_DOWN;
+            }
+        }
+        else if (TabletopController.IsTabletopMode &&
+            ((kb != null && kb.leftArrowKey.wasPressedThisFrame) ||
+             (h2 < -MAX_ZONE && (resetJoystick2 < Time.time)) ||
+             (h1 < -MAX_ZONE && (resetJoystick1 < Time.time))))
+        {
+            resetJoystick1 = Time.time + joystickResetTime;
+            resetJoystick2 = Time.time + joystickResetTime;
+            if (current_mode == MODE.DUNGEON)
+            {
+                surface_party_direction = DIRECTION.WEST;
+                main_set_dir(surface_party_direction);
+                main_keyboardHit((char)KEYS.VK_UP);
+                lastKeyboardHit = (char)KEYS.VK_UP;
+            }
+            else
+            {
+                surface_party_direction = DIRECTION.NORTH;
+                main_set_dir(surface_party_direction);
+                main_keyboardHit((char)KEYS.VK_LEFT);
+                lastKeyboardHit = (char)KEYS.VK_LEFT;
+            }
+        }
+        else if (TabletopController.IsTabletopMode &&
+            ((kb != null && kb.rightArrowKey.wasPressedThisFrame) ||
+             (h2 > MAX_ZONE && (resetJoystick2 < Time.time)) ||
+             (h1 > MAX_ZONE && (resetJoystick1 < Time.time))))
+        {
+            resetJoystick1 = Time.time + joystickResetTime;
+            resetJoystick2 = Time.time + joystickResetTime;
+            if (current_mode == MODE.DUNGEON)
+            {
+                surface_party_direction = DIRECTION.EAST;
+                main_set_dir(surface_party_direction);
+                main_keyboardHit((char)KEYS.VK_UP);
+                lastKeyboardHit = (char)KEYS.VK_UP;
+            }
+            else
+            {
+                surface_party_direction = DIRECTION.NORTH;
+                main_set_dir(surface_party_direction);
+                main_keyboardHit((char)KEYS.VK_RIGHT);
+                lastKeyboardHit = (char)KEYS.VK_RIGHT;
+            }
+        }
+        else if ((kb != null && kb.pageDownKey.wasPressedThisFrame) || (h1 > MAX_ZONE && (resetJoystick1 < Time.time)))
         {
             resetJoystick1 = Time.time + joystickResetTime;
             if (surface_party_direction == DIRECTION.NORTH)

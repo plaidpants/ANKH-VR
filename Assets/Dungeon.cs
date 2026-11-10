@@ -301,7 +301,7 @@ public static class Dungeon
     public static void AddDungeonRoomMonsters(GameObject dungeonRoomGameObject, ref Dungeon.DUNGEON_ROOM dungeonRoom)
     {
         GameObject monstersGameObject = new GameObject("Monsters");
-        monstersGameObject.transform.SetParent(dungeonRoomGameObject.transform);
+        monstersGameObject.transform.SetParent(dungeonRoomGameObject.transform, false);
 
         // add all the monsters
         for (int i = 0; i < Dungeon.MAX_DUNGEON_ROOM_MONSTERS; i++)
@@ -356,13 +356,14 @@ public static class Dungeon
 
                 // make it billboard
                 Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
-                look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-                monsterGameObject.transform.LookAt(look.transform);
+                Vector3 lookPos = new Vector3(look.position.x, monsterGameObject.transform.position.y, look.position.z);
+                monsterGameObject.transform.LookAt(lookPos);
                 Vector3 rot = monsterGameObject.transform.eulerAngles;
                 monsterGameObject.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
 
                 // set this as a parent of the monsters game object
-                monsterGameObject.transform.SetParent(monstersGameObject.transform);
+                monsterGameObject.transform.SetParent(monstersGameObject.transform, false);
+                monsterGameObject.transform.localScale = Vector3.one;
             }
         }
     }
@@ -376,7 +377,7 @@ public static class Dungeon
         if (billboardTransform == null)
         {
             billboardGameObject = new GameObject("Monsters");
-            billboardGameObject.transform.SetParent(dungeonRoomGameObject.transform);
+            billboardGameObject.transform.SetParent(dungeonRoomGameObject.transform, false);
             billboardGameObject.transform.localPosition = Vector3.zero;
             billboardGameObject.transform.localRotation = Quaternion.identity;
         }
@@ -390,8 +391,8 @@ public static class Dungeon
         {
             // make it billboard
             Transform look = Camera.main.transform; // TODO we need to find out where the camera will be not where it is currently before pointing these billboards
-            look.position = new Vector3(look.position.x, 0.0f, look.position.z);
-            child.transform.LookAt(look.transform);
+            Vector3 lookPos = new Vector3(look.position.x, child.transform.position.y, look.position.z);
+            child.transform.LookAt(lookPos);
             Vector3 rot = child.transform.eulerAngles;
             child.transform.eulerAngles = new Vector3(rot.x + 180.0f, rot.y, rot.z + 180.0f);
         }
@@ -1198,7 +1199,7 @@ public static class Dungeon
                     dungeonBlockGameObject.SetActive(true);
                 }
 
-                dungeonBlockGameObject.transform.SetParent(dungeonLevel.transform);
+                dungeonBlockGameObject.transform.SetParent(dungeonLevel.transform, false);
                 dungeonBlockGameObject.transform.localPosition = new Vector3(x * 11, y * 11, 0);
                 currentDungeonBlockLevel[x, y].dungeonBlockMap = map;
                 currentDungeonBlockLevel[x, y].dungeonGameObject = dungeonBlockGameObject;
@@ -1209,7 +1210,7 @@ public static class Dungeon
         // TODO cannot combine yet as the  areas are already combined, need to rebuild them into the dungeon
         //Combine(dungeonLevel);
 
-        dungeonLevel.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
+        dungeonLevel.transform.localEulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
 
         return dungeonLevel;
     }
